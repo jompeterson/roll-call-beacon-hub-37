@@ -47,39 +47,39 @@ export const DonationModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-5xl w-full">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">{donation.item}</DialogTitle>
           <p className="text-sm text-muted-foreground">Give a Donation</p>
         </DialogHeader>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
           {/* Information Section */}
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div>
-              <h3 className="font-semibold text-lg mb-3">Donation Information</h3>
-              <div className="space-y-3">
+              <h3 className="font-semibold text-lg mb-4">Donation Information</h3>
+              <div className="space-y-4">
                 <div>
                   <label className="font-medium text-sm text-muted-foreground">Donation Type</label>
-                  <p className="text-base">{donation.type}</p>
+                  <p className="text-base mt-1">{donation.type}</p>
                 </div>
                 <div>
                   <label className="font-medium text-sm text-muted-foreground">Donation Item</label>
-                  <p className="text-base">{donation.item}</p>
+                  <p className="text-base mt-1">{donation.item}</p>
                 </div>
                 <div>
                   <label className="font-medium text-sm text-muted-foreground">Donation Details</label>
-                  <p className="text-base">{donation.details}</p>
+                  <p className="text-base mt-1">{donation.details}</p>
                 </div>
                 <div>
                   <label className="font-medium text-sm text-muted-foreground">Estimated Value</label>
-                  <p className="text-base">{getEstimatedValue(donation.type, donation.item)}</p>
+                  <p className="text-base mt-1">{getEstimatedValue(donation.type, donation.item)}</p>
                 </div>
               </div>
             </div>
             
             {/* Action Buttons */}
-            <div className="flex gap-3 pt-4">
+            <div className="flex gap-3 pt-6">
               <Button 
                 onClick={() => onApprove(donation.id)}
                 className="bg-green-600 hover:bg-green-700 text-white"
@@ -104,7 +104,7 @@ export const DonationModal = ({
           {/* Image Carousel Section */}
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">Item Images</h3>
-            <Carousel className="w-full max-w-md mx-auto">
+            <Carousel className="w-full max-w-lg mx-auto">
               <CarouselContent>
                 {mockImages.map((image, index) => (
                   <CarouselItem key={index}>
