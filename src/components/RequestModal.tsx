@@ -51,10 +51,10 @@ export const RequestModal = ({
 
   const userInfo = getUserInfo(request.organization);
 
-  // Mock estimated value based on item type
-  const getEstimatedValue = (type: string, item: string) => {
-    if (type === "Tools") return "$250 - $500";
-    return "$50 - $150";
+  // Mock donation need by date based on item type
+  const getDonationNeedBy = (type: string, item: string) => {
+    if (type === "Tools") return "July 15, 2024";
+    return "June 30, 2024";
   };
 
   return (
@@ -99,8 +99,8 @@ export const RequestModal = ({
                   <p className="text-base mt-1">{request.details}</p>
                 </div>
                 <div>
-                  <label className="font-medium text-sm text-muted-foreground">Estimated Value</label>
-                  <p className="text-base mt-1">{getEstimatedValue(request.type, request.item)}</p>
+                  <label className="font-medium text-sm text-muted-foreground">Donation Need By</label>
+                  <p className="text-base mt-1">{getDonationNeedBy(request.type, request.item)}</p>
                 </div>
               </div>
             </div>
