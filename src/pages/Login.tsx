@@ -125,7 +125,7 @@ export const Login = () => {
                 <p className="text-sm text-muted-foreground">
                   Don't have an account?{" "}
                   <Link 
-                    to="/create-account" 
+                    to="/register" 
                     className="text-primary hover:underline font-medium"
                   >
                     Create Account

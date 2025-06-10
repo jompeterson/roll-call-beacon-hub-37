@@ -24,6 +24,10 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
     navigate("/login");
   };
 
+  const handleCreateAccount = () => {
+    navigate("/register");
+  };
+
   const handleSignOut = () => {
     setIsLoggedIn(false);
     console.log("User signed out");
@@ -101,7 +105,7 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
               <DropdownMenuItem onClick={handleSignIn}>
                 Sign In
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={handleCreateAccount}>
                 Create Account
               </DropdownMenuItem>
             </DropdownMenuContent>
