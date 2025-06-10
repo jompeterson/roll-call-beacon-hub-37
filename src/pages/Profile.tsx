@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Camera, Save } from "lucide-react";
+import { Camera, Save, Search } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export const Profile = () => {
@@ -18,6 +18,28 @@ export const Profile = () => {
     email: "john.doe@example.com",
     phone: "+1 (555) 123-4567"
   });
+  const [organizationSearch, setOrganizationSearch] = useState("");
+
+  // Current organization data
+  const currentOrganization = {
+    name: "Tech Solutions Inc",
+    role: "Software Developer",
+    joinedDate: "January 15, 2024",
+    logo: "/placeholder.svg"
+  };
+
+  // Mock organizations for search
+  const availableOrganizations = [
+    { id: "1", name: "Green Earth Foundation", type: "Environmental" },
+    { id: "2", name: "Community Health Center", type: "Healthcare" },
+    { id: "3", name: "Education First", type: "Education" },
+    { id: "4", name: "Local Food Bank", type: "Community Service" },
+  ];
+
+  const filteredOrganizations = availableOrganizations.filter(org =>
+    org.name.toLowerCase().includes(organizationSearch.toLowerCase()) ||
+    org.type.toLowerCase().includes(organizationSearch.toLowerCase())
+  );
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -162,17 +184,68 @@ export const Profile = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="organization">
+        <TabsContent value="organization" className="space-y-6">
+          {/* Current Organization */}
           <Card>
             <CardHeader>
-              <CardTitle>Organization Information</CardTitle>
+              <CardTitle>Current Organization</CardTitle>
               <CardDescription>
-                Your organization details and settings
+                Your current organization affiliation
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="bg-muted/50 rounded-lg p-8 text-center">
-                <p className="text-lg text-muted-foreground">Organization settings coming soon...</p>
+              <div className="flex items-center gap-4">
+                <Avatar className="h-16 w-16">
+                  <AvatarImage src={currentOrganization.logo} alt="Organization Logo" />
+                  <AvatarFallback>
+                    {currentOrganization.name.split(' ').map(word => word.charAt(0)).join('')}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="space-y-1">
+                  <h3 className="text-lg font-semibold">{currentOrganization.name}</h3>
+                  <p className="text-sm text-muted-foreground">{currentOrganization.role}</p>
+                  <p className="text-xs text-muted-foreground">Joined: {currentOrganization.joinedDate}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Search Organizations */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Search Organizations</CardTitle>
+              <CardDescription>
+                Find and explore other organizations
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search organizations..."
+                  value={organizationSearch}
+                  onChange={(e) => setOrganizationSearch(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {filteredOrganizations.map((org) => (
+                  <div key={org.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50">
+                    <div>
+                      <p className="font-medium">{org.name}</p>
+                      <p className="text-sm text-muted-foreground">{org.type}</p>
+                    </div>
+                    <Button variant="outline" size="sm">
+                      View Details
+                    </Button>
+                  </div>
+                ))}
+                {organizationSearch && filteredOrganizations.length === 0 && (
+                  <div className="text-center py-4 text-muted-foreground">
+                    No organizations found matching your search.
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
