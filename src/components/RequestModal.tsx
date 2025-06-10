@@ -29,6 +29,16 @@ const mockImages = [
   "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop"
 ];
 
+// Mock user data for demonstration
+const getUserInfo = (orgName: string) => {
+  const users = {
+    "Local School District": { name: "Emily Rodriguez", email: "emily@schooldistrict.edu", postedDate: "2024-06-06" },
+    "Youth Center": { name: "David Thompson", email: "david@youthcenter.org", postedDate: "2024-06-05" },
+    "Senior Center": { name: "Margaret Wilson", email: "margaret@seniorcenter.org", postedDate: "2024-06-04" }
+  };
+  return users[orgName as keyof typeof users] || { name: "Unknown User", email: "unknown@example.com", postedDate: "2024-06-10" };
+};
+
 export const RequestModal = ({ 
   request, 
   open, 
@@ -38,6 +48,8 @@ export const RequestModal = ({
   onRequestChanges 
 }: RequestModalProps) => {
   if (!request) return null;
+
+  const userInfo = getUserInfo(request.organization);
 
   // Mock estimated value based on item type
   const getEstimatedValue = (type: string, item: string) => {
@@ -53,7 +65,22 @@ export const RequestModal = ({
           <p className="text-sm text-muted-foreground">Request a Donation</p>
         </DialogHeader>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6">
+        {/* User Information Section */}
+        <div className="bg-muted/30 rounded-lg p-4 space-y-2">
+          <div className="flex justify-between items-start">
+            <div>
+              <h4 className="font-semibold text-base">{userInfo.name}</h4>
+              <p className="text-sm text-muted-foreground">{userInfo.email}</p>
+              <p className="text-sm text-muted-foreground">{request.organization}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-sm text-muted-foreground">Posted on</p>
+              <p className="text-sm font-medium">{new Date(userInfo.postedDate).toLocaleDateString()}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mt-4">
           {/* Information Section */}
           <div className="space-y-6">
             <div>
@@ -105,7 +132,7 @@ export const RequestModal = ({
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">Item Images</h3>
             <div className="relative px-8">
-              <Carousel className="w-full max-w-xs mx-auto">
+              <Carousel className="w-full max-w-sm mx-auto">
                 <CarouselContent>
                   {mockImages.map((image, index) => (
                     <CarouselItem key={index}>

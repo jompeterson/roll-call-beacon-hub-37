@@ -29,6 +29,16 @@ const mockImages = [
   "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop"
 ];
 
+// Mock user data for demonstration
+const getUserInfo = (orgName: string) => {
+  const users = {
+    "Green Earth Foundation": { name: "Sarah Johnson", email: "sarah@greenearth.org", postedDate: "2024-06-08" },
+    "Tech for Good": { name: "Mike Chen", email: "mike@techforgood.org", postedDate: "2024-06-09" },
+    "Community Garden": { name: "Lisa Martinez", email: "lisa@communitygarden.org", postedDate: "2024-06-07" }
+  };
+  return users[orgName as keyof typeof users] || { name: "Unknown User", email: "unknown@example.com", postedDate: "2024-06-10" };
+};
+
 export const DonationModal = ({ 
   donation, 
   open, 
@@ -38,6 +48,8 @@ export const DonationModal = ({
   onRequestChanges 
 }: DonationModalProps) => {
   if (!donation) return null;
+
+  const userInfo = getUserInfo(donation.organization);
 
   // Mock estimated value based on item type
   const getEstimatedValue = (type: string, item: string) => {
@@ -53,7 +65,22 @@ export const DonationModal = ({
           <p className="text-sm text-muted-foreground">Give a Donation</p>
         </DialogHeader>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6">
+        {/* User Information Section */}
+        <div className="bg-muted/30 rounded-lg p-4 space-y-2">
+          <div className="flex justify-between items-start">
+            <div>
+              <h4 className="font-semibold text-base">{userInfo.name}</h4>
+              <p className="text-sm text-muted-foreground">{userInfo.email}</p>
+              <p className="text-sm text-muted-foreground">{donation.organization}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-sm text-muted-foreground">Posted on</p>
+              <p className="text-sm font-medium">{new Date(userInfo.postedDate).toLocaleDateString()}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mt-4">
           {/* Information Section */}
           <div className="space-y-6">
             <div>
@@ -104,7 +131,7 @@ export const DonationModal = ({
           {/* Image Carousel Section */}
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">Item Images</h3>
-            <div className="relative px-12">
+            <div className="relative px-8">
               <Carousel className="w-full max-w-sm mx-auto">
                 <CarouselContent>
                   {mockImages.map((image, index) => (
@@ -119,8 +146,8 @@ export const DonationModal = ({
                     </CarouselItem>
                   ))}
                 </CarouselContent>
-                <CarouselPrevious className="-left-10" />
-                <CarouselNext className="-right-10" />
+                <CarouselPrevious className="-left-6" />
+                <CarouselNext className="-right-6" />
               </Carousel>
             </div>
           </div>
