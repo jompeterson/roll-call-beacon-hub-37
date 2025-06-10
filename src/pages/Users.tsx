@@ -1,12 +1,11 @@
 
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { ChevronUp, ChevronDown, CheckCircle, Clock } from "lucide-react";
 import { UserModal } from "@/components/UserModal";
+import { UserFilters } from "@/components/users/UserFilters";
+import { UserTable } from "@/components/users/UserTable";
 import { useUserProfiles } from "@/hooks/useUserProfiles";
+import { useUserSorting } from "@/hooks/useUserSorting";
+import { useUserFiltering } from "@/hooks/useUserFiltering";
 import { useToast } from "@/hooks/use-toast";
 
 type SortDirection = "asc" | "desc" | null;
@@ -37,52 +36,12 @@ interface UserProfile {
   } | null;
 }
 
-const StatusIcon = ({ isApproved }: { isApproved: boolean }) => {
-  if (isApproved) {
-    return <CheckCircle className="h-4 w-4 text-green-600" />;
-  } else {
-    return <Clock className="h-4 w-4 text-yellow-600" />;
-  }
-};
-
-const SortableTableHead = ({ 
-  children, 
-  field, 
-  currentSort, 
-  currentDirection, 
-  onSort,
-  className = ""
-}: { 
-  children: React.ReactNode;
-  field: SortField;
-  currentSort: SortField;
-  currentDirection: SortDirection;
-  onSort: (field: SortField) => void;
-  className?: string;
-}) => {
-  const isActive = currentSort === field;
-  
-  return (
-    <TableHead 
-      className={`cursor-pointer hover:bg-[#1e3a52] select-none text-white ${className}`}
-      style={{ backgroundColor: "#294865" }}
-      onClick={() => onSort(field)}
-    >
-      <div className="flex items-center justify-between">
-        <span>{children}</span>
-        <div className="ml-2">
-          {isActive && currentDirection === "asc" && <ChevronUp className="h-4 w-4" />}
-          {isActive && currentDirection === "desc" && <ChevronDown className="h-4 w-4" />}
-          {!isActive && <div className="h-4 w-4" />}
-        </div>
-      </div>
-    </TableHead>
-  );
-};
-
 export const Users = () => {
   const { toast } = useToast();
   const { userProfiles, loading, refetch } = useUserProfiles();
+  const { sortData } = useUserSorting();
+  const { filterData } = useUserFiltering();
+  
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   
@@ -110,65 +69,7 @@ export const Users = () => {
     }
   };
 
-  const sortData = (
-    data: UserProfile[], 
-    sortField: SortField, 
-    direction: SortDirection
-  ): UserProfile[] => {
-    if (!sortField || !direction) return data;
-    
-    return [...data].sort((a, b) => {
-      let aValue: string;
-      let bValue: string;
-      
-      if (sortField === "firstName") {
-        aValue = a.first_name || "";
-        bValue = b.first_name || "";
-      } else if (sortField === "lastName") {
-        aValue = a.last_name || "";
-        bValue = b.last_name || "";
-      } else if (sortField === "email") {
-        aValue = a.email;
-        bValue = b.email;
-      } else if (sortField === "organization") {
-        aValue = a.organizations?.name || "";
-        bValue = b.organizations?.name || "";
-      } else if (sortField === "dateJoined") {
-        aValue = a.created_at;
-        bValue = b.created_at;
-      } else if (sortField === "status") {
-        aValue = a.is_approved ? "Approved" : "Pending";
-        bValue = b.is_approved ? "Approved" : "Pending";
-      } else {
-        aValue = "";
-        bValue = "";
-      }
-      
-      if (direction === "asc") {
-        return aValue.localeCompare(bValue);
-      } else {
-        return bValue.localeCompare(aValue);
-      }
-    });
-  };
-
-  const filterData = (data: UserProfile[]): UserProfile[] => {
-    return data.filter((user) => {
-      const matchesSearch = searchTerm === "" || 
-        user.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (user.organizations?.name || "").toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesStatus = statusFilter === "all" || 
-        (statusFilter === "approved" && user.is_approved) ||
-        (statusFilter === "pending" && !user.is_approved);
-      
-      return matchesSearch && matchesStatus;
-    });
-  };
-
-  const filteredUsers = filterData(userProfiles);
+  const filteredUsers = filterData(userProfiles, searchTerm, statusFilter);
   const sortedUsers = sortData(filteredUsers, userSort, userDirection);
 
   const handleUserRowClick = (user: UserProfile) => {
@@ -207,10 +108,6 @@ export const Users = () => {
     refetch();
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString();
-  };
-
   if (loading) {
     return (
       <div className="space-y-6">
@@ -233,133 +130,23 @@ export const Users = () => {
         </p>
       </div>
 
-      {/* Search and Filters */}
-      <div className="flex gap-4 items-center">
-        <div className="flex-1">
-          <Input
-            placeholder="Search for users..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full"
-          />
-        </div>
+      <UserFilters
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        statusFilter={statusFilter}
+        onStatusFilterChange={setStatusFilter}
+      />
 
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[150px]">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="approved">Approved</SelectItem>
-            <SelectItem value="pending">Pending</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Users Table */}
       <div className="space-y-4">
-        <div className="border rounded-lg h-96">
-          <div className="h-full flex flex-col">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <SortableTableHead
-                    field="firstName"
-                    currentSort={userSort}
-                    currentDirection={userDirection}
-                    onSort={handleUserSort}
-                    className="w-1/6"
-                  >
-                    First Name
-                  </SortableTableHead>
-                  <SortableTableHead
-                    field="lastName"
-                    currentSort={userSort}
-                    currentDirection={userDirection}
-                    onSort={handleUserSort}
-                    className="w-1/6"
-                  >
-                    Last Name
-                  </SortableTableHead>
-                  <SortableTableHead
-                    field="organization"
-                    currentSort={userSort}
-                    currentDirection={userDirection}
-                    onSort={handleUserSort}
-                    className="w-1/6"
-                  >
-                    Organization
-                  </SortableTableHead>
-                  <SortableTableHead
-                    field="email"
-                    currentSort={userSort}
-                    currentDirection={userDirection}
-                    onSort={handleUserSort}
-                    className="w-1/6"
-                  >
-                    Email
-                  </SortableTableHead>
-                  <SortableTableHead
-                    field="dateJoined"
-                    currentSort={userSort}
-                    currentDirection={userDirection}
-                    onSort={handleUserSort}
-                    className="w-1/8"
-                  >
-                    Date Joined
-                  </SortableTableHead>
-                  <SortableTableHead
-                    field="status"
-                    currentSort={userSort}
-                    currentDirection={userDirection}
-                    onSort={handleUserSort}
-                    className="w-1/8"
-                  >
-                    Status
-                  </SortableTableHead>
-                </TableRow>
-              </TableHeader>
-            </Table>
-            <ScrollArea className="flex-1">
-              <Table>
-                <TableBody>
-                  {sortedUsers.map((user) => (
-                    <TableRow 
-                      key={user.id} 
-                      className="cursor-pointer hover:bg-muted/50"
-                      onClick={() => handleUserRowClick(user)}
-                    >
-                      <TableCell className="font-medium w-1/6 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
-                        {user.first_name}
-                      </TableCell>
-                      <TableCell className="w-1/6 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
-                        {user.last_name}
-                      </TableCell>
-                      <TableCell className="w-1/6 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
-                        {user.organizations?.name || "No Organization"}
-                      </TableCell>
-                      <TableCell className="w-1/6 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
-                        {user.email}
-                      </TableCell>
-                      <TableCell className="w-1/8 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
-                        {formatDate(user.created_at)}
-                      </TableCell>
-                      <TableCell className="w-1/8 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
-                        <div className="flex items-center gap-2">
-                          <StatusIcon isApproved={user.is_approved} />
-                          <span>{user.is_approved ? "Approved" : "Pending"}</span>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </ScrollArea>
-          </div>
-        </div>
+        <UserTable
+          users={sortedUsers}
+          sortField={userSort}
+          sortDirection={userDirection}
+          onSort={handleUserSort}
+          onRowClick={handleUserRowClick}
+        />
       </div>
 
-      {/* Modal */}
       <UserModal
         user={selectedUser}
         open={userModalOpen}
