@@ -15,19 +15,19 @@ interface RoleSelectionStepProps {
 
 const roles = [
   {
-    value: "member",
-    label: "Member",
-    description: "Standard user with basic access to organization features",
+    value: "supporter",
+    label: "Supporter",
+    description: "Community member providing support and assistance",
     icon: User
   },
   {
-    value: "moderator",
-    label: "Moderator",
-    description: "Enhanced permissions to help manage organization activities",
+    value: "shop_teacher",
+    label: "Shop Teacher",
+    description: "Educator with specialized knowledge in shop and technical skills",
     icon: Users
   },
   {
-    value: "admin",
+    value: "administrator",
     label: "Administrator",
     description: "Full access to manage organization settings and users",
     icon: Crown
