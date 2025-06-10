@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -6,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { ChevronUp, ChevronDown, Clock, CheckCircle, XCircle, Archive } from "lucide-react";
+import { DonationModal } from "@/components/DonationModal";
 
 type SortDirection = "asc" | "desc" | null;
 type SortField = "organization" | "type" | "item" | "details" | "status" | null;
@@ -145,6 +145,10 @@ export const Donations = () => {
   const [requestSort, setRequestSort] = useState<SortField>(null);
   const [requestDirection, setRequestDirection] = useState<SortDirection>(null);
 
+  // Modal state
+  const [selectedDonation, setSelectedDonation] = useState<DonationPost | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
   const handleDonationSort = (field: SortField) => {
     if (donationSort === field) {
       if (donationDirection === "asc") {
@@ -214,6 +218,26 @@ export const Donations = () => {
   
   const filteredRequestPosts = filterData(mockRequestPosts);
   const sortedRequestPosts = sortData(filteredRequestPosts, requestSort, requestDirection);
+
+  const handleDonationRowClick = (donation: DonationPost) => {
+    setSelectedDonation(donation);
+    setModalOpen(true);
+  };
+
+  const handleApprove = (id: string) => {
+    console.log("Approved donation:", id);
+    setModalOpen(false);
+  };
+
+  const handleReject = (id: string) => {
+    console.log("Rejected donation:", id);
+    setModalOpen(false);
+  };
+
+  const handleRequestChanges = (id: string) => {
+    console.log("Requested changes for donation:", id);
+    setModalOpen(false);
+  };
 
   return (
     <div className="space-y-6">
@@ -322,7 +346,11 @@ export const Donations = () => {
                 <Table>
                   <TableBody>
                     {sortedDonationPosts.map((post) => (
-                      <TableRow key={post.id}>
+                      <TableRow 
+                        key={post.id} 
+                        className="cursor-pointer hover:bg-muted/50"
+                        onClick={() => handleDonationRowClick(post)}
+                      >
                         <TableCell className="font-medium w-2/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.organization}</TableCell>
                         <TableCell className="w-1/6 whitespace-nowrap">{post.type}</TableCell>
                         <TableCell className="w-1/6 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.item}</TableCell>
@@ -422,6 +450,16 @@ export const Donations = () => {
           </div>
         </div>
       </div>
+
+      {/* Donation Modal */}
+      <DonationModal
+        donation={selectedDonation}
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        onApprove={handleApprove}
+        onReject={handleReject}
+        onRequestChanges={handleRequestChanges}
+      />
     </div>
   );
 };
