@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,6 +9,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Bell, User, ChevronDown, LogIn } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { signOut } from "@/lib/auth";
+import { useToast } from "@/hooks/use-toast";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 interface HeaderProps {
   sidebarOpen: boolean;
@@ -17,8 +21,25 @@ interface HeaderProps {
 
 export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [notificationCount] = useState(3);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Simulate auth state
+  const [user, setUser] = useState<SupabaseUser | null>(null);
+
+  useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const handleSignIn = () => {
     navigate("/login");
@@ -28,9 +49,41 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
     navigate("/register");
   };
 
-  const handleSignOut = () => {
-    setIsLoggedIn(false);
-    console.log("User signed out");
+  const handleSignOut = async () => {
+    const { error } = await signOut();
+    
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to sign out. Please try again.",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Signed Out",
+        description: "You have been successfully signed out.",
+      });
+      navigate("/login");
+    }
+  };
+
+  const getUserDisplayName = () => {
+    if (!user) return "User";
+    
+    // Try to get name from user metadata first
+    const firstName = user.user_metadata?.first_name;
+    const lastName = user.user_metadata?.last_name;
+    
+    if (firstName && lastName) {
+      return `${firstName} ${lastName}`;
+    }
+    
+    if (firstName) {
+      return firstName;
+    }
+    
+    // Fallback to email
+    return user.email || "User";
   };
 
   return (
@@ -60,7 +113,7 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
 
       {/* Right Side */}
       <div className="flex items-center space-x-4">
-        {isLoggedIn ? (
+        {user ? (
           <>
             {/* Notifications */}
             <Button variant="ghost" size="sm" className="relative">
@@ -77,7 +130,7 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="flex items-center space-x-2">
                   <User className="h-5 w-5" />
-                  <span className="hidden md:inline">John Doe</span>
+                  <span className="hidden md:inline">{getUserDisplayName()}</span>
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
