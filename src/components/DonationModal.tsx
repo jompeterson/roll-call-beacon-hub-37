@@ -53,7 +53,7 @@ export const DonationModal = ({
           <p className="text-sm text-muted-foreground">Give a Donation</p>
         </DialogHeader>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6">
           {/* Information Section */}
           <div className="space-y-6">
             <div>
