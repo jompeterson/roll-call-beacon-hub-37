@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import { RegistrationData } from "@/pages/Register";
 
 interface NewOrganizationStepProps {
@@ -14,6 +14,7 @@ interface NewOrganizationStepProps {
   onNext: () => void;
   onBack: () => void;
   onUpdate: (data: Partial<RegistrationData>) => void;
+  isSubmitting?: boolean;
 }
 
 const organizationTypes = [
@@ -26,7 +27,7 @@ const organizationTypes = [
   "Other"
 ];
 
-export const NewOrganizationStep = ({ data, onNext, onBack, onUpdate }: NewOrganizationStepProps) => {
+export const NewOrganizationStep = ({ data, onNext, onBack, onUpdate, isSubmitting = false }: NewOrganizationStepProps) => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const validateForm = () => {
@@ -82,6 +83,7 @@ export const NewOrganizationStep = ({ data, onNext, onBack, onUpdate }: NewOrgan
                 placeholder="Enter organization name"
                 className="h-12"
                 required
+                disabled={isSubmitting}
               />
               {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
             </div>
@@ -91,6 +93,7 @@ export const NewOrganizationStep = ({ data, onNext, onBack, onUpdate }: NewOrgan
               <Select 
                 value={data.newOrganization?.type || ""} 
                 onValueChange={(value) => updateOrganizationData("type", value)}
+                disabled={isSubmitting}
               >
                 <SelectTrigger className="h-12">
                   <SelectValue placeholder="Select organization type" />
@@ -115,6 +118,7 @@ export const NewOrganizationStep = ({ data, onNext, onBack, onUpdate }: NewOrgan
                 placeholder="Describe your organization's mission and activities"
                 className="min-h-[100px]"
                 required
+                disabled={isSubmitting}
               />
               {errors.description && <p className="text-sm text-destructive">{errors.description}</p>}
             </div>
@@ -128,6 +132,7 @@ export const NewOrganizationStep = ({ data, onNext, onBack, onUpdate }: NewOrgan
                 placeholder="Enter organization address"
                 className="h-12"
                 required
+                disabled={isSubmitting}
               />
               {errors.address && <p className="text-sm text-destructive">{errors.address}</p>}
             </div>
@@ -141,17 +146,35 @@ export const NewOrganizationStep = ({ data, onNext, onBack, onUpdate }: NewOrgan
                 placeholder="Enter organization phone number"
                 className="h-12"
                 required
+                disabled={isSubmitting}
               />
               {errors.phone && <p className="text-sm text-destructive">{errors.phone}</p>}
             </div>
 
             <div className="flex gap-3 pt-4">
-              <Button type="button" variant="outline" onClick={onBack} className="flex-1 h-12">
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={onBack} 
+                className="flex-1 h-12"
+                disabled={isSubmitting}
+              >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back
               </Button>
-              <Button type="submit" className="flex-1 h-12">
-                Submit Registration
+              <Button 
+                type="submit" 
+                className="flex-1 h-12"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Creating Account...
+                  </>
+                ) : (
+                  "Submit Registration"
+                )}
               </Button>
             </div>
           </form>

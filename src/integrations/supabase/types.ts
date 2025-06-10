@@ -9,7 +9,89 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      organizations: {
+        Row: {
+          address: string
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          phone: string
+          type: Database["public"]["Enums"]["organization_type"]
+          updated_at: string
+        }
+        Insert: {
+          address: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          phone: string
+          type: Database["public"]["Enums"]["organization_type"]
+          updated_at?: string
+        }
+        Update: {
+          address?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          phone?: string
+          type?: Database["public"]["Enums"]["organization_type"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_profiles: {
+        Row: {
+          address: string
+          created_at: string
+          email: string
+          first_name: string
+          id: string
+          is_approved: boolean
+          last_name: string
+          organization_id: string | null
+          phone: string
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string
+        }
+        Insert: {
+          address: string
+          created_at?: string
+          email: string
+          first_name: string
+          id: string
+          is_approved?: boolean
+          last_name: string
+          organization_id?: string | null
+          phone: string
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+        }
+        Update: {
+          address?: string
+          created_at?: string
+          email?: string
+          first_name?: string
+          id?: string
+          is_approved?: boolean
+          last_name?: string
+          organization_id?: string | null
+          phone?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +100,15 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      organization_type:
+        | "Non-Profit"
+        | "Educational Institution"
+        | "Community Group"
+        | "Religious Organization"
+        | "Sports Club"
+        | "Professional Association"
+        | "Other"
+      user_role: "supporter" | "shop_teacher" | "administrator"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +223,17 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      organization_type: [
+        "Non-Profit",
+        "Educational Institution",
+        "Community Group",
+        "Religious Organization",
+        "Sports Club",
+        "Professional Association",
+        "Other",
+      ],
+      user_role: ["supporter", "shop_teacher", "administrator"],
+    },
   },
 } as const

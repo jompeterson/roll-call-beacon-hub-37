@@ -6,7 +6,10 @@ import { RoleSelectionStep } from "@/components/register/RoleSelectionStep";
 import { PersonalInfoStep } from "@/components/register/PersonalInfoStep";
 import { OrganizationChoiceStep } from "@/components/register/OrganizationChoiceStep";
 import { NewOrganizationStep } from "@/components/register/NewOrganizationStep";
+import { ExistingOrganizationStep } from "@/components/register/ExistingOrganizationStep";
 import { VerificationPendingStep } from "@/components/register/VerificationPendingStep";
+import { signUp } from "@/lib/auth";
+import { useToast } from "@/hooks/use-toast";
 
 export interface RegistrationData {
   email: string;
@@ -29,7 +32,9 @@ export interface RegistrationData {
 
 export const Register = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [registrationData, setRegistrationData] = useState<RegistrationData>({
     email: "",
     password: "",
@@ -48,8 +53,40 @@ export const Register = () => {
   const nextStep = () => setCurrentStep(prev => prev + 1);
   const prevStep = () => setCurrentStep(prev => prev - 1);
 
+  const handleFinalSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      const { data, error } = await signUp(registrationData);
+      
+      if (error) {
+        toast({
+          title: "Registration Failed",
+          description: error.message || "An error occurred during registration",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "Registration Successful",
+        description: "Your account has been created and is pending approval.",
+      });
+      
+      nextStep();
+    } catch (error) {
+      console.error('Registration error:', error);
+      toast({
+        title: "Registration Failed",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const getTotalSteps = () => {
-    return registrationData.organizationChoice === 'new' ? 6 : 5;
+    return registrationData.organizationChoice === 'new' ? 6 : 6;
   };
 
   const renderStep = () => {
@@ -95,16 +132,19 @@ export const Register = () => {
           return (
             <NewOrganizationStep
               data={registrationData}
-              onNext={nextStep}
+              onNext={handleFinalSubmit}
               onBack={prevStep}
               onUpdate={updateRegistrationData}
+              isSubmitting={isSubmitting}
             />
           );
         } else {
           return (
-            <VerificationPendingStep
+            <ExistingOrganizationStep
               data={registrationData}
-              onRefresh={() => console.log("Checking verification status...")}
+              onNext={handleFinalSubmit}
+              onBack={prevStep}
+              onUpdate={updateRegistrationData}
             />
           );
         }
