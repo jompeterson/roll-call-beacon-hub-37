@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { RegistrationData } from "@/pages/Register";
 
@@ -82,6 +81,26 @@ export const signIn = async (email: string, password: string) => {
 export const signOut = async () => {
   const { error } = await supabase.auth.signOut();
   return { error };
+};
+
+export const checkVerificationStatus = async (email: string) => {
+  try {
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .select('is_approved')
+      .eq('email', email)
+      .single();
+
+    if (error) {
+      console.error('Verification status check error:', error);
+      return { isApproved: false, error: error.message };
+    }
+
+    return { isApproved: data?.is_approved || false, error: null };
+  } catch (error) {
+    console.error('Verification status check error:', error);
+    return { isApproved: false, error: 'Failed to check verification status' };
+  }
 };
 
 export const getExistingOrganizations = async () => {

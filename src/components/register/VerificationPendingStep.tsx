@@ -1,8 +1,12 @@
 
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle, RefreshCw, Clock } from "lucide-react";
+import { CheckCircle, RefreshCw, Clock, Loader } from "lucide-react";
 import { RegistrationData } from "@/pages/Register";
+import { checkVerificationStatus } from "@/lib/auth";
+import { useToast } from "@/hooks/use-toast";
 
 interface VerificationPendingStepProps {
   data: RegistrationData;
@@ -10,6 +14,54 @@ interface VerificationPendingStepProps {
 }
 
 export const VerificationPendingStep = ({ data, onRefresh }: VerificationPendingStepProps) => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [isChecking, setIsChecking] = useState(false);
+
+  const handleCheckStatus = async () => {
+    setIsChecking(true);
+    
+    try {
+      const { isApproved, error } = await checkVerificationStatus(data.email);
+      
+      if (error) {
+        toast({
+          title: "Error",
+          description: "Failed to check verification status. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (isApproved) {
+        toast({
+          title: "Account Approved!",
+          description: "Your account has been approved. Redirecting to login...",
+        });
+        
+        // Redirect to login after a short delay
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      } else {
+        toast({
+          title: "Not Approved Yet",
+          description: "Your account is still pending approval. Please try again later.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Status check error:', error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsChecking(false);
+    }
+  };
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -46,9 +98,18 @@ export const VerificationPendingStep = ({ data, onRefresh }: VerificationPending
           </div>
 
           <div className="space-y-3">
-            <Button onClick={onRefresh} variant="outline" className="w-full h-12">
-              <RefreshCw className="h-4 w-4 mr-2" />
-              Check Verification Status
+            <Button 
+              onClick={handleCheckStatus} 
+              variant="outline" 
+              className="w-full h-12"
+              disabled={isChecking}
+            >
+              {isChecking ? (
+                <Loader className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <RefreshCw className="h-4 w-4 mr-2" />
+              )}
+              {isChecking ? "Checking Status..." : "Check Verification Status"}
             </Button>
             <p className="text-xs text-muted-foreground">
               Click refresh to check if your account has been approved
