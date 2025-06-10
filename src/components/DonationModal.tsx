@@ -23,6 +23,7 @@ interface DonationModalProps {
   isScholarship?: boolean;
   isEvent?: boolean;
   isOrganization?: boolean;
+  isUser?: boolean;
 }
 
 // Mock images for demonstration
@@ -33,8 +34,15 @@ const mockImages = [
 ];
 
 // Mock user data for demonstration
-const getUserInfo = (orgName: string, isScholarship: boolean = false, isEvent: boolean = false, isOrganization: boolean = false) => {
-  if (isOrganization) {
+const getUserInfo = (orgName: string, isScholarship: boolean = false, isEvent: boolean = false, isOrganization: boolean = false, isUser: boolean = false) => {
+  if (isUser) {
+    const users = {
+      "Tech Solutions Inc": { name: "John Smith", email: "john.smith@techsolutions.com", postedDate: "2024-05-15", lastLogin: "2024-06-08" },
+      "Green Earth Foundation": { name: "Sarah Johnson", email: "sarah.johnson@greenearth.org", postedDate: "2024-05-20", lastLogin: "2024-06-09" },
+      "Community Health Center": { name: "Dr. Michael Brown", email: "michael.brown@healthcenter.org", postedDate: "2024-05-10", lastLogin: "2024-06-07" }
+    };
+    return users[orgName as keyof typeof users] || { name: "Unknown User", email: "unknown@example.com", postedDate: "2024-06-10", lastLogin: "2024-06-10" };
+  } else if (isOrganization) {
     const users = {
       "Tech Solutions Inc": { name: "John Smith", email: "john@techsolutions.com", postedDate: "2024-06-08" },
       "Green Earth Foundation": { name: "Sarah Johnson", email: "sarah@greenearth.org", postedDate: "2024-06-09" },
@@ -74,11 +82,12 @@ export const DonationModal = ({
   onRequestChanges,
   isScholarship = false,
   isEvent = false,
-  isOrganization = false
+  isOrganization = false,
+  isUser = false
 }: DonationModalProps) => {
   if (!donation) return null;
 
-  const userInfo = getUserInfo(donation.organization, isScholarship, isEvent, isOrganization);
+  const userInfo = getUserInfo(donation.organization, isScholarship, isEvent, isOrganization, isUser);
 
   // Mock estimated value based on item type
   const getEstimatedValue = (type: string, item: string) => {
@@ -87,6 +96,7 @@ export const DonationModal = ({
   };
 
   const getModalType = () => {
+    if (isUser) return `Administrator • ${donation.organization}`;
     if (isOrganization) return "Business";
     if (isEvent) return "Event - Community Engagement";
     if (isScholarship) return "Scholarship";
@@ -94,6 +104,7 @@ export const DonationModal = ({
   };
 
   const getInformationTitle = () => {
+    if (isUser) return "User Information";
     if (isOrganization) return "Organization Information";
     if (isEvent) return "Event Information";
     if (isScholarship) return "Scholarship Information";
@@ -101,6 +112,7 @@ export const DonationModal = ({
   };
 
   const getDateLabel = () => {
+    if (isUser) return "Joined on";
     if (isOrganization) return "Created on";
     return "Posted on";
   };
@@ -109,7 +121,12 @@ export const DonationModal = ({
     return "A leading organization dedicated to making a positive impact in the community through innovative solutions and collaborative partnerships.";
   };
 
+  const getUserBio = () => {
+    return "An experienced administrator dedicated to supporting community initiatives and driving positive change through effective organizational management.";
+  };
+
   const getModalTitle = () => {
+    if (isUser) return donation.item; // Full name
     if (isOrganization) return donation.organization;
     return donation.item;
   };
@@ -133,6 +150,12 @@ export const DonationModal = ({
             <div className="text-right">
               <p className="text-sm text-muted-foreground">{getDateLabel()}</p>
               <p className="text-sm font-medium">{new Date(userInfo.postedDate).toLocaleDateString()}</p>
+              {isUser && (userInfo as any).lastLogin && (
+                <>
+                  <p className="text-sm text-muted-foreground mt-2">Last Login</p>
+                  <p className="text-sm font-medium">{new Date((userInfo as any).lastLogin).toLocaleDateString()}</p>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -143,19 +166,19 @@ export const DonationModal = ({
             <div>
               <h3 className="font-semibold text-lg mb-4">{getInformationTitle()}</h3>
               <div className="space-y-4">
-                {!isScholarship && !isEvent && !isOrganization && (
+                {!isScholarship && !isEvent && !isOrganization && !isUser && (
                   <div>
                     <label className="font-medium text-sm text-muted-foreground">Donation Type</label>
                     <p className="text-base mt-1">{donation.type}</p>
                   </div>
                 )}
-                {!isScholarship && !isEvent && !isOrganization && (
+                {!isScholarship && !isEvent && !isOrganization && !isUser && (
                   <div>
                     <label className="font-medium text-sm text-muted-foreground">Donation Item</label>
                     <p className="text-base mt-1">{donation.item}</p>
                   </div>
                 )}
-                {!isOrganization && (
+                {!isOrganization && !isUser && (
                   <div>
                     <label className="font-medium text-sm text-muted-foreground">
                       {isEvent ? "Event Details" : isScholarship ? "Scholarship Details" : "Donation Details"}
@@ -169,7 +192,13 @@ export const DonationModal = ({
                     <p className="text-base mt-1">{getOrganizationBio()}</p>
                   </div>
                 )}
-                {!isOrganization && (
+                {isUser && (
+                  <div>
+                    <label className="font-medium text-sm text-muted-foreground">User Bio</label>
+                    <p className="text-base mt-1">{getUserBio()}</p>
+                  </div>
+                )}
+                {!isOrganization && !isUser && (
                   <div>
                     <label className="font-medium text-sm text-muted-foreground">
                       {isEvent ? "Volunteer Hours" : isScholarship ? "Scholarship Amount" : "Estimated Value"}
@@ -192,13 +221,16 @@ export const DonationModal = ({
           {/* Image Section */}
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">
-              {isOrganization ? "Organization Image" : "Item Images"}
+              {isUser ? "User Image" : isOrganization ? "Organization Image" : "Item Images"}
             </h3>
-            {isOrganization ? (
+            {isOrganization || isUser ? (
               <div className="aspect-square rounded-lg overflow-hidden max-w-sm mx-auto">
                 <img 
-                  src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=400&h=300&fit=crop"
-                  alt={donation.organization}
+                  src={isUser 
+                    ? "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=300&fit=crop"
+                    : "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=400&h=300&fit=crop"
+                  }
+                  alt={isUser ? donation.item : donation.organization}
                   className="w-full h-full object-cover"
                 />
               </div>
