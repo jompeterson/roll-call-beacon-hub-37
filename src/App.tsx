@@ -13,6 +13,7 @@ import { Organizations } from "./pages/Organizations";
 import { Users } from "./pages/Users";
 import { ValuedPartners } from "./pages/ValuedPartners";
 import { Profile } from "./pages/Profile";
+import { Login } from "./pages/Login";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
+          <Route path="/login" element={<Login />} />
           <Route path="/" element={<Layout />}>
             <Route index element={<Overview />} />
             <Route path="donations" element={<Donations />} />

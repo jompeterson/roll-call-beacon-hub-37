@@ -21,8 +21,7 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Simulate auth state
 
   const handleSignIn = () => {
-    setIsLoggedIn(true);
-    console.log("User signed in");
+    navigate("/login");
   };
 
   const handleSignOut = () => {
