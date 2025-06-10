@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -22,6 +21,7 @@ interface DonationModalProps {
   onRequestChanges: (id: string) => void;
   isScholarship?: boolean;
   isEvent?: boolean;
+  isOrganization?: boolean;
 }
 
 // Mock images for demonstration
@@ -32,8 +32,15 @@ const mockImages = [
 ];
 
 // Mock user data for demonstration
-const getUserInfo = (orgName: string, isScholarship: boolean = false, isEvent: boolean = false) => {
-  if (isEvent) {
+const getUserInfo = (orgName: string, isScholarship: boolean = false, isEvent: boolean = false, isOrganization: boolean = false) => {
+  if (isOrganization) {
+    const users = {
+      "Tech Solutions Inc": { name: "John Smith", email: "john@techsolutions.com", postedDate: "2024-06-08" },
+      "Green Earth Foundation": { name: "Sarah Johnson", email: "sarah@greenearth.org", postedDate: "2024-06-09" },
+      "Community Health Center": { name: "Dr. Michael Brown", email: "michael@healthcenter.org", postedDate: "2024-06-07" }
+    };
+    return users[orgName as keyof typeof users] || { name: "Unknown User", email: "unknown@example.com", postedDate: "2024-06-10" };
+  } else if (isEvent) {
     const users = {
       "Community Center": { name: "John Davis", email: "john@communitycenter.org", postedDate: "2024-06-08", expectedAttendees: "50-75 people" },
       "Local Library": { name: "Emma Wilson", email: "emma@locallibrary.org", postedDate: "2024-06-09", expectedAttendees: "25-30 people" },
@@ -65,11 +72,12 @@ export const DonationModal = ({
   onReject, 
   onRequestChanges,
   isScholarship = false,
-  isEvent = false
+  isEvent = false,
+  isOrganization = false
 }: DonationModalProps) => {
   if (!donation) return null;
 
-  const userInfo = getUserInfo(donation.organization, isScholarship, isEvent);
+  const userInfo = getUserInfo(donation.organization, isScholarship, isEvent, isOrganization);
 
   // Mock estimated value based on item type
   const getEstimatedValue = (type: string, item: string) => {
@@ -78,15 +86,26 @@ export const DonationModal = ({
   };
 
   const getModalType = () => {
+    if (isOrganization) return "Business";
     if (isEvent) return "Event - Community Engagement";
     if (isScholarship) return "Scholarship";
     return "Give a Donation";
   };
 
   const getInformationTitle = () => {
+    if (isOrganization) return "Organization Information";
     if (isEvent) return "Event Information";
     if (isScholarship) return "Scholarship Information";
     return "Donation Information";
+  };
+
+  const getDateLabel = () => {
+    if (isOrganization) return "Created on";
+    return "Posted on";
+  };
+
+  const getOrganizationBio = () => {
+    return "A leading organization dedicated to making a positive impact in the community through innovative solutions and collaborative partnerships.";
   };
 
   return (
@@ -106,7 +125,7 @@ export const DonationModal = ({
               <p className="text-sm text-muted-foreground">{donation.organization}</p>
             </div>
             <div className="text-right">
-              <p className="text-sm text-muted-foreground">Posted on</p>
+              <p className="text-sm text-muted-foreground">{getDateLabel()}</p>
               <p className="text-sm font-medium">{new Date(userInfo.postedDate).toLocaleDateString()}</p>
             </div>
           </div>
@@ -118,32 +137,42 @@ export const DonationModal = ({
             <div>
               <h3 className="font-semibold text-lg mb-4">{getInformationTitle()}</h3>
               <div className="space-y-4">
-                {!isScholarship && !isEvent && (
+                {!isScholarship && !isEvent && !isOrganization && (
                   <div>
                     <label className="font-medium text-sm text-muted-foreground">Donation Type</label>
                     <p className="text-base mt-1">{donation.type}</p>
                   </div>
                 )}
-                {!isScholarship && !isEvent && (
+                {!isScholarship && !isEvent && !isOrganization && (
                   <div>
                     <label className="font-medium text-sm text-muted-foreground">Donation Item</label>
                     <p className="text-base mt-1">{donation.item}</p>
                   </div>
                 )}
-                <div>
-                  <label className="font-medium text-sm text-muted-foreground">
-                    {isEvent ? "Event Details" : isScholarship ? "Scholarship Details" : "Donation Details"}
-                  </label>
-                  <p className="text-base mt-1">{donation.details}</p>
-                </div>
-                <div>
-                  <label className="font-medium text-sm text-muted-foreground">
-                    {isEvent ? "Volunteer Hours" : isScholarship ? "Scholarship Amount" : "Estimated Value"}
-                  </label>
-                  <p className="text-base mt-1">
-                    {isEvent || isScholarship ? donation.details : getEstimatedValue(donation.type, donation.item)}
-                  </p>
-                </div>
+                {!isOrganization && (
+                  <div>
+                    <label className="font-medium text-sm text-muted-foreground">
+                      {isEvent ? "Event Details" : isScholarship ? "Scholarship Details" : "Donation Details"}
+                    </label>
+                    <p className="text-base mt-1">{donation.details}</p>
+                  </div>
+                )}
+                {isOrganization && (
+                  <div>
+                    <label className="font-medium text-sm text-muted-foreground">Organization Bio</label>
+                    <p className="text-base mt-1">{getOrganizationBio()}</p>
+                  </div>
+                )}
+                {!isOrganization && (
+                  <div>
+                    <label className="font-medium text-sm text-muted-foreground">
+                      {isEvent ? "Volunteer Hours" : isScholarship ? "Scholarship Amount" : "Estimated Value"}
+                    </label>
+                    <p className="text-base mt-1">
+                      {isEvent || isScholarship ? donation.details : getEstimatedValue(donation.type, donation.item)}
+                    </p>
+                  </div>
+                )}
                 {isEvent && (userInfo as any).expectedAttendees && (
                   <div>
                     <label className="font-medium text-sm text-muted-foreground">Expected Attendees</label>
@@ -154,28 +183,40 @@ export const DonationModal = ({
             </div>
           </div>
 
-          {/* Image Carousel Section */}
+          {/* Image Section */}
           <div className="space-y-4">
-            <h3 className="font-semibold text-lg">Item Images</h3>
-            <div className="relative px-8">
-              <Carousel className="w-full max-w-sm mx-auto">
-                <CarouselContent>
-                  {mockImages.map((image, index) => (
-                    <CarouselItem key={index}>
-                      <div className="aspect-square rounded-lg overflow-hidden">
-                        <img 
-                          src={image} 
-                          alt={`${donation.item} ${index + 1}`}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="-left-6" />
-                <CarouselNext className="-right-6" />
-              </Carousel>
-            </div>
+            <h3 className="font-semibold text-lg">
+              {isOrganization ? "Organization Image" : "Item Images"}
+            </h3>
+            {isOrganization ? (
+              <div className="aspect-square rounded-lg overflow-hidden max-w-sm mx-auto">
+                <img 
+                  src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=400&h=300&fit=crop"
+                  alt={donation.organization}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ) : (
+              <div className="relative px-8">
+                <Carousel className="w-full max-w-sm mx-auto">
+                  <CarouselContent>
+                    {mockImages.map((image, index) => (
+                      <CarouselItem key={index}>
+                        <div className="aspect-square rounded-lg overflow-hidden">
+                          <img 
+                            src={image} 
+                            alt={`${donation.item} ${index + 1}`}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious className="-left-6" />
+                  <CarouselNext className="-right-6" />
+                </Carousel>
+              </div>
+            )}
           </div>
         </div>
 
