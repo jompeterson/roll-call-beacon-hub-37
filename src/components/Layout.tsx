@@ -13,7 +13,7 @@ export const Layout = () => {
       <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       <div className="flex">
         <Sidebar open={sidebarOpen} />
-        <main className="flex-1 p-6 lg:ml-64">
+        <main className="flex-1 p-6">
           <Outlet />
         </main>
       </div>
