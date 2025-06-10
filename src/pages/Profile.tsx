@@ -1,27 +1,46 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProfileImageSection } from "@/components/profile/ProfileImageSection";
 import { AccountInformation } from "@/components/profile/AccountInformation";
 import { ContactInformation } from "@/components/profile/ContactInformation";
 import { CurrentOrganization } from "@/components/profile/CurrentOrganization";
 import { OrganizationSearch } from "@/components/profile/OrganizationSearch";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
+
+interface UserProfile {
+  id: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  address: string;
+  phone: string;
+  created_at: string;
+  organization_id: string | null;
+}
+
+interface Organization {
+  id: string;
+  name: string;
+  type: string;
+  description: string | null;
+}
 
 export const Profile = () => {
-  const [contactInfo, setContactInfo] = useState({
-    firstName: "John",
-    lastName: "Doe",
-    email: "john.doe@example.com",
-    phone: "+1 (555) 123-4567"
-  });
+  const { toast } = useToast();
+  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [currentOrganization, setCurrentOrganization] = useState<Organization | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Current organization data
-  const currentOrganization = {
-    name: "Tech Solutions Inc",
-    role: "Software Developer",
-    joinedDate: "January 15, 2024",
-    logo: "/placeholder.svg"
-  };
+  const [contactInfo, setContactInfo] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: ""
+  });
 
   // Mock organizations for search with detailed information
   const availableOrganizations = [
@@ -67,6 +86,139 @@ export const Profile = () => {
     },
   ];
 
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  const fetchUserData = async () => {
+    try {
+      // Get current user
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      
+      if (!currentUser) {
+        toast({
+          title: "Error",
+          description: "You must be logged in to view your profile.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setUser(currentUser);
+
+      // Fetch user profile
+      const { data: profile, error: profileError } = await supabase
+        .from('user_profiles')
+        .select('*')
+        .eq('id', currentUser.id)
+        .single();
+
+      if (profileError) {
+        console.error('Error fetching user profile:', profileError);
+        toast({
+          title: "Error",
+          description: "Failed to load profile data.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setUserProfile(profile);
+      setContactInfo({
+        firstName: profile.first_name,
+        lastName: profile.last_name,
+        email: profile.email,
+        phone: profile.phone
+      });
+
+      // Fetch organization if user has one
+      if (profile.organization_id) {
+        const { data: org, error: orgError } = await supabase
+          .from('organizations')
+          .select('*')
+          .eq('id', profile.organization_id)
+          .single();
+
+        if (orgError) {
+          console.error('Error fetching organization:', orgError);
+        } else {
+          setCurrentOrganization(org);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load profile data.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleContactInfoChange = async (updatedInfo: typeof contactInfo) => {
+    setContactInfo(updatedInfo);
+    
+    if (!userProfile) return;
+
+    try {
+      const { error } = await supabase
+        .from('user_profiles')
+        .update({
+          first_name: updatedInfo.firstName,
+          last_name: updatedInfo.lastName,
+          email: updatedInfo.email,
+          phone: updatedInfo.phone
+        })
+        .eq('id', userProfile.id);
+
+      if (error) {
+        console.error('Error updating profile:', error);
+        toast({
+          title: "Error",
+          description: "Failed to update profile information.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Profile</h1>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!userProfile) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Profile</h1>
+          <p className="text-muted-foreground">Profile data not found.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const organizationData = currentOrganization ? {
+    name: currentOrganization.name,
+    role: "Member", // You might want to fetch this from a user_organization_roles table
+    joinedDate: new Date(userProfile.created_at).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }),
+    logo: "/placeholder.svg"
+  } : null;
+
   return (
     <div className="space-y-6">
       <div>
@@ -84,15 +236,21 @@ export const Profile = () => {
 
         <TabsContent value="personal" className="space-y-6">
           <ProfileImageSection contactInfo={contactInfo} />
-          <AccountInformation />
+          <AccountInformation joinedDate={userProfile.created_at} />
           <ContactInformation 
             contactInfo={contactInfo} 
-            onContactInfoChange={setContactInfo} 
+            onContactInfoChange={handleContactInfoChange} 
           />
         </TabsContent>
 
         <TabsContent value="organization" className="space-y-6">
-          <CurrentOrganization organization={currentOrganization} />
+          {organizationData ? (
+            <CurrentOrganization organization={organizationData} />
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">No organization assigned</p>
+            </div>
+          )}
           <OrganizationSearch organizations={availableOrganizations} />
         </TabsContent>
       </Tabs>

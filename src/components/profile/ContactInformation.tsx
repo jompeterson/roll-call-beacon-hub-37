@@ -16,26 +16,45 @@ interface ContactInfo {
 
 interface ContactInformationProps {
   contactInfo: ContactInfo;
-  onContactInfoChange: (info: ContactInfo) => void;
+  onContactInfoChange: (info: ContactInfo) => Promise<void> | void;
 }
 
 export const ContactInformation = ({ contactInfo, onContactInfoChange }: ContactInformationProps) => {
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const [localContactInfo, setLocalContactInfo] = useState(contactInfo);
 
-  const handleContactSave = () => {
-    toast({
-      title: "Contact information saved",
-      description: "Your contact information has been successfully updated.",
-    });
+  const handleContactSave = async () => {
+    setIsLoading(true);
+    try {
+      await onContactInfoChange(localContactInfo);
+      toast({
+        title: "Contact information saved",
+        description: "Your contact information has been successfully updated.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to save contact information.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (field: keyof ContactInfo, value: string) => {
     const updatedInfo = {
-      ...contactInfo,
+      ...localContactInfo,
       [field]: value
     };
-    onContactInfoChange(updatedInfo);
+    setLocalContactInfo(updatedInfo);
   };
+
+  // Update local state when contactInfo prop changes
+  React.useEffect(() => {
+    setLocalContactInfo(contactInfo);
+  }, [contactInfo]);
 
   return (
     <Card>
@@ -51,7 +70,7 @@ export const ContactInformation = ({ contactInfo, onContactInfoChange }: Contact
             <Label htmlFor="firstName">First Name</Label>
             <Input
               id="firstName"
-              value={contactInfo.firstName}
+              value={localContactInfo.firstName}
               onChange={(e) => handleInputChange("firstName", e.target.value)}
             />
           </div>
@@ -59,7 +78,7 @@ export const ContactInformation = ({ contactInfo, onContactInfoChange }: Contact
             <Label htmlFor="lastName">Last Name</Label>
             <Input
               id="lastName"
-              value={contactInfo.lastName}
+              value={localContactInfo.lastName}
               onChange={(e) => handleInputChange("lastName", e.target.value)}
             />
           </div>
@@ -69,7 +88,7 @@ export const ContactInformation = ({ contactInfo, onContactInfoChange }: Contact
           <Input
             id="email"
             type="email"
-            value={contactInfo.email}
+            value={localContactInfo.email}
             onChange={(e) => handleInputChange("email", e.target.value)}
           />
         </div>
@@ -77,13 +96,17 @@ export const ContactInformation = ({ contactInfo, onContactInfoChange }: Contact
           <Label htmlFor="phone">Phone</Label>
           <Input
             id="phone"
-            value={contactInfo.phone}
+            value={localContactInfo.phone}
             onChange={(e) => handleInputChange("phone", e.target.value)}
           />
         </div>
-        <Button onClick={handleContactSave} className="w-full">
+        <Button 
+          onClick={handleContactSave} 
+          className="w-full"
+          disabled={isLoading}
+        >
           <Save className="h-4 w-4 mr-2" />
-          Save Contact Information
+          {isLoading ? "Saving..." : "Save Contact Information"}
         </Button>
       </CardContent>
     </Card>
