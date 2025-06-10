@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -108,11 +109,16 @@ export const DonationModal = ({
     return "A leading organization dedicated to making a positive impact in the community through innovative solutions and collaborative partnerships.";
   };
 
+  const getModalTitle = () => {
+    if (isOrganization) return donation.organization;
+    return donation.item;
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-5xl w-full">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">{donation.item}</DialogTitle>
+          <DialogTitle className="text-2xl font-bold">{getModalTitle()}</DialogTitle>
           <p className="text-sm text-muted-foreground">{getModalType()}</p>
         </DialogHeader>
         
