@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -20,6 +19,7 @@ interface RequestModalProps {
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
   onRequestChanges: (id: string) => void;
+  onMarkCompleted?: (id: string) => void;
 }
 
 // Mock images for demonstration
@@ -45,7 +45,8 @@ export const RequestModal = ({
   onOpenChange, 
   onApprove, 
   onReject, 
-  onRequestChanges 
+  onRequestChanges,
+  onMarkCompleted 
 }: RequestModalProps) => {
   if (!request) return null;
 
@@ -106,7 +107,7 @@ export const RequestModal = ({
             </div>
             
             {/* Action Buttons */}
-            <div className="flex gap-3 pt-6">
+            <div className="flex gap-3 pt-6 flex-wrap">
               <Button 
                 onClick={() => onApprove(request.id)}
                 className="bg-green-600 hover:bg-green-700 text-white"
@@ -125,6 +126,14 @@ export const RequestModal = ({
               >
                 Request Changes
               </Button>
+              {onMarkCompleted && (
+                <Button 
+                  onClick={() => onMarkCompleted(request.id)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  Mark Completed
+                </Button>
+              )}
             </div>
           </div>
 
