@@ -124,7 +124,7 @@ export const Register = () => {
     <div className="min-h-screen flex">
       {/* Left Side - Background Image */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary/20 to-primary/40 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1560472354-b33ff0c44a43?auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center"></div>
+        <div className="absolute inset-0 bg-[url('/lovable-uploads/d16ba253-a4ac-4e57-b7c4-2f3c64d3cae3.png')] bg-cover bg-center"></div>
         <div className="absolute inset-0 bg-primary/30"></div>
         <div className="relative z-10 flex flex-col justify-center px-12 text-primary-foreground">
           <h1 className="text-4xl font-bold mb-4">Join Our Community</h1>
