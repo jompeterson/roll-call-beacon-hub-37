@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { ChevronUp, ChevronDown, Clock, CheckCircle, XCircle, Archive } from "lucide-react";
 
@@ -101,19 +102,21 @@ const SortableTableHead = ({
   field, 
   currentSort, 
   currentDirection, 
-  onSort 
+  onSort,
+  className = ""
 }: { 
   children: React.ReactNode;
   field: SortField;
   currentSort: SortField;
   currentDirection: SortDirection;
   onSort: (field: SortField) => void;
+  className?: string;
 }) => {
   const isActive = currentSort === field;
   
   return (
     <TableHead 
-      className="cursor-pointer hover:bg-[#1e3a52] select-none text-white"
+      className={`cursor-pointer hover:bg-[#1e3a52] select-none text-white ${className}`}
       style={{ backgroundColor: "#294865" }}
       onClick={() => onSort(field)}
     >
@@ -262,138 +265,160 @@ export const Donations = () => {
         {/* Donation Posts Section */}
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold">Donation Posts</h2>
-          <div className="border rounded-lg">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <SortableTableHead
-                    field="organization"
-                    currentSort={donationSort}
-                    currentDirection={donationDirection}
-                    onSort={handleDonationSort}
-                  >
-                    Organization
-                  </SortableTableHead>
-                  <SortableTableHead
-                    field="type"
-                    currentSort={donationSort}
-                    currentDirection={donationDirection}
-                    onSort={handleDonationSort}
-                  >
-                    Type
-                  </SortableTableHead>
-                  <SortableTableHead
-                    field="item"
-                    currentSort={donationSort}
-                    currentDirection={donationDirection}
-                    onSort={handleDonationSort}
-                  >
-                    Item
-                  </SortableTableHead>
-                  <SortableTableHead
-                    field="details"
-                    currentSort={donationSort}
-                    currentDirection={donationDirection}
-                    onSort={handleDonationSort}
-                  >
-                    Details
-                  </SortableTableHead>
-                  <SortableTableHead
-                    field="status"
-                    currentSort={donationSort}
-                    currentDirection={donationDirection}
-                    onSort={handleDonationSort}
-                  >
-                    Status
-                  </SortableTableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {sortedDonationPosts.map((post) => (
-                  <TableRow key={post.id}>
-                    <TableCell className="font-medium">{post.organization}</TableCell>
-                    <TableCell>{post.type}</TableCell>
-                    <TableCell>{post.item}</TableCell>
-                    <TableCell>{post.details}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <StatusIcon status={post.status} />
-                        <span>{post.status}</span>
-                      </div>
-                    </TableCell>
+          <div className="border rounded-lg h-96">
+            <div className="h-full flex flex-col">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <SortableTableHead
+                      field="organization"
+                      currentSort={donationSort}
+                      currentDirection={donationDirection}
+                      onSort={handleDonationSort}
+                      className="w-2/5"
+                    >
+                      Organization
+                    </SortableTableHead>
+                    <SortableTableHead
+                      field="type"
+                      currentSort={donationSort}
+                      currentDirection={donationDirection}
+                      onSort={handleDonationSort}
+                      className="w-1/6"
+                    >
+                      Type
+                    </SortableTableHead>
+                    <SortableTableHead
+                      field="item"
+                      currentSort={donationSort}
+                      currentDirection={donationDirection}
+                      onSort={handleDonationSort}
+                      className="w-1/6"
+                    >
+                      Item
+                    </SortableTableHead>
+                    <SortableTableHead
+                      field="details"
+                      currentSort={donationSort}
+                      currentDirection={donationDirection}
+                      onSort={handleDonationSort}
+                      className="w-1/4"
+                    >
+                      Details
+                    </SortableTableHead>
+                    <SortableTableHead
+                      field="status"
+                      currentSort={donationSort}
+                      currentDirection={donationDirection}
+                      onSort={handleDonationSort}
+                      className="w-1/6"
+                    >
+                      Status
+                    </SortableTableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+              </Table>
+              <ScrollArea className="flex-1">
+                <Table>
+                  <TableBody>
+                    {sortedDonationPosts.map((post) => (
+                      <TableRow key={post.id}>
+                        <TableCell className="font-medium w-2/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.organization}</TableCell>
+                        <TableCell className="w-1/6 whitespace-nowrap">{post.type}</TableCell>
+                        <TableCell className="w-1/6 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.item}</TableCell>
+                        <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.details}</TableCell>
+                        <TableCell className="w-1/6">
+                          <div className="flex items-center gap-2 whitespace-nowrap">
+                            <StatusIcon status={post.status} />
+                            <span>{post.status}</span>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </ScrollArea>
+            </div>
           </div>
         </div>
 
         {/* Request Posts Section */}
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold">Request Posts</h2>
-          <div className="border rounded-lg">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <SortableTableHead
-                    field="organization"
-                    currentSort={requestSort}
-                    currentDirection={requestDirection}
-                    onSort={handleRequestSort}
-                  >
-                    Organization
-                  </SortableTableHead>
-                  <SortableTableHead
-                    field="type"
-                    currentSort={requestSort}
-                    currentDirection={requestDirection}
-                    onSort={handleRequestSort}
-                  >
-                    Type
-                  </SortableTableHead>
-                  <SortableTableHead
-                    field="item"
-                    currentSort={requestSort}
-                    currentDirection={requestDirection}
-                    onSort={handleRequestSort}
-                  >
-                    Item
-                  </SortableTableHead>
-                  <SortableTableHead
-                    field="details"
-                    currentSort={requestSort}
-                    currentDirection={requestDirection}
-                    onSort={handleRequestSort}
-                  >
-                    Details
-                  </SortableTableHead>
-                  <SortableTableHead
-                    field="status"
-                    currentSort={requestSort}
-                    currentDirection={requestDirection}
-                    onSort={handleRequestSort}
-                  >
-                    Status
-                  </SortableTableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {sortedRequestPosts.map((post) => (
-                  <TableRow key={post.id}>
-                    <TableCell className="font-medium">{post.organization}</TableCell>
-                    <TableCell>{post.type}</TableCell>
-                    <TableCell>{post.item}</TableCell>
-                    <TableCell>{post.details}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <StatusIcon status={post.status} />
-                        <span>{post.status}</span>
-                      </div>
-                    </TableCell>
+          <div className="border rounded-lg h-96">
+            <div className="h-full flex flex-col">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <SortableTableHead
+                      field="organization"
+                      currentSort={requestSort}
+                      currentDirection={requestDirection}
+                      onSort={handleRequestSort}
+                      className="w-2/5"
+                    >
+                      Organization
+                    </SortableTableHead>
+                    <SortableTableHead
+                      field="type"
+                      currentSort={requestSort}
+                      currentDirection={requestDirection}
+                      onSort={handleRequestSort}
+                      className="w-1/6"
+                    >
+                      Type
+                    </SortableTableHead>
+                    <SortableTableHead
+                      field="item"
+                      currentSort={requestSort}
+                      currentDirection={requestDirection}
+                      onSort={handleRequestSort}
+                      className="w-1/6"
+                    >
+                      Item
+                    </SortableTableHead>
+                    <SortableTableHead
+                      field="details"
+                      currentSort={requestSort}
+                      currentDirection={requestDirection}
+                      onSort={handleRequestSort}
+                      className="w-1/4"
+                    >
+                      Details
+                    </SortableTableHead>
+                    <SortableTableHead
+                      field="status"
+                      currentSort={requestSort}
+                      currentDirection={requestDirection}
+                      onSort={handleRequestSort}
+                      className="w-1/6"
+                    >
+                      Status
+                    </SortableTableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+              </Table>
+              <ScrollArea className="flex-1">
+                <Table>
+                  <TableBody>
+                    {sortedRequestPosts.map((post) => (
+                      <TableRow key={post.id}>
+                        <TableCell className="font-medium w-2/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.organization}</TableCell>
+                        <TableCell className="w-1/6 whitespace-nowrap">{post.type}</TableCell>
+                        <TableCell className="w-1/6 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.item}</TableCell>
+                        <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.details}</TableCell>
+                        <TableCell className="w-1/6">
+                          <div className="flex items-center gap-2 whitespace-nowrap">
+                            <StatusIcon status={post.status} />
+                            <span>{post.status}</span>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </ScrollArea>
+            </div>
           </div>
         </div>
       </div>

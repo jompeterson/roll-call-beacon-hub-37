@@ -9,9 +9,9 @@ export const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      <div className="flex">
+      <div className="flex flex-1">
         <Sidebar open={sidebarOpen} />
         <main className="flex-1 p-6">
           <Outlet />
