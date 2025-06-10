@@ -7,12 +7,15 @@ import {
   GraduationCap,
   Calendar,
   Building2,
-  TrendingUp,
+  FileText,
+  Clock,
+  MessageSquare,
+  Calculator,
 } from "lucide-react";
 
 export const Overview = () => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Overview</h1>
         <p className="text-muted-foreground">
@@ -20,110 +23,138 @@ export const Overview = () => {
         </p>
       </div>
 
-      {/* Metrics Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <MetricCard
-          title="Total Users"
-          value="2,847"
-          change="+12.5%"
-          changeType="positive"
-          icon={Users}
-        />
-        <MetricCard
-          title="Total Donations"
-          value="$45,678"
-          change="+8.2%"
-          changeType="positive"
-          icon={DollarSign}
-        />
-        <MetricCard
-          title="Active Scholarships"
-          value="23"
-          change="+2"
-          changeType="positive"
-          icon={GraduationCap}
-        />
-        <MetricCard
-          title="Upcoming Events"
-          value="12"
-          change="+3"
-          changeType="positive"
-          icon={Calendar}
-        />
-        <MetricCard
-          title="Partner Organizations"
-          value="156"
-          change="+7.1%"
-          changeType="positive"
-          icon={Building2}
-        />
-        <MetricCard
-          title="Growth Rate"
-          value="24.8%"
-          change="+4.2%"
-          changeType="positive"
-          icon={TrendingUp}
-        />
+      {/* Pending Approvals Section */}
+      <div className="space-y-4">
+        <h2 className="text-2xl font-semibold">Pending Approvals</h2>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Pending Organizations</CardTitle>
+              <Building2 className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">12</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Pending Scholarships</CardTitle>
+              <GraduationCap className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">8</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Pending Donations/Requests</CardTitle>
+              <FileText className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">23</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Pending Events</CardTitle>
+              <Calendar className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">5</div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
-      {/* Additional Widgets */}
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center space-x-4">
-                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium">New scholarship application received</p>
-                  <p className="text-xs text-muted-foreground">2 minutes ago</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-4">
-                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium">Event registration opened</p>
-                  <p className="text-xs text-muted-foreground">1 hour ago</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-4">
-                <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium">New organization partnership</p>
-                  <p className="text-xs text-muted-foreground">3 hours ago</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      {/* This Month's Metrics Section */}
+      <div className="space-y-4">
+        <h2 className="text-2xl font-semibold">This Month's Metrics</h2>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+          <MetricCard
+            title="New Organizations"
+            value="15"
+            change="+3"
+            changeType="positive"
+            icon={Building2}
+          />
+          <MetricCard
+            title="Scholarships"
+            value="8"
+            change="+2"
+            changeType="positive"
+            icon={GraduationCap}
+          />
+          <MetricCard
+            title="Donations"
+            value="$12,450"
+            change="+18.5%"
+            changeType="positive"
+            icon={DollarSign}
+          />
+          <MetricCard
+            title="Events"
+            value="6"
+            change="+1"
+            changeType="positive"
+            icon={Calendar}
+          />
+          <MetricCard
+            title="New Users"
+            value="124"
+            change="+22.1%"
+            changeType="positive"
+            icon={Users}
+          />
+        </div>
+      </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Stats</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Applications Pending</span>
-                <span className="text-sm font-medium">47</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Events This Month</span>
-                <span className="text-sm font-medium">8</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">New Members</span>
-                <span className="text-sm font-medium">124</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Response Rate</span>
-                <span className="text-sm font-medium">87%</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      {/* Year Metrics Section */}
+      <div className="space-y-4">
+        <h2 className="text-2xl font-semibold">Year Metrics</h2>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <MetricCard
+            title="Organizations"
+            value="156"
+            change="+32.1%"
+            changeType="positive"
+            icon={Building2}
+          />
+          <MetricCard
+            title="Donations"
+            value="$245,678"
+            change="+28.5%"
+            changeType="positive"
+            icon={DollarSign}
+          />
+          <MetricCard
+            title="Events"
+            value="48"
+            change="+15.2%"
+            changeType="positive"
+            icon={Calendar}
+          />
+          <MetricCard
+            title="Hours Donated"
+            value="2,847"
+            change="+41.3%"
+            changeType="positive"
+            icon={Clock}
+          />
+          <MetricCard
+            title="Posts"
+            value="1,234"
+            change="+19.7%"
+            changeType="positive"
+            icon={MessageSquare}
+          />
+          <MetricCard
+            title="Financial Totals"
+            value="$425,890"
+            change="+24.8%"
+            changeType="positive"
+            icon={Calculator}
+          />
+        </div>
       </div>
     </div>
   );
