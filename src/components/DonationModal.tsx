@@ -126,27 +126,29 @@ export const DonationModal = ({
               </div>
             </div>
             
-            {/* Action Buttons */}
-            <div className="flex gap-3 pt-6">
-              <Button 
-                onClick={() => onApprove(donation.id)}
-                className="bg-green-600 hover:bg-green-700 text-white"
-              >
-                Approve
-              </Button>
-              <Button 
-                onClick={() => onReject(donation.id)}
-                variant="destructive"
-              >
-                Reject
-              </Button>
-              <Button 
-                onClick={() => onRequestChanges(donation.id)}
-                variant="outline"
-              >
-                Request Changes
-              </Button>
-            </div>
+            {/* Action Buttons for non-scholarship only */}
+            {!isScholarship && (
+              <div className="flex gap-3 pt-6">
+                <Button 
+                  onClick={() => onApprove(donation.id)}
+                  className="bg-green-600 hover:bg-green-700 text-white"
+                >
+                  Approve
+                </Button>
+                <Button 
+                  onClick={() => onReject(donation.id)}
+                  variant="destructive"
+                >
+                  Reject
+                </Button>
+                <Button 
+                  onClick={() => onRequestChanges(donation.id)}
+                  variant="outline"
+                >
+                  Request Changes
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Image Carousel Section */}
@@ -173,6 +175,30 @@ export const DonationModal = ({
             </div>
           </div>
         </div>
+
+        {/* Action Buttons for scholarship at bottom */}
+        {isScholarship && (
+          <div className="flex gap-3 pt-6 border-t">
+            <Button 
+              onClick={() => onApprove(donation.id)}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              Approve
+            </Button>
+            <Button 
+              onClick={() => onReject(donation.id)}
+              variant="destructive"
+            >
+              Reject
+            </Button>
+            <Button 
+              onClick={() => onRequestChanges(donation.id)}
+              variant="outline"
+            >
+              Request Changes
+            </Button>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );
