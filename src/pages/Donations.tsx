@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -131,8 +130,8 @@ const SortableTableHead = ({
 
 export const Donations = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [typeFilter, setTypeFilter] = useState<string>("");
-  const [statusFilter, setStatusFilter] = useState<string>("");
+  const [typeFilter, setTypeFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   
   // Sorting states for donation posts
   const [donationSort, setDonationSort] = useState<SortField>(null);
@@ -199,8 +198,8 @@ export const Donations = () => {
         Object.values(item).some(value => 
           value.toLowerCase().includes(searchTerm.toLowerCase())
         );
-      const matchesType = typeFilter === "" || item.type === typeFilter;
-      const matchesStatus = statusFilter === "" || item.status === statusFilter;
+      const matchesType = typeFilter === "all" || item.type === typeFilter;
+      const matchesStatus = statusFilter === "all" || item.status === statusFilter;
       
       return matchesSearch && matchesType && matchesStatus;
     });
@@ -237,7 +236,7 @@ export const Donations = () => {
             <SelectValue placeholder="Type" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Types</SelectItem>
+            <SelectItem value="all">All Types</SelectItem>
             <SelectItem value="Materials">Materials</SelectItem>
             <SelectItem value="Tools">Tools</SelectItem>
           </SelectContent>
@@ -248,7 +247,7 @@ export const Donations = () => {
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Status</SelectItem>
+            <SelectItem value="all">All Status</SelectItem>
             <SelectItem value="Approved">Approved</SelectItem>
             <SelectItem value="Pending">Pending</SelectItem>
             <SelectItem value="Rejected">Rejected</SelectItem>
