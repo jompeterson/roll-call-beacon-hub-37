@@ -3,15 +3,17 @@ import { ProfileImageSection } from "./ProfileImageSection";
 import { AccountInformation } from "./AccountInformation";
 import { ContactInformation } from "./ContactInformation";
 
+interface ContactInfo {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+}
+
 interface PersonalInformationTabProps {
-  contactInfo: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-  };
+  contactInfo: ContactInfo;
   joinedDate: string;
-  onContactInfoChange: (info: typeof contactInfo) => Promise<void> | void;
+  onContactInfoChange: (info: ContactInfo) => Promise<void> | void;
 }
 
 export const PersonalInformationTab = ({ 

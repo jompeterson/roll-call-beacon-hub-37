@@ -71,7 +71,10 @@ export const Profile = () => {
         </TabsContent>
 
         <TabsContent value="organization">
-          <OrganizationTab organizationData={organizationData} />
+          <OrganizationTab 
+            organizationData={organizationData} 
+            userOrganizationId={userProfile.organization_id}
+          />
         </TabsContent>
       </Tabs>
     </div>

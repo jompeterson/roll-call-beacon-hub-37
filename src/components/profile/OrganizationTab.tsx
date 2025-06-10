@@ -1,7 +1,6 @@
 
 import { CurrentOrganization } from "./CurrentOrganization";
 import { OrganizationSearch } from "./OrganizationSearch";
-import { availableOrganizations } from "@/data/organizations";
 
 interface OrganizationData {
   name: string;
@@ -12,9 +11,10 @@ interface OrganizationData {
 
 interface OrganizationTabProps {
   organizationData: OrganizationData | null;
+  userOrganizationId?: string | null;
 }
 
-export const OrganizationTab = ({ organizationData }: OrganizationTabProps) => {
+export const OrganizationTab = ({ organizationData, userOrganizationId }: OrganizationTabProps) => {
   return (
     <div className="space-y-6">
       {organizationData ? (
@@ -24,7 +24,7 @@ export const OrganizationTab = ({ organizationData }: OrganizationTabProps) => {
           <p className="text-muted-foreground">No organization assigned</p>
         </div>
       )}
-      <OrganizationSearch organizations={availableOrganizations} />
+      <OrganizationSearch userOrganizationId={userOrganizationId} />
     </div>
   );
 };
