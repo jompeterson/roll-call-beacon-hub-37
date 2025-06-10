@@ -37,16 +37,18 @@ export const Sidebar = ({ open }: SidebarProps) => {
         <nav className="flex-1 px-4 space-y-2">
           {navigation.map((item) => {
             const Icon = item.icon;
+            const isActive = location.pathname === item.href;
             return (
               <Link
                 key={item.name}
                 to={item.href}
                 className={cn(
                   "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors",
-                  location.pathname === item.href
-                    ? "bg-primary text-primary-foreground"
+                  isActive
+                    ? "text-white"
                     : "text-muted-foreground hover:text-foreground hover:bg-accent"
                 )}
+                style={isActive ? { backgroundColor: "#294865" } : {}}
               >
                 <Icon className="mr-3 h-5 w-5" />
                 {item.name}
