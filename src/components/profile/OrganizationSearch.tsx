@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Search, Phone, MapPin } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useOrganizations } from "@/hooks/useOrganizations";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface Organization {
   id: string;
@@ -41,7 +42,7 @@ export const OrganizationSearch = ({ userOrganizationId }: OrganizationSearchPro
 
   if (loading) {
     return (
-      <Card>
+      <Card className="h-96">
         <CardHeader>
           <CardTitle>Search Organizations</CardTitle>
           <CardDescription>Loading organizations...</CardDescription>
@@ -51,14 +52,14 @@ export const OrganizationSearch = ({ userOrganizationId }: OrganizationSearchPro
   }
 
   return (
-    <Card>
+    <Card className="h-96">
       <CardHeader>
         <CardTitle>Search Organizations</CardTitle>
         <CardDescription>
           Find and explore other organizations
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 h-full">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -69,85 +70,87 @@ export const OrganizationSearch = ({ userOrganizationId }: OrganizationSearchPro
           />
         </div>
         
-        <div className="space-y-2 max-h-64 overflow-y-auto">
-          {filteredOrganizations.map((org) => {
-            const isUserInOrganization = userOrganizationId === org.id;
-            
-            return (
-              <div key={org.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50">
-                <div>
-                  <p className="font-medium">{org.name}</p>
-                  <p className="text-sm text-muted-foreground">{org.type}</p>
-                  {isUserInOrganization && (
-                    <p className="text-xs text-primary font-medium">Current Organization</p>
-                  )}
-                </div>
-                <div className="flex gap-2">
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button variant="outline" size="sm">
-                        View Details
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                      <DialogHeader>
-                        <DialogTitle>{org.name}</DialogTitle>
-                        <DialogDescription>
-                          Organization details and contact information
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="space-y-4">
-                        <div className="space-y-2">
-                          <Label className="text-sm font-medium">Type</Label>
-                          <p className="text-sm text-muted-foreground">{org.type}</p>
-                        </div>
-                        
-                        {org.description && (
+        <ScrollArea className="flex-1 pr-4">
+          <div className="space-y-2">
+            {filteredOrganizations.map((org) => {
+              const isUserInOrganization = userOrganizationId === org.id;
+              
+              return (
+                <div key={org.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50">
+                  <div>
+                    <p className="font-medium">{org.name}</p>
+                    <p className="text-sm text-muted-foreground">{org.type}</p>
+                    {isUserInOrganization && (
+                      <p className="text-xs text-primary font-medium">Current Organization</p>
+                    )}
+                  </div>
+                  <div className="flex gap-2">
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size="sm">
+                          View Details
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                          <DialogTitle>{org.name}</DialogTitle>
+                          <DialogDescription>
+                            Organization details and contact information
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4">
                           <div className="space-y-2">
-                            <Label className="text-sm font-medium">Description</Label>
-                            <p className="text-sm text-muted-foreground">{org.description}</p>
+                            <Label className="text-sm font-medium">Type</Label>
+                            <p className="text-sm text-muted-foreground">{org.type}</p>
                           </div>
-                        )}
+                          
+                          {org.description && (
+                            <div className="space-y-2">
+                              <Label className="text-sm font-medium">Description</Label>
+                              <p className="text-sm text-muted-foreground">{org.description}</p>
+                            </div>
+                          )}
 
-                        <div className="space-y-3">
-                          <Label className="text-sm font-medium">Contact Information</Label>
-                          <div className="space-y-2">
-                            <div className="flex items-center gap-2">
-                              <Phone className="h-4 w-4 text-muted-foreground" />
-                              <span className="text-sm">{org.phone}</span>
-                            </div>
-                            <div className="flex items-start gap-2">
-                              <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
-                              <span className="text-sm">{org.address}</span>
+                          <div className="space-y-3">
+                            <Label className="text-sm font-medium">Contact Information</Label>
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                <Phone className="h-4 w-4 text-muted-foreground" />
+                                <span className="text-sm">{org.phone}</span>
+                              </div>
+                              <div className="flex items-start gap-2">
+                                <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
+                                <span className="text-sm">{org.address}</span>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-                  {!isUserInOrganization && (
-                    <Button 
-                      size="sm"
-                      onClick={() => handleRequestAccess(org.name)}
-                    >
-                      Request Access
-                    </Button>
-                  )}
+                      </DialogContent>
+                    </Dialog>
+                    {!isUserInOrganization && (
+                      <Button 
+                        size="sm"
+                        onClick={() => handleRequestAccess(org.name)}
+                      >
+                        Request Access
+                      </Button>
+                    )}
+                  </div>
                 </div>
+              );
+            })}
+            {organizationSearch && filteredOrganizations.length === 0 && (
+              <div className="text-center py-4 text-muted-foreground">
+                No organizations found matching your search.
               </div>
-            );
-          })}
-          {organizationSearch && filteredOrganizations.length === 0 && (
-            <div className="text-center py-4 text-muted-foreground">
-              No organizations found matching your search.
-            </div>
-          )}
-          {!organizationSearch && filteredOrganizations.length === 0 && (
-            <div className="text-center py-4 text-muted-foreground">
-              No organizations available.
-            </div>
-          )}
-        </div>
+            )}
+            {!organizationSearch && filteredOrganizations.length === 0 && (
+              <div className="text-center py-4 text-muted-foreground">
+                No organizations available.
+              </div>
+            )}
+          </div>
+        </ScrollArea>
       </CardContent>
     </Card>
   );
