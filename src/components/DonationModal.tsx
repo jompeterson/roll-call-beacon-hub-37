@@ -104,23 +104,25 @@ export const DonationModal = ({
           {/* Image Carousel Section */}
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">Item Images</h3>
-            <Carousel className="w-full max-w-lg mx-auto">
-              <CarouselContent>
-                {mockImages.map((image, index) => (
-                  <CarouselItem key={index}>
-                    <div className="aspect-square rounded-lg overflow-hidden">
-                      <img 
-                        src={image} 
-                        alt={`${donation.item} ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious />
-              <CarouselNext />
-            </Carousel>
+            <div className="relative px-12">
+              <Carousel className="w-full max-w-sm mx-auto">
+                <CarouselContent>
+                  {mockImages.map((image, index) => (
+                    <CarouselItem key={index}>
+                      <div className="aspect-square rounded-lg overflow-hidden">
+                        <img 
+                          src={image} 
+                          alt={`${donation.item} ${index + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="-left-10" />
+                <CarouselNext className="-right-10" />
+              </Carousel>
+            </div>
           </div>
         </div>
       </DialogContent>
