@@ -92,3 +92,12 @@ export const getExistingOrganizations = async () => {
 
   return { data, error };
 };
+
+export const getUserRoles = async () => {
+  const { data, error } = await supabase
+    .from('user_roles')
+    .select('id, name, description')
+    .order('name');
+
+  return { data, error };
+};

@@ -53,7 +53,7 @@ export type Database = {
           last_name: string
           organization_id: string | null
           phone: string
-          role: Database["public"]["Enums"]["user_role"]
+          role_id: string
           updated_at: string
         }
         Insert: {
@@ -66,7 +66,7 @@ export type Database = {
           last_name: string
           organization_id?: string | null
           phone: string
-          role: Database["public"]["Enums"]["user_role"]
+          role_id: string
           updated_at?: string
         }
         Update: {
@@ -79,7 +79,7 @@ export type Database = {
           last_name?: string
           organization_id?: string | null
           phone?: string
-          role?: Database["public"]["Enums"]["user_role"]
+          role_id?: string
           updated_at?: string
         }
         Relationships: [
@@ -90,7 +90,38 @@ export type Database = {
             referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "user_profiles_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "user_roles"
+            referencedColumns: ["id"]
+          },
         ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
     }
     Views: {
@@ -108,7 +139,6 @@ export type Database = {
         | "Sports Club"
         | "Professional Association"
         | "Other"
-      user_role: "supporter" | "shop_teacher" | "administrator"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -233,7 +263,6 @@ export const Constants = {
         "Professional Association",
         "Other",
       ],
-      user_role: ["supporter", "shop_teacher", "administrator"],
     },
   },
 } as const
