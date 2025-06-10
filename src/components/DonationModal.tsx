@@ -258,27 +258,29 @@ export const DonationModal = ({
           </div>
         </div>
 
-        {/* Action Buttons at bottom for all modals */}
-        <div className="flex gap-3 pt-6 border-t">
-          <Button 
-            onClick={() => onApprove(donation.id)}
-            className="bg-green-600 hover:bg-green-700 text-white"
-          >
-            Approve
-          </Button>
-          <Button 
-            onClick={() => onReject(donation.id)}
-            variant="destructive"
-          >
-            Reject
-          </Button>
-          <Button 
-            onClick={() => onRequestChanges(donation.id)}
-            variant="outline"
-          >
-            Request Changes
-          </Button>
-        </div>
+        {/* Action Buttons at bottom for all modals except users */}
+        {!isUser && (
+          <div className="flex gap-3 pt-6 border-t">
+            <Button 
+              onClick={() => onApprove(donation.id)}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              Approve
+            </Button>
+            <Button 
+              onClick={() => onReject(donation.id)}
+              variant="destructive"
+            >
+              Reject
+            </Button>
+            <Button 
+              onClick={() => onRequestChanges(donation.id)}
+              variant="outline"
+            >
+              Request Changes
+            </Button>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );
