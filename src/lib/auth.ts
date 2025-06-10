@@ -96,7 +96,7 @@ export const getExistingOrganizations = async () => {
 export const getUserRoles = async () => {
   const { data, error } = await supabase
     .from('user_roles')
-    .select('id, name, description')
+    .select('id, name, display_name, description')
     .order('name');
 
   return { data, error };

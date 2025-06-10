@@ -18,6 +18,7 @@ interface RoleSelectionStepProps {
 interface Role {
   id: string;
   name: string;
+  display_name: string;
   description: string | null;
 }
 
@@ -126,7 +127,7 @@ export const RoleSelectionStep = ({ data, onNext, onBack, onUpdate }: RoleSelect
                       <IconComponent className="h-6 w-6 text-primary" />
                       <div>
                         <Label htmlFor={role.id} className="text-base font-medium cursor-pointer">
-                          {role.name.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                          {role.display_name}
                         </Label>
                         <p className="text-sm text-muted-foreground">{role.description}</p>
                       </div>
