@@ -6,6 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { ChevronUp, ChevronDown, Clock, CheckCircle, XCircle, Archive } from "lucide-react";
 import { DonationModal } from "@/components/DonationModal";
+import { RequestModal } from "@/components/RequestModal";
 
 type SortDirection = "asc" | "desc" | null;
 type SortField = "organization" | "type" | "item" | "details" | "status" | null;
@@ -145,9 +146,11 @@ export const Donations = () => {
   const [requestSort, setRequestSort] = useState<SortField>(null);
   const [requestDirection, setRequestDirection] = useState<SortDirection>(null);
 
-  // Modal state
+  // Modal states
   const [selectedDonation, setSelectedDonation] = useState<DonationPost | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [donationModalOpen, setDonationModalOpen] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState<RequestPost | null>(null);
+  const [requestModalOpen, setRequestModalOpen] = useState(false);
 
   const handleDonationSort = (field: SortField) => {
     if (donationSort === field) {
@@ -221,22 +224,42 @@ export const Donations = () => {
 
   const handleDonationRowClick = (donation: DonationPost) => {
     setSelectedDonation(donation);
-    setModalOpen(true);
+    setDonationModalOpen(true);
   };
 
-  const handleApprove = (id: string) => {
+  const handleRequestRowClick = (request: RequestPost) => {
+    setSelectedRequest(request);
+    setRequestModalOpen(true);
+  };
+
+  const handleDonationApprove = (id: string) => {
     console.log("Approved donation:", id);
-    setModalOpen(false);
+    setDonationModalOpen(false);
   };
 
-  const handleReject = (id: string) => {
+  const handleDonationReject = (id: string) => {
     console.log("Rejected donation:", id);
-    setModalOpen(false);
+    setDonationModalOpen(false);
   };
 
-  const handleRequestChanges = (id: string) => {
+  const handleDonationRequestChanges = (id: string) => {
     console.log("Requested changes for donation:", id);
-    setModalOpen(false);
+    setDonationModalOpen(false);
+  };
+
+  const handleRequestApprove = (id: string) => {
+    console.log("Approved request:", id);
+    setRequestModalOpen(false);
+  };
+
+  const handleRequestReject = (id: string) => {
+    console.log("Rejected request:", id);
+    setRequestModalOpen(false);
+  };
+
+  const handleRequestRequestChanges = (id: string) => {
+    console.log("Requested changes for request:", id);
+    setRequestModalOpen(false);
   };
 
   return (
@@ -430,7 +453,11 @@ export const Donations = () => {
                 <Table>
                   <TableBody>
                     {sortedRequestPosts.map((post) => (
-                      <TableRow key={post.id}>
+                      <TableRow 
+                        key={post.id} 
+                        className="cursor-pointer hover:bg-muted/50"
+                        onClick={() => handleRequestRowClick(post)}
+                      >
                         <TableCell className="font-medium w-2/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.organization}</TableCell>
                         <TableCell className="w-1/6 whitespace-nowrap">{post.type}</TableCell>
                         <TableCell className="w-1/6 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.item}</TableCell>
@@ -451,14 +478,23 @@ export const Donations = () => {
         </div>
       </div>
 
-      {/* Donation Modal */}
+      {/* Modals */}
       <DonationModal
         donation={selectedDonation}
-        open={modalOpen}
-        onOpenChange={setModalOpen}
-        onApprove={handleApprove}
-        onReject={handleReject}
-        onRequestChanges={handleRequestChanges}
+        open={donationModalOpen}
+        onOpenChange={setDonationModalOpen}
+        onApprove={handleDonationApprove}
+        onReject={handleDonationReject}
+        onRequestChanges={handleDonationRequestChanges}
+      />
+
+      <RequestModal
+        request={selectedRequest}
+        open={requestModalOpen}
+        onOpenChange={setRequestModalOpen}
+        onApprove={handleRequestApprove}
+        onReject={handleRequestReject}
+        onRequestChanges={handleRequestRequestChanges}
       />
     </div>
   );
