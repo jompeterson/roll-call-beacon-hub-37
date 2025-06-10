@@ -105,34 +105,6 @@ export const RequestModal = ({
                 </div>
               </div>
             </div>
-            
-            {/* Action Buttons */}
-            <div className="flex gap-3 pt-6 flex-wrap">
-              <Button 
-                onClick={() => onApprove(request.id)}
-                className="bg-green-600 hover:bg-green-700 text-white"
-              >
-                Approve
-              </Button>
-              <Button 
-                onClick={() => onReject(request.id)}
-                variant="destructive"
-              >
-                Reject
-              </Button>
-              <Button 
-                onClick={() => onRequestChanges(request.id)}
-                variant="outline"
-              >
-                Request Changes
-              </Button>
-              <Button 
-                onClick={() => onMarkCompleted && onMarkCompleted(request.id)}
-                className="bg-blue-600 hover:bg-blue-700 text-white"
-              >
-                Mark Completed
-              </Button>
-            </div>
           </div>
 
           {/* Image Carousel Section */}
@@ -158,6 +130,34 @@ export const RequestModal = ({
               </Carousel>
             </div>
           </div>
+        </div>
+
+        {/* Action Buttons at bottom for all modals */}
+        <div className="flex gap-3 pt-6 border-t flex-wrap">
+          <Button 
+            onClick={() => onApprove(request.id)}
+            className="bg-green-600 hover:bg-green-700 text-white"
+          >
+            Approve
+          </Button>
+          <Button 
+            onClick={() => onReject(request.id)}
+            variant="destructive"
+          >
+            Reject
+          </Button>
+          <Button 
+            onClick={() => onRequestChanges(request.id)}
+            variant="outline"
+          >
+            Request Changes
+          </Button>
+          <Button 
+            onClick={() => onMarkCompleted && onMarkCompleted(request.id)}
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            Mark Completed
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
