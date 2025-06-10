@@ -126,14 +126,12 @@ export const RequestModal = ({
               >
                 Request Changes
               </Button>
-              {onMarkCompleted && (
-                <Button 
-                  onClick={() => onMarkCompleted(request.id)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
-                >
-                  Mark Completed
-                </Button>
-              )}
+              <Button 
+                onClick={() => onMarkCompleted && onMarkCompleted(request.id)}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                Mark Completed
+              </Button>
             </div>
           </div>
 
