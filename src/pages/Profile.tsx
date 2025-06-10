@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProfileImageSection } from "@/components/profile/ProfileImageSection";
@@ -19,6 +18,7 @@ interface UserProfile {
   phone: string;
   created_at: string;
   organization_id: string | null;
+  role_id: string;
 }
 
 interface Organization {
@@ -28,11 +28,19 @@ interface Organization {
   description: string | null;
 }
 
+interface UserRole {
+  id: string;
+  name: string;
+  display_name: string;
+  description: string | null;
+}
+
 export const Profile = () => {
   const { toast } = useToast();
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [currentOrganization, setCurrentOrganization] = useState<Organization | null>(null);
+  const [userRole, setUserRole] = useState<UserRole | null>(null);
   const [loading, setLoading] = useState(true);
 
   const [contactInfo, setContactInfo] = useState({
@@ -106,10 +114,18 @@ export const Profile = () => {
 
       setUser(currentUser);
 
-      // Fetch user profile
+      // Fetch user profile with role information
       const { data: profile, error: profileError } = await supabase
         .from('user_profiles')
-        .select('*')
+        .select(`
+          *,
+          user_roles (
+            id,
+            name,
+            display_name,
+            description
+          )
+        `)
         .eq('id', currentUser.id)
         .single();
 
@@ -124,6 +140,7 @@ export const Profile = () => {
       }
 
       setUserProfile(profile);
+      setUserRole(profile.user_roles);
       setContactInfo({
         firstName: profile.first_name,
         lastName: profile.last_name,
@@ -210,7 +227,7 @@ export const Profile = () => {
 
   const organizationData = currentOrganization ? {
     name: currentOrganization.name,
-    role: "Member", // You might want to fetch this from a user_organization_roles table
+    role: userRole?.display_name || "Member",
     joinedDate: new Date(userProfile.created_at).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
