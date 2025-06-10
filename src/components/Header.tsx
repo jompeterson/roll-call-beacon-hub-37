@@ -1,0 +1,76 @@
+
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Bell, User, ChevronDown } from "lucide-react";
+
+interface HeaderProps {
+  sidebarOpen: boolean;
+  setSidebarOpen: (open: boolean) => void;
+}
+
+export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
+  const navigate = useNavigate();
+  const [notificationCount] = useState(3);
+
+  return (
+    <header className="bg-card border-b border-border px-6 py-4 flex items-center justify-between relative z-50">
+      {/* Logo */}
+      <div className="flex items-center space-x-4">
+        <div className="text-2xl font-bold text-primary">Roll Call</div>
+      </div>
+
+      {/* Center Navigation */}
+      <div className="hidden md:flex items-center space-x-6">
+        <Link to="/">
+          <Button variant="ghost" className="text-foreground hover:text-primary">
+            Dashboard
+          </Button>
+        </Link>
+        <Link to="/valued-partners">
+          <Button variant="ghost" className="text-foreground hover:text-primary">
+            Valued Partners
+          </Button>
+        </Link>
+      </div>
+
+      {/* Right Side */}
+      <div className="flex items-center space-x-4">
+        {/* Notifications */}
+        <Button variant="ghost" size="sm" className="relative">
+          <Bell className="h-5 w-5" />
+          {notificationCount > 0 && (
+            <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
+              {notificationCount}
+            </span>
+          )}
+        </Button>
+
+        {/* User Dropdown */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="flex items-center space-x-2">
+              <User className="h-5 w-5" />
+              <span className="hidden md:inline">John Doe</span>
+              <ChevronDown className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48 bg-popover">
+            <DropdownMenuItem onClick={() => navigate("/profile")}>
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              Sign Out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </header>
+  );
+};
