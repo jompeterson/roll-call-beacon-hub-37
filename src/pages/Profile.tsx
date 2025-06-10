@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Camera, Save, Search } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Camera, Save, Search, Users, Mail, Phone } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export const Profile = () => {
@@ -28,12 +29,48 @@ export const Profile = () => {
     logo: "/placeholder.svg"
   };
 
-  // Mock organizations for search
+  // Mock organizations for search with detailed information
   const availableOrganizations = [
-    { id: "1", name: "Green Earth Foundation", type: "Environmental" },
-    { id: "2", name: "Community Health Center", type: "Healthcare" },
-    { id: "3", name: "Education First", type: "Education" },
-    { id: "4", name: "Local Food Bank", type: "Community Service" },
+    { 
+      id: "1", 
+      name: "Green Earth Foundation", 
+      type: "Environmental",
+      userCount: 245,
+      owner: "Sarah Johnson",
+      email: "contact@greenearth.org",
+      phone: "+1 (555) 987-6543",
+      description: "Dedicated to environmental conservation and sustainable practices."
+    },
+    { 
+      id: "2", 
+      name: "Community Health Center", 
+      type: "Healthcare",
+      userCount: 128,
+      owner: "Dr. Michael Chen",
+      email: "info@communityhealthcenter.org",
+      phone: "+1 (555) 234-5678",
+      description: "Providing quality healthcare services to the community."
+    },
+    { 
+      id: "3", 
+      name: "Education First", 
+      type: "Education",
+      userCount: 89,
+      owner: "Lisa Rodriguez",
+      email: "hello@educationfirst.org",
+      phone: "+1 (555) 345-6789",
+      description: "Improving educational opportunities for underserved communities."
+    },
+    { 
+      id: "4", 
+      name: "Local Food Bank", 
+      type: "Community Service",
+      userCount: 67,
+      owner: "Robert Wilson",
+      email: "support@localfoodbank.org",
+      phone: "+1 (555) 456-7890",
+      description: "Fighting hunger in our local community through food distribution."
+    },
   ];
 
   const filteredOrganizations = availableOrganizations.filter(org =>
@@ -244,9 +281,55 @@ export const Profile = () => {
                       <p className="text-sm text-muted-foreground">{org.type}</p>
                     </div>
                     <div className="flex gap-2">
-                      <Button variant="outline" size="sm">
-                        View Details
-                      </Button>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" size="sm">
+                            View Details
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px]">
+                          <DialogHeader>
+                            <DialogTitle>{org.name}</DialogTitle>
+                            <DialogDescription>
+                              Organization details and contact information
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="space-y-4">
+                            <div className="space-y-2">
+                              <Label className="text-sm font-medium">Description</Label>
+                              <p className="text-sm text-muted-foreground">{org.description}</p>
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <Label className="text-sm font-medium flex items-center gap-2">
+                                  <Users className="h-4 w-4" />
+                                  Members
+                                </Label>
+                                <p className="text-sm">{org.userCount} users</p>
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-sm font-medium">Owner</Label>
+                                <p className="text-sm">{org.owner}</p>
+                              </div>
+                            </div>
+
+                            <div className="space-y-3">
+                              <Label className="text-sm font-medium">Contact Information</Label>
+                              <div className="space-y-2">
+                                <div className="flex items-center gap-2">
+                                  <Mail className="h-4 w-4 text-muted-foreground" />
+                                  <span className="text-sm">{org.email}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <Phone className="h-4 w-4 text-muted-foreground" />
+                                  <span className="text-sm">{org.phone}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
                       <Button 
                         size="sm"
                         onClick={() => handleRequestAccess(org.name)}
