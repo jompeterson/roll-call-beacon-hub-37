@@ -23,7 +23,11 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
     <header className="bg-card border-b border-border px-6 py-4 flex items-center justify-between relative z-50">
       {/* Logo */}
       <div className="flex items-center space-x-4">
-        <div className="text-2xl font-bold text-primary">Roll Call</div>
+        <img 
+          src="/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png" 
+          alt="Roll Call Logo" 
+          className="h-8"
+        />
       </div>
 
       {/* Center Navigation */}
