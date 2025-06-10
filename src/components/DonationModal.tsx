@@ -20,6 +20,7 @@ interface DonationModalProps {
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
   onRequestChanges: (id: string) => void;
+  isScholarship?: boolean;
 }
 
 // Mock images for demonstration
@@ -30,13 +31,22 @@ const mockImages = [
 ];
 
 // Mock user data for demonstration
-const getUserInfo = (orgName: string) => {
-  const users = {
-    "Green Earth Foundation": { name: "Sarah Johnson", email: "sarah@greenearth.org", postedDate: "2024-06-08" },
-    "Tech for Good": { name: "Mike Chen", email: "mike@techforgood.org", postedDate: "2024-06-09" },
-    "Community Garden": { name: "Lisa Martinez", email: "lisa@communitygarden.org", postedDate: "2024-06-07" }
-  };
-  return users[orgName as keyof typeof users] || { name: "Unknown User", email: "unknown@example.com", postedDate: "2024-06-10" };
+const getUserInfo = (orgName: string, isScholarship: boolean = false) => {
+  if (isScholarship) {
+    const users = {
+      "Education Foundation": { name: "Sarah Johnson", email: "sarah@greenearth.org", postedDate: "2024-06-08", deadline: "July 15, 2024" },
+      "Community College": { name: "Mike Chen", email: "mike@techforgood.org", postedDate: "2024-06-09", deadline: "August 1, 2024" },
+      "Local University": { name: "Lisa Martinez", email: "lisa@communitygarden.org", postedDate: "2024-06-07", deadline: "June 30, 2024" }
+    };
+    return users[orgName as keyof typeof users] || { name: "Unknown User", email: "unknown@example.com", postedDate: "2024-06-10", deadline: "December 31, 2024" };
+  } else {
+    const users = {
+      "Green Earth Foundation": { name: "Sarah Johnson", email: "sarah@greenearth.org", postedDate: "2024-06-08" },
+      "Tech for Good": { name: "Mike Chen", email: "mike@techforgood.org", postedDate: "2024-06-09" },
+      "Community Garden": { name: "Lisa Martinez", email: "lisa@communitygarden.org", postedDate: "2024-06-07" }
+    };
+    return users[orgName as keyof typeof users] || { name: "Unknown User", email: "unknown@example.com", postedDate: "2024-06-10" };
+  }
 };
 
 export const DonationModal = ({ 
@@ -45,11 +55,12 @@ export const DonationModal = ({
   onOpenChange, 
   onApprove, 
   onReject, 
-  onRequestChanges 
+  onRequestChanges,
+  isScholarship = false
 }: DonationModalProps) => {
   if (!donation) return null;
 
-  const userInfo = getUserInfo(donation.organization);
+  const userInfo = getUserInfo(donation.organization, isScholarship);
 
   // Mock estimated value based on item type
   const getEstimatedValue = (type: string, item: string) => {
@@ -62,7 +73,7 @@ export const DonationModal = ({
       <DialogContent className="max-w-5xl w-full">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">{donation.item}</DialogTitle>
-          <p className="text-sm text-muted-foreground">Give a Donation</p>
+          <p className="text-sm text-muted-foreground">{isScholarship ? "Scholarship" : "Give a Donation"}</p>
         </DialogHeader>
         
         {/* User Information Section */}
@@ -76,6 +87,12 @@ export const DonationModal = ({
             <div className="text-right">
               <p className="text-sm text-muted-foreground">Posted on</p>
               <p className="text-sm font-medium">{new Date(userInfo.postedDate).toLocaleDateString()}</p>
+              {isScholarship && (userInfo as any).deadline && (
+                <>
+                  <p className="text-sm text-muted-foreground mt-2">Scholarship Deadline</p>
+                  <p className="text-sm font-medium">{(userInfo as any).deadline}</p>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -84,23 +101,27 @@ export const DonationModal = ({
           {/* Information Section */}
           <div className="space-y-6">
             <div>
-              <h3 className="font-semibold text-lg mb-4">Donation Information</h3>
+              <h3 className="font-semibold text-lg mb-4">{isScholarship ? "Scholarship Information" : "Donation Information"}</h3>
               <div className="space-y-4">
+                {!isScholarship && (
+                  <div>
+                    <label className="font-medium text-sm text-muted-foreground">Donation Type</label>
+                    <p className="text-base mt-1">{donation.type}</p>
+                  </div>
+                )}
+                {!isScholarship && (
+                  <div>
+                    <label className="font-medium text-sm text-muted-foreground">Donation Item</label>
+                    <p className="text-base mt-1">{donation.item}</p>
+                  </div>
+                )}
                 <div>
-                  <label className="font-medium text-sm text-muted-foreground">Donation Type</label>
-                  <p className="text-base mt-1">{donation.type}</p>
-                </div>
-                <div>
-                  <label className="font-medium text-sm text-muted-foreground">Donation Item</label>
-                  <p className="text-base mt-1">{donation.item}</p>
-                </div>
-                <div>
-                  <label className="font-medium text-sm text-muted-foreground">Donation Details</label>
+                  <label className="font-medium text-sm text-muted-foreground">{isScholarship ? "Scholarship Details" : "Donation Details"}</label>
                   <p className="text-base mt-1">{donation.details}</p>
                 </div>
                 <div>
-                  <label className="font-medium text-sm text-muted-foreground">Estimated Value</label>
-                  <p className="text-base mt-1">{getEstimatedValue(donation.type, donation.item)}</p>
+                  <label className="font-medium text-sm text-muted-foreground">{isScholarship ? "Scholarship Amount" : "Estimated Value"}</label>
+                  <p className="text-base mt-1">{isScholarship ? donation.details : getEstimatedValue(donation.type, donation.item)}</p>
                 </div>
               </div>
             </div>

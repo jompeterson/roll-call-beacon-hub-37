@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -8,7 +7,7 @@ import { ChevronUp, ChevronDown, Clock, CheckCircle, XCircle, Archive } from "lu
 import { DonationModal } from "@/components/DonationModal";
 
 type SortDirection = "asc" | "desc" | null;
-type SortField = "organization" | "type" | "item" | "details" | "status" | null;
+type SortField = "organization" | "name" | "amount" | "status" | null;
 
 interface ScholarshipPost {
   id: string;
@@ -25,7 +24,7 @@ const mockScholarshipPosts: ScholarshipPost[] = [
     organization: "Education Foundation",
     type: "Materials",
     item: "STEM Scholarship",
-    details: "$5,000 scholarship for STEM students",
+    details: "$5,000",
     status: "Approved"
   },
   {
@@ -33,7 +32,7 @@ const mockScholarshipPosts: ScholarshipPost[] = [
     organization: "Community College",
     type: "Tools",
     item: "Trade Skills Grant",
-    details: "Funding for vocational training programs",
+    details: "$3,000",
     status: "Pending"
   },
   {
@@ -41,7 +40,7 @@ const mockScholarshipPosts: ScholarshipPost[] = [
     organization: "Local University",
     type: "Materials",
     item: "Arts Scholarship",
-    details: "Support for fine arts students",
+    details: "$2,500",
     status: "Rejected"
   }
 ];
@@ -98,7 +97,6 @@ const SortableTableHead = ({
 
 export const Scholarships = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [typeFilter, setTypeFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   
   // Sorting states for scholarship posts
@@ -133,8 +131,19 @@ export const Scholarships = () => {
     if (!sortField || !direction) return data;
     
     return [...data].sort((a, b) => {
-      let aValue = a[sortField as keyof T] as string;
-      let bValue = b[sortField as keyof T] as string;
+      let aValue: string;
+      let bValue: string;
+      
+      if (sortField === "name") {
+        aValue = a.item;
+        bValue = b.item;
+      } else if (sortField === "amount") {
+        aValue = a.details;
+        bValue = b.details;
+      } else {
+        aValue = a[sortField as keyof T] as string;
+        bValue = b[sortField as keyof T] as string;
+      }
       
       if (direction === "asc") {
         return aValue.localeCompare(bValue);
@@ -150,10 +159,9 @@ export const Scholarships = () => {
         Object.values(item).some(value => 
           value.toLowerCase().includes(searchTerm.toLowerCase())
         );
-      const matchesType = typeFilter === "all" || item.type === typeFilter;
       const matchesStatus = statusFilter === "all" || item.status === statusFilter;
       
-      return matchesSearch && matchesType && matchesStatus;
+      return matchesSearch && matchesStatus;
     });
   };
 
@@ -199,17 +207,6 @@ export const Scholarships = () => {
             className="w-full"
           />
         </div>
-        
-        <Select value={typeFilter} onValueChange={setTypeFilter}>
-          <SelectTrigger className="w-[150px]">
-            <SelectValue placeholder="Type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Types</SelectItem>
-            <SelectItem value="Materials">Materials</SelectItem>
-            <SelectItem value="Tools">Tools</SelectItem>
-          </SelectContent>
-        </Select>
 
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-[150px]">
@@ -243,31 +240,22 @@ export const Scholarships = () => {
                     Organization
                   </SortableTableHead>
                   <SortableTableHead
-                    field="type"
-                    currentSort={scholarshipSort}
-                    currentDirection={scholarshipDirection}
-                    onSort={handleScholarshipSort}
-                    className="w-1/6"
-                  >
-                    Type
-                  </SortableTableHead>
-                  <SortableTableHead
-                    field="item"
-                    currentSort={scholarshipSort}
-                    currentDirection={scholarshipDirection}
-                    onSort={handleScholarshipSort}
-                    className="w-1/6"
-                  >
-                    Item
-                  </SortableTableHead>
-                  <SortableTableHead
-                    field="details"
+                    field="name"
                     currentSort={scholarshipSort}
                     currentDirection={scholarshipDirection}
                     onSort={handleScholarshipSort}
                     className="w-1/4"
                   >
-                    Details
+                    Name
+                  </SortableTableHead>
+                  <SortableTableHead
+                    field="amount"
+                    currentSort={scholarshipSort}
+                    currentDirection={scholarshipDirection}
+                    onSort={handleScholarshipSort}
+                    className="w-1/6"
+                  >
+                    Amount
                   </SortableTableHead>
                   <SortableTableHead
                     field="status"
@@ -291,9 +279,8 @@ export const Scholarships = () => {
                       onClick={() => handleScholarshipRowClick(post)}
                     >
                       <TableCell className="font-medium w-2/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.organization}</TableCell>
-                      <TableCell className="w-1/6 whitespace-nowrap">{post.type}</TableCell>
-                      <TableCell className="w-1/6 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.item}</TableCell>
-                      <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.details}</TableCell>
+                      <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.item}</TableCell>
+                      <TableCell className="w-1/6 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.details}</TableCell>
                       <TableCell className="w-1/6">
                         <div className="flex items-center gap-2 whitespace-nowrap">
                           <StatusIcon status={post.status} />
@@ -317,6 +304,7 @@ export const Scholarships = () => {
         onApprove={handleScholarshipApprove}
         onReject={handleScholarshipReject}
         onRequestChanges={handleScholarshipRequestChanges}
+        isScholarship={true}
       />
     </div>
   );
