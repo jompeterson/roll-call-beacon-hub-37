@@ -6,10 +6,18 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Eye, EyeOff } from "lucide-react";
+import { signIn } from "@/lib/auth";
+import { useToast } from "@/hooks/use-toast";
 
 export const Login = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({
+    username: "",
+    password: "",
+  });
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -21,13 +29,63 @@ export const Login = () => {
       ...prev,
       [name]: value
     }));
+    
+    // Clear errors when user starts typing
+    if (errors.username || errors.password) {
+      setErrors({
+        username: "",
+        password: "",
+      });
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login attempt:", formData);
-    // TODO: Implement actual authentication logic
-    navigate("/");
+    setIsLoading(true);
+    setErrors({
+      username: "",
+      password: "",
+    });
+
+    try {
+      const { data, error } = await signIn(formData.username, formData.password);
+
+      if (error) {
+        console.error("Login error:", error);
+        
+        // Show error on both fields for incorrect credentials
+        setErrors({
+          username: "Incorrect information",
+          password: "Incorrect information",
+        });
+        
+        toast({
+          title: "Login Failed",
+          description: "Please check your credentials and try again.",
+          variant: "destructive",
+        });
+      } else if (data.user) {
+        toast({
+          title: "Welcome back!",
+          description: "You have been successfully signed in.",
+        });
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setErrors({
+        username: "Incorrect information",
+        password: "Incorrect information",
+      });
+      
+      toast({
+        title: "Login Failed",
+        description: "An error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -73,9 +131,12 @@ export const Login = () => {
                     value={formData.username}
                     onChange={handleInputChange}
                     placeholder="Enter your username or email"
-                    className="h-12"
+                    className={`h-12 ${errors.username ? 'border-destructive' : ''}`}
                     required
                   />
+                  {errors.username && (
+                    <p className="text-sm text-destructive">{errors.username}</p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -88,7 +149,7 @@ export const Login = () => {
                       value={formData.password}
                       onChange={handleInputChange}
                       placeholder="Enter your password"
-                      className="h-12 pr-10"
+                      className={`h-12 pr-10 ${errors.password ? 'border-destructive' : ''}`}
                       required
                     />
                     <Button
@@ -105,6 +166,9 @@ export const Login = () => {
                       )}
                     </Button>
                   </div>
+                  {errors.password && (
+                    <p className="text-sm text-destructive">{errors.password}</p>
+                  )}
                 </div>
 
                 <div className="flex items-center justify-between">
@@ -116,8 +180,12 @@ export const Login = () => {
                   </Link>
                 </div>
 
-                <Button type="submit" className="w-full h-12 text-base">
-                  Sign In
+                <Button 
+                  type="submit" 
+                  className="w-full h-12 text-base"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Signing In..." : "Sign In"}
                 </Button>
               </form>
 
