@@ -11,9 +11,9 @@ export const Layout = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      <div className="flex flex-1">
+      <div className="flex flex-1 overflow-hidden">
         <Sidebar open={sidebarOpen} />
-        <main className="flex-1 p-6">
+        <main className="flex-1 overflow-y-auto p-6">
           <Outlet />
         </main>
       </div>
