@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -112,8 +113,8 @@ const SortableTableHead = ({
   
   return (
     <TableHead 
-      className="cursor-pointer hover:bg-gray-100 select-none"
-      style={{ backgroundColor: "#d3d3d3" }}
+      className="cursor-pointer hover:bg-[#1e3a52] select-none text-white"
+      style={{ backgroundColor: "#294865" }}
       onClick={() => onSort(field)}
     >
       <div className="flex items-center justify-between">
