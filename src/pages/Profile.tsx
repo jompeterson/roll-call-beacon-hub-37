@@ -70,6 +70,13 @@ export const Profile = () => {
     }));
   };
 
+  const handleRequestAccess = (organizationName: string) => {
+    toast({
+      title: "Access request sent",
+      description: `Your request to join ${organizationName} has been sent.`,
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -236,9 +243,17 @@ export const Profile = () => {
                       <p className="font-medium">{org.name}</p>
                       <p className="text-sm text-muted-foreground">{org.type}</p>
                     </div>
-                    <Button variant="outline" size="sm">
-                      View Details
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm">
+                        View Details
+                      </Button>
+                      <Button 
+                        size="sm"
+                        onClick={() => handleRequestAccess(org.name)}
+                      >
+                        Request Access
+                      </Button>
+                    </div>
                   </div>
                 ))}
                 {organizationSearch && filteredOrganizations.length === 0 && (
