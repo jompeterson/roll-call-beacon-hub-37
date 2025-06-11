@@ -32,7 +32,8 @@ export const DonationCreateModal = ({
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    amount_needed: "",
+    estimated_value: "",
+    donation_type: "",
     target_date: "",
     donation_link: "",
     contact_email: "",
@@ -113,7 +114,7 @@ export const DonationCreateModal = ({
       const donationData = {
         title: formData.title,
         description: formData.description || null,
-        amount_needed: parseFloat(formData.amount_needed),
+        amount_needed: parseFloat(formData.estimated_value),
         target_date: formData.target_date ? new Date(formData.target_date).toISOString() : null,
         donation_link: formData.donation_link || null,
         contact_email: formData.contact_email || null,
@@ -143,7 +144,8 @@ export const DonationCreateModal = ({
       setFormData({
         title: "",
         description: "",
-        amount_needed: "",
+        estimated_value: "",
+        donation_type: "",
         target_date: "",
         donation_link: "",
         contact_email: contactInfo?.email || "",
@@ -188,17 +190,31 @@ export const DonationCreateModal = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="amount_needed">Amount Needed *</Label>
+              <Label htmlFor="estimated_value">Estimated Value *</Label>
               <Input
-                id="amount_needed"
+                id="estimated_value"
                 type="number"
                 step="0.01"
                 min="0"
-                value={formData.amount_needed}
-                onChange={(e) => handleInputChange("amount_needed", e.target.value)}
+                value={formData.estimated_value}
+                onChange={(e) => handleInputChange("estimated_value", e.target.value)}
                 placeholder="0.00"
                 required
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="donation_type">Donation Type *</Label>
+              <Select value={formData.donation_type} onValueChange={(value) => handleInputChange("donation_type", value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select donation type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Tools">Tools</SelectItem>
+                  <SelectItem value="Materials">Materials</SelectItem>
+                  <SelectItem value="Other">Other</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="space-y-2">
@@ -284,7 +300,7 @@ export const DonationCreateModal = ({
           <div className="flex gap-3 pt-4">
             <Button
               type="submit"
-              disabled={isSubmitting || !formData.title || !formData.amount_needed}
+              disabled={isSubmitting || !formData.title || !formData.estimated_value || !formData.donation_type}
               className="flex-1"
             >
               {isSubmitting ? "Creating..." : "Create Donation Post"}
