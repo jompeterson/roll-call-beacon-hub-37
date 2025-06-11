@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -9,46 +8,11 @@ import { ChevronUp, ChevronDown, Clock, CheckCircle, XCircle, Archive } from "lu
 import { DonationModal } from "@/components/DonationModal";
 import { RequestModal } from "@/components/RequestModal";
 import { useDonations, type Donation } from "@/hooks/useDonations";
+import { useRequests, type Request } from "@/hooks/useRequests";
 
 type SortDirection = "asc" | "desc" | null;
 type DonationSortField = "organization_name" | "title" | "description" | "status" | null;
-type RequestSortField = "organization" | "type" | "item" | "details" | "status" | null;
-
-interface RequestPost {
-  id: string;
-  organization: string;
-  type: "Materials" | "Tools";
-  item: string;
-  details: string;
-  status: "Approved" | "Pending" | "Rejected" | "Archived";
-}
-
-const mockRequestPosts: RequestPost[] = [
-  {
-    id: "1",
-    organization: "Local School District",
-    type: "Materials",
-    item: "Art Supplies",
-    details: "Paint, brushes, and canvas for art class",
-    status: "Pending"
-  },
-  {
-    id: "2",
-    organization: "Youth Center",
-    type: "Tools",
-    item: "Sports Equipment",
-    details: "Basketball hoops and volleyballs",
-    status: "Approved"
-  },
-  {
-    id: "3",
-    organization: "Senior Center",
-    type: "Materials",
-    item: "Craft Materials",
-    details: "Yarn and knitting needles",
-    status: "Archived"
-  }
-];
+type RequestSortField = "organization_name" | "request_type" | "title" | "description" | "status" | null;
 
 const StatusIcon = ({ status }: { status: string }) => {
   switch (status) {
@@ -143,6 +107,14 @@ const getDonationStatus = (donation: Donation): "Approved" | "Pending" | "Reject
   return donation.is_approved ? "Approved" : "Rejected";
 };
 
+// Helper function to get status from request approval state
+const getRequestStatus = (request: Request): "Approved" | "Pending" | "Rejected" | "Archived" => {
+  if (!request.approval_decision_made) {
+    return "Pending";
+  }
+  return request.is_approved ? "Approved" : "Rejected";
+};
+
 export const Donations = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -158,11 +130,12 @@ export const Donations = () => {
   // Modal states
   const [selectedDonation, setSelectedDonation] = useState<Donation | null>(null);
   const [donationModalOpen, setDonationModalOpen] = useState(false);
-  const [selectedRequest, setSelectedRequest] = useState<RequestPost | null>(null);
+  const [selectedRequest, setSelectedRequest] = useState<Request | null>(null);
   const [requestModalOpen, setRequestModalOpen] = useState(false);
 
-  // Fetch donations from Supabase
-  const { data: donations = [], isLoading, error } = useDonations();
+  // Fetch data from Supabase
+  const { data: donations = [], isLoading: donationsLoading, error: donationsError } = useDonations();
+  const { data: requests = [], isLoading: requestsLoading, error: requestsError } = useRequests();
 
   const handleDonationSort = (field: DonationSortField) => {
     if (donationSort === field) {
@@ -237,10 +210,10 @@ export const Donations = () => {
   };
 
   const sortRequests = (
-    data: RequestPost[], 
+    data: Request[], 
     sortField: RequestSortField, 
     direction: SortDirection
-  ): RequestPost[] => {
+  ): Request[] => {
     if (!sortField || !direction) return data;
     
     return [...data].sort((a, b) => {
@@ -248,25 +221,25 @@ export const Donations = () => {
       let bValue: string;
       
       switch (sortField) {
-        case "organization":
-          aValue = a.organization;
-          bValue = b.organization;
+        case "organization_name":
+          aValue = a.organization_name || "";
+          bValue = b.organization_name || "";
           break;
-        case "type":
-          aValue = a.type;
-          bValue = b.type;
+        case "request_type":
+          aValue = a.request_type;
+          bValue = b.request_type;
           break;
-        case "item":
-          aValue = a.item;
-          bValue = b.item;
+        case "title":
+          aValue = a.title;
+          bValue = b.title;
           break;
-        case "details":
-          aValue = a.details;
-          bValue = b.details;
+        case "description":
+          aValue = a.description || "";
+          bValue = b.description || "";
           break;
         case "status":
-          aValue = a.status;
-          bValue = b.status;
+          aValue = getRequestStatus(a);
+          bValue = getRequestStatus(b);
           break;
         default:
           return 0;
@@ -293,13 +266,14 @@ export const Donations = () => {
     });
   };
 
-  const filterRequests = (data: RequestPost[]): RequestPost[] => {
-    return data.filter((item) => {
+  const filterRequests = (data: Request[]): Request[] => {
+    return data.filter((request) => {
       const matchesSearch = searchTerm === "" || 
-        Object.values(item).some(value => 
-          value.toLowerCase().includes(searchTerm.toLowerCase())
+        Object.values(request).some(value => 
+          value && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
         );
-      const matchesStatus = statusFilter === "all" || item.status === statusFilter;
+      const status = getRequestStatus(request);
+      const matchesStatus = statusFilter === "all" || status === statusFilter;
       
       return matchesSearch && matchesStatus;
     });
@@ -308,7 +282,7 @@ export const Donations = () => {
   const filteredDonationPosts = filterDonations(donations);
   const sortedDonationPosts = sortDonations(filteredDonationPosts, donationSort, donationDirection);
   
-  const filteredRequestPosts = filterRequests(mockRequestPosts);
+  const filteredRequestPosts = filterRequests(requests);
   const sortedRequestPosts = sortRequests(filteredRequestPosts, requestSort, requestDirection);
 
   const handleDonationRowClick = (donation: Donation) => {
@@ -316,7 +290,7 @@ export const Donations = () => {
     setDonationModalOpen(true);
   };
 
-  const handleRequestRowClick = (request: RequestPost) => {
+  const handleRequestRowClick = (request: Request) => {
     setSelectedRequest(request);
     setRequestModalOpen(true);
   };
@@ -351,7 +325,7 @@ export const Donations = () => {
     setRequestModalOpen(false);
   };
 
-  if (isLoading) {
+  if (donationsLoading || requestsLoading) {
     return (
       <div className="space-y-6">
         <div>
@@ -361,13 +335,13 @@ export const Donations = () => {
           </p>
         </div>
         <div className="flex items-center justify-center h-64">
-          <p>Loading donations...</p>
+          <p>Loading donations and requests...</p>
         </div>
       </div>
     );
   }
 
-  if (error) {
+  if (donationsError || requestsError) {
     return (
       <div className="space-y-6">
         <div>
@@ -377,7 +351,9 @@ export const Donations = () => {
           </p>
         </div>
         <div className="flex items-center justify-center h-64">
-          <p className="text-red-600">Error loading donations: {error.message}</p>
+          <p className="text-red-600">
+            Error loading data: {donationsError?.message || requestsError?.message}
+          </p>
         </div>
       </div>
     );
@@ -519,7 +495,7 @@ export const Donations = () => {
                 <TableHeader>
                   <TableRow>
                     <RequestSortableTableHead
-                      field="organization"
+                      field="organization_name"
                       currentSort={requestSort}
                       currentDirection={requestDirection}
                       onSort={handleRequestSort}
@@ -528,7 +504,7 @@ export const Donations = () => {
                       Organization
                     </RequestSortableTableHead>
                     <RequestSortableTableHead
-                      field="type"
+                      field="request_type"
                       currentSort={requestSort}
                       currentDirection={requestDirection}
                       onSort={handleRequestSort}
@@ -537,7 +513,7 @@ export const Donations = () => {
                       Type
                     </RequestSortableTableHead>
                     <RequestSortableTableHead
-                      field="item"
+                      field="title"
                       currentSort={requestSort}
                       currentDirection={requestDirection}
                       onSort={handleRequestSort}
@@ -546,7 +522,7 @@ export const Donations = () => {
                       Item
                     </RequestSortableTableHead>
                     <RequestSortableTableHead
-                      field="details"
+                      field="description"
                       currentSort={requestSort}
                       currentDirection={requestDirection}
                       onSort={handleRequestSort}
@@ -569,24 +545,39 @@ export const Donations = () => {
               <ScrollArea className="flex-1">
                 <Table>
                   <TableBody>
-                    {sortedRequestPosts.map((post) => (
-                      <TableRow 
-                        key={post.id} 
-                        className="cursor-pointer hover:bg-muted/50"
-                        onClick={() => handleRequestRowClick(post)}
-                      >
-                        <TableCell className="font-medium w-2/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.organization}</TableCell>
-                        <TableCell className="w-1/6 whitespace-nowrap">{post.type}</TableCell>
-                        <TableCell className="w-1/6 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.item}</TableCell>
-                        <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.details}</TableCell>
-                        <TableCell className="w-1/6">
-                          <div className="flex items-center gap-2 whitespace-nowrap">
-                            <StatusIcon status={post.status} />
-                            <span>{post.status}</span>
-                          </div>
+                    {sortedRequestPosts.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                          No requests available
                         </TableCell>
                       </TableRow>
-                    ))}
+                    ) : (
+                      sortedRequestPosts.map((request) => {
+                        const status = getRequestStatus(request);
+                        return (
+                          <TableRow 
+                            key={request.id} 
+                            className="cursor-pointer hover:bg-muted/50"
+                            onClick={() => handleRequestRowClick(request)}
+                          >
+                            <TableCell className="font-medium w-2/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                              {request.organization_name || "No Organization"}
+                            </TableCell>
+                            <TableCell className="w-1/6 whitespace-nowrap">{request.request_type}</TableCell>
+                            <TableCell className="w-1/6 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{request.title}</TableCell>
+                            <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                              {request.description || "No description"}
+                            </TableCell>
+                            <TableCell className="w-1/6">
+                              <div className="flex items-center gap-2 whitespace-nowrap">
+                                <StatusIcon status={status} />
+                                <span>{status}</span>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })
+                    )}
                   </TableBody>
                 </Table>
               </ScrollArea>

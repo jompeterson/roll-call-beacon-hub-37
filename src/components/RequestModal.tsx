@@ -1,19 +1,12 @@
+
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-
-interface RequestPost {
-  id: string;
-  organization: string;
-  type: "Materials" | "Tools";
-  item: string;
-  details: string;
-  status: "Approved" | "Pending" | "Rejected" | "Archived";
-}
+import type { Request } from "@/hooks/useRequests";
 
 interface RequestModalProps {
-  request: RequestPost | null;
+  request: Request | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onApprove: (id: string) => void;
@@ -39,6 +32,14 @@ const getUserInfo = (orgName: string) => {
   return users[orgName as keyof typeof users] || { name: "Unknown User", email: "unknown@example.com", postedDate: "2024-06-10" };
 };
 
+// Helper function to get status from request approval state
+const getRequestStatus = (request: Request): "Approved" | "Pending" | "Rejected" | "Archived" => {
+  if (!request.approval_decision_made) {
+    return "Pending";
+  }
+  return request.is_approved ? "Approved" : "Rejected";
+};
+
 export const RequestModal = ({ 
   request, 
   open, 
@@ -50,19 +51,22 @@ export const RequestModal = ({
 }: RequestModalProps) => {
   if (!request) return null;
 
-  const userInfo = getUserInfo(request.organization);
+  const orgName = request.organization_name || "Unknown Organization";
+  const userInfo = getUserInfo(orgName);
 
-  // Mock donation need by date based on item type
-  const getDonationNeedBy = (type: string, item: string) => {
-    if (type === "Tools") return "July 15, 2024";
-    return "June 30, 2024";
+  // Mock donation need by date based on request type
+  const getDonationNeedBy = (deadline: string | null) => {
+    if (deadline) {
+      return new Date(deadline).toLocaleDateString();
+    }
+    return "Not specified";
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-5xl w-full max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">{request.item}</DialogTitle>
+          <DialogTitle className="text-2xl font-bold">{request.title}</DialogTitle>
           <p className="text-sm text-muted-foreground">Request a Donation</p>
         </DialogHeader>
         
@@ -72,11 +76,11 @@ export const RequestModal = ({
             <div>
               <h4 className="font-semibold text-base">{userInfo.name}</h4>
               <p className="text-sm text-muted-foreground">{userInfo.email}</p>
-              <p className="text-sm text-muted-foreground">{request.organization}</p>
+              <p className="text-sm text-muted-foreground">{orgName}</p>
             </div>
             <div className="text-right">
               <p className="text-sm text-muted-foreground">Posted on</p>
-              <p className="text-sm font-medium">{new Date(userInfo.postedDate).toLocaleDateString()}</p>
+              <p className="text-sm font-medium">{new Date(request.created_at).toLocaleDateString()}</p>
             </div>
           </div>
         </div>
@@ -89,20 +93,46 @@ export const RequestModal = ({
               <div className="space-y-4">
                 <div>
                   <label className="font-medium text-sm text-muted-foreground">Request Type</label>
-                  <p className="text-base mt-1">{request.type}</p>
+                  <p className="text-base mt-1">{request.request_type}</p>
                 </div>
                 <div>
                   <label className="font-medium text-sm text-muted-foreground">Requested Item</label>
-                  <p className="text-base mt-1">{request.item}</p>
+                  <p className="text-base mt-1">{request.title}</p>
                 </div>
-                <div>
-                  <label className="font-medium text-sm text-muted-foreground">Request Details</label>
-                  <p className="text-base mt-1">{request.details}</p>
-                </div>
+                {request.description && (
+                  <div>
+                    <label className="font-medium text-sm text-muted-foreground">Request Details</label>
+                    <p className="text-base mt-1">{request.description}</p>
+                  </div>
+                )}
                 <div>
                   <label className="font-medium text-sm text-muted-foreground">Donation Need By</label>
-                  <p className="text-base mt-1">{getDonationNeedBy(request.type, request.item)}</p>
+                  <p className="text-base mt-1">{getDonationNeedBy(request.deadline)}</p>
                 </div>
+                {request.location && (
+                  <div>
+                    <label className="font-medium text-sm text-muted-foreground">Location</label>
+                    <p className="text-base mt-1">{request.location}</p>
+                  </div>
+                )}
+                {request.urgency_level && (
+                  <div>
+                    <label className="font-medium text-sm text-muted-foreground">Urgency Level</label>
+                    <p className="text-base mt-1">{request.urgency_level}</p>
+                  </div>
+                )}
+                {request.contact_email && (
+                  <div>
+                    <label className="font-medium text-sm text-muted-foreground">Contact Email</label>
+                    <p className="text-base mt-1">{request.contact_email}</p>
+                  </div>
+                )}
+                {request.contact_phone && (
+                  <div>
+                    <label className="font-medium text-sm text-muted-foreground">Contact Phone</label>
+                    <p className="text-base mt-1">{request.contact_phone}</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -118,7 +148,7 @@ export const RequestModal = ({
                       <div className="aspect-square rounded-lg overflow-hidden">
                         <img 
                           src={image} 
-                          alt={`${request.item} ${index + 1}`}
+                          alt={`${request.title} ${index + 1}`}
                           className="w-full h-full object-cover"
                         />
                       </div>
