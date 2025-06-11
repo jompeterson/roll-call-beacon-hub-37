@@ -40,7 +40,7 @@ export const ScholarshipModal = ({
   isRejecting = false,
   isRequestingChanges = false,
 }: ScholarshipModalProps) => {
-  const { isAdministrator } = useAuth();
+  const { isAdministrator, isAuthenticated } = useAuth();
 
   if (!scholarship) return null;
 
@@ -80,7 +80,7 @@ export const ScholarshipModal = ({
             <DialogTitle className="text-xl font-semibold">
               {scholarship.title}
             </DialogTitle>
-            {getStatusBadge()}
+            {isAuthenticated && getStatusBadge()}
           </div>
         </DialogHeader>
 
@@ -101,10 +101,12 @@ export const ScholarshipModal = ({
               <h4 className="font-semibold text-sm text-muted-foreground mb-1">Application Deadline</h4>
               <p className="text-sm">{formatDate(scholarship.application_deadline)}</p>
             </div>
-            <div>
-              <h4 className="font-semibold text-sm text-muted-foreground mb-1">Creator</h4>
-              <p className="text-sm">{scholarship.creator?.email || "Unknown"}</p>
-            </div>
+            {isAuthenticated && (
+              <div>
+                <h4 className="font-semibold text-sm text-muted-foreground mb-1">Creator</h4>
+                <p className="text-sm">{scholarship.creator?.email || "Unknown"}</p>
+              </div>
+            )}
           </div>
 
           <Separator />
@@ -138,10 +140,12 @@ export const ScholarshipModal = ({
             )}
           </div>
 
-          <div className="text-xs text-muted-foreground">
-            <p>Created: {formatDate(scholarship.created_at)}</p>
-            <p>Last Updated: {formatDate(scholarship.updated_at)}</p>
-          </div>
+          {isAuthenticated && (
+            <div className="text-xs text-muted-foreground">
+              <p>Created: {formatDate(scholarship.created_at)}</p>
+              <p>Last Updated: {formatDate(scholarship.updated_at)}</p>
+            </div>
+          )}
         </div>
 
         {showActionButtons && (

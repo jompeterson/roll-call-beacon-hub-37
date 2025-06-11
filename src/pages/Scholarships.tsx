@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -7,6 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChevronUp, ChevronDown, Clock, CheckCircle, XCircle } from "lucide-react";
 import { ScholarshipModal } from "@/components/ScholarshipModal";
 import { useScholarships } from "@/hooks/useScholarships";
+import { useAuth } from "@/hooks/useAuth";
 import { Tables } from "@/integrations/supabase/types";
 
 type SortDirection = "asc" | "desc" | null;
@@ -76,7 +76,7 @@ export const Scholarships = () => {
   const [selectedScholarship, setSelectedScholarship] = useState<Scholarship | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-  // Use the scholarships hook
+  // Use the scholarships hook and auth
   const {
     scholarships,
     isLoading,
@@ -88,6 +88,8 @@ export const Scholarships = () => {
     isRejecting,
     isRequestingChanges,
   } = useScholarships();
+
+  const { isAuthenticated } = useAuth();
 
   const handleSort = (field: SortField) => {
     if (sort === field) {
@@ -219,17 +221,19 @@ export const Scholarships = () => {
           />
         </div>
 
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[150px]">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="Approved">Approved</SelectItem>
-            <SelectItem value="Pending">Pending</SelectItem>
-            <SelectItem value="Rejected">Rejected</SelectItem>
-          </SelectContent>
-        </Select>
+        {isAuthenticated && (
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-[150px]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="Approved">Approved</SelectItem>
+              <SelectItem value="Pending">Pending</SelectItem>
+              <SelectItem value="Rejected">Rejected</SelectItem>
+            </SelectContent>
+          </Select>
+        )}
       </div>
 
       {/* Scholarship Posts Section */}
@@ -245,7 +249,7 @@ export const Scholarships = () => {
                     currentSort={sort}
                     currentDirection={direction}
                     onSort={handleSort}
-                    className="w-2/5"
+                    className={isAuthenticated ? "w-2/5" : "w-1/2"}
                   >
                     Organization
                   </SortableTableHead>
@@ -254,7 +258,7 @@ export const Scholarships = () => {
                     currentSort={sort}
                     currentDirection={direction}
                     onSort={handleSort}
-                    className="w-1/4"
+                    className={isAuthenticated ? "w-1/4" : "w-1/3"}
                   >
                     Name
                   </SortableTableHead>
@@ -267,15 +271,17 @@ export const Scholarships = () => {
                   >
                     Amount
                   </SortableTableHead>
-                  <SortableTableHead
-                    field="is_approved"
-                    currentSort={sort}
-                    currentDirection={direction}
-                    onSort={handleSort}
-                    className="w-1/6"
-                  >
-                    Status
-                  </SortableTableHead>
+                  {isAuthenticated && (
+                    <SortableTableHead
+                      field="is_approved"
+                      currentSort={sort}
+                      currentDirection={direction}
+                      onSort={handleSort}
+                      className="w-1/6"
+                    >
+                      Status
+                    </SortableTableHead>
+                  )}
                 </TableRow>
               </TableHeader>
             </Table>
@@ -284,13 +290,13 @@ export const Scholarships = () => {
                 <TableBody>
                   {isLoading ? (
                     <TableRow>
-                      <TableCell colSpan={4} className="text-center py-8">
+                      <TableCell colSpan={isAuthenticated ? 4 : 3} className="text-center py-8">
                         Loading scholarships...
                       </TableCell>
                     </TableRow>
                   ) : sortedScholarships.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={4} className="text-center py-8">
+                      <TableCell colSpan={isAuthenticated ? 4 : 3} className="text-center py-8">
                         No scholarships found
                       </TableCell>
                     </TableRow>
@@ -301,21 +307,23 @@ export const Scholarships = () => {
                         className="cursor-pointer hover:bg-muted/50"
                         onClick={() => handleRowClick(scholarship)}
                       >
-                        <TableCell className="font-medium w-2/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                        <TableCell className={`font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-0 ${isAuthenticated ? "w-2/5" : "w-1/2"}`}>
                           {scholarship.organization_name}
                         </TableCell>
-                        <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                        <TableCell className={`whitespace-nowrap overflow-hidden text-ellipsis max-w-0 ${isAuthenticated ? "w-1/4" : "w-1/3"}`}>
                           {scholarship.title}
                         </TableCell>
                         <TableCell className="w-1/6 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
                           {formatCurrency(Number(scholarship.amount))}
                         </TableCell>
-                        <TableCell className="w-1/6">
-                          <div className="flex items-center gap-2 whitespace-nowrap">
-                            <StatusIcon scholarship={scholarship} />
-                            <span>{getStatusText(scholarship)}</span>
-                          </div>
-                        </TableCell>
+                        {isAuthenticated && (
+                          <TableCell className="w-1/6">
+                            <div className="flex items-center gap-2 whitespace-nowrap">
+                              <StatusIcon scholarship={scholarship} />
+                              <span>{getStatusText(scholarship)}</span>
+                            </div>
+                          </TableCell>
+                        )}
                       </TableRow>
                     ))
                   )}
