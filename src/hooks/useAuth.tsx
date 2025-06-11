@@ -2,10 +2,12 @@
 import { useState, useEffect } from "react";
 import { customAuth, type User as CustomUser } from "@/lib/customAuth";
 import { useProfileData } from "@/hooks/useProfileData";
+import { checkVerificationStatus } from "@/lib/auth";
 
 export const useAuth = () => {
   const [user, setUser] = useState<CustomUser | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [isApproved, setIsApproved] = useState<boolean | null>(null);
   const isAuthenticated = !!user && isInitialized;
   
   // Always call useProfileData, but it will handle auth check internally
@@ -24,12 +26,38 @@ export const useAuth = () => {
       const currentUser = customAuth.getUser();
       setUser(currentUser);
       setIsInitialized(true);
+      
+      // Check approval status if user is logged in
+      if (currentUser) {
+        checkVerificationStatus(currentUser.email)
+          .then(({ isApproved }) => {
+            setIsApproved(isApproved);
+          })
+          .catch(error => {
+            console.error("Error checking approval status:", error);
+            setIsApproved(false);
+          });
+      }
     }, 100);
 
     // Listen for auth state changes
     const unsubscribe = customAuth.onAuthStateChange((user) => {
       setUser(user);
       setIsInitialized(true);
+      
+      // Check approval status when auth state changes
+      if (user) {
+        checkVerificationStatus(user.email)
+          .then(({ isApproved }) => {
+            setIsApproved(isApproved);
+          })
+          .catch(error => {
+            console.error("Error checking approval status:", error);
+            setIsApproved(false);
+          });
+      } else {
+        setIsApproved(null);
+      }
     });
 
     return () => {
@@ -45,6 +73,7 @@ export const useAuth = () => {
     isAuthenticated,
     isAdministrator,
     userRole,
-    isInitialized
+    isInitialized,
+    isApproved
   };
 };
