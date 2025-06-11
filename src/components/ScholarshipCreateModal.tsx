@@ -34,6 +34,7 @@ export const ScholarshipCreateModal = ({
     application_deadline: "",
     contact_email: "",
     contact_phone: "",
+    scholarship_link: "",
   });
 
   // Pre-fill contact information when user profile is available
@@ -63,6 +64,7 @@ export const ScholarshipCreateModal = ({
       application_deadline: "",
       contact_email: userProfile?.email || "",
       contact_phone: userProfile?.phone || "",
+      scholarship_link: "",
     });
   };
 
@@ -109,6 +111,7 @@ export const ScholarshipCreateModal = ({
         application_deadline: formData.application_deadline ? new Date(formData.application_deadline).toISOString() : null,
         contact_email: formData.contact_email || null,
         contact_phone: formData.contact_phone || null,
+        scholarship_link: formData.scholarship_link || null,
         creator_user_id: user.id,
       };
 
@@ -207,14 +210,27 @@ export const ScholarshipCreateModal = ({
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="application_deadline">Application Deadline</Label>
-            <Input
-              id="application_deadline"
-              type="date"
-              value={formData.application_deadline}
-              onChange={(e) => handleInputChange("application_deadline", e.target.value)}
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="application_deadline">Application Deadline</Label>
+              <Input
+                id="application_deadline"
+                type="date"
+                value={formData.application_deadline}
+                onChange={(e) => handleInputChange("application_deadline", e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="scholarship_link">Scholarship Link</Label>
+              <Input
+                id="scholarship_link"
+                type="url"
+                value={formData.scholarship_link}
+                onChange={(e) => handleInputChange("scholarship_link", e.target.value)}
+                placeholder="https://example.com/scholarship-application"
+              />
+            </div>
           </div>
 
           <div className="space-y-2">
