@@ -10,6 +10,13 @@ interface Organization {
   description: string | null;
   phone: string;
   address: string;
+  contact_user_id: string | null;
+  contact_user?: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+  } | null;
 }
 
 export const useOrganizations = () => {
@@ -21,7 +28,21 @@ export const useOrganizations = () => {
     try {
       const { data, error } = await supabase
         .from('organizations')
-        .select('id, name, type, description, phone, address')
+        .select(`
+          id, 
+          name, 
+          type, 
+          description, 
+          phone, 
+          address,
+          contact_user_id,
+          contact_user:user_profiles!contact_user_id(
+            id,
+            first_name,
+            last_name,
+            email
+          )
+        `)
         .order('name');
 
       if (error) {
@@ -47,6 +68,42 @@ export const useOrganizations = () => {
     }
   };
 
+  const updateOrganizationContact = async (organizationId: string, contactUserId: string | null) => {
+    try {
+      const { error } = await supabase
+        .from('organizations')
+        .update({ contact_user_id: contactUserId })
+        .eq('id', organizationId);
+
+      if (error) {
+        console.error('Error updating organization contact:', error);
+        toast({
+          title: "Error",
+          description: "Failed to update organization contact.",
+          variant: "destructive",
+        });
+        return false;
+      }
+
+      toast({
+        title: "Success",
+        description: "Organization contact updated successfully.",
+      });
+      
+      // Refresh the organizations list
+      await fetchOrganizations();
+      return true;
+    } catch (error) {
+      console.error('Error updating organization contact:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update organization contact.",
+        variant: "destructive",
+      });
+      return false;
+    }
+  };
+
   useEffect(() => {
     fetchOrganizations();
   }, []);
@@ -54,6 +111,7 @@ export const useOrganizations = () => {
   return {
     organizations,
     loading,
-    refetch: fetchOrganizations
+    refetch: fetchOrganizations,
+    updateOrganizationContact
   };
 };

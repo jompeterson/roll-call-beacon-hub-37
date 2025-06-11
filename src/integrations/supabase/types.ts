@@ -12,6 +12,7 @@ export type Database = {
       organizations: {
         Row: {
           address: string
+          contact_user_id: string | null
           created_at: string
           description: string | null
           id: string
@@ -22,6 +23,7 @@ export type Database = {
         }
         Insert: {
           address: string
+          contact_user_id?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -32,6 +34,7 @@ export type Database = {
         }
         Update: {
           address?: string
+          contact_user_id?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -40,7 +43,15 @@ export type Database = {
           type?: Database["public"]["Enums"]["organization_type"]
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "organizations_contact_user_id_fkey"
+            columns: ["contact_user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_profiles: {
         Row: {
