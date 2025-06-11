@@ -11,10 +11,7 @@ const getDonationStatus = (donation: Donation): "Approved" | "Pending" | "Reject
 };
 
 // Helper function to get status from request approval state
-const getRequestStatus = (request: Request): "Completed" | "Approved" | "Pending" | "Rejected" | "Archived" => {
-  if (request.is_completed) {
-    return "Completed";
-  }
+const getRequestStatus = (request: Request): "Approved" | "Pending" | "Rejected" | "Archived" => {
   if (!request.approval_decision_made) {
     return "Pending";
   }

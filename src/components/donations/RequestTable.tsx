@@ -1,7 +1,7 @@
 
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { CheckCircle, Clock, XCircle, Archive, Check } from "lucide-react";
+import { CheckCircle, Clock, XCircle, Archive } from "lucide-react";
 import { RequestSortableTableHead } from "./RequestSortableTableHead";
 import type { Request } from "@/hooks/useRequests";
 
@@ -10,8 +10,6 @@ type RequestSortField = "organization_name" | "request_type" | "title" | "descri
 
 const StatusIcon = ({ status }: { status: string }) => {
   switch (status) {
-    case "Completed":
-      return <Check className="h-4 w-4 text-blue-600" />;
     case "Approved":
       return <CheckCircle className="h-4 w-4 text-green-600" />;
     case "Pending":
@@ -26,10 +24,7 @@ const StatusIcon = ({ status }: { status: string }) => {
 };
 
 // Helper function to get status from request approval state
-const getRequestStatus = (request: Request): "Completed" | "Approved" | "Pending" | "Rejected" | "Archived" => {
-  if (request.is_completed) {
-    return "Completed";
-  }
+const getRequestStatus = (request: Request): "Approved" | "Pending" | "Rejected" | "Archived" => {
   if (!request.approval_decision_made) {
     return "Pending";
   }

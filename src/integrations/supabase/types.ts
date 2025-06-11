@@ -227,7 +227,6 @@ export type Database = {
           description: string | null
           id: string
           is_approved: boolean
-          is_completed: boolean
           location: string | null
           organization_id: string | null
           organization_name: string | null
@@ -246,7 +245,6 @@ export type Database = {
           description?: string | null
           id?: string
           is_approved?: boolean
-          is_completed?: boolean
           location?: string | null
           organization_id?: string | null
           organization_name?: string | null
@@ -265,7 +263,6 @@ export type Database = {
           description?: string | null
           id?: string
           is_approved?: boolean
-          is_completed?: boolean
           location?: string | null
           organization_id?: string | null
           organization_name?: string | null
