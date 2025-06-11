@@ -167,6 +167,7 @@ export const RequestModal = ({
 
       console.log("Request marked as completed successfully");
       onMarkCompleted && onMarkCompleted(id);
+      onOpenChange(false); // Close the modal
     } catch (error) {
       console.error("Error marking request as completed:", error);
     }
