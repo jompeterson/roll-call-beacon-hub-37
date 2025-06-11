@@ -1,3 +1,4 @@
+
 import { supabase } from "@/integrations/supabase/client";
 
 export interface User {
@@ -272,5 +273,3 @@ class CustomAuthService {
 }
 
 export const customAuth = new CustomAuthService();
-
-}
