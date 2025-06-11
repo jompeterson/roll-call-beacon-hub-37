@@ -5,7 +5,11 @@ import { useProfileData } from "@/hooks/useProfileData";
 
 export const useAuth = () => {
   const [user, setUser] = useState<CustomUser | null>(null);
-  const { userRole } = useProfileData();
+  const isAuthenticated = !!user;
+  
+  // Only fetch profile data when authenticated
+  const profileData = isAuthenticated ? useProfileData() : { userRole: null };
+  const { userRole } = profileData;
 
   useEffect(() => {
     // Get initial user
@@ -19,7 +23,6 @@ export const useAuth = () => {
     return () => unsubscribe();
   }, []);
 
-  const isAuthenticated = !!user;
   const isAdministrator = userRole?.name === 'administrator';
 
   return {
