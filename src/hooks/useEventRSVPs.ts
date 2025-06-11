@@ -21,7 +21,6 @@ export const useEventRSVPs = (eventId: string) => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const channelRef = useRef<any>(null);
-  const instanceId = useRef(Math.random().toString(36).substr(2, 9));
 
   const fetchRSVPs = async () => {
     if (!eventId) return;
@@ -162,7 +161,9 @@ export const useEventRSVPs = (eventId: string) => {
     fetchRSVPs();
 
     // Create new channel for real-time subscription with unique name
-    const channelName = `event-rsvps-${eventId}-${instanceId.current}`;
+    const instanceId = Math.random().toString(36).substr(2, 9);
+    const channelName = `event-rsvps-${eventId}-${instanceId}`;
+    
     channelRef.current = supabase
       .channel(channelName)
       .on(
@@ -185,7 +186,7 @@ export const useEventRSVPs = (eventId: string) => {
         channelRef.current = null;
       }
     };
-  }, [eventId, user?.id]); // Only depend on eventId and user.id
+  }, [eventId, user?.id]);
 
   return {
     rsvps,
