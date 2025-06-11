@@ -20,7 +20,7 @@ interface Event {
 }
 
 export const PendingEventsWidget = () => {
-  const { events, loading } = useEvents();
+  const { events, loading, approveEvent, rejectEvent } = useEvents();
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [eventModalOpen, setEventModalOpen] = useState(false);
 
@@ -29,6 +29,16 @@ export const PendingEventsWidget = () => {
   const handleEventClick = (event: Event) => {
     setSelectedEvent(event);
     setEventModalOpen(true);
+  };
+
+  const handleApprove = async (eventId: string) => {
+    await approveEvent(eventId);
+    setEventModalOpen(false);
+  };
+
+  const handleReject = async (eventId: string) => {
+    await rejectEvent(eventId);
+    setEventModalOpen(false);
   };
 
   const formatDate = (dateString: string) => {
@@ -85,8 +95,8 @@ export const PendingEventsWidget = () => {
         event={selectedEvent}
         open={eventModalOpen}
         onOpenChange={setEventModalOpen}
-        onApprove={() => {}}
-        onReject={() => {}}
+        onApprove={handleApprove}
+        onReject={handleReject}
         disableNavigation={true}
       />
     </>
