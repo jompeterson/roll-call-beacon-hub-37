@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -19,6 +19,7 @@ export const useEventRSVPs = (eventId: string) => {
   const [userRsvp, setUserRsvp] = useState<RSVP | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const channelRef = useRef<any>(null);
 
   const fetchRSVPs = async () => {
     if (!eventId) return;
@@ -139,11 +140,20 @@ export const useEventRSVPs = (eventId: string) => {
   };
 
   useEffect(() => {
+    // Clean up any existing channel
+    if (channelRef.current) {
+      supabase.removeChannel(channelRef.current);
+      channelRef.current = null;
+    }
+
+    if (!eventId) return;
+
     fetchRSVPs();
 
-    // Set up real-time subscription for RSVPs
-    const channel = supabase
-      .channel(`event-rsvps-${eventId}`)
+    // Create new channel for real-time subscription
+    const channelName = `event-rsvps-${eventId}`;
+    channelRef.current = supabase
+      .channel(channelName)
       .on(
         'postgres_changes',
         {
@@ -159,9 +169,12 @@ export const useEventRSVPs = (eventId: string) => {
       .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
+      }
     };
-  }, [eventId, user]);
+  }, [eventId, user?.id]); // Only depend on eventId and user.id
 
   return {
     rsvps,
