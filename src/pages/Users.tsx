@@ -3,7 +3,7 @@ import { useState } from "react";
 import { UserModal } from "@/components/UserModal";
 import { UserFilters } from "@/components/users/UserFilters";
 import { UserTable } from "@/components/users/UserTable";
-import { useUserProfiles } from "@/hooks/useUserProfiles";
+import { useUserProfilesRealtime } from "@/hooks/useUserProfilesRealtime";
 import { useUserSorting } from "@/hooks/useUserSorting";
 import { useUserFiltering } from "@/hooks/useUserFiltering";
 import { useAuth } from "@/hooks/useAuth";
@@ -41,7 +41,7 @@ interface UserProfile {
 
 export const Users = () => {
   const { toast } = useToast();
-  const { userProfiles, loading, refetch } = useUserProfiles();
+  const { userProfiles, loading, refetch } = useUserProfilesRealtime();
   const { isAdministrator } = useAuth();
   const { sortData } = useUserSorting();
   const { filterData } = useUserFiltering();
@@ -115,7 +115,6 @@ export const Users = () => {
         description: "User has been successfully approved.",
       });
       setUserModalOpen(false);
-      refetch();
     } catch (error) {
       console.error('Error approving user:', error);
       toast({
@@ -161,7 +160,6 @@ export const Users = () => {
         variant: "destructive",
       });
       setUserModalOpen(false);
-      refetch();
     } catch (error) {
       console.error('Error rejecting user:', error);
       toast({

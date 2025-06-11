@@ -79,9 +79,6 @@ export const useEvents = () => {
         title: "Success",
         description: "Event approved successfully.",
       });
-
-      // Refresh events list
-      fetchEvents();
     } catch (error) {
       console.error('Error approving event:', error);
       toast({
@@ -117,9 +114,6 @@ export const useEvents = () => {
         title: "Success",
         description: "Event rejected successfully.",
       });
-
-      // Refresh events list
-      fetchEvents();
     } catch (error) {
       console.error('Error rejecting event:', error);
       toast({
@@ -132,6 +126,27 @@ export const useEvents = () => {
 
   useEffect(() => {
     fetchEvents();
+
+    // Set up real-time subscription for events
+    const channel = supabase
+      .channel('events-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'events'
+        },
+        (payload) => {
+          console.log('Events real-time update:', payload);
+          fetchEvents(); // Refetch events when any change occurs
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   return {

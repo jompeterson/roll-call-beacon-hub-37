@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { OrganizationModal } from "@/components/OrganizationModal";
 import { OrganizationSortableTableHead } from "@/components/organizations/OrganizationSortableTableHead";
 import { OrganizationStatusIcon } from "@/components/organizations/OrganizationStatusIcon";
-import { useOrganizations } from "@/hooks/useOrganizations";
+import { useOrganizationsRealtime } from "@/hooks/useOrganizationsRealtime";
 import { useAuth } from "@/hooks/useAuth";
 
 type SortDirection = "asc" | "desc" | null;
@@ -32,7 +32,7 @@ interface Organization {
 }
 
 export const Organizations = () => {
-  const { organizations, loading, updateOrganizationContact, approveOrganization, rejectOrganization } = useOrganizations();
+  const { organizations, loading, updateOrganizationContact, approveOrganization, rejectOrganization } = useOrganizationsRealtime();
   const { isAuthenticated, isAdministrator } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   
