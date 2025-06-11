@@ -1,4 +1,3 @@
-
 import { customAuth } from "@/lib/customAuth";
 import { RegistrationData } from "@/pages/Register";
 import { supabase } from "@/integrations/supabase/client";
@@ -102,6 +101,7 @@ export const getExistingOrganizations = async () => {
   const { data, error } = await supabase
     .from('organizations')
     .select('id, name, type, description')
+    .eq('is_approved', true)
     .order('name');
 
   return { data, error };
