@@ -1,9 +1,9 @@
 
 import { MetricCard } from "@/components/MetricCard";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PendingOrganizationsWidget } from "@/components/PendingOrganizationsWidget";
 import { PendingScholarshipsWidget } from "@/components/PendingScholarshipsWidget";
 import { PendingDonationsRequestsWidget } from "@/components/PendingDonationsRequestsWidget";
+import { PendingEventsWidget } from "@/components/PendingEventsWidget";
 import { useAuth } from "@/hooks/useAuth";
 import {
   Users,
@@ -36,15 +36,7 @@ export const Overview = () => {
             <PendingOrganizationsWidget />
             <PendingScholarshipsWidget />
             <PendingDonationsRequestsWidget />
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Pending Events</CardTitle>
-                <Calendar className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">5</div>
-              </CardContent>
-            </Card>
+            <PendingEventsWidget />
           </div>
         </div>
       )}

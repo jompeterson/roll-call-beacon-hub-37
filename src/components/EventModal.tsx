@@ -33,6 +33,7 @@ interface EventModalProps {
   onReject: (id: string) => void;
   onRequestChanges?: (id: string) => void;
   onOpenGuestRSVPModal?: () => void;
+  disableNavigation?: boolean;
 }
 
 export const EventModal = ({
@@ -43,19 +44,20 @@ export const EventModal = ({
   onReject,
   onRequestChanges,
   onOpenGuestRSVPModal,
+  disableNavigation = false,
 }: EventModalProps) => {
   const { isAdministrator, isAuthenticated } = useAuth();
   const { rsvpCount, hasRsvp, submitting, createRSVP, deleteRSVP } = useEventRSVPs(event?.id || "");
   const navigate = useNavigate();
 
-  // Update URL when modal opens
+  // Update URL when modal opens - only if navigation is enabled
   useEffect(() => {
-    if (open && event) {
+    if (!disableNavigation && open && event) {
       navigate(`/events/${event.id}`, { replace: true });
-    } else if (!open) {
+    } else if (!disableNavigation && !open) {
       navigate('/events', { replace: true });
     }
-  }, [open, event, navigate]);
+  }, [open, event, navigate, disableNavigation]);
 
   if (!event) return null;
 
@@ -106,19 +108,21 @@ export const EventModal = ({
           </div>
         </ScrollArea>
 
-        {/* Fixed Footer */}
-        <EventModalActionButtons
-          event={event}
-          isAdministrator={isAdministrator}
-          isAuthenticated={isAuthenticated}
-          hasRsvp={hasRsvp}
-          rsvpCount={rsvpCount}
-          submitting={submitting}
-          onApprove={onApprove}
-          onReject={onReject}
-          onRequestChanges={onRequestChanges}
-          onRSVPAction={handleRSVPAction}
-        />
+        {/* Fixed Footer - Only show action buttons if handlers are provided */}
+        {(onApprove || onReject || onRequestChanges) && (
+          <EventModalActionButtons
+            event={event}
+            isAdministrator={isAdministrator}
+            isAuthenticated={isAuthenticated}
+            hasRsvp={hasRsvp}
+            rsvpCount={rsvpCount}
+            submitting={submitting}
+            onApprove={onApprove}
+            onReject={onReject}
+            onRequestChanges={onRequestChanges}
+            onRSVPAction={handleRSVPAction}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );
