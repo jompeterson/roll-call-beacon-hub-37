@@ -2,6 +2,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface DonationFormData {
   title: string;
@@ -25,6 +26,7 @@ interface DonationFormSubmissionProps {
 export const useDonationFormSubmission = () => {
   const { toast } = useToast();
   const { user } = useAuth();
+  const queryClient = useQueryClient();
 
   const submitDonation = async ({ 
     formData, 
@@ -67,6 +69,10 @@ export const useDonationFormSubmission = () => {
       if (error) {
         throw error;
       }
+
+      // Invalidate all relevant queries to trigger real-time updates
+      queryClient.invalidateQueries({ queryKey: ['donations'] });
+      queryClient.invalidateQueries({ queryKey: ['pending-donations'] });
 
       toast({
         title: "Success",

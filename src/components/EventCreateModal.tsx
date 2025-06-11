@@ -10,6 +10,7 @@ import { Calendar, MapPin, Users, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface EventCreateModalProps {
   open: boolean;
@@ -32,6 +33,7 @@ export const EventCreateModal = ({
 }: EventCreateModalProps) => {
   const { toast } = useToast();
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<EventFormData>({
@@ -77,6 +79,10 @@ export const EventCreateModal = ({
         });
         return;
       }
+
+      // Invalidate all relevant queries to trigger real-time updates
+      queryClient.invalidateQueries({ queryKey: ['events'] });
+      queryClient.invalidateQueries({ queryKey: ['pending-events'] });
 
       toast({
         title: "Success",

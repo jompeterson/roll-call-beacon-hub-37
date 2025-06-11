@@ -1,10 +1,9 @@
 
-import { useState, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { customAuth } from "@/lib/customAuth";
 
-interface Event {
+export interface Event {
   id: string;
   title: string;
   description: string | null;
@@ -20,140 +19,103 @@ interface Event {
 
 export const useEvents = () => {
   const { toast } = useToast();
-  const [events, setEvents] = useState<Event[]>([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
 
-  const fetchEvents = async () => {
-    try {
-      setLoading(true);
+  const { data: events = [], isLoading: loading, error } = useQuery({
+    queryKey: ["events"],
+    queryFn: async () => {
       const { data, error } = await supabase
-        .from('events')
-        .select('*')
-        .order('created_at', { ascending: false });
+        .from("events")
+        .select("*")
+        .order("created_at", { ascending: false });
 
       if (error) {
-        console.error('Error fetching events:', error);
-        toast({
-          title: "Error",
-          description: "Failed to load events.",
-          variant: "destructive",
-        });
-        return;
+        console.error("Error fetching events:", error);
+        throw new Error(error.message);
       }
 
-      setEvents(data || []);
-    } catch (error) {
-      console.error('Error fetching events:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load events.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+      return data as Event[];
+    },
+  });
 
-  const approveEvent = async (eventId: string) => {
-    try {
+  const approveEventMutation = useMutation({
+    mutationFn: async (eventId: string) => {
       const { error } = await supabase
-        .from('events')
+        .from("events")
         .update({ 
           is_approved: true, 
-          approval_decision_made: true,
-          updated_at: new Date().toISOString()
+          approval_decision_made: true 
         })
-        .eq('id', eventId);
+        .eq("id", eventId);
 
       if (error) {
-        console.error('Error approving event:', error);
-        toast({
-          title: "Error",
-          description: "Failed to approve event.",
-          variant: "destructive",
-        });
-        return;
+        throw error;
       }
-
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+      queryClient.invalidateQueries({ queryKey: ["pending-events"] });
       toast({
         title: "Success",
-        description: "Event approved successfully.",
+        description: "Event approved successfully!",
       });
-    } catch (error) {
-      console.error('Error approving event:', error);
+    },
+    onError: (error) => {
+      console.error("Error approving event:", error);
       toast({
         title: "Error",
-        description: "Failed to approve event.",
+        description: "Failed to approve event. Please try again.",
         variant: "destructive",
       });
-    }
-  };
+    },
+  });
 
-  const rejectEvent = async (eventId: string) => {
-    try {
+  const rejectEventMutation = useMutation({
+    mutationFn: async (eventId: string) => {
       const { error } = await supabase
-        .from('events')
+        .from("events")
         .update({ 
           is_approved: false, 
-          approval_decision_made: true,
-          updated_at: new Date().toISOString()
+          approval_decision_made: true 
         })
-        .eq('id', eventId);
+        .eq("id", eventId);
 
       if (error) {
-        console.error('Error rejecting event:', error);
-        toast({
-          title: "Error",
-          description: "Failed to reject event.",
-          variant: "destructive",
-        });
-        return;
+        throw error;
       }
-
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+      queryClient.invalidateQueries({ queryKey: ["pending-events"] });
       toast({
         title: "Success",
         description: "Event rejected successfully.",
-      });
-    } catch (error) {
-      console.error('Error rejecting event:', error);
-      toast({
-        title: "Error",
-        description: "Failed to reject event.",
         variant: "destructive",
       });
-    }
+    },
+    onError: (error) => {
+      console.error("Error rejecting event:", error);
+      toast({
+        title: "Error",
+        description: "Failed to reject event. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const approveEvent = (eventId: string) => {
+    approveEventMutation.mutate(eventId);
   };
 
-  useEffect(() => {
-    fetchEvents();
-
-    // Set up real-time subscription for events
-    const channel = supabase
-      .channel('events-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'events'
-        },
-        (payload) => {
-          console.log('Events real-time update:', payload);
-          fetchEvents(); // Refetch events when any change occurs
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, []);
+  const rejectEvent = (eventId: string) => {
+    rejectEventMutation.mutate(eventId);
+  };
 
   return {
     events,
     loading,
-    fetchEvents,
+    error,
     approveEvent,
-    rejectEvent
+    rejectEvent,
   };
 };

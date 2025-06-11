@@ -32,12 +32,12 @@ export const PendingEventsWidget = () => {
   };
 
   const handleApprove = async (eventId: string) => {
-    await approveEvent(eventId);
+    approveEvent(eventId);
     setEventModalOpen(false);
   };
 
   const handleReject = async (eventId: string) => {
-    await rejectEvent(eventId);
+    rejectEvent(eventId);
     setEventModalOpen(false);
   };
 
