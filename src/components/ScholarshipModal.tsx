@@ -1,6 +1,6 @@
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tables } from "@/integrations/supabase/types";
 import { useAuth } from "@/hooks/useAuth";
@@ -58,17 +58,6 @@ export const ScholarshipModal = ({
     onOpenChange(false);
   };
 
-  const getStatusBadge = () => {
-    if (scholarship.approval_decision_made) {
-      return scholarship.is_approved ? (
-        <Badge className="bg-green-100 text-green-800">Approved</Badge>
-      ) : (
-        <Badge variant="destructive">Rejected</Badge>
-      );
-    }
-    return <Badge variant="secondary">Pending</Badge>;
-  };
-
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -90,12 +79,9 @@ export const ScholarshipModal = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <div className="flex items-center justify-between">
-            <DialogTitle className="text-xl font-semibold">
-              {scholarship.title}
-            </DialogTitle>
-            {isAuthenticated && getStatusBadge()}
-          </div>
+          <DialogTitle className="text-xl font-semibold">
+            {scholarship.title}
+          </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6">
