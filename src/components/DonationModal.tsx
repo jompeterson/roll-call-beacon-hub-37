@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -37,14 +36,20 @@ export const DonationModal = ({
 }: DonationModalProps) => {
   const navigate = useNavigate();
 
-  // Update URL when modal opens
+  // Update URL when modal opens, but don't navigate back when closing
   useEffect(() => {
     if (open && donation) {
       navigate(`/donations/${donation.id}`, { replace: true });
-    } else if (!open) {
-      navigate('/donations', { replace: true });
     }
   }, [open, donation, navigate]);
+
+  // Handle modal close by navigating back to donations page
+  const handleOpenChange = (newOpen: boolean) => {
+    if (!newOpen) {
+      navigate('/donations', { replace: true });
+    }
+    onOpenChange(newOpen);
+  };
 
   if (!donation) return null;
 
@@ -100,7 +105,7 @@ export const DonationModal = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-5xl w-full h-[90vh] flex flex-col p-0">
         {/* Fixed Header */}
         <div className="flex-shrink-0 p-6 border-b">
