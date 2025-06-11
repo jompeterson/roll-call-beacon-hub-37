@@ -214,6 +214,48 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          created_at: string
+          creator_user_id: string | null
+          id: string
+          is_read: boolean
+          message: string
+          related_content_id: string | null
+          related_content_type: string | null
+          title: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          creator_user_id?: string | null
+          id?: string
+          is_read?: boolean
+          message: string
+          related_content_id?: string | null
+          related_content_type?: string | null
+          title: string
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          creator_user_id?: string | null
+          id?: string
+          is_read?: boolean
+          message?: string
+          related_content_id?: string | null
+          related_content_type?: string | null
+          title?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       organizations: {
         Row: {
           address: string

@@ -8,10 +8,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Bell, User, ChevronDown, LogIn } from "lucide-react";
+import { User, ChevronDown, LogIn } from "lucide-react";
 import { customAuth, type User as CustomUser } from "@/lib/customAuth";
 import { signOut } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
+import { NotificationDropdown } from "@/components/NotificationDropdown";
 
 interface HeaderProps {
   sidebarOpen: boolean;
@@ -21,7 +22,6 @@ interface HeaderProps {
 export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [notificationCount] = useState(3);
   const [user, setUser] = useState<CustomUser | null>(null);
 
   useEffect(() => {
@@ -100,14 +100,7 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
         {user ? (
           <>
             {/* Notifications */}
-            <Button variant="ghost" size="sm" className="relative">
-              <Bell className="h-5 w-5" />
-              {notificationCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  {notificationCount}
-                </span>
-              )}
-            </Button>
+            <NotificationDropdown />
 
             {/* User Dropdown */}
             <DropdownMenu>
