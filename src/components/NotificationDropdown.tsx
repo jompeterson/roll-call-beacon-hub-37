@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Bell, Check, CheckCheck } from "lucide-react";
 import { useNotifications } from "@/hooks/useNotifications";
 import { formatDistanceToNow } from "date-fns";
+import { supabase } from "@/integrations/supabase/client";
 
 export const NotificationDropdown = () => {
   const { notifications, unreadCount, markAsRead, markAllAsRead, loading } = useNotifications();
@@ -26,6 +28,53 @@ export const NotificationDropdown = () => {
     const dropdownTrigger = document.querySelector('[data-state="open"]');
     if (dropdownTrigger) {
       (dropdownTrigger as HTMLElement).click();
+    }
+
+    // For comment notifications, we need to find the parent content
+    if (notification.related_content_type === 'comment' && notification.related_content_id) {
+      try {
+        // Fetch the comment to get the content_type and content_id
+        const { data: comment, error } = await supabase
+          .from('comments')
+          .select('content_type, content_id')
+          .eq('id', notification.related_content_id)
+          .single();
+
+        if (error) {
+          console.error('Error fetching comment:', error);
+          navigate('/');
+          return;
+        }
+
+        if (comment) {
+          // Navigate based on the parent content type
+          switch (comment.content_type) {
+            case 'donation':
+              navigate(`/donations/${comment.content_id}`);
+              break;
+              
+            case 'request':
+              navigate(`/donations/requests/${comment.content_id}`);
+              break;
+              
+            case 'scholarship':
+              navigate(`/scholarships/${comment.content_id}`);
+              break;
+              
+            case 'event':
+              navigate(`/events/${comment.content_id}`);
+              break;
+              
+            default:
+              navigate('/');
+          }
+          return;
+        }
+      } catch (error) {
+        console.error('Error handling comment notification:', error);
+        navigate('/');
+        return;
+      }
     }
 
     // Navigate to the appropriate page with the content ID for direct modal opening
@@ -45,15 +94,6 @@ export const NotificationDropdown = () => {
           
         case 'event':
           navigate(`/events/${notification.related_content_id}`);
-          break;
-          
-        case 'comment':
-          // For comments, we need to navigate to the parent content
-          if (notification.type === 'comment_reply' || notification.type === 'post_comment') {
-            // For now, we'll navigate to the donations page as it's the most common
-            // In a real implementation, you might want to store the parent content type
-            navigate('/donations');
-          }
           break;
           
         default:
