@@ -1,8 +1,9 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { supabase } from "@/integrations/supabase/client";
 import type { Donation } from "@/hooks/useDonations";
 
 interface DonationModalProps {
@@ -18,52 +19,19 @@ interface DonationModalProps {
   isUser?: boolean;
 }
 
+interface CreatorInfo {
+  name: string;
+  email: string;
+  postedDate: string;
+  lastLogin?: string;
+}
+
 // Mock images for demonstration
 const mockImages = [
   "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=300&fit=crop",
   "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=300&fit=crop",
   "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop"
 ];
-
-// Mock user data for demonstration
-const getUserInfo = (orgName: string, isScholarship: boolean = false, isEvent: boolean = false, isOrganization: boolean = false, isUser: boolean = false) => {
-  if (isUser) {
-    const users = {
-      "Tech Solutions Inc": { name: "John Smith", email: "john.smith@techsolutions.com", postedDate: "2024-05-15", lastLogin: "2024-06-08" },
-      "Green Earth Foundation": { name: "Sarah Johnson", email: "sarah.johnson@greenearth.org", postedDate: "2024-05-20", lastLogin: "2024-06-09" },
-      "Community Health Center": { name: "Dr. Michael Brown", email: "michael.brown@healthcenter.org", postedDate: "2024-05-10", lastLogin: "2024-06-07" }
-    };
-    return users[orgName as keyof typeof users] || { name: "Unknown User", email: "unknown@example.com", postedDate: "2024-06-10", lastLogin: "2024-06-10" };
-  } else if (isOrganization) {
-    const users = {
-      "Tech Solutions Inc": { name: "John Smith", email: "john@techsolutions.com", postedDate: "2024-06-08" },
-      "Green Earth Foundation": { name: "Sarah Johnson", email: "sarah@greenearth.org", postedDate: "2024-06-09" },
-      "Community Health Center": { name: "Dr. Michael Brown", email: "michael@healthcenter.org", postedDate: "2024-06-07" }
-    };
-    return users[orgName as keyof typeof users] || { name: "Unknown User", email: "unknown@example.com", postedDate: "2024-06-10" };
-  } else if (isEvent) {
-    const users = {
-      "Community Center": { name: "John Davis", email: "john@communitycenter.org", postedDate: "2024-06-08", expectedAttendees: "50-75 people" },
-      "Local Library": { name: "Emma Wilson", email: "emma@locallibrary.org", postedDate: "2024-06-09", expectedAttendees: "25-30 people" },
-      "Food Bank": { name: "Robert Smith", email: "robert@foodbank.org", postedDate: "2024-06-07", expectedAttendees: "100+ people" }
-    };
-    return users[orgName as keyof typeof users] || { name: "Unknown User", email: "unknown@example.com", postedDate: "2024-06-10", expectedAttendees: "TBD" };
-  } else if (isScholarship) {
-    const users = {
-      "Education Foundation": { name: "Sarah Johnson", email: "sarah@greenearth.org", postedDate: "2024-06-08" },
-      "Community College": { name: "Mike Chen", email: "mike@techforgood.org", postedDate: "2024-06-09" },
-      "Local University": { name: "Lisa Martinez", email: "lisa@communitygarden.org", postedDate: "2024-06-07" }
-    };
-    return users[orgName as keyof typeof users] || { name: "Unknown User", email: "unknown@example.com", postedDate: "2024-06-10" };
-  } else {
-    const users = {
-      "Green Earth Foundation": { name: "Sarah Johnson", email: "sarah@greenearth.org", postedDate: "2024-06-08" },
-      "Tech for Good": { name: "Mike Chen", email: "mike@techforgood.org", postedDate: "2024-06-09" },
-      "Community Garden": { name: "Lisa Martinez", email: "lisa@communitygarden.org", postedDate: "2024-06-07" }
-    };
-    return users[orgName as keyof typeof users] || { name: "Unknown User", email: "unknown@example.com", postedDate: "2024-06-10" };
-  }
-};
 
 export const DonationModal = ({ 
   donation, 
@@ -77,10 +45,54 @@ export const DonationModal = ({
   isOrganization = false,
   isUser = false
 }: DonationModalProps) => {
+  const [creatorInfo, setCreatorInfo] = useState<CreatorInfo | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch creator information when donation changes
+  useEffect(() => {
+    const fetchCreatorInfo = async () => {
+      if (!donation?.creator_user_id || !open) return;
+
+      setLoading(true);
+      try {
+        const { data: profile, error } = await supabase
+          .from('user_profiles')
+          .select('first_name, last_name, email')
+          .eq('id', donation.creator_user_id)
+          .single();
+
+        if (error) {
+          console.error('Error fetching creator profile:', error);
+          setCreatorInfo({
+            name: "Unknown User",
+            email: "unknown@example.com",
+            postedDate: donation.created_at
+          });
+        } else {
+          setCreatorInfo({
+            name: `${profile.first_name} ${profile.last_name}`,
+            email: profile.email,
+            postedDate: donation.created_at
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching creator info:', error);
+        setCreatorInfo({
+          name: "Unknown User",
+          email: "unknown@example.com",
+          postedDate: donation.created_at
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCreatorInfo();
+  }, [donation?.creator_user_id, donation?.created_at, open]);
+
   if (!donation) return null;
 
   const orgName = donation.organization_name || "Unknown Organization";
-  const userInfo = getUserInfo(orgName, isScholarship, isEvent, isOrganization, isUser);
 
   // Format amount for display
   const formatAmount = (amount: number) => {
@@ -134,21 +146,33 @@ export const DonationModal = ({
           <p className="text-sm text-muted-foreground">{getModalType()}</p>
         </DialogHeader>
         
-        {/* User Information Section */}
+        {/* Creator Information Section */}
         <div className="bg-muted/30 rounded-lg p-4 space-y-2">
           <div className="flex justify-between items-start">
             <div>
-              <h4 className="font-semibold text-base">{userInfo.name}</h4>
-              <p className="text-sm text-muted-foreground">{userInfo.email}</p>
-              <p className="text-sm text-muted-foreground">{orgName}</p>
+              {loading ? (
+                <div className="space-y-1">
+                  <div className="h-4 bg-gray-200 rounded animate-pulse w-32"></div>
+                  <div className="h-3 bg-gray-200 rounded animate-pulse w-48"></div>
+                  <div className="h-3 bg-gray-200 rounded animate-pulse w-40"></div>
+                </div>
+              ) : (
+                <>
+                  <h4 className="font-semibold text-base">{creatorInfo?.name || "Loading..."}</h4>
+                  <p className="text-sm text-muted-foreground">{creatorInfo?.email || "Loading..."}</p>
+                  <p className="text-sm text-muted-foreground">{orgName}</p>
+                </>
+              )}
             </div>
             <div className="text-right">
               <p className="text-sm text-muted-foreground">{getDateLabel()}</p>
-              <p className="text-sm font-medium">{new Date(userInfo.postedDate).toLocaleDateString()}</p>
-              {isUser && (userInfo as any).lastLogin && (
+              <p className="text-sm font-medium">
+                {creatorInfo?.postedDate ? new Date(creatorInfo.postedDate).toLocaleDateString() : "Loading..."}
+              </p>
+              {isUser && creatorInfo && (creatorInfo as any).lastLogin && (
                 <>
                   <p className="text-sm text-muted-foreground mt-2">Last Login</p>
-                  <p className="text-sm font-medium">{new Date((userInfo as any).lastLogin).toLocaleDateString()}</p>
+                  <p className="text-sm font-medium">{new Date((creatorInfo as any).lastLogin).toLocaleDateString()}</p>
                 </>
               )}
             </div>
@@ -219,12 +243,6 @@ export const DonationModal = ({
                   <div>
                     <label className="font-medium text-sm text-muted-foreground">Target Date</label>
                     <p className="text-base mt-1">{new Date(donation.target_date).toLocaleDateString()}</p>
-                  </div>
-                )}
-                {isEvent && (userInfo as any).expectedAttendees && (
-                  <div>
-                    <label className="font-medium text-sm text-muted-foreground">Expected Attendees</label>
-                    <p className="text-base mt-1">{(userInfo as any).expectedAttendees}</p>
                   </div>
                 )}
               </div>
