@@ -6,6 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChevronUp, ChevronDown, Clock, CheckCircle, XCircle, Archive, Users } from "lucide-react";
 import { EventModal } from "@/components/EventModal";
 import { EventRSVPModal } from "@/components/EventRSVPModal";
+import { GuestRSVPModal } from "@/components/GuestRSVPModal";
 import { useEvents } from "@/hooks/useEvents";
 import { useAuth } from "@/hooks/useAuth";
 import { useEventRSVPs } from "@/hooks/useEventRSVPs";
@@ -90,6 +91,7 @@ export const Events = () => {
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [eventModalOpen, setEventModalOpen] = useState(false);
   const [rsvpModalOpen, setRSVPModalOpen] = useState(false);
+  const [guestRSVPModalOpen, setGuestRSVPModalOpen] = useState(false);
 
   const handleEventSort = (field: SortField) => {
     if (eventSort === field) {
@@ -182,7 +184,11 @@ export const Events = () => {
 
   const handleOpenRSVPModal = () => {
     setEventModalOpen(false);
-    setRSVPModalOpen(true);
+    if (isAuthenticated) {
+      setRSVPModalOpen(true);
+    } else {
+      setGuestRSVPModalOpen(true);
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -345,14 +351,23 @@ export const Events = () => {
         onOpenRSVPModal={handleOpenRSVPModal}
       />
 
-      {/* RSVP Modal */}
+      {/* Authenticated User RSVP Modal */}
       <EventRSVPModal
         event={selectedEvent}
         open={rsvpModalOpen}
         onOpenChange={setRSVPModalOpen}
+      />
+
+      {/* Guest RSVP Modal */}
+      <GuestRSVPModal
+        event={selectedEvent}
+        open={guestRSVPModalOpen}
+        onOpenChange={setGuestRSVPModalOpen}
       />
     </div>
   );
 };
 
 export default Events;
+
+}

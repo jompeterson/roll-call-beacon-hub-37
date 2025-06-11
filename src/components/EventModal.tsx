@@ -55,7 +55,7 @@ export const EventModal = ({
   };
 
   const showApprovalButtons = !event.approval_decision_made && isAdministrator;
-  const showRSVPButton = event.is_approved && isAuthenticated;
+  const showRSVPButton = event.is_approved; // Show for all approved events, regardless of auth status
 
   // Debug logging
   console.log('EventModal Debug:', {
