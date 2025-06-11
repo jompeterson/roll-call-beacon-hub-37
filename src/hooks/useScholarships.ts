@@ -33,6 +33,9 @@ export const useScholarships = () => {
 
       return data;
     },
+    refetchInterval: 30000, // Refetch every 30 seconds
+    refetchIntervalInBackground: true, // Continue refetching when tab is not active
+    staleTime: 0, // Consider data stale immediately
   });
 
   const approveScholarship = useMutation({
