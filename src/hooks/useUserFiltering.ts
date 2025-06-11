@@ -10,6 +10,7 @@ interface UserProfile {
   organization_id: string | null;
   role_id: string;
   is_approved: boolean;
+  approval_decision_made: boolean;
   user_roles: {
     id: string;
     name: string;
@@ -34,8 +35,9 @@ export const useUserFiltering = () => {
         (user.organizations?.name || "").toLowerCase().includes(searchTerm.toLowerCase());
       
       const matchesStatus = statusFilter === "all" || 
-        (statusFilter === "approved" && user.is_approved) ||
-        (statusFilter === "pending" && !user.is_approved);
+        (statusFilter === "approved" && user.is_approved && user.approval_decision_made) ||
+        (statusFilter === "rejected" && !user.is_approved && user.approval_decision_made) ||
+        (statusFilter === "pending" && !user.approval_decision_made);
       
       return matchesSearch && matchesStatus;
     });

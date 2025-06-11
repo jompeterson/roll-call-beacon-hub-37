@@ -13,6 +13,7 @@ interface UserProfile {
   organization_id: string | null;
   role_id: string;
   is_approved: boolean;
+  approval_decision_made: boolean;
   user_roles: {
     id: string;
     name: string;
@@ -55,8 +56,12 @@ export const useUserSorting = () => {
         aValue = a.created_at;
         bValue = b.created_at;
       } else if (sortField === "status") {
-        aValue = a.is_approved ? "Approved" : "Pending";
-        bValue = b.is_approved ? "Approved" : "Pending";
+        const getStatusText = (isApproved: boolean, decisionMade: boolean) => {
+          if (!decisionMade) return "Pending";
+          return isApproved ? "Approved" : "Rejected";
+        };
+        aValue = getStatusText(a.is_approved, a.approval_decision_made);
+        bValue = getStatusText(b.is_approved, b.approval_decision_made);
       } else {
         aValue = "";
         bValue = "";
