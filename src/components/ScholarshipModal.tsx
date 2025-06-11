@@ -2,6 +2,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { ExternalLink } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -58,6 +59,12 @@ export const ScholarshipModal = ({
     onOpenChange(false);
   };
 
+  const handleApplyToScholarship = () => {
+    if (scholarship.scholarship_link) {
+      window.open(scholarship.scholarship_link, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -71,6 +78,7 @@ export const ScholarshipModal = ({
   };
 
   const showActionButtons = isAdministrator && !scholarship.approval_decision_made;
+  const showApplyButton = scholarship.scholarship_link && scholarship.scholarship_link.trim() !== '';
 
   // Get organization name from relationship or fallback to the stored name
   const organizationName = scholarship.organization?.name || scholarship.organization_name || "Unknown Organization";
@@ -148,33 +156,46 @@ export const ScholarshipModal = ({
           )}
         </div>
 
-        {showActionButtons && (
-          <div className="flex gap-2 pt-4">
+        <DialogFooter className="flex flex-col gap-2">
+          {showApplyButton && (
             <Button
-              onClick={handleApprove}
-              disabled={isApproving}
-              className="flex-1"
+              onClick={handleApplyToScholarship}
+              className="w-full flex items-center gap-2"
+              size="lg"
             >
-              {isApproving ? "Approving..." : "Approve Scholarship"}
+              <ExternalLink className="h-4 w-4" />
+              Apply to Scholarship
             </Button>
-            <Button
-              variant="destructive"
-              onClick={handleReject}
-              disabled={isRejecting}
-              className="flex-1"
-            >
-              {isRejecting ? "Rejecting..." : "Reject Scholarship"}
-            </Button>
-            <Button
-              variant="outline"
-              onClick={handleRequestChanges}
-              disabled={isRequestingChanges}
-              className="flex-1"
-            >
-              {isRequestingChanges ? "Requesting..." : "Request Changes"}
-            </Button>
-          </div>
-        )}
+          )}
+
+          {showActionButtons && (
+            <div className="flex gap-2 w-full">
+              <Button
+                onClick={handleApprove}
+                disabled={isApproving}
+                className="flex-1"
+              >
+                {isApproving ? "Approving..." : "Approve Scholarship"}
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleReject}
+                disabled={isRejecting}
+                className="flex-1"
+              >
+                {isRejecting ? "Rejecting..." : "Reject Scholarship"}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={handleRequestChanges}
+                disabled={isRequestingChanges}
+                className="flex-1"
+              >
+                {isRequestingChanges ? "Requesting..." : "Request Changes"}
+              </Button>
+            </div>
+          )}
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

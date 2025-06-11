@@ -124,6 +124,7 @@ export type Database = {
           is_approved: boolean
           organization_id: string | null
           organization_name: string | null
+          scholarship_link: string | null
           title: string
           updated_at: string
         }
@@ -141,6 +142,7 @@ export type Database = {
           is_approved?: boolean
           organization_id?: string | null
           organization_name?: string | null
+          scholarship_link?: string | null
           title: string
           updated_at?: string
         }
@@ -158,6 +160,7 @@ export type Database = {
           is_approved?: boolean
           organization_id?: string | null
           organization_name?: string | null
+          scholarship_link?: string | null
           title?: string
           updated_at?: string
         }
