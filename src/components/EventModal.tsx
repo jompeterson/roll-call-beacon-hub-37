@@ -57,6 +57,15 @@ export const EventModal = ({
   const showApprovalButtons = !event.approval_decision_made && isAdministrator;
   const showRSVPButton = event.is_approved && isAuthenticated;
 
+  // Debug logging
+  console.log('EventModal Debug:', {
+    eventId: event.id,
+    isApproved: event.is_approved,
+    isAuthenticated,
+    showRSVPButton,
+    onOpenRSVPModal: !!onOpenRSVPModal
+  });
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
