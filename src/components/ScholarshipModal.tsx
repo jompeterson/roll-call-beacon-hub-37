@@ -81,6 +81,7 @@ export const ScholarshipModal = ({
             <DialogTitle className="text-xl font-semibold">
               {scholarship.title}
             </DialogTitle>
+            <p className="text-sm text-muted-foreground mt-1">Scholarships</p>
           </DialogHeader>
         </div>
 
