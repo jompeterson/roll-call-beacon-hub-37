@@ -62,6 +62,9 @@ export const RequestModal = ({
     return "Not specified";
   };
 
+  // Check if the "Mark Completed" button should be shown
+  const shouldShowMarkCompleted = request.is_approved && !request.is_completed;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-5xl w-full max-h-[90vh] overflow-y-auto">
@@ -182,12 +185,14 @@ export const RequestModal = ({
           >
             Request Changes
           </Button>
-          <Button 
-            onClick={() => onMarkCompleted && onMarkCompleted(request.id)}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
-          >
-            Mark Completed
-          </Button>
+          {shouldShowMarkCompleted && (
+            <Button 
+              onClick={() => onMarkCompleted && onMarkCompleted(request.id)}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              Mark Completed
+            </Button>
+          )}
         </div>
       </DialogContent>
     </Dialog>
