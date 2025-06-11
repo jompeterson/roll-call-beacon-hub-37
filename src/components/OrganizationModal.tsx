@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Building, Phone, MapPin, User, Mail, CheckCircle, XCircle, Clock } from "lucide-react";
 import { useState } from "react";
 import { useUserProfiles } from "@/hooks/useUserProfiles";
+import { useAuth } from "@/hooks/useAuth";
 
 interface Organization {
   id: string;
@@ -46,6 +47,7 @@ export const OrganizationModal = ({
   isAdministrator = false,
 }: OrganizationModalProps) => {
   const { userProfiles } = useUserProfiles();
+  const { isAuthenticated } = useAuth();
   const [selectedContactId, setSelectedContactId] = useState<string | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -108,15 +110,18 @@ export const OrganizationModal = ({
         </DialogHeader>
 
         <div className="space-y-6">
-          {/* Status */}
-          <div className="flex items-center gap-2">
-            {getStatusIcon(organization.is_approved, organization.approval_decision_made)}
-            <Badge variant={getStatusVariant(organization.is_approved, organization.approval_decision_made)}>
-              {getStatusText(organization.is_approved, organization.approval_decision_made)}
-            </Badge>
-          </div>
-
-          <Separator />
+          {/* Status - Only show for authenticated users */}
+          {isAuthenticated && (
+            <>
+              <div className="flex items-center gap-2">
+                {getStatusIcon(organization.is_approved, organization.approval_decision_made)}
+                <Badge variant={getStatusVariant(organization.is_approved, organization.approval_decision_made)}>
+                  {getStatusText(organization.is_approved, organization.approval_decision_made)}
+                </Badge>
+              </div>
+              <Separator />
+            </>
+          )}
 
           {/* Organization Information */}
           <div className="space-y-4">
