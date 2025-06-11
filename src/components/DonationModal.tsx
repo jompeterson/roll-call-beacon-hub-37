@@ -3,18 +3,10 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-
-interface DonationPost {
-  id: string;
-  organization: string;
-  type: "Materials" | "Tools";
-  item: string;
-  details: string;
-  status: "Approved" | "Pending" | "Rejected" | "Archived";
-}
+import type { Donation } from "@/hooks/useDonations";
 
 interface DonationModalProps {
-  donation: DonationPost | null;
+  donation: Donation | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onApprove: (id: string) => void;
@@ -87,16 +79,19 @@ export const DonationModal = ({
 }: DonationModalProps) => {
   if (!donation) return null;
 
-  const userInfo = getUserInfo(donation.organization, isScholarship, isEvent, isOrganization, isUser);
+  const orgName = donation.organization_name || "Unknown Organization";
+  const userInfo = getUserInfo(orgName, isScholarship, isEvent, isOrganization, isUser);
 
-  // Mock estimated value based on item type
-  const getEstimatedValue = (type: string, item: string) => {
-    if (type === "Tools") return "$250 - $500";
-    return "$50 - $150";
+  // Format amount for display
+  const formatAmount = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(amount);
   };
 
   const getModalType = () => {
-    if (isUser) return `Administrator • ${donation.organization}`;
+    if (isUser) return `Administrator • ${orgName}`;
     if (isOrganization) return "Business";
     if (isEvent) return "Event - Community Engagement";
     if (isScholarship) return "Scholarship";
@@ -126,9 +121,9 @@ export const DonationModal = ({
   };
 
   const getModalTitle = () => {
-    if (isUser) return donation.item; // Full name
-    if (isOrganization) return donation.organization;
-    return donation.item;
+    if (isUser) return donation.title; // Full name
+    if (isOrganization) return orgName;
+    return donation.title;
   };
 
   return (
@@ -145,7 +140,7 @@ export const DonationModal = ({
             <div>
               <h4 className="font-semibold text-base">{userInfo.name}</h4>
               <p className="text-sm text-muted-foreground">{userInfo.email}</p>
-              <p className="text-sm text-muted-foreground">{donation.organization}</p>
+              <p className="text-sm text-muted-foreground">{orgName}</p>
             </div>
             <div className="text-right">
               <p className="text-sm text-muted-foreground">{getDateLabel()}</p>
@@ -168,14 +163,8 @@ export const DonationModal = ({
               <div className="space-y-4">
                 {!isScholarship && !isEvent && !isOrganization && !isUser && (
                   <div>
-                    <label className="font-medium text-sm text-muted-foreground">Donation Type</label>
-                    <p className="text-base mt-1">{donation.type}</p>
-                  </div>
-                )}
-                {!isScholarship && !isEvent && !isOrganization && !isUser && (
-                  <div>
-                    <label className="font-medium text-sm text-muted-foreground">Donation Item</label>
-                    <p className="text-base mt-1">{donation.item}</p>
+                    <label className="font-medium text-sm text-muted-foreground">Donation Title</label>
+                    <p className="text-base mt-1">{donation.title}</p>
                   </div>
                 )}
                 {!isOrganization && !isUser && (
@@ -183,7 +172,7 @@ export const DonationModal = ({
                     <label className="font-medium text-sm text-muted-foreground">
                       {isEvent ? "Event Details" : isScholarship ? "Scholarship Details" : "Donation Details"}
                     </label>
-                    <p className="text-base mt-1">{donation.details}</p>
+                    <p className="text-base mt-1">{donation.description || "No description provided"}</p>
                   </div>
                 )}
                 {isOrganization && (
@@ -201,11 +190,35 @@ export const DonationModal = ({
                 {!isOrganization && !isUser && (
                   <div>
                     <label className="font-medium text-sm text-muted-foreground">
-                      {isEvent ? "Volunteer Hours" : isScholarship ? "Scholarship Amount" : "Estimated Value"}
+                      {isEvent ? "Volunteer Hours" : isScholarship ? "Scholarship Amount" : "Amount Needed"}
                     </label>
                     <p className="text-base mt-1">
-                      {isEvent || isScholarship ? donation.details : getEstimatedValue(donation.type, donation.item)}
+                      {formatAmount(donation.amount_needed)}
                     </p>
+                  </div>
+                )}
+                {!isOrganization && !isUser && donation.amount_raised !== null && (
+                  <div>
+                    <label className="font-medium text-sm text-muted-foreground">Amount Raised</label>
+                    <p className="text-base mt-1">{formatAmount(donation.amount_raised)}</p>
+                  </div>
+                )}
+                {donation.contact_email && (
+                  <div>
+                    <label className="font-medium text-sm text-muted-foreground">Contact Email</label>
+                    <p className="text-base mt-1">{donation.contact_email}</p>
+                  </div>
+                )}
+                {donation.contact_phone && (
+                  <div>
+                    <label className="font-medium text-sm text-muted-foreground">Contact Phone</label>
+                    <p className="text-base mt-1">{donation.contact_phone}</p>
+                  </div>
+                )}
+                {donation.target_date && (
+                  <div>
+                    <label className="font-medium text-sm text-muted-foreground">Target Date</label>
+                    <p className="text-base mt-1">{new Date(donation.target_date).toLocaleDateString()}</p>
                   </div>
                 )}
                 {isEvent && (userInfo as any).expectedAttendees && (
@@ -221,7 +234,7 @@ export const DonationModal = ({
           {/* Image Section */}
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">
-              {isUser ? "User Image" : isOrganization ? "Organization Image" : "Item Images"}
+              {isUser ? "User Image" : isOrganization ? "Organization Image" : "Donation Images"}
             </h3>
             {isOrganization || isUser ? (
               <div className="aspect-square rounded-lg overflow-hidden max-w-sm mx-auto">
@@ -230,7 +243,7 @@ export const DonationModal = ({
                     ? "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=300&fit=crop"
                     : "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=400&h=300&fit=crop"
                   }
-                  alt={isUser ? donation.item : donation.organization}
+                  alt={isUser ? donation.title : orgName}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -243,7 +256,7 @@ export const DonationModal = ({
                         <div className="aspect-square rounded-lg overflow-hidden">
                           <img 
                             src={image} 
-                            alt={`${donation.item} ${index + 1}`}
+                            alt={`${donation.title} ${index + 1}`}
                             className="w-full h-full object-cover"
                           />
                         </div>
