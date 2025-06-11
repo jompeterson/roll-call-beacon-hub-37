@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -37,7 +36,7 @@ export const NotificationDropdown = () => {
           break;
           
         case 'request':
-          navigate(`/requests/${notification.related_content_id}`);
+          navigate(`/donations/requests/${notification.related_content_id}`);
           break;
           
         case 'scholarship':
