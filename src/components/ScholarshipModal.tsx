@@ -78,7 +78,9 @@ export const ScholarshipModal = ({
   };
 
   const showActionButtons = isAdministrator && !scholarship.approval_decision_made;
-  const showApplyButton = scholarship.scholarship_link && scholarship.scholarship_link.trim() !== '';
+  const showApplyButton = scholarship.scholarship_link && 
+                          scholarship.scholarship_link.trim() !== '' && 
+                          scholarship.is_approved;
 
   // Get organization name from relationship or fallback to the stored name
   const organizationName = scholarship.organization?.name || scholarship.organization_name || "Unknown Organization";
