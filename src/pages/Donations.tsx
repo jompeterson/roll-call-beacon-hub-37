@@ -7,18 +7,10 @@ import { Button } from "@/components/ui/button";
 import { ChevronUp, ChevronDown, Clock, CheckCircle, XCircle, Archive } from "lucide-react";
 import { DonationModal } from "@/components/DonationModal";
 import { RequestModal } from "@/components/RequestModal";
+import { useDonations, type Donation } from "@/hooks/useDonations";
 
 type SortDirection = "asc" | "desc" | null;
-type SortField = "organization" | "type" | "item" | "details" | "status" | null;
-
-interface DonationPost {
-  id: string;
-  organization: string;
-  type: "Materials" | "Tools";
-  item: string;
-  details: string;
-  status: "Approved" | "Pending" | "Rejected" | "Archived";
-}
+type SortField = "organization_name" | "title" | "description" | "status" | null;
 
 interface RequestPost {
   id: string;
@@ -28,33 +20,6 @@ interface RequestPost {
   details: string;
   status: "Approved" | "Pending" | "Rejected" | "Archived";
 }
-
-const mockDonationPosts: DonationPost[] = [
-  {
-    id: "1",
-    organization: "Green Earth Foundation",
-    type: "Materials",
-    item: "Recycled Paper",
-    details: "500 sheets of recycled office paper",
-    status: "Approved"
-  },
-  {
-    id: "2",
-    organization: "Tech for Good",
-    type: "Tools",
-    item: "Laptops",
-    details: "10 refurbished laptops for education",
-    status: "Pending"
-  },
-  {
-    id: "3",
-    organization: "Community Garden",
-    type: "Materials",
-    item: "Seeds",
-    details: "Vegetable seeds for spring planting",
-    status: "Rejected"
-  }
-];
 
 const mockRequestPosts: RequestPost[] = [
   {
@@ -133,24 +98,34 @@ const SortableTableHead = ({
   );
 };
 
+// Helper function to get status from donation approval state
+const getDonationStatus = (donation: Donation): "Approved" | "Pending" | "Rejected" | "Archived" => {
+  if (!donation.approval_decision_made) {
+    return "Pending";
+  }
+  return donation.is_approved ? "Approved" : "Rejected";
+};
+
 export const Donations = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [typeFilter, setTypeFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   
   // Sorting states for donation posts
   const [donationSort, setDonationSort] = useState<SortField>(null);
   const [donationDirection, setDonationDirection] = useState<SortDirection>(null);
   
-  // Sorting states for request posts
+  // Sorting states for request posts (keeping for request posts)
   const [requestSort, setRequestSort] = useState<SortField>(null);
   const [requestDirection, setRequestDirection] = useState<SortDirection>(null);
 
   // Modal states
-  const [selectedDonation, setSelectedDonation] = useState<DonationPost | null>(null);
+  const [selectedDonation, setSelectedDonation] = useState<Donation | null>(null);
   const [donationModalOpen, setDonationModalOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<RequestPost | null>(null);
   const [requestModalOpen, setRequestModalOpen] = useState(false);
+
+  // Fetch donations from Supabase
+  const { data: donations = [], isLoading, error } = useDonations();
 
   const handleDonationSort = (field: SortField) => {
     if (donationSort === field) {
@@ -184,7 +159,47 @@ export const Donations = () => {
     }
   };
 
-  const sortData = <T extends DonationPost | RequestPost>(
+  const sortDonations = (
+    data: Donation[], 
+    sortField: SortField, 
+    direction: SortDirection
+  ): Donation[] => {
+    if (!sortField || !direction) return data;
+    
+    return [...data].sort((a, b) => {
+      let aValue: string;
+      let bValue: string;
+      
+      switch (sortField) {
+        case "organization_name":
+          aValue = a.organization_name || "";
+          bValue = b.organization_name || "";
+          break;
+        case "title":
+          aValue = a.title;
+          bValue = b.title;
+          break;
+        case "description":
+          aValue = a.description || "";
+          bValue = b.description || "";
+          break;
+        case "status":
+          aValue = getDonationStatus(a);
+          bValue = getDonationStatus(b);
+          break;
+        default:
+          return 0;
+      }
+      
+      if (direction === "asc") {
+        return aValue.localeCompare(bValue);
+      } else {
+        return bValue.localeCompare(aValue);
+      }
+    });
+  };
+
+  const sortData = <T extends RequestPost>(
     data: T[], 
     sortField: SortField, 
     direction: SortDirection
@@ -203,26 +218,38 @@ export const Donations = () => {
     });
   };
 
-  const filterData = <T extends DonationPost | RequestPost>(data: T[]): T[] => {
+  const filterDonations = (data: Donation[]): Donation[] => {
+    return data.filter((donation) => {
+      const matchesSearch = searchTerm === "" || 
+        Object.values(donation).some(value => 
+          value && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      const status = getDonationStatus(donation);
+      const matchesStatus = statusFilter === "all" || status === statusFilter;
+      
+      return matchesSearch && matchesStatus;
+    });
+  };
+
+  const filterData = <T extends RequestPost>(data: T[]): T[] => {
     return data.filter((item) => {
       const matchesSearch = searchTerm === "" || 
         Object.values(item).some(value => 
           value.toLowerCase().includes(searchTerm.toLowerCase())
         );
-      const matchesType = typeFilter === "all" || item.type === typeFilter;
       const matchesStatus = statusFilter === "all" || item.status === statusFilter;
       
-      return matchesSearch && matchesType && matchesStatus;
+      return matchesSearch && matchesStatus;
     });
   };
 
-  const filteredDonationPosts = filterData(mockDonationPosts);
-  const sortedDonationPosts = sortData(filteredDonationPosts, donationSort, donationDirection);
+  const filteredDonationPosts = filterDonations(donations);
+  const sortedDonationPosts = sortDonations(filteredDonationPosts, donationSort, donationDirection);
   
   const filteredRequestPosts = filterData(mockRequestPosts);
   const sortedRequestPosts = sortData(filteredRequestPosts, requestSort, requestDirection);
 
-  const handleDonationRowClick = (donation: DonationPost) => {
+  const handleDonationRowClick = (donation: Donation) => {
     setSelectedDonation(donation);
     setDonationModalOpen(true);
   };
@@ -262,6 +289,38 @@ export const Donations = () => {
     setRequestModalOpen(false);
   };
 
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Donations</h1>
+          <p className="text-muted-foreground">
+            Manage and track all donation activities
+          </p>
+        </div>
+        <div className="flex items-center justify-center h-64">
+          <p>Loading donations...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Donations</h1>
+          <p className="text-muted-foreground">
+            Manage and track all donation activities
+          </p>
+        </div>
+        <div className="flex items-center justify-center h-64">
+          <p className="text-red-600">Error loading donations: {error.message}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -282,17 +341,6 @@ export const Donations = () => {
           />
         </div>
         
-        <Select value={typeFilter} onValueChange={setTypeFilter}>
-          <SelectTrigger className="w-[150px]">
-            <SelectValue placeholder="Type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Types</SelectItem>
-            <SelectItem value="Materials">Materials</SelectItem>
-            <SelectItem value="Tools">Tools</SelectItem>
-          </SelectContent>
-        </Select>
-
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-[150px]">
             <SelectValue placeholder="Status" />
@@ -318,7 +366,7 @@ export const Donations = () => {
                 <TableHeader>
                   <TableRow>
                     <SortableTableHead
-                      field="organization"
+                      field="organization_name"
                       currentSort={donationSort}
                       currentDirection={donationDirection}
                       onSort={handleDonationSort}
@@ -327,31 +375,22 @@ export const Donations = () => {
                       Organization
                     </SortableTableHead>
                     <SortableTableHead
-                      field="type"
-                      currentSort={donationSort}
-                      currentDirection={donationDirection}
-                      onSort={handleDonationSort}
-                      className="w-1/6"
-                    >
-                      Type
-                    </SortableTableHead>
-                    <SortableTableHead
-                      field="item"
-                      currentSort={donationSort}
-                      currentDirection={donationDirection}
-                      onSort={handleDonationSort}
-                      className="w-1/6"
-                    >
-                      Item
-                    </SortableTableHead>
-                    <SortableTableHead
-                      field="details"
+                      field="title"
                       currentSort={donationSort}
                       currentDirection={donationDirection}
                       onSort={handleDonationSort}
                       className="w-1/4"
                     >
-                      Details
+                      Title
+                    </SortableTableHead>
+                    <SortableTableHead
+                      field="description"
+                      currentSort={donationSort}
+                      currentDirection={donationDirection}
+                      onSort={handleDonationSort}
+                      className="w-1/4"
+                    >
+                      Description
                     </SortableTableHead>
                     <SortableTableHead
                       field="status"
@@ -368,24 +407,32 @@ export const Donations = () => {
               <ScrollArea className="flex-1">
                 <Table>
                   <TableBody>
-                    {sortedDonationPosts.map((post) => (
-                      <TableRow 
-                        key={post.id} 
-                        className="cursor-pointer hover:bg-muted/50"
-                        onClick={() => handleDonationRowClick(post)}
-                      >
-                        <TableCell className="font-medium w-2/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.organization}</TableCell>
-                        <TableCell className="w-1/6 whitespace-nowrap">{post.type}</TableCell>
-                        <TableCell className="w-1/6 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.item}</TableCell>
-                        <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.details}</TableCell>
-                        <TableCell className="w-1/6">
-                          <div className="flex items-center gap-2 whitespace-nowrap">
-                            <StatusIcon status={post.status} />
-                            <span>{post.status}</span>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {sortedDonationPosts.map((donation) => {
+                      const status = getDonationStatus(donation);
+                      return (
+                        <TableRow 
+                          key={donation.id} 
+                          className="cursor-pointer hover:bg-muted/50"
+                          onClick={() => handleDonationRowClick(donation)}
+                        >
+                          <TableCell className="font-medium w-2/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                            {donation.organization_name || "No Organization"}
+                          </TableCell>
+                          <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                            {donation.title}
+                          </TableCell>
+                          <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                            {donation.description || "No description"}
+                          </TableCell>
+                          <TableCell className="w-1/6">
+                            <div className="flex items-center gap-2 whitespace-nowrap">
+                              <StatusIcon status={status} />
+                              <span>{status}</span>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
                   </TableBody>
                 </Table>
               </ScrollArea>
