@@ -47,7 +47,7 @@ export const useUserProfilesRealtime = () => {
             display_name,
             description
           ),
-          organizations (
+          organizations!user_profiles_organization_id_fkey (
             id,
             name,
             type,
