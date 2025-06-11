@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -150,6 +151,27 @@ export const RequestModal = ({
     // Add your fulfill request logic here
   };
 
+  const handleMarkCompleted = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from("requests")
+        .update({
+          is_completed: true
+        })
+        .eq("id", id);
+
+      if (error) {
+        console.error("Error marking request as completed:", error);
+        return;
+      }
+
+      console.log("Request marked as completed successfully");
+      onMarkCompleted && onMarkCompleted(id);
+    } catch (error) {
+      console.error("Error marking request as completed:", error);
+    }
+  };
+
   if (!request) return null;
 
   // Mock donation need by date based on request type
@@ -177,7 +199,7 @@ export const RequestModal = ({
             </Button>
             {shouldShowMarkCompleted && (
               <Button 
-                onClick={() => onMarkCompleted && onMarkCompleted(request.id)}
+                onClick={() => handleMarkCompleted(request.id)}
                 className="bg-green-600 hover:bg-green-700 text-white"
               >
                 Mark Completed
