@@ -1,14 +1,14 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import { useUserProfilesRealtime } from "@/hooks/useUserProfilesRealtime";
 import { useUserRoles } from "@/hooks/useUserRoles";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { OrganizationMembersSearch } from "./OrganizationMembersSearch";
+import { OrganizationMemberCard } from "./OrganizationMemberCard";
 
 interface Organization {
   name: string;
@@ -28,11 +28,23 @@ export const CurrentOrganization = ({ organization, userOrganizationId }: Curren
   const { isAdministrator } = useAuth();
   const { toast } = useToast();
   const [updatingUserId, setUpdatingUserId] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Filter members who belong to the current organization
   const organizationMembers = userProfiles.filter(
     user => user.organization_id === userOrganizationId
   );
+
+  // Filter members based on search term
+  const filteredMembers = useMemo(() => {
+    if (!searchTerm) return organizationMembers;
+    
+    return organizationMembers.filter(member => 
+      member.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      member.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      member.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [organizationMembers, searchTerm]);
 
   const handleRoleChange = async (userId: string, newRoleId: string) => {
     setUpdatingUserId(userId);
@@ -92,54 +104,44 @@ export const CurrentOrganization = ({ organization, userOrganizationId }: Curren
 
         {userOrganizationId && (
           <div className="space-y-4">
-            <h4 className="text-md font-semibold">Organization Members</h4>
+            <div className="flex items-center justify-between">
+              <h4 className="text-md font-semibold">Organization Members</h4>
+              {organizationMembers.length > 0 && (
+                <span className="text-sm text-muted-foreground">
+                  {filteredMembers.length} of {organizationMembers.length} members
+                </span>
+              )}
+            </div>
+            
             {loading ? (
               <p className="text-sm text-muted-foreground">Loading members...</p>
             ) : organizationMembers.length === 0 ? (
               <p className="text-sm text-muted-foreground">No other members in this organization.</p>
             ) : (
-              <div className="space-y-3">
-                {organizationMembers.map((member) => (
-                  <div key={member.id} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-8 w-8">
-                        <AvatarFallback>
-                          {member.first_name.charAt(0)}{member.last_name.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="text-sm font-medium">
-                          {member.first_name} {member.last_name}
-                        </p>
-                        <p className="text-xs text-muted-foreground">{member.email}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {isAdministrator ? (
-                        <Select
-                          value={member.role_id}
-                          onValueChange={(value) => handleRoleChange(member.id, value)}
-                          disabled={updatingUserId === member.id}
-                        >
-                          <SelectTrigger className="w-40">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {userRoles.map((role) => (
-                              <SelectItem key={role.id} value={role.id}>
-                                {role.display_name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      ) : (
-                        <Badge variant="outline">
-                          {member.user_roles?.display_name || "Member"}
-                        </Badge>
-                      )}
-                    </div>
+              <div className="space-y-4">
+                <OrganizationMembersSearch
+                  searchTerm={searchTerm}
+                  onSearchChange={setSearchTerm}
+                />
+                
+                {filteredMembers.length === 0 ? (
+                  <p className="text-sm text-muted-foreground text-center py-4">
+                    No members found matching your search.
+                  </p>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {filteredMembers.map((member) => (
+                      <OrganizationMemberCard
+                        key={member.id}
+                        member={member}
+                        isAdministrator={isAdministrator}
+                        userRoles={userRoles}
+                        updatingUserId={updatingUserId}
+                        onRoleChange={handleRoleChange}
+                      />
+                    ))}
                   </div>
-                ))}
+                )}
               </div>
             )}
           </div>
