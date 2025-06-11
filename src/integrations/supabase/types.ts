@@ -13,23 +13,26 @@ export type Database = {
         Row: {
           created_at: string
           event_id: string
+          guest_info: Json | null
           id: string
           updated_at: string
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           created_at?: string
           event_id: string
+          guest_info?: Json | null
           id?: string
           updated_at?: string
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           created_at?: string
           event_id?: string
+          guest_info?: Json | null
           id?: string
           updated_at?: string
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: [
           {
