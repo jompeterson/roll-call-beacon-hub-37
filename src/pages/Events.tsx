@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -6,7 +5,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChevronUp, ChevronDown, Clock, CheckCircle, XCircle, Archive, Users } from "lucide-react";
 import { EventModal } from "@/components/EventModal";
-import { EventRSVPModal } from "@/components/EventRSVPModal";
 import { GuestRSVPModal } from "@/components/GuestRSVPModal";
 import { useEvents } from "@/hooks/useEvents";
 import { useAuth } from "@/hooks/useAuth";
@@ -91,7 +89,6 @@ export const Events = () => {
   // Modal states
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [eventModalOpen, setEventModalOpen] = useState(false);
-  const [rsvpModalOpen, setRSVPModalOpen] = useState(false);
   const [guestRSVPModalOpen, setGuestRSVPModalOpen] = useState(false);
 
   const handleEventSort = (field: SortField) => {
@@ -183,13 +180,9 @@ export const Events = () => {
     setEventModalOpen(false);
   };
 
-  const handleOpenRSVPModal = () => {
+  const handleOpenGuestRSVPModal = () => {
     setEventModalOpen(false);
-    if (isAuthenticated) {
-      setRSVPModalOpen(true);
-    } else {
-      setGuestRSVPModalOpen(true);
-    }
+    setGuestRSVPModalOpen(true);
   };
 
   const formatDate = (dateString: string) => {
@@ -349,14 +342,7 @@ export const Events = () => {
         onApprove={handleEventApprove}
         onReject={handleEventReject}
         onRequestChanges={handleEventRequestChanges}
-        onOpenRSVPModal={handleOpenRSVPModal}
-      />
-
-      {/* Authenticated User RSVP Modal */}
-      <EventRSVPModal
-        event={selectedEvent}
-        open={rsvpModalOpen}
-        onOpenChange={setRSVPModalOpen}
+        onOpenGuestRSVPModal={handleOpenGuestRSVPModal}
       />
 
       {/* Guest RSVP Modal */}
