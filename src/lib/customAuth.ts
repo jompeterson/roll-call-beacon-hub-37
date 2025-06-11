@@ -1,3 +1,4 @@
+
 import { supabase } from "@/integrations/supabase/client";
 
 export interface User {
@@ -111,16 +112,26 @@ class CustomAuthService {
 
   async signUp(email: string, password: string, userData: any): Promise<AuthResponse> {
     try {
+      console.log('Starting user signup process...');
+      
       // Generate salt and hash password
       const { data: saltData, error: saltError } = await supabase.rpc('generate_salt');
-      if (saltError) throw saltError;
+      if (saltError) {
+        console.error('Salt generation error:', saltError);
+        throw saltError;
+      }
       
       const salt = saltData;
       const { data: hashData, error: hashError } = await supabase.rpc('hash_password', {
         password,
         salt
       });
-      if (hashError) throw hashError;
+      if (hashError) {
+        console.error('Password hashing error:', hashError);
+        throw hashError;
+      }
+
+      console.log('Password hashed successfully');
 
       // Create user
       const { data: newUser, error: userError } = await supabase
@@ -135,26 +146,43 @@ class CustomAuthService {
         .single();
 
       if (userError) {
+        console.error('User creation error:', userError);
         return { user: null, error: userError.message };
       }
 
-      // Create user profile
-      const { error: profileError } = await supabase
+      console.log('User created in users table:', newUser.id);
+
+      // Create user profile - this is the critical part
+      const profileData = {
+        id: newUser.id,
+        email: userData.email,
+        first_name: userData.first_name,
+        last_name: userData.last_name,
+        address: userData.address,
+        phone: userData.phone,
+        role_id: userData.role_id,
+        organization_id: userData.organization_id
+      };
+
+      console.log('Creating user profile with data:', profileData);
+
+      const { data: profileResult, error: profileError } = await supabase
         .from('user_profiles')
-        .insert({
-          id: newUser.id,
-          email: userData.email,
-          first_name: userData.first_name,
-          last_name: userData.last_name,
-          address: userData.address,
-          phone: userData.phone,
-          role_id: userData.role_id,
-          organization_id: userData.organization_id
-        });
+        .insert(profileData)
+        .select()
+        .single();
 
       if (profileError) {
         console.error('Profile creation error:', profileError);
+        console.error('Profile error details:', JSON.stringify(profileError, null, 2));
+        
+        // If profile creation fails, we should clean up the user record
+        await supabase.from('users').delete().eq('id', newUser.id);
+        
+        return { user: null, error: `Failed to create user profile: ${profileError.message}` };
       }
+
+      console.log('User profile created successfully:', profileResult);
 
       return {
         user: {
@@ -166,6 +194,7 @@ class CustomAuthService {
         error: null
       };
     } catch (error: any) {
+      console.error('Signup process error:', error);
       return { user: null, error: error.message || 'Registration failed' };
     }
   }

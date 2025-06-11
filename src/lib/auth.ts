@@ -1,3 +1,4 @@
+
 import { customAuth } from "@/lib/customAuth";
 import { RegistrationData } from "@/pages/Register";
 import { supabase } from "@/integrations/supabase/client";
@@ -56,9 +57,25 @@ export const signUp = async (registrationData: RegistrationData) => {
     );
 
     if (error) {
-      console.error('Signup error:', error);
+      console.error('User creation error:', error);
       throw new Error(error);
     }
+
+    if (!user) {
+      throw new Error('User creation failed - no user returned');
+    }
+
+    console.log('User created successfully:', user.id);
+    console.log('Profile data to insert:', {
+      id: user.id,
+      email: registrationData.email,
+      first_name: registrationData.firstName,
+      last_name: registrationData.lastName,
+      address: registrationData.address,
+      phone: registrationData.phone,
+      role_id: roleData.id,
+      organization_id: organizationId,
+    });
 
     return { data: { user }, error: null };
   } catch (error: any) {
