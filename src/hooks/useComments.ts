@@ -100,6 +100,32 @@ export const useComments = (contentType: string, contentId: string) => {
 
     try {
       setSubmitting(true);
+      
+      // Get the current user
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      if (userError) {
+        console.error('Error getting user:', userError);
+        toast({
+          title: "Authentication Error",
+          description: "Please log in to post comments.",
+          variant: "destructive",
+        });
+        return false;
+      }
+
+      if (!user) {
+        console.error('No authenticated user found');
+        toast({
+          title: "Authentication Required",
+          description: "Please log in to post comments.",
+          variant: "destructive",
+        });
+        return false;
+      }
+
+      console.log('Creating comment with user ID:', user.id);
+
       const { error } = await supabase
         .from('comments')
         .insert({
@@ -107,7 +133,7 @@ export const useComments = (contentType: string, contentId: string) => {
           content_type: contentType,
           content_id: contentId,
           parent_comment_id: parentCommentId || null,
-          creator_user_id: (await supabase.auth.getUser()).data.user?.id
+          creator_user_id: user.id
         });
 
       if (error) {
@@ -144,13 +170,26 @@ export const useComments = (contentType: string, contentId: string) => {
     if (!content.trim()) return false;
 
     try {
+      // Check authentication before updating
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      if (userError || !user) {
+        toast({
+          title: "Authentication Required",
+          description: "Please log in to edit comments.",
+          variant: "destructive",
+        });
+        return false;
+      }
+
       const { error } = await supabase
         .from('comments')
         .update({ 
           content: content.trim(),
           updated_at: new Date().toISOString()
         })
-        .eq('id', commentId);
+        .eq('id', commentId)
+        .eq('creator_user_id', user.id); // Ensure user can only edit their own comments
 
       if (error) {
         console.error('Error updating comment:', error);
@@ -182,10 +221,23 @@ export const useComments = (contentType: string, contentId: string) => {
 
   const deleteComment = async (commentId: string) => {
     try {
+      // Check authentication before deleting
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      if (userError || !user) {
+        toast({
+          title: "Authentication Required",
+          description: "Please log in to delete comments.",
+          variant: "destructive",
+        });
+        return false;
+      }
+
       const { error } = await supabase
         .from('comments')
         .delete()
-        .eq('id', commentId);
+        .eq('id', commentId)
+        .eq('creator_user_id', user.id); // Ensure user can only delete their own comments
 
       if (error) {
         console.error('Error deleting comment:', error);
