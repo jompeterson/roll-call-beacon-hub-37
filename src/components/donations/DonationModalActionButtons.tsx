@@ -74,7 +74,7 @@ export const DonationModalActionButtons = ({
   if (approvalDecisionMade) {
     if (isApproved) {
       return (
-        <div className="flex gap-3 pt-6 border-t flex-wrap">
+        <div className="flex gap-3 p-6 flex-wrap">
           <Button 
             onClick={handleAcceptDonation}
             className="bg-blue-600 hover:bg-blue-700 text-white"
@@ -91,7 +91,7 @@ export const DonationModalActionButtons = ({
   // Show approval buttons if no decision has been made yet
   if (isUser) {
     return (
-      <div className="flex gap-3 pt-6 border-t flex-wrap">
+      <div className="flex gap-3 p-6 flex-wrap">
         <Button 
           onClick={handleApprove}
           className="bg-green-600 hover:bg-green-700 text-white"
@@ -115,7 +115,7 @@ export const DonationModalActionButtons = ({
   }
 
   return (
-    <div className="flex gap-3 pt-6 border-t flex-wrap">
+    <div className="flex gap-3 p-6 flex-wrap">
       <Button 
         onClick={handleApprove}
         className="bg-green-600 hover:bg-green-700 text-white"

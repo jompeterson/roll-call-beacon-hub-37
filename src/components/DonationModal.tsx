@@ -1,5 +1,6 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Donation } from "@/hooks/useDonations";
 import { DonationModalCreatorInfo } from "./donations/DonationModalCreatorInfo";
 import { DonationModalInformation } from "./donations/DonationModalInformation";
@@ -87,60 +88,71 @@ export const DonationModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl w-full max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">{getModalTitle()}</DialogTitle>
-          <p className="text-sm text-muted-foreground">{getModalType()}</p>
-        </DialogHeader>
+      <DialogContent className="max-w-5xl w-full h-[90vh] flex flex-col p-0">
+        {/* Fixed Header */}
+        <div className="flex-shrink-0 p-6 border-b">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold">{getModalTitle()}</DialogTitle>
+            <p className="text-sm text-muted-foreground">{getModalType()}</p>
+          </DialogHeader>
+        </div>
         
-        <DonationModalCreatorInfo
-          creatorUserId={donation.creator_user_id}
-          createdAt={donation.created_at}
-          orgName={orgName}
-          open={open}
-          isUser={isUser}
-          getDateLabel={getDateLabel}
-        />
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mt-4">
-          <DonationModalInformation
-            donation={donation}
-            isScholarship={isScholarship}
-            isEvent={isEvent}
-            isOrganization={isOrganization}
-            isUser={isUser}
-            getInformationTitle={getInformationTitle}
-            getOrganizationBio={getOrganizationBio}
-            getUserBio={getUserBio}
-            formatAmount={formatAmount}
-          />
+        {/* Scrollable Content */}
+        <ScrollArea className="flex-1 px-6">
+          <div className="space-y-4 py-4">
+            <DonationModalCreatorInfo
+              creatorUserId={donation.creator_user_id}
+              createdAt={donation.created_at}
+              orgName={orgName}
+              open={open}
+              isUser={isUser}
+              getDateLabel={getDateLabel}
+            />
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+              <DonationModalInformation
+                donation={donation}
+                isScholarship={isScholarship}
+                isEvent={isEvent}
+                isOrganization={isOrganization}
+                isUser={isUser}
+                getInformationTitle={getInformationTitle}
+                getOrganizationBio={getOrganizationBio}
+                getUserBio={getUserBio}
+                formatAmount={formatAmount}
+              />
 
-          <DonationModalImageSection
-            donation={donation}
-            orgName={orgName}
-            isOrganization={isOrganization}
+              <DonationModalImageSection
+                donation={donation}
+                orgName={orgName}
+                isOrganization={isOrganization}
+                isUser={isUser}
+              />
+            </div>
+
+            {/* Comments Section - Only show for approved donations/scholarships */}
+            {donation.is_approved && (
+              <CommentsSection
+                contentType={getCommentsContentType()}
+                contentId={donation.id}
+                title={isScholarship ? "Scholarship Discussion" : "Donation Discussion"}
+              />
+            )}
+          </div>
+        </ScrollArea>
+
+        {/* Fixed Footer */}
+        <div className="flex-shrink-0 border-t">
+          <DonationModalActionButtons
+            donationId={donation.id}
+            onApprove={onApprove}
+            onReject={onReject}
+            onRequestChanges={onRequestChanges}
             isUser={isUser}
+            approvalDecisionMade={donation.approval_decision_made}
+            isApproved={donation.is_approved}
           />
         </div>
-
-        {/* Comments Section - Only show for approved donations/scholarships */}
-        {donation.is_approved && (
-          <CommentsSection
-            contentType={getCommentsContentType()}
-            contentId={donation.id}
-            title={isScholarship ? "Scholarship Discussion" : "Donation Discussion"}
-          />
-        )}
-
-        <DonationModalActionButtons
-          donationId={donation.id}
-          onApprove={onApprove}
-          onReject={onReject}
-          onRequestChanges={onRequestChanges}
-          isUser={isUser}
-          approvalDecisionMade={donation.approval_decision_made}
-          isApproved={donation.is_approved}
-        />
       </DialogContent>
     </Dialog>
   );
