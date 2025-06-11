@@ -96,6 +96,11 @@ export const NotificationDropdown = () => {
           navigate(`/events/${notification.related_content_id}`);
           break;
           
+        case 'user':
+          // For user registration notifications, navigate to the Users page
+          navigate('/users');
+          break;
+          
         default:
           // Default to dashboard if we can't determine the content type
           navigate('/');
@@ -114,6 +119,8 @@ export const NotificationDropdown = () => {
         return '📝';
       case 'new_post':
         return '📢';
+      case 'user_registration':
+        return '👤';
       default:
         return '🔔';
     }

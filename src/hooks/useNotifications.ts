@@ -6,11 +6,11 @@ import { useAuth } from "@/hooks/useAuth";
 export interface Notification {
   id: string;
   user_id: string;
-  type: 'comment_reply' | 'new_post' | 'post_comment';
+  type: 'comment_reply' | 'new_post' | 'post_comment' | 'user_registration';
   title: string;
   message: string;
   is_read: boolean;
-  related_content_type?: 'donation' | 'request' | 'scholarship' | 'event' | 'comment';
+  related_content_type?: 'donation' | 'request' | 'scholarship' | 'event' | 'comment' | 'user';
   related_content_id?: string;
   creator_user_id?: string;
   created_at: string;
