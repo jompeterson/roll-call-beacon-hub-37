@@ -1,5 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Calendar } from "lucide-react";
 import { useEvents } from "@/hooks/useEvents";
 import { EventModal } from "@/components/EventModal";
@@ -50,7 +51,7 @@ export const PendingEventsWidget = () => {
 
   if (loading) {
     return (
-      <Card>
+      <Card className="h-64">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Pending Events</CardTitle>
           <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -64,29 +65,31 @@ export const PendingEventsWidget = () => {
 
   return (
     <>
-      <Card>
+      <Card className="h-64">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Pending Events</CardTitle>
           <Calendar className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex-1 p-0">
           {pendingEvents.length === 0 ? (
-            <div className="text-sm text-muted-foreground">No pending events</div>
+            <div className="p-6 text-sm text-muted-foreground">No pending events</div>
           ) : (
-            <div className="space-y-2">
-              {pendingEvents.map((event) => (
-                <div
-                  key={event.id}
-                  className="p-2 border rounded cursor-pointer hover:bg-muted/50 transition-colors"
-                  onClick={() => handleEventClick(event)}
-                >
-                  <div className="font-medium text-sm">{event.title}</div>
-                  <div className="text-xs text-muted-foreground">
-                    {formatDate(event.event_date)} • {event.location || 'Location TBD'}
+            <ScrollArea className="h-44 px-6">
+              <div className="space-y-2 py-2">
+                {pendingEvents.map((event) => (
+                  <div
+                    key={event.id}
+                    className="p-2 border rounded cursor-pointer hover:bg-muted/50 transition-colors"
+                    onClick={() => handleEventClick(event)}
+                  >
+                    <div className="font-medium text-sm">{event.title}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {formatDate(event.event_date)} • {event.location || 'Location TBD'}
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            </ScrollArea>
           )}
         </CardContent>
       </Card>

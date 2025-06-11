@@ -1,5 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { FileText } from "lucide-react";
 import { useDonations } from "@/hooks/useDonations";
 import { useRequests } from "@/hooks/useRequests";
@@ -54,7 +55,7 @@ export const PendingDonationsRequestsWidget = () => {
 
   if (donationsLoading || requestsLoading) {
     return (
-      <Card>
+      <Card className="h-64">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Pending Donations/Requests</CardTitle>
           <FileText className="h-4 w-4 text-muted-foreground" />
@@ -68,41 +69,43 @@ export const PendingDonationsRequestsWidget = () => {
 
   return (
     <>
-      <Card>
+      <Card className="h-64">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Pending Donations/Requests</CardTitle>
           <FileText className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex-1 p-0">
           {allPendingItems.length === 0 ? (
-            <div className="text-sm text-muted-foreground">No pending donations/requests</div>
+            <div className="p-6 text-sm text-muted-foreground">No pending donations/requests</div>
           ) : (
-            <div className="space-y-2">
-              {pendingDonations.map((donation) => (
-                <div
-                  key={`donation-${donation.id}`}
-                  className="p-2 border rounded cursor-pointer hover:bg-muted/50 transition-colors"
-                  onClick={() => handleDonationClick(donation)}
-                >
-                  <div className="font-medium text-sm">{donation.title}</div>
-                  <div className="text-xs text-muted-foreground">
-                    Donation • ${donation.amount_needed}
+            <ScrollArea className="h-44 px-6">
+              <div className="space-y-2 py-2">
+                {pendingDonations.map((donation) => (
+                  <div
+                    key={`donation-${donation.id}`}
+                    className="p-2 border rounded cursor-pointer hover:bg-muted/50 transition-colors"
+                    onClick={() => handleDonationClick(donation)}
+                  >
+                    <div className="font-medium text-sm">{donation.title}</div>
+                    <div className="text-xs text-muted-foreground">
+                      Donation • ${donation.amount_needed}
+                    </div>
                   </div>
-                </div>
-              ))}
-              {pendingRequests.map((request) => (
-                <div
-                  key={`request-${request.id}`}
-                  className="p-2 border rounded cursor-pointer hover:bg-muted/50 transition-colors"
-                  onClick={() => handleRequestClick(request)}
-                >
-                  <div className="font-medium text-sm">{request.title}</div>
-                  <div className="text-xs text-muted-foreground">
-                    Request • {request.request_type}
+                ))}
+                {pendingRequests.map((request) => (
+                  <div
+                    key={`request-${request.id}`}
+                    className="p-2 border rounded cursor-pointer hover:bg-muted/50 transition-colors"
+                    onClick={() => handleRequestClick(request)}
+                  >
+                    <div className="font-medium text-sm">{request.title}</div>
+                    <div className="text-xs text-muted-foreground">
+                      Request • {request.request_type}
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            </ScrollArea>
           )}
         </CardContent>
       </Card>
