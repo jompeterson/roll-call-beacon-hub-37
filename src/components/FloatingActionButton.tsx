@@ -7,20 +7,23 @@ import { useAuth } from "@/hooks/useAuth";
 
 export const FloatingActionButton = () => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isAdministrator } = useAuth();
 
   // Don't render the FAB if user is not authenticated
   if (!isAuthenticated) {
     return null;
   }
 
-  const actions = [
-    { name: "New User", icon: User, color: "bg-blue-500 hover:bg-blue-600" },
-    { name: "New Organization", icon: Building2, color: "bg-green-500 hover:bg-green-600" },
-    { name: "New Scholarship", icon: GraduationCap, color: "bg-purple-500 hover:bg-purple-600" },
-    { name: "New Request", icon: FileText, color: "bg-orange-500 hover:bg-orange-600" },
-    { name: "New Event", icon: Calendar, color: "bg-red-500 hover:bg-red-600" },
+  const allActions = [
+    { name: "New User", icon: User, color: "bg-blue-500 hover:bg-blue-600", adminOnly: true },
+    { name: "New Organization", icon: Building2, color: "bg-green-500 hover:bg-green-600", adminOnly: true },
+    { name: "New Scholarship", icon: GraduationCap, color: "bg-purple-500 hover:bg-purple-600", adminOnly: false },
+    { name: "New Request", icon: FileText, color: "bg-orange-500 hover:bg-orange-600", adminOnly: false },
+    { name: "New Event", icon: Calendar, color: "bg-red-500 hover:bg-red-600", adminOnly: false },
   ];
+
+  // Filter actions based on user role
+  const actions = allActions.filter(action => !action.adminOnly || isAdministrator);
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
