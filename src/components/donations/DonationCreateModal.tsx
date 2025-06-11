@@ -243,7 +243,7 @@ export const DonationCreateModal = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="target_date">Target Date</Label>
+              <Label htmlFor="target_date">Deadline</Label>
               <Input
                 id="target_date"
                 type="date"

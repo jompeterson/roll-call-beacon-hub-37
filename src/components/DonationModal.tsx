@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -234,7 +235,7 @@ export const DonationModal = ({
                 )}
                 {donation.target_date && (
                   <div>
-                    <label className="font-medium text-sm text-muted-foreground">Target Date</label>
+                    <label className="font-medium text-sm text-muted-foreground">Deadline</label>
                     <p className="text-base mt-1">{new Date(donation.target_date).toLocaleDateString()}</p>
                   </div>
                 )}
