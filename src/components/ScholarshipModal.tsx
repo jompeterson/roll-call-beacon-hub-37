@@ -1,4 +1,6 @@
 
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tables } from "@/integrations/supabase/types";
@@ -43,6 +45,16 @@ export const ScholarshipModal = ({
   isRequestingChanges = false,
 }: ScholarshipModalProps) => {
   const { isAdministrator, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  // Update URL when modal opens
+  useEffect(() => {
+    if (open && scholarship) {
+      navigate(`/scholarships/${scholarship.id}`, { replace: true });
+    } else if (!open) {
+      navigate('/scholarships', { replace: true });
+    }
+  }, [open, scholarship, navigate]);
 
   if (!scholarship) return null;
 

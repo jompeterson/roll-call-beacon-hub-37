@@ -1,5 +1,5 @@
-
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
@@ -48,11 +48,21 @@ export const RequestModal = ({
   onRequestChanges,
   onMarkCompleted 
 }: RequestModalProps) => {
+  const navigate = useNavigate();
   const [creatorInfo, setCreatorInfo] = useState<CreatorInfo>({
     name: "Loading...",
     email: "Loading...",
     organization: "Loading..."
   });
+
+  // Update URL when modal opens
+  useEffect(() => {
+    if (open && request) {
+      navigate(`/requests/${request.id}`, { replace: true });
+    } else if (!open) {
+      navigate('/donations', { replace: true });
+    }
+  }, [open, request, navigate]);
 
   useEffect(() => {
     const fetchCreatorInfo = async () => {

@@ -1,4 +1,6 @@
 
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Donation } from "@/hooks/useDonations";
@@ -33,6 +35,17 @@ export const DonationModal = ({
   isOrganization = false,
   isUser = false
 }: DonationModalProps) => {
+  const navigate = useNavigate();
+
+  // Update URL when modal opens
+  useEffect(() => {
+    if (open && donation) {
+      navigate(`/donations/${donation.id}`, { replace: true });
+    } else if (!open) {
+      navigate('/donations', { replace: true });
+    }
+  }, [open, donation, navigate]);
+
   if (!donation) return null;
 
   const orgName = donation.organization_name || "Unknown Organization";

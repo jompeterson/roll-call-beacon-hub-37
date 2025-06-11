@@ -1,4 +1,6 @@
 
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -43,6 +45,16 @@ export const EventModal = ({
 }: EventModalProps) => {
   const { isAdministrator, isAuthenticated } = useAuth();
   const { rsvpCount, hasRsvp, submitting, createRSVP, deleteRSVP } = useEventRSVPs(event?.id || "");
+  const navigate = useNavigate();
+
+  // Update URL when modal opens
+  useEffect(() => {
+    if (open && event) {
+      navigate(`/events/${event.id}`, { replace: true });
+    } else if (!open) {
+      navigate('/events', { replace: true });
+    }
+  }, [open, event, navigate]);
 
   if (!event) return null;
 
