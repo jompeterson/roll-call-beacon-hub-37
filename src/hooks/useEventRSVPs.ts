@@ -7,7 +7,8 @@ import { useAuth } from "@/hooks/useAuth";
 interface RSVP {
   id: string;
   event_id: string;
-  user_id: string;
+  user_id: string | null;
+  guest_info: any | null;
   created_at: string;
   updated_at: string;
 }
@@ -45,10 +46,12 @@ export const useEventRSVPs = (eventId: string) => {
 
       setRsvps(data || []);
       
-      // Check if current user has RSVP'd
-      if (user) {
+      // Check if current user has RSVP'd (only for authenticated users)
+      if (user?.id) {
         const currentUserRsvp = data?.find(rsvp => rsvp.user_id === user.id);
         setUserRsvp(currentUserRsvp || null);
+      } else {
+        setUserRsvp(null);
       }
     } catch (error) {
       console.error('Error fetching RSVPs:', error);
@@ -63,7 +66,10 @@ export const useEventRSVPs = (eventId: string) => {
   };
 
   const createRSVP = async () => {
-    if (!user || !eventId) return;
+    if (!user?.id || !eventId) {
+      console.error('User not authenticated or event ID missing');
+      return;
+    }
 
     try {
       setSubmitting(true);
@@ -71,7 +77,8 @@ export const useEventRSVPs = (eventId: string) => {
         .from('event_rsvps')
         .insert({
           event_id: eventId,
-          user_id: user.id
+          user_id: user.id,
+          guest_info: null
         })
         .select()
         .single();
@@ -104,7 +111,10 @@ export const useEventRSVPs = (eventId: string) => {
   };
 
   const deleteRSVP = async () => {
-    if (!user || !userRsvp) return;
+    if (!user?.id || !userRsvp) {
+      console.error('User not authenticated or no RSVP to delete');
+      return;
+    }
 
     try {
       setSubmitting(true);
