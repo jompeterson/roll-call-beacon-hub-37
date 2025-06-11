@@ -9,10 +9,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Bell, User, ChevronDown, LogIn } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { customAuth, type User as CustomUser } from "@/lib/customAuth";
 import { signOut } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
-import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 interface HeaderProps {
   sidebarOpen: boolean;
@@ -23,22 +22,18 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [notificationCount] = useState(3);
-  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [user, setUser] = useState<CustomUser | null>(null);
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-    });
+    // Get initial user
+    setUser(customAuth.getUser());
 
     // Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setUser(session?.user ?? null);
-      }
-    );
+    const unsubscribe = customAuth.onAuthStateChange((user) => {
+      setUser(user);
+    });
 
-    return () => subscription.unsubscribe();
+    return () => unsubscribe();
   }, []);
 
   const handleSignIn = () => {
@@ -70,19 +65,8 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
   const getUserDisplayName = () => {
     if (!user) return "User";
     
-    // Try to get name from user metadata first
-    const firstName = user.user_metadata?.first_name;
-    const lastName = user.user_metadata?.last_name;
-    
-    if (firstName && lastName) {
-      return `${firstName} ${lastName}`;
-    }
-    
-    if (firstName) {
-      return firstName;
-    }
-    
-    // Fallback to email
+    // For now, just use email since we don't have name in the user object
+    // We could fetch profile data if needed
     return user.email || "User";
   };
 

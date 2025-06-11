@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import type { User as SupabaseUser } from "@supabase/supabase-js";
+import { customAuth, type User as CustomUser } from "@/lib/customAuth";
 
 interface UserProfile {
   id: string;
@@ -39,7 +39,7 @@ interface ContactInfo {
 
 export const useProfileData = () => {
   const { toast } = useToast();
-  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [user, setUser] = useState<CustomUser | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [currentOrganization, setCurrentOrganization] = useState<Organization | null>(null);
   const [userRole, setUserRole] = useState<UserRole | null>(null);
@@ -53,8 +53,8 @@ export const useProfileData = () => {
 
   const fetchUserData = async () => {
     try {
-      // Get current user
-      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      // Get current user from custom auth
+      const currentUser = customAuth.getUser();
       
       if (!currentUser) {
         toast({
@@ -158,6 +158,26 @@ export const useProfileData = () => {
 
   useEffect(() => {
     fetchUserData();
+
+    // Listen for auth state changes
+    const unsubscribe = customAuth.onAuthStateChange((user) => {
+      if (user) {
+        fetchUserData();
+      } else {
+        setUser(null);
+        setUserProfile(null);
+        setCurrentOrganization(null);
+        setUserRole(null);
+        setContactInfo({
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: ""
+        });
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
   return {

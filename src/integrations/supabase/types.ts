@@ -84,6 +84,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "user_profiles_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "user_profiles_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
@@ -126,12 +133,78 @@ export type Database = {
         }
         Relationships: []
       }
+      users: {
+        Row: {
+          created_at: string
+          email: string
+          email_verification_token: string | null
+          email_verified: boolean
+          failed_login_attempts: number
+          id: string
+          locked_until: string | null
+          password_hash: string
+          password_reset_expires_at: string | null
+          password_reset_token: string | null
+          salt: string
+          session_expires_at: string | null
+          session_token: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          email_verification_token?: string | null
+          email_verified?: boolean
+          failed_login_attempts?: number
+          id?: string
+          locked_until?: string | null
+          password_hash: string
+          password_reset_expires_at?: string | null
+          password_reset_token?: string | null
+          salt: string
+          session_expires_at?: string | null
+          session_token?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          email_verification_token?: string | null
+          email_verified?: boolean
+          failed_login_attempts?: number
+          id?: string
+          locked_until?: string | null
+          password_hash?: string
+          password_reset_expires_at?: string | null
+          password_reset_token?: string | null
+          salt?: string
+          session_expires_at?: string | null
+          session_token?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_salt: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      generate_session_token: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      hash_password: {
+        Args: { password: string; salt: string }
+        Returns: string
+      }
+      verify_password: {
+        Args: { password: string; hash: string }
+        Returns: boolean
+      }
     }
     Enums: {
       organization_type:

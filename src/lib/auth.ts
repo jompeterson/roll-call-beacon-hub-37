@@ -1,5 +1,7 @@
-import { supabase } from "@/integrations/supabase/client";
+
+import { customAuth } from "@/lib/customAuth";
 import { RegistrationData } from "@/pages/Register";
+import { supabase } from "@/integrations/supabase/client";
 
 export const signUp = async (registrationData: RegistrationData) => {
   try {
@@ -27,60 +29,53 @@ export const signUp = async (registrationData: RegistrationData) => {
       organizationId = orgData.id;
     }
 
-    // Sign up the user with metadata
-    const { data, error } = await supabase.auth.signUp({
-      email: registrationData.email,
-      password: registrationData.password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/`,
-        data: {
-          first_name: registrationData.firstName,
-          last_name: registrationData.lastName,
-          address: registrationData.address,
-          phone: registrationData.phone,
-          role: registrationData.role,
-          organization_id: organizationId,
-        },
-      },
-    });
+    // Get role_id from role name
+    const { data: roleData, error: roleError } = await supabase
+      .from('user_roles')
+      .select('id')
+      .eq('name', registrationData.role)
+      .single();
+
+    if (roleError) {
+      console.error('Role lookup error:', roleError);
+      throw new Error('Invalid role specified');
+    }
+
+    // Sign up the user with our custom auth system
+    const { user, error } = await customAuth.signUp(
+      registrationData.email,
+      registrationData.password,
+      {
+        email: registrationData.email,
+        first_name: registrationData.firstName,
+        last_name: registrationData.lastName,
+        address: registrationData.address,
+        phone: registrationData.phone,
+        role_id: roleData.id,
+        organization_id: organizationId,
+      }
+    );
 
     if (error) {
       console.error('Signup error:', error);
-      throw error;
+      throw new Error(error);
     }
 
-    // If organization was created and user signup successful, link them
-    if (organizationId && data.user) {
-      const { error: updateError } = await supabase
-        .from('user_profiles')
-        .update({ organization_id: organizationId })
-        .eq('id', data.user.id);
-
-      if (updateError) {
-        console.error('Profile update error:', updateError);
-        // Don't throw here as the user is already created
-      }
-    }
-
-    return { data, error: null };
-  } catch (error) {
+    return { data: { user }, error: null };
+  } catch (error: any) {
     console.error('Registration error:', error);
     return { data: null, error };
   }
 };
 
 export const signIn = async (email: string, password: string) => {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-
-  return { data, error };
+  const { user, error } = await customAuth.signIn(email, password);
+  return { data: { user }, error: error ? new Error(error) : null };
 };
 
 export const signOut = async () => {
-  const { error } = await supabase.auth.signOut();
-  return { error };
+  const { error } = await customAuth.signOut();
+  return { error: error ? new Error(error) : null };
 };
 
 export const checkVerificationStatus = async (email: string) => {
@@ -97,7 +92,7 @@ export const checkVerificationStatus = async (email: string) => {
     }
 
     return { isApproved: data?.is_approved || false, error: null };
-  } catch (error) {
+  } catch (error: any) {
     console.error('Verification status check error:', error);
     return { isApproved: false, error: 'Failed to check verification status' };
   }
