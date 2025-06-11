@@ -109,6 +109,65 @@ export type Database = {
           },
         ]
       }
+      scholarships: {
+        Row: {
+          amount: number
+          application_deadline: string | null
+          approval_decision_made: boolean
+          contact_email: string | null
+          contact_phone: string | null
+          created_at: string
+          creator_user_id: string
+          description: string | null
+          eligibility_criteria: string | null
+          id: string
+          is_approved: boolean
+          organization_name: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          application_deadline?: string | null
+          approval_decision_made?: boolean
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          creator_user_id: string
+          description?: string | null
+          eligibility_criteria?: string | null
+          id?: string
+          is_approved?: boolean
+          organization_name: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          application_deadline?: string | null
+          approval_decision_made?: boolean
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          creator_user_id?: string
+          description?: string | null
+          eligibility_criteria?: string | null
+          id?: string
+          is_approved?: boolean
+          organization_name?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scholarships_creator_user_id_fkey"
+            columns: ["creator_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_profiles: {
         Row: {
           address: string

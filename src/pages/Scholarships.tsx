@@ -1,63 +1,32 @@
+
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ChevronUp, ChevronDown, Clock, CheckCircle, XCircle, Archive } from "lucide-react";
-import { DonationModal } from "@/components/DonationModal";
+import { ChevronUp, ChevronDown, Clock, CheckCircle, XCircle } from "lucide-react";
+import { ScholarshipModal } from "@/components/ScholarshipModal";
+import { useScholarships } from "@/hooks/useScholarships";
+import { Tables } from "@/integrations/supabase/types";
 
 type SortDirection = "asc" | "desc" | null;
-type SortField = "organization" | "name" | "amount" | "status" | null;
+type SortField = "organization_name" | "title" | "amount" | "is_approved" | null;
 
-interface ScholarshipPost {
-  id: string;
-  organization: string;
-  type: "Materials" | "Tools";
-  item: string;
-  details: string;
-  status: "Approved" | "Pending" | "Rejected" | "Archived";
-}
+type Scholarship = Tables<"scholarships"> & {
+  creator?: {
+    email: string;
+  };
+};
 
-const mockScholarshipPosts: ScholarshipPost[] = [
-  {
-    id: "1",
-    organization: "Education Foundation",
-    type: "Materials",
-    item: "STEM Scholarship",
-    details: "$5,000",
-    status: "Approved"
-  },
-  {
-    id: "2",
-    organization: "Community College",
-    type: "Tools",
-    item: "Trade Skills Grant",
-    details: "$3,000",
-    status: "Pending"
-  },
-  {
-    id: "3",
-    organization: "Local University",
-    type: "Materials",
-    item: "Arts Scholarship",
-    details: "$2,500",
-    status: "Rejected"
+const StatusIcon = ({ scholarship }: { scholarship: Scholarship }) => {
+  if (scholarship.approval_decision_made) {
+    return scholarship.is_approved ? (
+      <CheckCircle className="h-4 w-4 text-green-600" />
+    ) : (
+      <XCircle className="h-4 w-4 text-red-600" />
+    );
   }
-];
-
-const StatusIcon = ({ status }: { status: string }) => {
-  switch (status) {
-    case "Approved":
-      return <CheckCircle className="h-4 w-4 text-green-600" />;
-    case "Pending":
-      return <Clock className="h-4 w-4 text-yellow-600" />;
-    case "Rejected":
-      return <XCircle className="h-4 w-4 text-red-600" />;
-    case "Archived":
-      return <Archive className="h-4 w-4 text-gray-600" />;
-    default:
-      return null;
-  }
+  return <Clock className="h-4 w-4 text-yellow-600" />;
 };
 
 const SortableTableHead = ({ 
@@ -99,94 +68,136 @@ export const Scholarships = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   
-  // Sorting states for scholarship posts
-  const [scholarshipSort, setScholarshipSort] = useState<SortField>(null);
-  const [scholarshipDirection, setScholarshipDirection] = useState<SortDirection>(null);
+  // Sorting states
+  const [sort, setSort] = useState<SortField>(null);
+  const [direction, setDirection] = useState<SortDirection>(null);
 
   // Modal states
-  const [selectedScholarship, setSelectedScholarship] = useState<ScholarshipPost | null>(null);
-  const [scholarshipModalOpen, setScholarshipModalOpen] = useState(false);
+  const [selectedScholarship, setSelectedScholarship] = useState<Scholarship | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
-  const handleScholarshipSort = (field: SortField) => {
-    if (scholarshipSort === field) {
-      if (scholarshipDirection === "asc") {
-        setScholarshipDirection("desc");
-      } else if (scholarshipDirection === "desc") {
-        setScholarshipSort(null);
-        setScholarshipDirection(null);
+  // Use the scholarships hook
+  const {
+    scholarships,
+    isLoading,
+    error,
+    approveScholarship,
+    rejectScholarship,
+    requestChanges,
+    isApproving,
+    isRejecting,
+    isRequestingChanges,
+  } = useScholarships();
+
+  const handleSort = (field: SortField) => {
+    if (sort === field) {
+      if (direction === "asc") {
+        setDirection("desc");
+      } else if (direction === "desc") {
+        setSort(null);
+        setDirection(null);
       } else {
-        setScholarshipDirection("asc");
+        setDirection("asc");
       }
     } else {
-      setScholarshipSort(field);
-      setScholarshipDirection("asc");
+      setSort(field);
+      setDirection("asc");
     }
   };
 
-  const sortData = <T extends ScholarshipPost>(
-    data: T[], 
-    sortField: SortField, 
-    direction: SortDirection
-  ): T[] => {
-    if (!sortField || !direction) return data;
+  const sortData = (data: Scholarship[]): Scholarship[] => {
+    if (!sort || !direction) return data;
     
     return [...data].sort((a, b) => {
-      let aValue: string;
-      let bValue: string;
+      let aValue: string | number;
+      let bValue: string | number;
       
-      if (sortField === "name") {
-        aValue = a.item;
-        bValue = b.item;
-      } else if (sortField === "amount") {
-        aValue = a.details;
-        bValue = b.details;
+      if (sort === "title") {
+        aValue = a.title;
+        bValue = b.title;
+      } else if (sort === "amount") {
+        aValue = Number(a.amount);
+        bValue = Number(b.amount);
+      } else if (sort === "organization_name") {
+        aValue = a.organization_name;
+        bValue = b.organization_name;
+      } else if (sort === "is_approved") {
+        aValue = a.approval_decision_made ? (a.is_approved ? "approved" : "rejected") : "pending";
+        bValue = b.approval_decision_made ? (b.is_approved ? "approved" : "rejected") : "pending";
       } else {
-        aValue = a[sortField as keyof T] as string;
-        bValue = b[sortField as keyof T] as string;
+        aValue = String(a[sort as keyof Scholarship]);
+        bValue = String(b[sort as keyof Scholarship]);
+      }
+      
+      if (typeof aValue === "number" && typeof bValue === "number") {
+        return direction === "asc" ? aValue - bValue : bValue - aValue;
       }
       
       if (direction === "asc") {
-        return aValue.localeCompare(bValue);
+        return String(aValue).localeCompare(String(bValue));
       } else {
-        return bValue.localeCompare(aValue);
+        return String(bValue).localeCompare(String(aValue));
       }
     });
   };
 
-  const filterData = <T extends ScholarshipPost>(data: T[]): T[] => {
+  const filterData = (data: Scholarship[]): Scholarship[] => {
     return data.filter((item) => {
       const matchesSearch = searchTerm === "" || 
-        Object.values(item).some(value => 
-          value.toLowerCase().includes(searchTerm.toLowerCase())
+        [item.title, item.organization_name, item.description].some(value => 
+          value?.toLowerCase().includes(searchTerm.toLowerCase())
         );
-      const matchesStatus = statusFilter === "all" || item.status === statusFilter;
+      
+      let matchesStatus = true;
+      if (statusFilter === "Approved") {
+        matchesStatus = item.approval_decision_made && item.is_approved;
+      } else if (statusFilter === "Rejected") {
+        matchesStatus = item.approval_decision_made && !item.is_approved;
+      } else if (statusFilter === "Pending") {
+        matchesStatus = !item.approval_decision_made;
+      }
       
       return matchesSearch && matchesStatus;
     });
   };
 
-  const filteredScholarshipPosts = filterData(mockScholarshipPosts);
-  const sortedScholarshipPosts = sortData(filteredScholarshipPosts, scholarshipSort, scholarshipDirection);
+  const filteredScholarships = filterData(scholarships);
+  const sortedScholarships = sortData(filteredScholarships);
 
-  const handleScholarshipRowClick = (scholarship: ScholarshipPost) => {
+  const handleRowClick = (scholarship: Scholarship) => {
     setSelectedScholarship(scholarship);
-    setScholarshipModalOpen(true);
+    setModalOpen(true);
   };
 
-  const handleScholarshipApprove = (id: string) => {
-    console.log("Approved scholarship:", id);
-    setScholarshipModalOpen(false);
+  const getStatusText = (scholarship: Scholarship) => {
+    if (scholarship.approval_decision_made) {
+      return scholarship.is_approved ? "Approved" : "Rejected";
+    }
+    return "Pending";
   };
 
-  const handleScholarshipReject = (id: string) => {
-    console.log("Rejected scholarship:", id);
-    setScholarshipModalOpen(false);
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(amount);
   };
 
-  const handleScholarshipRequestChanges = (id: string) => {
-    console.log("Requested changes for scholarship:", id);
-    setScholarshipModalOpen(false);
-  };
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Scholarships</h1>
+          <p className="text-muted-foreground">
+            Manage scholarship programs and applications
+          </p>
+        </div>
+        <div className="text-center text-red-600">
+          Error loading scholarships. Please try again later.
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -217,12 +228,11 @@ export const Scholarships = () => {
             <SelectItem value="Approved">Approved</SelectItem>
             <SelectItem value="Pending">Pending</SelectItem>
             <SelectItem value="Rejected">Rejected</SelectItem>
-            <SelectItem value="Archived">Archived</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
-      {/* Scholarship Posts Section - Full Width */}
+      {/* Scholarship Posts Section */}
       <div className="space-y-4">
         <h2 className="text-2xl font-semibold">Scholarship Posts</h2>
         <div className="border rounded-lg h-96">
@@ -231,37 +241,37 @@ export const Scholarships = () => {
               <TableHeader>
                 <TableRow>
                   <SortableTableHead
-                    field="organization"
-                    currentSort={scholarshipSort}
-                    currentDirection={scholarshipDirection}
-                    onSort={handleScholarshipSort}
+                    field="organization_name"
+                    currentSort={sort}
+                    currentDirection={direction}
+                    onSort={handleSort}
                     className="w-2/5"
                   >
                     Organization
                   </SortableTableHead>
                   <SortableTableHead
-                    field="name"
-                    currentSort={scholarshipSort}
-                    currentDirection={scholarshipDirection}
-                    onSort={handleScholarshipSort}
+                    field="title"
+                    currentSort={sort}
+                    currentDirection={direction}
+                    onSort={handleSort}
                     className="w-1/4"
                   >
                     Name
                   </SortableTableHead>
                   <SortableTableHead
                     field="amount"
-                    currentSort={scholarshipSort}
-                    currentDirection={scholarshipDirection}
-                    onSort={handleScholarshipSort}
+                    currentSort={sort}
+                    currentDirection={direction}
+                    onSort={handleSort}
                     className="w-1/6"
                   >
                     Amount
                   </SortableTableHead>
                   <SortableTableHead
-                    field="status"
-                    currentSort={scholarshipSort}
-                    currentDirection={scholarshipDirection}
-                    onSort={handleScholarshipSort}
+                    field="is_approved"
+                    currentSort={sort}
+                    currentDirection={direction}
+                    onSort={handleSort}
                     className="w-1/6"
                   >
                     Status
@@ -272,23 +282,43 @@ export const Scholarships = () => {
             <ScrollArea className="flex-1">
               <Table>
                 <TableBody>
-                  {sortedScholarshipPosts.map((post) => (
-                    <TableRow 
-                      key={post.id} 
-                      className="cursor-pointer hover:bg-muted/50"
-                      onClick={() => handleScholarshipRowClick(post)}
-                    >
-                      <TableCell className="font-medium w-2/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.organization}</TableCell>
-                      <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.item}</TableCell>
-                      <TableCell className="w-1/6 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.details}</TableCell>
-                      <TableCell className="w-1/6">
-                        <div className="flex items-center gap-2 whitespace-nowrap">
-                          <StatusIcon status={post.status} />
-                          <span>{post.status}</span>
-                        </div>
+                  {isLoading ? (
+                    <TableRow>
+                      <TableCell colSpan={4} className="text-center py-8">
+                        Loading scholarships...
                       </TableCell>
                     </TableRow>
-                  ))}
+                  ) : sortedScholarships.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={4} className="text-center py-8">
+                        No scholarships found
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    sortedScholarships.map((scholarship) => (
+                      <TableRow 
+                        key={scholarship.id} 
+                        className="cursor-pointer hover:bg-muted/50"
+                        onClick={() => handleRowClick(scholarship)}
+                      >
+                        <TableCell className="font-medium w-2/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                          {scholarship.organization_name}
+                        </TableCell>
+                        <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                          {scholarship.title}
+                        </TableCell>
+                        <TableCell className="w-1/6 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                          {formatCurrency(Number(scholarship.amount))}
+                        </TableCell>
+                        <TableCell className="w-1/6">
+                          <div className="flex items-center gap-2 whitespace-nowrap">
+                            <StatusIcon scholarship={scholarship} />
+                            <span>{getStatusText(scholarship)}</span>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
                 </TableBody>
               </Table>
             </ScrollArea>
@@ -297,14 +327,16 @@ export const Scholarships = () => {
       </div>
 
       {/* Modal */}
-      <DonationModal
-        donation={selectedScholarship}
-        open={scholarshipModalOpen}
-        onOpenChange={setScholarshipModalOpen}
-        onApprove={handleScholarshipApprove}
-        onReject={handleScholarshipReject}
-        onRequestChanges={handleScholarshipRequestChanges}
-        isScholarship={true}
+      <ScholarshipModal
+        scholarship={selectedScholarship}
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        onApprove={approveScholarship}
+        onReject={rejectScholarship}
+        onRequestChanges={requestChanges}
+        isApproving={isApproving}
+        isRejecting={isRejecting}
+        isRequestingChanges={isRequestingChanges}
       />
     </div>
   );
