@@ -1,4 +1,3 @@
-
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -37,6 +36,7 @@ interface UserModalProps {
   onOpenChange: (open: boolean) => void;
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
+  isAdministrator?: boolean;
 }
 
 export const UserModal = ({
@@ -45,6 +45,7 @@ export const UserModal = ({
   onOpenChange,
   onApprove,
   onReject,
+  isAdministrator = false,
 }: UserModalProps) => {
   if (!user) return null;
 
@@ -77,7 +78,7 @@ export const UserModal = ({
     return new Date(dateString).toLocaleDateString();
   };
 
-  const showApprovalButtons = !user.approval_decision_made;
+  const showApprovalButtons = !user.approval_decision_made && isAdministrator;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { UserModal } from "@/components/UserModal";
 import { UserFilters } from "@/components/users/UserFilters";
@@ -6,6 +5,7 @@ import { UserTable } from "@/components/users/UserTable";
 import { useUserProfiles } from "@/hooks/useUserProfiles";
 import { useUserSorting } from "@/hooks/useUserSorting";
 import { useUserFiltering } from "@/hooks/useUserFiltering";
+import { useProfileData } from "@/hooks/useProfileData";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -41,6 +41,7 @@ interface UserProfile {
 export const Users = () => {
   const { toast } = useToast();
   const { userProfiles, loading, refetch } = useUserProfiles();
+  const { userRole } = useProfileData();
   const { sortData } = useUserSorting();
   const { filterData } = useUserFiltering();
   
@@ -54,6 +55,8 @@ export const Users = () => {
   // Modal states
   const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
   const [userModalOpen, setUserModalOpen] = useState(false);
+
+  const isAdministrator = userRole?.name === 'administrator';
 
   const handleUserSort = (field: SortField) => {
     if (userSort === field) {
@@ -80,6 +83,15 @@ export const Users = () => {
   };
 
   const handleUserApprove = async (id: string) => {
+    if (!isAdministrator) {
+      toast({
+        title: "Access Denied",
+        description: "Only administrators can approve users.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       const { error } = await supabase
         .from('user_profiles')
@@ -116,6 +128,15 @@ export const Users = () => {
   };
 
   const handleUserReject = async (id: string) => {
+    if (!isAdministrator) {
+      toast({
+        title: "Access Denied",
+        description: "Only administrators can reject users.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       const { error } = await supabase
         .from('user_profiles')
@@ -197,6 +218,7 @@ export const Users = () => {
         onOpenChange={setUserModalOpen}
         onApprove={handleUserApprove}
         onReject={handleUserReject}
+        isAdministrator={isAdministrator}
       />
     </div>
   );

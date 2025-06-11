@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
@@ -8,6 +7,7 @@ import { OrganizationModal } from "@/components/OrganizationModal";
 import { OrganizationSortableTableHead } from "@/components/organizations/OrganizationSortableTableHead";
 import { OrganizationStatusIcon } from "@/components/organizations/OrganizationStatusIcon";
 import { useOrganizations } from "@/hooks/useOrganizations";
+import { useProfileData } from "@/hooks/useProfileData";
 
 type SortDirection = "asc" | "desc" | null;
 type SortField = "name" | "contact" | "type" | "status" | null;
@@ -32,6 +32,7 @@ interface Organization {
 
 export const Organizations = () => {
   const { organizations, loading, updateOrganizationContact, approveOrganization, rejectOrganization } = useOrganizations();
+  const { userRole } = useProfileData();
   const [searchTerm, setSearchTerm] = useState("");
   
   // Sorting states
@@ -41,6 +42,8 @@ export const Organizations = () => {
   // Modal states
   const [selectedOrganization, setSelectedOrganization] = useState<Organization | null>(null);
   const [organizationModalOpen, setOrganizationModalOpen] = useState(false);
+
+  const isAdministrator = userRole?.name === 'administrator';
 
   const handleOrganizationSort = (field: SortField) => {
     if (organizationSort === field) {
@@ -121,6 +124,9 @@ export const Organizations = () => {
   };
 
   const handleOrganizationApprove = async (id: string) => {
+    if (!isAdministrator) {
+      return;
+    }
     const success = await approveOrganization(id);
     if (success) {
       setOrganizationModalOpen(false);
@@ -128,6 +134,9 @@ export const Organizations = () => {
   };
 
   const handleOrganizationReject = async (id: string) => {
+    if (!isAdministrator) {
+      return;
+    }
     const success = await rejectOrganization(id);
     if (success) {
       setOrganizationModalOpen(false);
@@ -263,6 +272,7 @@ export const Organizations = () => {
         onUpdateContact={updateOrganizationContact}
         onApprove={handleOrganizationApprove}
         onReject={handleOrganizationReject}
+        isAdministrator={isAdministrator}
       />
     </div>
   );

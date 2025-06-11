@@ -1,4 +1,3 @@
-
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -33,6 +32,7 @@ interface OrganizationModalProps {
   onUpdateContact: (organizationId: string, contactUserId: string | null) => Promise<boolean>;
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
+  isAdministrator?: boolean;
 }
 
 export const OrganizationModal = ({
@@ -42,6 +42,7 @@ export const OrganizationModal = ({
   onUpdateContact,
   onApprove,
   onReject,
+  isAdministrator = false,
 }: OrganizationModalProps) => {
   const { userProfiles } = useUserProfiles();
   const [selectedContactId, setSelectedContactId] = useState<string | null>(null);
@@ -90,7 +91,7 @@ export const OrganizationModal = ({
     ? `${organization.contact_user.first_name} ${organization.contact_user.last_name}`
     : "No contact assigned";
 
-  const showApprovalButtons = !organization.approval_decision_made;
+  const showApprovalButtons = !organization.approval_decision_made && isAdministrator;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
