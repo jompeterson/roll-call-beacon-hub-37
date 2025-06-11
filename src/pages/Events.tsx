@@ -5,46 +5,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChevronUp, ChevronDown, Clock, CheckCircle, XCircle, Archive } from "lucide-react";
-import { DonationModal } from "@/components/DonationModal";
+import { EventModal } from "@/components/EventModal";
+import { useEvents } from "@/hooks/useEvents";
 
 type SortDirection = "asc" | "desc" | null;
-type SortField = "organization" | "name" | "hours" | "status" | null;
-
-interface EventPost {
-  id: string;
-  organization: string;
-  type: "Materials" | "Tools";
-  item: string;
-  details: string;
-  status: "Approved" | "Pending" | "Rejected" | "Archived";
-}
-
-const mockEventPosts: EventPost[] = [
-  {
-    id: "1",
-    organization: "Community Center",
-    type: "Materials",
-    item: "Beach Cleanup Day",
-    details: "15 hours",
-    status: "Approved"
-  },
-  {
-    id: "2",
-    organization: "Local Library",
-    type: "Tools",
-    item: "Reading Program",
-    details: "8 hours",
-    status: "Pending"
-  },
-  {
-    id: "3",
-    organization: "Food Bank",
-    type: "Materials",
-    item: "Food Drive",
-    details: "12 hours",
-    status: "Rejected"
-  }
-];
+type SortField = "title" | "event_date" | "location" | "status" | null;
 
 const StatusIcon = ({ status }: { status: string }) => {
   switch (status) {
@@ -97,15 +62,16 @@ const SortableTableHead = ({
 };
 
 export const Events = () => {
+  const { events, loading, approveEvent, rejectEvent } = useEvents();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   
-  // Sorting states for event posts
+  // Sorting states
   const [eventSort, setEventSort] = useState<SortField>(null);
   const [eventDirection, setEventDirection] = useState<SortDirection>(null);
 
   // Modal states
-  const [selectedEvent, setSelectedEvent] = useState<EventPost | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [eventModalOpen, setEventModalOpen] = useState(false);
 
   const handleEventSort = (field: SortField) => {
@@ -124,26 +90,27 @@ export const Events = () => {
     }
   };
 
-  const sortData = <T extends EventPost>(
-    data: T[], 
-    sortField: SortField, 
-    direction: SortDirection
-  ): T[] => {
+  const getEventStatus = (event: any) => {
+    if (!event.approval_decision_made) return "Pending";
+    return event.is_approved ? "Approved" : "Rejected";
+  };
+
+  const sortData = (data: any[], sortField: SortField, direction: SortDirection) => {
     if (!sortField || !direction) return data;
     
     return [...data].sort((a, b) => {
       let aValue: string;
       let bValue: string;
       
-      if (sortField === "name") {
-        aValue = a.item;
-        bValue = b.item;
-      } else if (sortField === "hours") {
-        aValue = a.details;
-        bValue = b.details;
+      if (sortField === "status") {
+        aValue = getEventStatus(a);
+        bValue = getEventStatus(b);
+      } else if (sortField === "event_date") {
+        aValue = a.event_date;
+        bValue = b.event_date;
       } else {
-        aValue = a[sortField as keyof T] as string;
-        bValue = b[sortField as keyof T] as string;
+        aValue = a[sortField as keyof typeof a] || "";
+        bValue = b[sortField as keyof typeof b] || "";
       }
       
       if (direction === "asc") {
@@ -154,33 +121,34 @@ export const Events = () => {
     });
   };
 
-  const filterData = <T extends EventPost>(data: T[]): T[] => {
+  const filterData = (data: any[]) => {
     return data.filter((item) => {
       const matchesSearch = searchTerm === "" || 
         Object.values(item).some(value => 
-          value.toLowerCase().includes(searchTerm.toLowerCase())
+          value && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
         );
-      const matchesStatus = statusFilter === "all" || item.status === statusFilter;
+      const status = getEventStatus(item);
+      const matchesStatus = statusFilter === "all" || status === statusFilter;
       
       return matchesSearch && matchesStatus;
     });
   };
 
-  const filteredEventPosts = filterData(mockEventPosts);
-  const sortedEventPosts = sortData(filteredEventPosts, eventSort, eventDirection);
+  const filteredEvents = filterData(events);
+  const sortedEvents = sortData(filteredEvents, eventSort, eventDirection);
 
-  const handleEventRowClick = (event: EventPost) => {
+  const handleEventRowClick = (event: any) => {
     setSelectedEvent(event);
     setEventModalOpen(true);
   };
 
   const handleEventApprove = (id: string) => {
-    console.log("Approved event:", id);
+    approveEvent(id);
     setEventModalOpen(false);
   };
 
   const handleEventReject = (id: string) => {
-    console.log("Rejected event:", id);
+    rejectEvent(id);
     setEventModalOpen(false);
   };
 
@@ -188,6 +156,25 @@ export const Events = () => {
     console.log("Requested changes for event:", id);
     setEventModalOpen(false);
   };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Events</h1>
+          <p className="text-muted-foreground">Loading events...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -218,45 +205,44 @@ export const Events = () => {
             <SelectItem value="Approved">Approved</SelectItem>
             <SelectItem value="Pending">Pending</SelectItem>
             <SelectItem value="Rejected">Rejected</SelectItem>
-            <SelectItem value="Archived">Archived</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
-      {/* Event Posts Section - Full Width */}
+      {/* Events Section */}
       <div className="space-y-4">
-        <h2 className="text-2xl font-semibold">Event Posts</h2>
+        <h2 className="text-2xl font-semibold">Events</h2>
         <div className="border rounded-lg h-96">
           <div className="h-full flex flex-col">
             <Table>
               <TableHeader>
                 <TableRow>
                   <SortableTableHead
-                    field="organization"
+                    field="title"
                     currentSort={eventSort}
                     currentDirection={eventDirection}
                     onSort={handleEventSort}
-                    className="w-2/5"
+                    className="w-1/3"
                   >
-                    Organization
+                    Event Title
                   </SortableTableHead>
                   <SortableTableHead
-                    field="name"
+                    field="event_date"
                     currentSort={eventSort}
                     currentDirection={eventDirection}
                     onSort={handleEventSort}
                     className="w-1/4"
                   >
-                    Name
+                    Date
                   </SortableTableHead>
                   <SortableTableHead
-                    field="hours"
+                    field="location"
                     currentSort={eventSort}
                     currentDirection={eventDirection}
                     onSort={handleEventSort}
-                    className="w-1/6"
+                    className="w-1/4"
                   >
-                    Volunteer Hours
+                    Location
                   </SortableTableHead>
                   <SortableTableHead
                     field="status"
@@ -273,23 +259,37 @@ export const Events = () => {
             <ScrollArea className="flex-1">
               <Table>
                 <TableBody>
-                  {sortedEventPosts.map((post) => (
-                    <TableRow 
-                      key={post.id} 
-                      className="cursor-pointer hover:bg-muted/50"
-                      onClick={() => handleEventRowClick(post)}
-                    >
-                      <TableCell className="font-medium w-2/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.organization}</TableCell>
-                      <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.item}</TableCell>
-                      <TableCell className="w-1/6 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{post.details}</TableCell>
-                      <TableCell className="w-1/6">
-                        <div className="flex items-center gap-2 whitespace-nowrap">
-                          <StatusIcon status={post.status} />
-                          <span>{post.status}</span>
-                        </div>
+                  {sortedEvents.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                        No events found
                       </TableCell>
                     </TableRow>
-                  ))}
+                  ) : (
+                    sortedEvents.map((event) => (
+                      <TableRow 
+                        key={event.id} 
+                        className="cursor-pointer hover:bg-muted/50"
+                        onClick={() => handleEventRowClick(event)}
+                      >
+                        <TableCell className="font-medium w-1/3 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                          {event.title}
+                        </TableCell>
+                        <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                          {formatDate(event.event_date)}
+                        </TableCell>
+                        <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                          {event.location || "TBD"}
+                        </TableCell>
+                        <TableCell className="w-1/6">
+                          <div className="flex items-center gap-2 whitespace-nowrap">
+                            <StatusIcon status={getEventStatus(event)} />
+                            <span>{getEventStatus(event)}</span>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
                 </TableBody>
               </Table>
             </ScrollArea>
@@ -298,14 +298,13 @@ export const Events = () => {
       </div>
 
       {/* Modal */}
-      <DonationModal
-        donation={selectedEvent}
+      <EventModal
+        event={selectedEvent}
         open={eventModalOpen}
         onOpenChange={setEventModalOpen}
         onApprove={handleEventApprove}
         onReject={handleEventReject}
         onRequestChanges={handleEventRequestChanges}
-        isEvent={true}
       />
     </div>
   );

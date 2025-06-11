@@ -9,6 +9,48 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      events: {
+        Row: {
+          approval_decision_made: boolean
+          created_at: string
+          creator_user_id: string
+          description: string | null
+          event_date: string
+          id: string
+          is_approved: boolean
+          location: string | null
+          max_participants: number | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          approval_decision_made?: boolean
+          created_at?: string
+          creator_user_id: string
+          description?: string | null
+          event_date: string
+          id?: string
+          is_approved?: boolean
+          location?: string | null
+          max_participants?: number | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          approval_decision_made?: boolean
+          created_at?: string
+          creator_user_id?: string
+          description?: string | null
+          event_date?: string
+          id?: string
+          is_approved?: boolean
+          location?: string | null
+          max_participants?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       organizations: {
         Row: {
           address: string
