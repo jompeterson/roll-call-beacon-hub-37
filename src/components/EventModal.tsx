@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -9,6 +8,7 @@ import { Calendar, MapPin, Users, UserCheck } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useEventRSVPs } from "@/hooks/useEventRSVPs";
 import { CommentsSection } from "@/components/comments/CommentsSection";
+import { ShareButton } from "./ShareButton";
 
 interface Event {
   id: string;
@@ -96,13 +96,18 @@ export const EventModal = ({
         {/* Fixed Header */}
         <div className="flex-shrink-0 p-6 border-b">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Calendar className="h-5 w-5" />
-              {event.title}
-            </DialogTitle>
-            <DialogDescription>
-              Event details and management
-            </DialogDescription>
+            <div className="flex justify-between items-start">
+              <div>
+                <DialogTitle className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5" />
+                  {event.title}
+                </DialogTitle>
+                <DialogDescription>
+                  Event details and management
+                </DialogDescription>
+              </div>
+              <ShareButton />
+            </div>
           </DialogHeader>
         </div>
 

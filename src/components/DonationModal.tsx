@@ -8,6 +8,7 @@ import { DonationModalInformation } from "./donations/DonationModalInformation";
 import { DonationModalImageSection } from "./donations/DonationModalImageSection";
 import { DonationModalActionButtons } from "./donations/DonationModalActionButtons";
 import { CommentsSection } from "./comments/CommentsSection";
+import { ShareButton } from "./ShareButton";
 
 interface DonationModalProps {
   donation: Donation | null;
@@ -110,8 +111,13 @@ export const DonationModal = ({
         {/* Fixed Header */}
         <div className="flex-shrink-0 p-6 border-b">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold">{getModalTitle()}</DialogTitle>
-            <p className="text-sm text-muted-foreground">{getModalType()}</p>
+            <div className="flex justify-between items-start">
+              <div>
+                <DialogTitle className="text-2xl font-bold">{getModalTitle()}</DialogTitle>
+                <p className="text-sm text-muted-foreground">{getModalType()}</p>
+              </div>
+              <ShareButton />
+            </div>
           </DialogHeader>
         </div>
         

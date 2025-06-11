@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -6,6 +7,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { supabase } from "@/integrations/supabase/client";
 import { CommentsSection } from "@/components/comments/CommentsSection";
+import { ShareButton } from "./ShareButton";
 import type { Request } from "@/hooks/useRequests";
 
 interface RequestModalProps {
@@ -256,8 +258,13 @@ export const RequestModal = ({
         {/* Fixed Header */}
         <div className="flex-shrink-0 p-6 border-b">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold">{request.title}</DialogTitle>
-            <p className="text-sm text-muted-foreground">Request a Donation</p>
+            <div className="flex justify-between items-start">
+              <div>
+                <DialogTitle className="text-2xl font-bold">{request.title}</DialogTitle>
+                <p className="text-sm text-muted-foreground">Request a Donation</p>
+              </div>
+              <ShareButton />
+            </div>
           </DialogHeader>
         </div>
         

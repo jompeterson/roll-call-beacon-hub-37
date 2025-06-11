@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -9,6 +8,7 @@ import { ScholarshipInfo } from "./scholarship/ScholarshipInfo";
 import { ScholarshipActionButtons } from "./scholarship/ScholarshipActionButtons";
 import { ScholarshipApplyButton } from "./scholarship/ScholarshipApplyButton";
 import { CommentsSection } from "./comments/CommentsSection";
+import { ShareButton } from "./ShareButton";
 
 type Scholarship = Tables<"scholarships"> & {
   creator?: {
@@ -90,10 +90,15 @@ export const ScholarshipModal = ({
         {/* Fixed Header */}
         <div className="flex-shrink-0 p-6 border-b">
           <DialogHeader>
-            <DialogTitle className="text-xl font-semibold">
-              {scholarship.title}
-            </DialogTitle>
-            <p className="text-sm text-muted-foreground mt-1">Scholarships</p>
+            <div className="flex justify-between items-start">
+              <div>
+                <DialogTitle className="text-xl font-semibold">
+                  {scholarship.title}
+                </DialogTitle>
+                <p className="text-sm text-muted-foreground mt-1">Scholarships</p>
+              </div>
+              <ShareButton />
+            </div>
           </DialogHeader>
         </div>
 
