@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 
 export interface Comment {
   id: string;
@@ -19,6 +20,7 @@ export interface Comment {
 
 export const useComments = (contentType: string, contentId: string) => {
   const { toast } = useToast();
+  const { user, isAuthenticated } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -98,32 +100,18 @@ export const useComments = (contentType: string, contentId: string) => {
   const createComment = async (content: string, parentCommentId?: string) => {
     if (!content.trim()) return false;
 
+    if (!isAuthenticated || !user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to post comments.",
+        variant: "destructive",
+      });
+      return false;
+    }
+
     try {
       setSubmitting(true);
       
-      // Get the current user
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
-      
-      if (userError) {
-        console.error('Error getting user:', userError);
-        toast({
-          title: "Authentication Error",
-          description: "Please log in to post comments.",
-          variant: "destructive",
-        });
-        return false;
-      }
-
-      if (!user) {
-        console.error('No authenticated user found');
-        toast({
-          title: "Authentication Required",
-          description: "Please log in to post comments.",
-          variant: "destructive",
-        });
-        return false;
-      }
-
       console.log('Creating comment with user ID:', user.id);
 
       const { error } = await supabase
@@ -169,19 +157,16 @@ export const useComments = (contentType: string, contentId: string) => {
   const updateComment = async (commentId: string, content: string) => {
     if (!content.trim()) return false;
 
-    try {
-      // Check authentication before updating
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
-      
-      if (userError || !user) {
-        toast({
-          title: "Authentication Required",
-          description: "Please log in to edit comments.",
-          variant: "destructive",
-        });
-        return false;
-      }
+    if (!isAuthenticated || !user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to edit comments.",
+        variant: "destructive",
+      });
+      return false;
+    }
 
+    try {
       const { error } = await supabase
         .from('comments')
         .update({ 
@@ -220,19 +205,16 @@ export const useComments = (contentType: string, contentId: string) => {
   };
 
   const deleteComment = async (commentId: string) => {
-    try {
-      // Check authentication before deleting
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
-      
-      if (userError || !user) {
-        toast({
-          title: "Authentication Required",
-          description: "Please log in to delete comments.",
-          variant: "destructive",
-        });
-        return false;
-      }
+    if (!isAuthenticated || !user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to delete comments.",
+        variant: "destructive",
+      });
+      return false;
+    }
 
+    try {
       const { error } = await supabase
         .from('comments')
         .delete()
