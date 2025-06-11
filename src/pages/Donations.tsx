@@ -1,119 +1,19 @@
+
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
-import { ChevronUp, ChevronDown, Clock, CheckCircle, XCircle, Archive } from "lucide-react";
 import { DonationModal } from "@/components/DonationModal";
 import { RequestModal } from "@/components/RequestModal";
+import { DonationFilters } from "@/components/donations/DonationFilters";
+import { DonationTable } from "@/components/donations/DonationTable";
+import { RequestTable } from "@/components/donations/RequestTable";
 import { useDonations, type Donation } from "@/hooks/useDonations";
 import { useRequests, type Request } from "@/hooks/useRequests";
+import { sortDonations } from "@/hooks/useDonationSorting";
+import { sortRequests } from "@/hooks/useRequestSorting";
+import { filterDonations, filterRequests } from "@/hooks/useDonationFiltering";
 
 type SortDirection = "asc" | "desc" | null;
 type DonationSortField = "organization_name" | "title" | "description" | "status" | null;
 type RequestSortField = "organization_name" | "request_type" | "title" | "description" | "status" | null;
-
-const StatusIcon = ({ status }: { status: string }) => {
-  switch (status) {
-    case "Approved":
-      return <CheckCircle className="h-4 w-4 text-green-600" />;
-    case "Pending":
-      return <Clock className="h-4 w-4 text-yellow-600" />;
-    case "Rejected":
-      return <XCircle className="h-4 w-4 text-red-600" />;
-    case "Archived":
-      return <Archive className="h-4 w-4 text-gray-600" />;
-    default:
-      return null;
-  }
-};
-
-const DonationSortableTableHead = ({ 
-  children, 
-  field, 
-  currentSort, 
-  currentDirection, 
-  onSort,
-  className = ""
-}: { 
-  children: React.ReactNode;
-  field: DonationSortField;
-  currentSort: DonationSortField;
-  currentDirection: SortDirection;
-  onSort: (field: DonationSortField) => void;
-  className?: string;
-}) => {
-  const isActive = currentSort === field;
-  
-  return (
-    <TableHead 
-      className={`cursor-pointer hover:bg-[#1e3a52] select-none text-white ${className}`}
-      style={{ backgroundColor: "#294865" }}
-      onClick={() => onSort(field)}
-    >
-      <div className="flex items-center justify-between">
-        <span>{children}</span>
-        <div className="ml-2">
-          {isActive && currentDirection === "asc" && <ChevronUp className="h-4 w-4" />}
-          {isActive && currentDirection === "desc" && <ChevronDown className="h-4 w-4" />}
-          {!isActive && <div className="h-4 w-4" />}
-        </div>
-      </div>
-    </TableHead>
-  );
-};
-
-const RequestSortableTableHead = ({ 
-  children, 
-  field, 
-  currentSort, 
-  currentDirection, 
-  onSort,
-  className = ""
-}: { 
-  children: React.ReactNode;
-  field: RequestSortField;
-  currentSort: RequestSortField;
-  currentDirection: SortDirection;
-  onSort: (field: RequestSortField) => void;
-  className?: string;
-}) => {
-  const isActive = currentSort === field;
-  
-  return (
-    <TableHead 
-      className={`cursor-pointer hover:bg-[#1e3a52] select-none text-white ${className}`}
-      style={{ backgroundColor: "#294865" }}
-      onClick={() => onSort(field)}
-    >
-      <div className="flex items-center justify-between">
-        <span>{children}</span>
-        <div className="ml-2">
-          {isActive && currentDirection === "asc" && <ChevronUp className="h-4 w-4" />}
-          {isActive && currentDirection === "desc" && <ChevronDown className="h-4 w-4" />}
-          {!isActive && <div className="h-4 w-4" />}
-        </div>
-      </div>
-    </TableHead>
-  );
-};
-
-// Helper function to get status from donation approval state
-const getDonationStatus = (donation: Donation): "Approved" | "Pending" | "Rejected" | "Archived" => {
-  if (!donation.approval_decision_made) {
-    return "Pending";
-  }
-  return donation.is_approved ? "Approved" : "Rejected";
-};
-
-// Helper function to get status from request approval state
-const getRequestStatus = (request: Request): "Approved" | "Pending" | "Rejected" | "Archived" => {
-  if (!request.approval_decision_made) {
-    return "Pending";
-  }
-  return request.is_approved ? "Approved" : "Rejected";
-};
 
 export const Donations = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -169,120 +69,10 @@ export const Donations = () => {
     }
   };
 
-  const sortDonations = (
-    data: Donation[], 
-    sortField: DonationSortField, 
-    direction: SortDirection
-  ): Donation[] => {
-    if (!sortField || !direction) return data;
-    
-    return [...data].sort((a, b) => {
-      let aValue: string;
-      let bValue: string;
-      
-      switch (sortField) {
-        case "organization_name":
-          aValue = a.organization_name || "";
-          bValue = b.organization_name || "";
-          break;
-        case "title":
-          aValue = a.title;
-          bValue = b.title;
-          break;
-        case "description":
-          aValue = a.description || "";
-          bValue = b.description || "";
-          break;
-        case "status":
-          aValue = getDonationStatus(a);
-          bValue = getDonationStatus(b);
-          break;
-        default:
-          return 0;
-      }
-      
-      if (direction === "asc") {
-        return aValue.localeCompare(bValue);
-      } else {
-        return bValue.localeCompare(aValue);
-      }
-    });
-  };
-
-  const sortRequests = (
-    data: Request[], 
-    sortField: RequestSortField, 
-    direction: SortDirection
-  ): Request[] => {
-    if (!sortField || !direction) return data;
-    
-    return [...data].sort((a, b) => {
-      let aValue: string;
-      let bValue: string;
-      
-      switch (sortField) {
-        case "organization_name":
-          aValue = a.organization_name || "";
-          bValue = b.organization_name || "";
-          break;
-        case "request_type":
-          aValue = a.request_type;
-          bValue = b.request_type;
-          break;
-        case "title":
-          aValue = a.title;
-          bValue = b.title;
-          break;
-        case "description":
-          aValue = a.description || "";
-          bValue = b.description || "";
-          break;
-        case "status":
-          aValue = getRequestStatus(a);
-          bValue = getRequestStatus(b);
-          break;
-        default:
-          return 0;
-      }
-      
-      if (direction === "asc") {
-        return aValue.localeCompare(bValue);
-      } else {
-        return bValue.localeCompare(aValue);
-      }
-    });
-  };
-
-  const filterDonations = (data: Donation[]): Donation[] => {
-    return data.filter((donation) => {
-      const matchesSearch = searchTerm === "" || 
-        Object.values(donation).some(value => 
-          value && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-        );
-      const status = getDonationStatus(donation);
-      const matchesStatus = statusFilter === "all" || status === statusFilter;
-      
-      return matchesSearch && matchesStatus;
-    });
-  };
-
-  const filterRequests = (data: Request[]): Request[] => {
-    return data.filter((request) => {
-      const matchesSearch = searchTerm === "" || 
-        Object.values(request).some(value => 
-          value && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-        );
-      const status = getRequestStatus(request);
-      const matchesStatus = statusFilter === "all" || status === statusFilter;
-      
-      return matchesSearch && matchesStatus;
-    });
-  };
-
-  const filteredDonationPosts = filterDonations(donations);
+  const filteredDonationPosts = filterDonations(donations, searchTerm, statusFilter);
   const sortedDonationPosts = sortDonations(filteredDonationPosts, donationSort, donationDirection);
   
-  const filteredRequestPosts = filterRequests(requests);
+  const filteredRequestPosts = filterRequests(requests, searchTerm, statusFilter);
   const sortedRequestPosts = sortRequests(filteredRequestPosts, requestSort, requestDirection);
 
   const handleDonationRowClick = (donation: Donation) => {
@@ -368,221 +158,37 @@ export const Donations = () => {
         </p>
       </div>
 
-      {/* Search and Filters */}
-      <div className="flex gap-4 items-center">
-        <div className="flex-1">
-          <Input
-            placeholder="Search for donations..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full"
-          />
-        </div>
-        
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[150px]">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="Approved">Approved</SelectItem>
-            <SelectItem value="Pending">Pending</SelectItem>
-            <SelectItem value="Rejected">Rejected</SelectItem>
-            <SelectItem value="Archived">Archived</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      <DonationFilters
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        statusFilter={statusFilter}
+        onStatusFilterChange={setStatusFilter}
+      />
 
       {/* Two Sections Side by Side */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Donation Posts Section */}
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold">Donation Posts</h2>
-          <div className="border rounded-lg h-96">
-            <div className="h-full flex flex-col">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <DonationSortableTableHead
-                      field="organization_name"
-                      currentSort={donationSort}
-                      currentDirection={donationDirection}
-                      onSort={handleDonationSort}
-                      className="w-2/5"
-                    >
-                      Organization
-                    </DonationSortableTableHead>
-                    <DonationSortableTableHead
-                      field="title"
-                      currentSort={donationSort}
-                      currentDirection={donationDirection}
-                      onSort={handleDonationSort}
-                      className="w-1/4"
-                    >
-                      Title
-                    </DonationSortableTableHead>
-                    <DonationSortableTableHead
-                      field="description"
-                      currentSort={donationSort}
-                      currentDirection={donationDirection}
-                      onSort={handleDonationSort}
-                      className="w-1/4"
-                    >
-                      Description
-                    </DonationSortableTableHead>
-                    <DonationSortableTableHead
-                      field="status"
-                      currentSort={donationSort}
-                      currentDirection={donationDirection}
-                      onSort={handleDonationSort}
-                      className="w-1/6"
-                    >
-                      Status
-                    </DonationSortableTableHead>
-                  </TableRow>
-                </TableHeader>
-              </Table>
-              <ScrollArea className="flex-1">
-                <Table>
-                  <TableBody>
-                    {sortedDonationPosts.length === 0 ? (
-                      <TableRow>
-                        <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
-                          No donations available
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      sortedDonationPosts.map((donation) => {
-                        const status = getDonationStatus(donation);
-                        return (
-                          <TableRow 
-                            key={donation.id} 
-                            className="cursor-pointer hover:bg-muted/50"
-                            onClick={() => handleDonationRowClick(donation)}
-                          >
-                            <TableCell className="font-medium w-2/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
-                              {donation.organization_name || "No Organization"}
-                            </TableCell>
-                            <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
-                              {donation.title}
-                            </TableCell>
-                            <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
-                              {donation.description || "No description"}
-                            </TableCell>
-                            <TableCell className="w-1/6">
-                              <div className="flex items-center gap-2 whitespace-nowrap">
-                                <StatusIcon status={status} />
-                                <span>{status}</span>
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })
-                    )}
-                  </TableBody>
-                </Table>
-              </ScrollArea>
-            </div>
-          </div>
+          <DonationTable
+            donations={sortedDonationPosts}
+            sortField={donationSort}
+            sortDirection={donationDirection}
+            onSort={handleDonationSort}
+            onRowClick={handleDonationRowClick}
+          />
         </div>
 
         {/* Request Posts Section */}
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold">Request Posts</h2>
-          <div className="border rounded-lg h-96">
-            <div className="h-full flex flex-col">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <RequestSortableTableHead
-                      field="organization_name"
-                      currentSort={requestSort}
-                      currentDirection={requestDirection}
-                      onSort={handleRequestSort}
-                      className="w-2/5"
-                    >
-                      Organization
-                    </RequestSortableTableHead>
-                    <RequestSortableTableHead
-                      field="request_type"
-                      currentSort={requestSort}
-                      currentDirection={requestDirection}
-                      onSort={handleRequestSort}
-                      className="w-1/6"
-                    >
-                      Type
-                    </RequestSortableTableHead>
-                    <RequestSortableTableHead
-                      field="title"
-                      currentSort={requestSort}
-                      currentDirection={requestDirection}
-                      onSort={handleRequestSort}
-                      className="w-1/6"
-                    >
-                      Item
-                    </RequestSortableTableHead>
-                    <RequestSortableTableHead
-                      field="description"
-                      currentSort={requestSort}
-                      currentDirection={requestDirection}
-                      onSort={handleRequestSort}
-                      className="w-1/4"
-                    >
-                      Details
-                    </RequestSortableTableHead>
-                    <RequestSortableTableHead
-                      field="status"
-                      currentSort={requestSort}
-                      currentDirection={requestDirection}
-                      onSort={handleRequestSort}
-                      className="w-1/6"
-                    >
-                      Status
-                    </RequestSortableTableHead>
-                  </TableRow>
-                </TableHeader>
-              </Table>
-              <ScrollArea className="flex-1">
-                <Table>
-                  <TableBody>
-                    {sortedRequestPosts.length === 0 ? (
-                      <TableRow>
-                        <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                          No requests available
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      sortedRequestPosts.map((request) => {
-                        const status = getRequestStatus(request);
-                        return (
-                          <TableRow 
-                            key={request.id} 
-                            className="cursor-pointer hover:bg-muted/50"
-                            onClick={() => handleRequestRowClick(request)}
-                          >
-                            <TableCell className="font-medium w-2/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
-                              {request.organization_name || "No Organization"}
-                            </TableCell>
-                            <TableCell className="w-1/6 whitespace-nowrap">{request.request_type}</TableCell>
-                            <TableCell className="w-1/6 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{request.title}</TableCell>
-                            <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
-                              {request.description || "No description"}
-                            </TableCell>
-                            <TableCell className="w-1/6">
-                              <div className="flex items-center gap-2 whitespace-nowrap">
-                                <StatusIcon status={status} />
-                                <span>{status}</span>
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })
-                    )}
-                  </TableBody>
-                </Table>
-              </ScrollArea>
-            </div>
-          </div>
+          <RequestTable
+            requests={sortedRequestPosts}
+            sortField={requestSort}
+            sortDirection={requestDirection}
+            onSort={handleRequestSort}
+            onRowClick={handleRequestRowClick}
+          />
         </div>
       </div>
 
