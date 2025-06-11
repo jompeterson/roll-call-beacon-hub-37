@@ -47,15 +47,8 @@ export const RequestCreateModal = ({
   const { currentOrganization, contactInfo } = useProfileData();
 
   const requestTypes = [
-    "Food Donation",
-    "Clothing Donation", 
-    "School Supplies",
-    "Medical Supplies",
-    "Toys & Games",
-    "Books",
-    "Electronics",
-    "Furniture",
-    "Volunteer Help",
+    "Tools",
+    "Materials",
     "Other"
   ];
 
