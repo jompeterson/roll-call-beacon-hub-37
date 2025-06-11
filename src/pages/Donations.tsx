@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { DonationModal } from "@/components/DonationModal";
 import { RequestModal } from "@/components/RequestModal";
@@ -34,8 +33,8 @@ export const Donations = () => {
   const [requestModalOpen, setRequestModalOpen] = useState(false);
 
   // Fetch data from Supabase
-  const { data: donations = [], isLoading: donationsLoading, error: donationsError } = useDonations();
-  const { data: requests = [], isLoading: requestsLoading, error: requestsError } = useRequests();
+  const { data: donations = [], isLoading: donationsLoading, error: donationsError, refetch: refetchDonations } = useDonations();
+  const { data: requests = [], isLoading: requestsLoading, error: requestsError, refetch: refetchRequests } = useRequests();
 
   const handleDonationSort = (field: DonationSortField) => {
     if (donationSort === field) {
@@ -88,31 +87,47 @@ export const Donations = () => {
   const handleDonationApprove = (id: string) => {
     console.log("Approved donation:", id);
     setDonationModalOpen(false);
+    refetchDonations();
   };
 
   const handleDonationReject = (id: string) => {
     console.log("Rejected donation:", id);
     setDonationModalOpen(false);
+    refetchDonations();
   };
 
   const handleDonationRequestChanges = (id: string) => {
     console.log("Requested changes for donation:", id);
     setDonationModalOpen(false);
+    refetchDonations();
   };
 
   const handleRequestApprove = (id: string) => {
     console.log("Approved request:", id);
     setRequestModalOpen(false);
+    refetchRequests();
   };
 
   const handleRequestReject = (id: string) => {
     console.log("Rejected request:", id);
     setRequestModalOpen(false);
+    refetchRequests();
   };
 
   const handleRequestRequestChanges = (id: string) => {
     console.log("Requested changes for request:", id);
     setRequestModalOpen(false);
+    refetchRequests();
+  };
+
+  const handleRequestModalClose = () => {
+    setRequestModalOpen(false);
+    refetchRequests(); // Refresh data when modal closes to show updated completion status
+  };
+
+  const handleDonationModalClose = () => {
+    setDonationModalOpen(false);
+    refetchDonations();
   };
 
   if (donationsLoading || requestsLoading) {
@@ -196,7 +211,7 @@ export const Donations = () => {
       <DonationModal
         donation={selectedDonation}
         open={donationModalOpen}
-        onOpenChange={setDonationModalOpen}
+        onOpenChange={handleDonationModalClose}
         onApprove={handleDonationApprove}
         onReject={handleDonationReject}
         onRequestChanges={handleDonationRequestChanges}
@@ -205,7 +220,7 @@ export const Donations = () => {
       <RequestModal
         request={selectedRequest}
         open={requestModalOpen}
-        onOpenChange={setRequestModalOpen}
+        onOpenChange={handleRequestModalClose}
         onApprove={handleRequestApprove}
         onReject={handleRequestReject}
         onRequestChanges={handleRequestRequestChanges}

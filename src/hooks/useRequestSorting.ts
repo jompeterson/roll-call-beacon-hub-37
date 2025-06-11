@@ -5,7 +5,10 @@ type SortDirection = "asc" | "desc" | null;
 type RequestSortField = "organization_name" | "request_type" | "title" | "description" | "status" | null;
 
 // Helper function to get status from request approval state
-const getRequestStatus = (request: Request): "Approved" | "Pending" | "Rejected" | "Archived" => {
+const getRequestStatus = (request: Request): "Completed" | "Approved" | "Pending" | "Rejected" | "Archived" => {
+  if (request.is_completed) {
+    return "Completed";
+  }
   if (!request.approval_decision_made) {
     return "Pending";
   }

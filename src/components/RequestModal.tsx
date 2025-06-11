@@ -1,9 +1,15 @@
 
-import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import type { Request } from "@/hooks/useRequests";
+import { Badge } from "@/components/ui/badge";
+import { Calendar, MapPin, Mail, Phone, Building, Clock, AlertTriangle } from "lucide-react";
+import { Tables } from "@/integrations/supabase/types";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
+
+type Request = Tables<"requests">;
 
 interface RequestModalProps {
   request: Request | null;
@@ -12,183 +18,234 @@ interface RequestModalProps {
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
   onRequestChanges: (id: string) => void;
-  onMarkCompleted?: (id: string) => void;
 }
 
-// Mock images for demonstration
-const mockImages = [
-  "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=300&fit=crop",
-  "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=300&fit=crop",
-  "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop"
-];
-
-// Mock user data for demonstration
-const getUserInfo = (orgName: string) => {
-  const users = {
-    "Local School District": { name: "Emily Rodriguez", email: "emily@schooldistrict.edu", postedDate: "2024-06-06" },
-    "Youth Center": { name: "David Thompson", email: "david@youthcenter.org", postedDate: "2024-06-05" },
-    "Senior Center": { name: "Margaret Wilson", email: "margaret@seniorcenter.org", postedDate: "2024-06-04" }
-  };
-  return users[orgName as keyof typeof users] || { name: "Unknown User", email: "unknown@example.com", postedDate: "2024-06-10" };
-};
-
-// Helper function to get status from request approval state
-const getRequestStatus = (request: Request): "Approved" | "Pending" | "Rejected" | "Archived" => {
-  if (!request.approval_decision_made) {
-    return "Pending";
-  }
-  return request.is_approved ? "Approved" : "Rejected";
-};
-
-export const RequestModal = ({ 
-  request, 
-  open, 
-  onOpenChange, 
-  onApprove, 
-  onReject, 
+export const RequestModal = ({
+  request,
+  open,
+  onOpenChange,
+  onApprove,
+  onReject,
   onRequestChanges,
-  onMarkCompleted 
 }: RequestModalProps) => {
+  const { isAdministrator } = useAuth();
+  const { toast } = useToast();
+  const [isMarkingCompleted, setIsMarkingCompleted] = useState(false);
+
   if (!request) return null;
 
-  const orgName = request.organization_name || "Unknown Organization";
-  const userInfo = getUserInfo(orgName);
-
-  // Mock donation need by date based on request type
-  const getDonationNeedBy = (deadline: string | null) => {
-    if (deadline) {
-      return new Date(deadline).toLocaleDateString();
-    }
-    return "Not specified";
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString();
   };
+
+  const getUrgencyColor = (level: string) => {
+    switch (level?.toLowerCase()) {
+      case "urgent":
+        return "bg-red-100 text-red-800 border-red-200";
+      case "high":
+        return "bg-orange-100 text-orange-800 border-orange-200";
+      case "medium":
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      case "low":
+        return "bg-green-100 text-green-800 border-green-200";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-200";
+    }
+  };
+
+  const getStatusBadge = () => {
+    if (request.is_completed) {
+      return <Badge className="bg-blue-100 text-blue-800 border-blue-200">Completed</Badge>;
+    }
+    
+    if (!request.approval_decision_made) {
+      return <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200">Pending Review</Badge>;
+    }
+    
+    if (request.is_approved) {
+      return <Badge className="bg-green-100 text-green-800 border-green-200">Approved</Badge>;
+    } else {
+      return <Badge className="bg-red-100 text-red-800 border-red-200">Rejected</Badge>;
+    }
+  };
+
+  const handleMarkCompleted = async () => {
+    if (!request.id) return;
+
+    setIsMarkingCompleted(true);
+    
+    try {
+      const { error } = await supabase
+        .from("requests")
+        .update({ is_completed: true })
+        .eq("id", request.id);
+
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: "Success",
+        description: "Request marked as completed successfully!",
+      });
+
+      onOpenChange(false);
+    } catch (error) {
+      console.error("Error marking request as completed:", error);
+      toast({
+        title: "Error",
+        description: "Failed to mark request as completed. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsMarkingCompleted(false);
+    }
+  };
+
+  const showActionButtons = isAdministrator && !request.approval_decision_made;
+  const showMarkCompletedButton = request.is_approved && !request.is_completed;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl w-full max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">{request.title}</DialogTitle>
-          <p className="text-sm text-muted-foreground">Request a Donation</p>
-        </DialogHeader>
-        
-        {/* User Information Section */}
-        <div className="bg-muted/30 rounded-lg p-4 space-y-2">
-          <div className="flex justify-between items-start">
-            <div>
-              <h4 className="font-semibold text-base">{userInfo.name}</h4>
-              <p className="text-sm text-muted-foreground">{userInfo.email}</p>
-              <p className="text-sm text-muted-foreground">{orgName}</p>
-            </div>
-            <div className="text-right">
-              <p className="text-sm text-muted-foreground">Posted on</p>
-              <p className="text-sm font-medium">{new Date(request.created_at).toLocaleDateString()}</p>
-            </div>
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mt-4">
-          {/* Information Section */}
-          <div className="space-y-6">
-            <div>
-              <h3 className="font-semibold text-lg mb-4">Request Information</h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="font-medium text-sm text-muted-foreground">Request Type</label>
-                  <p className="text-base mt-1">{request.request_type}</p>
-                </div>
-                <div>
-                  <label className="font-medium text-sm text-muted-foreground">Requested Item</label>
-                  <p className="text-base mt-1">{request.title}</p>
-                </div>
-                {request.description && (
-                  <div>
-                    <label className="font-medium text-sm text-muted-foreground">Request Details</label>
-                    <p className="text-base mt-1">{request.description}</p>
-                  </div>
-                )}
-                <div>
-                  <label className="font-medium text-sm text-muted-foreground">Donation Need By</label>
-                  <p className="text-base mt-1">{getDonationNeedBy(request.deadline)}</p>
-                </div>
-                {request.location && (
-                  <div>
-                    <label className="font-medium text-sm text-muted-foreground">Location</label>
-                    <p className="text-base mt-1">{request.location}</p>
-                  </div>
-                )}
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <DialogTitle className="text-xl font-semibold pr-4">
+                {request.title}
+              </DialogTitle>
+              <div className="flex items-center gap-2 mt-2">
+                {getStatusBadge()}
                 {request.urgency_level && (
-                  <div>
-                    <label className="font-medium text-sm text-muted-foreground">Urgency Level</label>
-                    <p className="text-base mt-1">{request.urgency_level}</p>
-                  </div>
-                )}
-                {request.contact_email && (
-                  <div>
-                    <label className="font-medium text-sm text-muted-foreground">Contact Email</label>
-                    <p className="text-base mt-1">{request.contact_email}</p>
-                  </div>
-                )}
-                {request.contact_phone && (
-                  <div>
-                    <label className="font-medium text-sm text-muted-foreground">Contact Phone</label>
-                    <p className="text-base mt-1">{request.contact_phone}</p>
-                  </div>
+                  <Badge className={getUrgencyColor(request.urgency_level)}>
+                    <AlertTriangle className="h-3 w-3 mr-1" />
+                    {request.urgency_level.charAt(0).toUpperCase() + request.urgency_level.slice(1)} Priority
+                  </Badge>
                 )}
               </div>
             </div>
           </div>
+        </DialogHeader>
 
-          {/* Image Carousel Section */}
-          <div className="space-y-4">
-            <h3 className="font-semibold text-lg">Item Images</h3>
-            <div className="relative px-8">
-              <Carousel className="w-full max-w-sm mx-auto">
-                <CarouselContent>
-                  {mockImages.map((image, index) => (
-                    <CarouselItem key={index}>
-                      <div className="aspect-square rounded-lg overflow-hidden">
-                        <img 
-                          src={image} 
-                          alt={`${request.title} ${index + 1}`}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="-left-6" />
-                <CarouselNext className="-right-6" />
-              </Carousel>
+        <div className="space-y-6">
+          {/* Request Details */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Building className="h-4 w-4" />
+                <span className="font-medium">Organization:</span>
+                <span>{request.organization_name || "No Organization"}</span>
+              </div>
+
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span className="font-medium">Type:</span>
+                <Badge variant="outline">{request.request_type}</Badge>
+              </div>
+
+              {request.location && (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <MapPin className="h-4 w-4" />
+                  <span className="font-medium">Location:</span>
+                  <span>{request.location}</span>
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-3">
+              {request.deadline && (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Calendar className="h-4 w-4" />
+                  <span className="font-medium">Deadline:</span>
+                  <span>{formatDate(request.deadline)}</span>
+                </div>
+              )}
+
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Clock className="h-4 w-4" />
+                <span className="font-medium">Posted:</span>
+                <span>{formatDate(request.created_at)}</span>
+              </div>
             </div>
           </div>
+
+          {/* Description */}
+          {request.description && (
+            <div>
+              <h3 className="font-semibold mb-2">Description</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {request.description}
+              </p>
+            </div>
+          )}
+
+          {/* Contact Information */}
+          {(request.contact_email || request.contact_phone) && (
+            <div>
+              <h3 className="font-semibold mb-2">Contact Information</h3>
+              <div className="space-y-2">
+                {request.contact_email && (
+                  <div className="flex items-center gap-2 text-sm">
+                    <Mail className="h-4 w-4 text-muted-foreground" />
+                    <a
+                      href={`mailto:${request.contact_email}`}
+                      className="text-blue-600 hover:underline"
+                    >
+                      {request.contact_email}
+                    </a>
+                  </div>
+                )}
+                {request.contact_phone && (
+                  <div className="flex items-center gap-2 text-sm">
+                    <Phone className="h-4 w-4 text-muted-foreground" />
+                    <a
+                      href={`tel:${request.contact_phone}`}
+                      className="text-blue-600 hover:underline"
+                    >
+                      {request.contact_phone}
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Action Buttons at bottom for all modals */}
-        <div className="flex gap-3 pt-6 border-t flex-wrap">
-          <Button 
-            onClick={() => onApprove(request.id)}
-            className="bg-green-600 hover:bg-green-700 text-white"
-          >
-            Approve
-          </Button>
-          <Button 
-            onClick={() => onReject(request.id)}
-            variant="destructive"
-          >
-            Reject
-          </Button>
-          <Button 
-            onClick={() => onRequestChanges(request.id)}
-            variant="outline"
-          >
-            Request Changes
-          </Button>
-          <Button 
-            onClick={() => onMarkCompleted && onMarkCompleted(request.id)}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
-          >
-            Mark Completed
-          </Button>
-        </div>
+        <DialogFooter className="flex flex-col gap-2">
+          {showMarkCompletedButton && (
+            <Button
+              onClick={handleMarkCompleted}
+              disabled={isMarkingCompleted}
+              className="w-full"
+            >
+              {isMarkingCompleted ? "Marking as Completed..." : "Mark as Completed"}
+            </Button>
+          )}
+
+          {showActionButtons && (
+            <div className="flex gap-2 w-full">
+              <Button
+                onClick={() => onApprove(request.id)}
+                className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+              >
+                Approve
+              </Button>
+              <Button
+                onClick={() => onReject(request.id)}
+                variant="destructive"
+                className="flex-1"
+              >
+                Reject
+              </Button>
+              <Button
+                onClick={() => onRequestChanges(request.id)}
+                variant="outline"
+                className="flex-1"
+              >
+                Request Changes
+              </Button>
+            </div>
+          )}
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
