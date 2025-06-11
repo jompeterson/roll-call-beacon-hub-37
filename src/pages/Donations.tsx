@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+
+import { useState } from "react";
 import { DonationModal } from "@/components/DonationModal";
 import { RequestModal } from "@/components/RequestModal";
 import { DonationFilters } from "@/components/donations/DonationFilters";
@@ -10,15 +10,12 @@ import { useRequests, type Request } from "@/hooks/useRequests";
 import { sortDonations } from "@/hooks/useDonationSorting";
 import { sortRequests } from "@/hooks/useRequestSorting";
 import { filterDonations, filterRequests } from "@/hooks/useDonationFiltering";
-import { supabase } from "@/integrations/supabase/client";
 
 type SortDirection = "asc" | "desc" | null;
 type DonationSortField = "organization_name" | "title" | "description" | "status" | null;
 type RequestSortField = "organization_name" | "request_type" | "title" | "description" | "status" | null;
 
 export const Donations = () => {
-  const { donationId, requestId } = useParams();
-  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   
@@ -39,85 +36,6 @@ export const Donations = () => {
   // Fetch data from Supabase
   const { data: donations = [], isLoading: donationsLoading, error: donationsError } = useDonations();
   const { data: requests = [], isLoading: requestsLoading, error: requestsError } = useRequests();
-
-  // Handle URL parameters to open specific modals
-  useEffect(() => {
-    const fetchAndOpenDonation = async () => {
-      if (donationId && donations.length > 0) {
-        const donation = donations.find(d => d.id === donationId);
-        if (donation) {
-          setSelectedDonation(donation);
-          setDonationModalOpen(true);
-        } else {
-          // Try to fetch from database if not in current list
-          try {
-            const { data, error } = await supabase
-              .from('donations')
-              .select('*')
-              .eq('id', donationId)
-              .single();
-            
-            if (!error && data) {
-              setSelectedDonation(data as Donation);
-              setDonationModalOpen(true);
-            }
-          } catch (error) {
-            console.error('Error fetching donation:', error);
-          }
-        }
-      }
-    };
-
-    const fetchAndOpenRequest = async () => {
-      if (requestId && requests.length > 0) {
-        const request = requests.find(r => r.id === requestId);
-        if (request) {
-          setSelectedRequest(request);
-          setRequestModalOpen(true);
-        } else {
-          // Try to fetch from database if not in current list
-          try {
-            const { data, error } = await supabase
-              .from('requests')
-              .select('*')
-              .eq('id', requestId)
-              .single();
-            
-            if (!error && data) {
-              setSelectedRequest(data as Request);
-              setRequestModalOpen(true);
-            }
-          } catch (error) {
-            console.error('Error fetching request:', error);
-          }
-        }
-      }
-    };
-
-    fetchAndOpenDonation();
-    fetchAndOpenRequest();
-  }, [donationId, requestId, donations, requests]);
-
-  // Handle modal close and update URL
-  const handleDonationModalClose = (open: boolean) => {
-    setDonationModalOpen(open);
-    if (!open) {
-      setSelectedDonation(null);
-      if (donationId) {
-        navigate('/donations', { replace: true });
-      }
-    }
-  };
-
-  const handleRequestModalClose = (open: boolean) => {
-    setRequestModalOpen(open);
-    if (!open) {
-      setSelectedRequest(null);
-      if (requestId) {
-        navigate('/donations', { replace: true });
-      }
-    }
-  };
 
   const handleDonationSort = (field: DonationSortField) => {
     if (donationSort === field) {
@@ -160,13 +78,11 @@ export const Donations = () => {
   const handleDonationRowClick = (donation: Donation) => {
     setSelectedDonation(donation);
     setDonationModalOpen(true);
-    navigate(`/donations/${donation.id}`);
   };
 
   const handleRequestRowClick = (request: Request) => {
     setSelectedRequest(request);
     setRequestModalOpen(true);
-    navigate(`/requests/${request.id}`);
   };
 
   const handleDonationApprove = (id: string) => {
@@ -280,7 +196,7 @@ export const Donations = () => {
       <DonationModal
         donation={selectedDonation}
         open={donationModalOpen}
-        onOpenChange={handleDonationModalClose}
+        onOpenChange={setDonationModalOpen}
         onApprove={handleDonationApprove}
         onReject={handleDonationReject}
         onRequestChanges={handleDonationRequestChanges}
@@ -289,7 +205,7 @@ export const Donations = () => {
       <RequestModal
         request={selectedRequest}
         open={requestModalOpen}
-        onOpenChange={handleRequestModalClose}
+        onOpenChange={setRequestModalOpen}
         onApprove={handleRequestApprove}
         onReject={handleRequestReject}
         onRequestChanges={handleRequestRequestChanges}
