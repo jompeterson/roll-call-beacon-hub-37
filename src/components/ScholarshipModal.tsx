@@ -1,4 +1,3 @@
-
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -43,6 +42,21 @@ export const ScholarshipModal = ({
   const { isAdministrator, isAuthenticated } = useAuth();
 
   if (!scholarship) return null;
+
+  const handleApprove = () => {
+    onApprove(scholarship.id);
+    onOpenChange(false);
+  };
+
+  const handleReject = () => {
+    onReject(scholarship.id);
+    onOpenChange(false);
+  };
+
+  const handleRequestChanges = () => {
+    onRequestChanges(scholarship.id);
+    onOpenChange(false);
+  };
 
   const getStatusBadge = () => {
     if (scholarship.approval_decision_made) {
@@ -151,7 +165,7 @@ export const ScholarshipModal = ({
         {showActionButtons && (
           <div className="flex gap-2 pt-4">
             <Button
-              onClick={() => onApprove(scholarship.id)}
+              onClick={handleApprove}
               disabled={isApproving}
               className="flex-1"
             >
@@ -159,7 +173,7 @@ export const ScholarshipModal = ({
             </Button>
             <Button
               variant="destructive"
-              onClick={() => onReject(scholarship.id)}
+              onClick={handleReject}
               disabled={isRejecting}
               className="flex-1"
             >
@@ -167,7 +181,7 @@ export const ScholarshipModal = ({
             </Button>
             <Button
               variant="outline"
-              onClick={() => onRequestChanges(scholarship.id)}
+              onClick={handleRequestChanges}
               disabled={isRequestingChanges}
               className="flex-1"
             >

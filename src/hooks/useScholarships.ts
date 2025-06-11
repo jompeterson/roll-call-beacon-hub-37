@@ -1,3 +1,4 @@
+
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
@@ -63,7 +64,8 @@ export const useScholarships = () => {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["scholarships"] });
+      // Invalidate all queries to refresh dashboard data
+      queryClient.invalidateQueries();
       toast({
         title: "Success",
         description: "Scholarship approved successfully",
@@ -93,7 +95,8 @@ export const useScholarships = () => {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["scholarships"] });
+      // Invalidate all queries to refresh dashboard data
+      queryClient.invalidateQueries();
       toast({
         title: "Success",
         description: "Scholarship rejected",
@@ -123,7 +126,8 @@ export const useScholarships = () => {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["scholarships"] });
+      // Invalidate all queries to refresh dashboard data
+      queryClient.invalidateQueries();
       toast({
         title: "Success",
         description: "Changes requested for scholarship",
