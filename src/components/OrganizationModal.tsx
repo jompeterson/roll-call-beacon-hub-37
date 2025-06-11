@@ -47,7 +47,8 @@ export const OrganizationModal = ({
     if (!organization) return;
     
     setIsUpdating(true);
-    const success = await onUpdateContact(organization.id, selectedContactId);
+    const contactUserId = selectedContactId === "none" ? null : selectedContactId;
+    const success = await onUpdateContact(organization.id, contactUserId);
     if (success) {
       onOpenChange(false);
     }
@@ -121,14 +122,14 @@ export const OrganizationModal = ({
               <h4 className="font-medium">Update Contact Person</h4>
               <div className="flex gap-2">
                 <Select 
-                  value={selectedContactId || ""} 
-                  onValueChange={(value) => setSelectedContactId(value || null)}
+                  value={selectedContactId || "none"} 
+                  onValueChange={(value) => setSelectedContactId(value === "none" ? null : value)}
                 >
                   <SelectTrigger className="flex-1">
                     <SelectValue placeholder="Select a contact person" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">No contact</SelectItem>
+                    <SelectItem value="none">No contact</SelectItem>
                     {userProfiles.map((user) => (
                       <SelectItem key={user.id} value={user.id}>
                         {user.first_name} {user.last_name} ({user.email})
@@ -138,7 +139,7 @@ export const OrganizationModal = ({
                 </Select>
                 <Button 
                   onClick={handleContactUpdate}
-                  disabled={isUpdating || selectedContactId === organization.contact_user_id}
+                  disabled={isUpdating || (selectedContactId === organization.contact_user_id || (selectedContactId === null && organization.contact_user_id === null))}
                 >
                   {isUpdating ? "Updating..." : "Update"}
                 </Button>
