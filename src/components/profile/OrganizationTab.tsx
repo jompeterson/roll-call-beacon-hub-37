@@ -18,7 +18,10 @@ export const OrganizationTab = ({ organizationData, userOrganizationId }: Organi
   return (
     <div className="space-y-6">
       {organizationData ? (
-        <CurrentOrganization organization={organizationData} />
+        <CurrentOrganization 
+          organization={organizationData} 
+          userOrganizationId={userOrganizationId}
+        />
       ) : (
         <div className="text-center py-8">
           <p className="text-muted-foreground">No organization assigned</p>
