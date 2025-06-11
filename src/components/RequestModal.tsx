@@ -1,8 +1,9 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { supabase } from "@/integrations/supabase/client";
 import type { Request } from "@/hooks/useRequests";
 
 interface RequestModalProps {
@@ -22,15 +23,11 @@ const mockImages = [
   "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop"
 ];
 
-// Mock user data for demonstration
-const getUserInfo = (orgName: string) => {
-  const users = {
-    "Local School District": { name: "Emily Rodriguez", email: "emily@schooldistrict.edu", postedDate: "2024-06-06" },
-    "Youth Center": { name: "David Thompson", email: "david@youthcenter.org", postedDate: "2024-06-05" },
-    "Senior Center": { name: "Margaret Wilson", email: "margaret@seniorcenter.org", postedDate: "2024-06-04" }
-  };
-  return users[orgName as keyof typeof users] || { name: "Unknown User", email: "unknown@example.com", postedDate: "2024-06-10" };
-};
+interface CreatorInfo {
+  name: string;
+  email: string;
+  organization: string;
+}
 
 // Helper function to get status from request approval state
 const getRequestStatus = (request: Request): "Approved" | "Pending" | "Rejected" | "Archived" => {
@@ -49,10 +46,107 @@ export const RequestModal = ({
   onRequestChanges,
   onMarkCompleted 
 }: RequestModalProps) => {
-  if (!request) return null;
+  const [creatorInfo, setCreatorInfo] = useState<CreatorInfo>({
+    name: "Loading...",
+    email: "Loading...",
+    organization: "Loading..."
+  });
 
-  const orgName = request.organization_name || "Unknown Organization";
-  const userInfo = getUserInfo(orgName);
+  useEffect(() => {
+    const fetchCreatorInfo = async () => {
+      if (!request?.creator_user_id) return;
+
+      try {
+        const { data: profile, error } = await supabase
+          .from("user_profiles")
+          .select(`
+            first_name,
+            last_name,
+            email,
+            organizations:organization_id (
+              name
+            )
+          `)
+          .eq("id", request.creator_user_id)
+          .single();
+
+        if (error) {
+          console.error("Error fetching creator info:", error);
+          setCreatorInfo({
+            name: "Unknown User",
+            email: "unknown@example.com",
+            organization: request.organization_name || "Unknown Organization"
+          });
+          return;
+        }
+
+        if (profile) {
+          setCreatorInfo({
+            name: `${profile.first_name} ${profile.last_name}`,
+            email: profile.email,
+            organization: (profile.organizations as any)?.name || request.organization_name || "Unknown Organization"
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching creator info:", error);
+        setCreatorInfo({
+          name: "Unknown User",
+          email: "unknown@example.com",
+          organization: request.organization_name || "Unknown Organization"
+        });
+      }
+    };
+
+    if (open && request) {
+      fetchCreatorInfo();
+    }
+  }, [request, open]);
+
+  const handleApprove = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from("requests")
+        .update({
+          is_approved: true,
+          approval_decision_made: true
+        })
+        .eq("id", id);
+
+      if (error) {
+        console.error("Error approving request:", error);
+        return;
+      }
+
+      console.log("Request approved successfully");
+      onApprove(id);
+    } catch (error) {
+      console.error("Error approving request:", error);
+    }
+  };
+
+  const handleReject = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from("requests")
+        .update({
+          is_approved: false,
+          approval_decision_made: true
+        })
+        .eq("id", id);
+
+      if (error) {
+        console.error("Error rejecting request:", error);
+        return;
+      }
+
+      console.log("Request rejected successfully");
+      onReject(id);
+    } catch (error) {
+      console.error("Error rejecting request:", error);
+    }
+  };
+
+  if (!request) return null;
 
   // Mock donation need by date based on request type
   const getDonationNeedBy = (deadline: string | null) => {
@@ -77,9 +171,9 @@ export const RequestModal = ({
         <div className="bg-muted/30 rounded-lg p-4 space-y-2">
           <div className="flex justify-between items-start">
             <div>
-              <h4 className="font-semibold text-base">{userInfo.name}</h4>
-              <p className="text-sm text-muted-foreground">{userInfo.email}</p>
-              <p className="text-sm text-muted-foreground">{orgName}</p>
+              <h4 className="font-semibold text-base">{creatorInfo.name}</h4>
+              <p className="text-sm text-muted-foreground">{creatorInfo.email}</p>
+              <p className="text-sm text-muted-foreground">{creatorInfo.organization}</p>
             </div>
             <div className="text-right">
               <p className="text-sm text-muted-foreground">Posted on</p>
@@ -168,13 +262,13 @@ export const RequestModal = ({
         {/* Action Buttons at bottom for all modals */}
         <div className="flex gap-3 pt-6 border-t flex-wrap">
           <Button 
-            onClick={() => onApprove(request.id)}
+            onClick={() => handleApprove(request.id)}
             className="bg-green-600 hover:bg-green-700 text-white"
           >
             Approve
           </Button>
           <Button 
-            onClick={() => onReject(request.id)}
+            onClick={() => handleReject(request.id)}
             variant="destructive"
           >
             Reject
