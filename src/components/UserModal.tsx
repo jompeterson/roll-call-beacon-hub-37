@@ -37,7 +37,6 @@ interface UserModalProps {
   onOpenChange: (open: boolean) => void;
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
-  onRequestChanges: (id: string) => void;
 }
 
 export const UserModal = ({
@@ -46,7 +45,6 @@ export const UserModal = ({
   onOpenChange,
   onApprove,
   onReject,
-  onRequestChanges,
 }: UserModalProps) => {
   if (!user) return null;
 
@@ -187,13 +185,6 @@ export const UserModal = ({
               className="flex-1"
             >
               Approve User
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => onRequestChanges(user.id)}
-              className="flex-1"
-            >
-              Request Changes
             </Button>
             <Button
               variant="destructive"

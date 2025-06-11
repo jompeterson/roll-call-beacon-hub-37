@@ -152,42 +152,6 @@ export const Users = () => {
     }
   };
 
-  const handleUserRequestChanges = async (id: string) => {
-    try {
-      const { error } = await supabase
-        .from('user_profiles')
-        .update({ 
-          is_approved: false, 
-          approval_decision_made: false 
-        })
-        .eq('id', id);
-
-      if (error) {
-        console.error('Error requesting changes for user:', error);
-        toast({
-          title: "Error",
-          description: "Failed to request changes.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      toast({
-        title: "Changes Requested",
-        description: "User has been notified to make changes.",
-      });
-      setUserModalOpen(false);
-      refetch();
-    } catch (error) {
-      console.error('Error requesting changes for user:', error);
-      toast({
-        title: "Error",
-        description: "Failed to request changes.",
-        variant: "destructive",
-      });
-    }
-  };
-
   if (loading) {
     return (
       <div className="space-y-6">
@@ -233,7 +197,6 @@ export const Users = () => {
         onOpenChange={setUserModalOpen}
         onApprove={handleUserApprove}
         onReject={handleUserReject}
-        onRequestChanges={handleUserRequestChanges}
       />
     </div>
   );
