@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -16,10 +15,11 @@ interface RequestModalProps {
   request: Request | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onApprove: (id: string) => void;
-  onReject: (id: string) => void;
-  onRequestChanges: (id: string) => void;
+  onApprove?: (id: string) => void;
+  onReject?: (id: string) => void;
+  onRequestChanges?: (id: string) => void;
   onMarkCompleted?: (id: string) => void;
+  disableNavigation?: boolean;
 }
 
 interface CreatorInfo {
@@ -35,7 +35,8 @@ export const RequestModal = ({
   onApprove, 
   onReject, 
   onRequestChanges,
-  onMarkCompleted 
+  onMarkCompleted,
+  disableNavigation = false
 }: RequestModalProps) => {
   const navigate = useNavigate();
   const [creatorInfo, setCreatorInfo] = useState<CreatorInfo>({
@@ -44,14 +45,14 @@ export const RequestModal = ({
     organization: "Loading..."
   });
 
-  // Update URL when modal opens
+  // Update URL when modal opens - only if navigation is enabled
   useEffect(() => {
-    if (open && request) {
+    if (!disableNavigation && open && request) {
       navigate(`/requests/${request.id}`, { replace: true });
-    } else if (!open) {
+    } else if (!disableNavigation && !open) {
       navigate('/donations', { replace: true });
     }
-  }, [open, request, navigate]);
+  }, [open, request, navigate, disableNavigation]);
 
   useEffect(() => {
     const fetchCreatorInfo = async () => {
@@ -133,14 +134,17 @@ export const RequestModal = ({
           </div>
         </ScrollArea>
 
-        <RequestModalActionButtons
-          request={request}
-          onApprove={onApprove}
-          onReject={onReject}
-          onRequestChanges={onRequestChanges}
-          onMarkCompleted={onMarkCompleted}
-          onOpenChange={onOpenChange}
-        />
+        {/* Only show action buttons if handlers are provided */}
+        {(onApprove || onReject || onRequestChanges || onMarkCompleted) && (
+          <RequestModalActionButtons
+            request={request}
+            onApprove={onApprove || (() => {})}
+            onReject={onReject || (() => {})}
+            onRequestChanges={onRequestChanges || (() => {})}
+            onMarkCompleted={onMarkCompleted}
+            onOpenChange={onOpenChange}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );

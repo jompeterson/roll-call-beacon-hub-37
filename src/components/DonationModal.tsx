@@ -14,13 +14,14 @@ interface DonationModalProps {
   donation: Donation | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onApprove: (id: string) => void;
-  onReject: (id: string) => void;
-  onRequestChanges: (id: string) => void;
+  onApprove?: (id: string) => void;
+  onReject?: (id: string) => void;
+  onRequestChanges?: (id: string) => void;
   isScholarship?: boolean;
   isEvent?: boolean;
   isOrganization?: boolean;
   isUser?: boolean;
+  disableNavigation?: boolean;
 }
 
 export const DonationModal = ({ 
@@ -33,20 +34,21 @@ export const DonationModal = ({
   isScholarship = false,
   isEvent = false,
   isOrganization = false,
-  isUser = false
+  isUser = false,
+  disableNavigation = false
 }: DonationModalProps) => {
   const navigate = useNavigate();
 
-  // Update URL when modal opens, but don't navigate back when closing
+  // Update URL when modal opens, but don't navigate back when closing - only if navigation is enabled
   useEffect(() => {
-    if (open && donation) {
+    if (!disableNavigation && open && donation) {
       navigate(`/donations/${donation.id}`, { replace: true });
     }
-  }, [open, donation, navigate]);
+  }, [open, donation, navigate, disableNavigation]);
 
-  // Handle modal close by navigating back to donations page
+  // Handle modal close by navigating back to donations page - only if navigation is enabled
   const handleOpenChange = (newOpen: boolean) => {
-    if (!newOpen) {
+    if (!disableNavigation && !newOpen) {
       navigate('/donations', { replace: true });
     }
     onOpenChange(newOpen);
@@ -165,18 +167,20 @@ export const DonationModal = ({
           </div>
         </ScrollArea>
 
-        {/* Fixed Footer */}
-        <div className="flex-shrink-0 border-t">
-          <DonationModalActionButtons
-            donationId={donation.id}
-            onApprove={onApprove}
-            onReject={onReject}
-            onRequestChanges={onRequestChanges}
-            isUser={isUser}
-            approvalDecisionMade={donation.approval_decision_made}
-            isApproved={donation.is_approved}
-          />
-        </div>
+        {/* Fixed Footer - Only show action buttons if handlers are provided */}
+        {(onApprove || onReject || onRequestChanges) && (
+          <div className="flex-shrink-0 border-t">
+            <DonationModalActionButtons
+              donationId={donation.id}
+              onApprove={onApprove || (() => {})}
+              onReject={onReject || (() => {})}
+              onRequestChanges={onRequestChanges || (() => {})}
+              isUser={isUser}
+              approvalDecisionMade={donation.approval_decision_made}
+              isApproved={donation.is_approved}
+            />
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );
