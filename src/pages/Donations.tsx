@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -10,7 +11,8 @@ import { RequestModal } from "@/components/RequestModal";
 import { useDonations, type Donation } from "@/hooks/useDonations";
 
 type SortDirection = "asc" | "desc" | null;
-type SortField = "organization_name" | "title" | "description" | "status" | null;
+type DonationSortField = "organization_name" | "title" | "description" | "status" | null;
+type RequestSortField = "organization" | "type" | "item" | "details" | "status" | null;
 
 interface RequestPost {
   id: string;
@@ -63,7 +65,7 @@ const StatusIcon = ({ status }: { status: string }) => {
   }
 };
 
-const SortableTableHead = ({ 
+const DonationSortableTableHead = ({ 
   children, 
   field, 
   currentSort, 
@@ -72,10 +74,45 @@ const SortableTableHead = ({
   className = ""
 }: { 
   children: React.ReactNode;
-  field: SortField;
-  currentSort: SortField;
+  field: DonationSortField;
+  currentSort: DonationSortField;
   currentDirection: SortDirection;
-  onSort: (field: SortField) => void;
+  onSort: (field: DonationSortField) => void;
+  className?: string;
+}) => {
+  const isActive = currentSort === field;
+  
+  return (
+    <TableHead 
+      className={`cursor-pointer hover:bg-[#1e3a52] select-none text-white ${className}`}
+      style={{ backgroundColor: "#294865" }}
+      onClick={() => onSort(field)}
+    >
+      <div className="flex items-center justify-between">
+        <span>{children}</span>
+        <div className="ml-2">
+          {isActive && currentDirection === "asc" && <ChevronUp className="h-4 w-4" />}
+          {isActive && currentDirection === "desc" && <ChevronDown className="h-4 w-4" />}
+          {!isActive && <div className="h-4 w-4" />}
+        </div>
+      </div>
+    </TableHead>
+  );
+};
+
+const RequestSortableTableHead = ({ 
+  children, 
+  field, 
+  currentSort, 
+  currentDirection, 
+  onSort,
+  className = ""
+}: { 
+  children: React.ReactNode;
+  field: RequestSortField;
+  currentSort: RequestSortField;
+  currentDirection: SortDirection;
+  onSort: (field: RequestSortField) => void;
   className?: string;
 }) => {
   const isActive = currentSort === field;
@@ -111,11 +148,11 @@ export const Donations = () => {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   
   // Sorting states for donation posts
-  const [donationSort, setDonationSort] = useState<SortField>(null);
+  const [donationSort, setDonationSort] = useState<DonationSortField>(null);
   const [donationDirection, setDonationDirection] = useState<SortDirection>(null);
   
-  // Sorting states for request posts (keeping for request posts)
-  const [requestSort, setRequestSort] = useState<SortField>(null);
+  // Sorting states for request posts
+  const [requestSort, setRequestSort] = useState<RequestSortField>(null);
   const [requestDirection, setRequestDirection] = useState<SortDirection>(null);
 
   // Modal states
@@ -127,7 +164,7 @@ export const Donations = () => {
   // Fetch donations from Supabase
   const { data: donations = [], isLoading, error } = useDonations();
 
-  const handleDonationSort = (field: SortField) => {
+  const handleDonationSort = (field: DonationSortField) => {
     if (donationSort === field) {
       if (donationDirection === "asc") {
         setDonationDirection("desc");
@@ -143,7 +180,7 @@ export const Donations = () => {
     }
   };
 
-  const handleRequestSort = (field: SortField) => {
+  const handleRequestSort = (field: RequestSortField) => {
     if (requestSort === field) {
       if (requestDirection === "asc") {
         setRequestDirection("desc");
@@ -161,7 +198,7 @@ export const Donations = () => {
 
   const sortDonations = (
     data: Donation[], 
-    sortField: SortField, 
+    sortField: DonationSortField, 
     direction: SortDirection
   ): Donation[] => {
     if (!sortField || !direction) return data;
@@ -199,16 +236,41 @@ export const Donations = () => {
     });
   };
 
-  const sortData = <T extends RequestPost>(
-    data: T[], 
-    sortField: SortField, 
+  const sortRequests = (
+    data: RequestPost[], 
+    sortField: RequestSortField, 
     direction: SortDirection
-  ): T[] => {
+  ): RequestPost[] => {
     if (!sortField || !direction) return data;
     
     return [...data].sort((a, b) => {
-      let aValue = a[sortField as keyof T] as string;
-      let bValue = b[sortField as keyof T] as string;
+      let aValue: string;
+      let bValue: string;
+      
+      switch (sortField) {
+        case "organization":
+          aValue = a.organization;
+          bValue = b.organization;
+          break;
+        case "type":
+          aValue = a.type;
+          bValue = b.type;
+          break;
+        case "item":
+          aValue = a.item;
+          bValue = b.item;
+          break;
+        case "details":
+          aValue = a.details;
+          bValue = b.details;
+          break;
+        case "status":
+          aValue = a.status;
+          bValue = b.status;
+          break;
+        default:
+          return 0;
+      }
       
       if (direction === "asc") {
         return aValue.localeCompare(bValue);
@@ -231,7 +293,7 @@ export const Donations = () => {
     });
   };
 
-  const filterData = <T extends RequestPost>(data: T[]): T[] => {
+  const filterRequests = (data: RequestPost[]): RequestPost[] => {
     return data.filter((item) => {
       const matchesSearch = searchTerm === "" || 
         Object.values(item).some(value => 
@@ -246,8 +308,8 @@ export const Donations = () => {
   const filteredDonationPosts = filterDonations(donations);
   const sortedDonationPosts = sortDonations(filteredDonationPosts, donationSort, donationDirection);
   
-  const filteredRequestPosts = filterData(mockRequestPosts);
-  const sortedRequestPosts = sortData(filteredRequestPosts, requestSort, requestDirection);
+  const filteredRequestPosts = filterRequests(mockRequestPosts);
+  const sortedRequestPosts = sortRequests(filteredRequestPosts, requestSort, requestDirection);
 
   const handleDonationRowClick = (donation: Donation) => {
     setSelectedDonation(donation);
@@ -365,7 +427,7 @@ export const Donations = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <SortableTableHead
+                    <DonationSortableTableHead
                       field="organization_name"
                       currentSort={donationSort}
                       currentDirection={donationDirection}
@@ -373,8 +435,8 @@ export const Donations = () => {
                       className="w-2/5"
                     >
                       Organization
-                    </SortableTableHead>
-                    <SortableTableHead
+                    </DonationSortableTableHead>
+                    <DonationSortableTableHead
                       field="title"
                       currentSort={donationSort}
                       currentDirection={donationDirection}
@@ -382,8 +444,8 @@ export const Donations = () => {
                       className="w-1/4"
                     >
                       Title
-                    </SortableTableHead>
-                    <SortableTableHead
+                    </DonationSortableTableHead>
+                    <DonationSortableTableHead
                       field="description"
                       currentSort={donationSort}
                       currentDirection={donationDirection}
@@ -391,8 +453,8 @@ export const Donations = () => {
                       className="w-1/4"
                     >
                       Description
-                    </SortableTableHead>
-                    <SortableTableHead
+                    </DonationSortableTableHead>
+                    <DonationSortableTableHead
                       field="status"
                       currentSort={donationSort}
                       currentDirection={donationDirection}
@@ -400,7 +462,7 @@ export const Donations = () => {
                       className="w-1/6"
                     >
                       Status
-                    </SortableTableHead>
+                    </DonationSortableTableHead>
                   </TableRow>
                 </TableHeader>
               </Table>
@@ -448,7 +510,7 @@ export const Donations = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <SortableTableHead
+                    <RequestSortableTableHead
                       field="organization"
                       currentSort={requestSort}
                       currentDirection={requestDirection}
@@ -456,8 +518,8 @@ export const Donations = () => {
                       className="w-2/5"
                     >
                       Organization
-                    </SortableTableHead>
-                    <SortableTableHead
+                    </RequestSortableTableHead>
+                    <RequestSortableTableHead
                       field="type"
                       currentSort={requestSort}
                       currentDirection={requestDirection}
@@ -465,8 +527,8 @@ export const Donations = () => {
                       className="w-1/6"
                     >
                       Type
-                    </SortableTableHead>
-                    <SortableTableHead
+                    </RequestSortableTableHead>
+                    <RequestSortableTableHead
                       field="item"
                       currentSort={requestSort}
                       currentDirection={requestDirection}
@@ -474,8 +536,8 @@ export const Donations = () => {
                       className="w-1/6"
                     >
                       Item
-                    </SortableTableHead>
-                    <SortableTableHead
+                    </RequestSortableTableHead>
+                    <RequestSortableTableHead
                       field="details"
                       currentSort={requestSort}
                       currentDirection={requestDirection}
@@ -483,8 +545,8 @@ export const Donations = () => {
                       className="w-1/4"
                     >
                       Details
-                    </SortableTableHead>
-                    <SortableTableHead
+                    </RequestSortableTableHead>
+                    <RequestSortableTableHead
                       field="status"
                       currentSort={requestSort}
                       currentDirection={requestDirection}
@@ -492,7 +554,7 @@ export const Donations = () => {
                       className="w-1/6"
                     >
                       Status
-                    </SortableTableHead>
+                    </RequestSortableTableHead>
                   </TableRow>
                 </TableHeader>
               </Table>
