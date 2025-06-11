@@ -17,12 +17,18 @@ interface RequestCreateModalProps {
   onRequestCreated?: () => void;
 }
 
+interface Organization {
+  id: string;
+  name: string;
+}
+
 export const RequestCreateModal = ({ 
   open, 
   onOpenChange, 
   onRequestCreated 
 }: RequestCreateModalProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -32,11 +38,12 @@ export const RequestCreateModal = ({
     urgency_level: "",
     contact_email: "",
     contact_phone: "",
-    organization_name: ""
+    organization_name: "",
+    organization_id: ""
   });
 
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user, isAdministrator } = useAuth();
   const { currentOrganization, contactInfo } = useProfileData();
 
   const requestTypes = [
@@ -59,12 +66,34 @@ export const RequestCreateModal = ({
     "Urgent"
   ];
 
+  // Fetch organizations for administrators
+  useEffect(() => {
+    if (isAdministrator && open) {
+      const fetchOrganizations = async () => {
+        const { data, error } = await supabase
+          .from('organizations')
+          .select('id, name')
+          .eq('is_approved', true)
+          .order('name');
+
+        if (error) {
+          console.error('Error fetching organizations:', error);
+        } else {
+          setOrganizations(data || []);
+        }
+      };
+
+      fetchOrganizations();
+    }
+  }, [isAdministrator, open]);
+
   // Prepopulate organization and contact information when modal opens
   useEffect(() => {
     if (open && currentOrganization && contactInfo) {
       setFormData(prev => ({
         ...prev,
         organization_name: currentOrganization.name || "",
+        organization_id: currentOrganization.id || "",
         contact_email: contactInfo.email || "",
         contact_phone: contactInfo.phone || ""
       }));
@@ -75,6 +104,15 @@ export const RequestCreateModal = ({
     setFormData(prev => ({
       ...prev,
       [field]: value
+    }));
+  };
+
+  const handleOrganizationChange = (organizationId: string) => {
+    const selectedOrg = organizations.find(org => org.id === organizationId);
+    setFormData(prev => ({
+      ...prev,
+      organization_id: organizationId,
+      organization_name: selectedOrg?.name || ""
     }));
   };
 
@@ -104,7 +142,7 @@ export const RequestCreateModal = ({
         contact_phone: formData.contact_phone || null,
         organization_name: formData.organization_name || null,
         creator_user_id: user.id,
-        organization_id: currentOrganization?.id || null,
+        organization_id: formData.organization_id || null,
         is_approved: false,
         approval_decision_made: false
       };
@@ -130,9 +168,10 @@ export const RequestCreateModal = ({
         deadline: "",
         location: "",
         urgency_level: "",
-        contact_email: contactInfo.email || "",
-        contact_phone: contactInfo.phone || "",
-        organization_name: currentOrganization?.name || ""
+        contact_email: contactInfo?.email || "",
+        contact_phone: contactInfo?.phone || "",
+        organization_name: currentOrganization?.name || "",
+        organization_id: currentOrganization?.id || ""
       });
 
       onOpenChange(false);
@@ -188,12 +227,27 @@ export const RequestCreateModal = ({
 
             <div className="space-y-2">
               <Label htmlFor="organization_name">Organization Name</Label>
-              <Input
-                id="organization_name"
-                value={formData.organization_name}
-                onChange={(e) => handleInputChange("organization_name", e.target.value)}
-                placeholder="Enter organization name"
-              />
+              {isAdministrator ? (
+                <Select value={formData.organization_id} onValueChange={handleOrganizationChange}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select organization" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {organizations.map((org) => (
+                      <SelectItem key={org.id} value={org.id}>
+                        {org.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <Input
+                  id="organization_name"
+                  value={formData.organization_name}
+                  readOnly
+                  className="bg-muted"
+                />
+              )}
             </div>
 
             <div className="space-y-2">
