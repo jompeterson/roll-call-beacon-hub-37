@@ -57,11 +57,8 @@ export const useProfileData = () => {
       const currentUser = customAuth.getUser();
       
       if (!currentUser) {
-        toast({
-          title: "Error",
-          description: "You must be logged in to view your profile.",
-          variant: "destructive",
-        });
+        // Don't show toast if user is not logged in - this is expected behavior
+        setLoading(false);
         return;
       }
 
@@ -174,6 +171,7 @@ export const useProfileData = () => {
           email: "",
           phone: ""
         });
+        setLoading(false);
       }
     });
 

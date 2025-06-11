@@ -7,9 +7,8 @@ export const useAuth = () => {
   const [user, setUser] = useState<CustomUser | null>(null);
   const isAuthenticated = !!user;
   
-  // Only fetch profile data when authenticated
-  const profileData = isAuthenticated ? useProfileData() : { userRole: null };
-  const { userRole } = profileData;
+  // Always call useProfileData, but it will handle auth check internally
+  const { userRole } = useProfileData();
 
   useEffect(() => {
     // Get initial user
