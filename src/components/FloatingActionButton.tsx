@@ -6,11 +6,15 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { EventCreateModal } from "@/components/EventCreateModal";
 import { ScholarshipCreateModal } from "@/components/ScholarshipCreateModal";
+import { DonationCreateModal } from "@/components/donations/DonationCreateModal";
+import { RequestCreateModal } from "@/components/donations/RequestCreateModal";
 
 export const FloatingActionButton = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [eventModalOpen, setEventModalOpen] = useState(false);
   const [scholarshipModalOpen, setScholarshipModalOpen] = useState(false);
+  const [donationModalOpen, setDonationModalOpen] = useState(false);
+  const [requestModalOpen, setRequestModalOpen] = useState(false);
   const { isAuthenticated, isAdministrator } = useAuth();
 
   // Don't render the FAB if user is not authenticated
@@ -39,6 +43,12 @@ export const FloatingActionButton = () => {
     } else if (actionName === "New Scholarship") {
       setScholarshipModalOpen(true);
       setIsExpanded(false);
+    } else if (actionName === "New Donation") {
+      setDonationModalOpen(true);
+      setIsExpanded(false);
+    } else if (actionName === "New Request") {
+      setRequestModalOpen(true);
+      setIsExpanded(false);
     } else {
       console.log(`Creating ${actionName}`);
     }
@@ -52,6 +62,16 @@ export const FloatingActionButton = () => {
   const handleScholarshipCreated = () => {
     // Optionally refresh scholarships list or show success message
     console.log("Scholarship created successfully");
+  };
+
+  const handleDonationCreated = () => {
+    // Optionally refresh donations list or show success message
+    console.log("Donation created successfully");
+  };
+
+  const handleRequestCreated = () => {
+    // Optionally refresh requests list or show success message
+    console.log("Request created successfully");
   };
 
   return (
@@ -113,6 +133,20 @@ export const FloatingActionButton = () => {
         open={scholarshipModalOpen}
         onOpenChange={setScholarshipModalOpen}
         onScholarshipCreated={handleScholarshipCreated}
+      />
+
+      {/* Donation Creation Modal */}
+      <DonationCreateModal
+        open={donationModalOpen}
+        onOpenChange={setDonationModalOpen}
+        onDonationCreated={handleDonationCreated}
+      />
+
+      {/* Request Creation Modal */}
+      <RequestCreateModal
+        open={requestModalOpen}
+        onOpenChange={setRequestModalOpen}
+        onRequestCreated={handleRequestCreated}
       />
     </>
   );
