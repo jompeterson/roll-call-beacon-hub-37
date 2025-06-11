@@ -69,7 +69,31 @@ export const signUp = async (registrationData: RegistrationData) => {
 
 export const signIn = async (email: string, password: string) => {
   const { user, error } = await customAuth.signIn(email, password);
-  return { data: { user }, error: error ? new Error(error) : null };
+  
+  if (error) {
+    return { data: null, error: new Error(error) };
+  }
+  
+  if (user) {
+    // Check if user is approved
+    const { data: profileData, error: profileError } = await supabase
+      .from('user_profiles')
+      .select('is_approved')
+      .eq('email', email)
+      .single();
+    
+    if (profileError) {
+      console.error('Profile check error:', profileError);
+      return { data: { user }, error: null };
+    }
+    
+    return { 
+      data: { user, isApproved: profileData?.is_approved || false }, 
+      error: null 
+    };
+  }
+  
+  return { data: null, error: new Error('Login failed') };
 };
 
 export const signOut = async () => {

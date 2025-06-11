@@ -15,6 +15,7 @@ import { ValuedPartners } from "./pages/ValuedPartners";
 import { Profile } from "./pages/Profile";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
+import { VerificationPending } from "./pages/VerificationPending";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/verification-pending" element={<VerificationPending />} />
           <Route path="/" element={<Layout />}>
             <Route index element={<Overview />} />
             <Route path="donations" element={<Donations />} />

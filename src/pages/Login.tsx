@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -65,11 +64,22 @@ export const Login = () => {
           variant: "destructive",
         });
       } else if (data.user) {
-        toast({
-          title: "Welcome back!",
-          description: "You have been successfully signed in.",
-        });
-        navigate("/");
+        // Check if user is approved
+        if (data.isApproved === false) {
+          // Redirect to verification pending page
+          navigate("/verification-pending", { 
+            state: { 
+              email: formData.username,
+              fromLogin: true 
+            } 
+          });
+        } else {
+          toast({
+            title: "Welcome back!",
+            description: "You have been successfully signed in.",
+          });
+          navigate("/");
+        }
       }
     } catch (error) {
       console.error("Login error:", error);
