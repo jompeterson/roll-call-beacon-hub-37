@@ -1,10 +1,12 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tables } from "@/integrations/supabase/types";
 import { useAuth } from "@/hooks/useAuth";
 import { ScholarshipInfo } from "./scholarship/ScholarshipInfo";
 import { ScholarshipActionButtons } from "./scholarship/ScholarshipActionButtons";
 import { ScholarshipApplyButton } from "./scholarship/ScholarshipApplyButton";
+import { CommentsSection } from "./comments/CommentsSection";
 
 type Scholarship = Tables<"scholarships"> & {
   creator?: {
@@ -72,34 +74,54 @@ export const ScholarshipModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-semibold">
-            {scholarship.title}
-          </DialogTitle>
-        </DialogHeader>
+      <DialogContent className="max-w-4xl h-[90vh] flex flex-col p-0">
+        {/* Fixed Header */}
+        <div className="flex-shrink-0 p-6 border-b">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-semibold">
+              {scholarship.title}
+            </DialogTitle>
+          </DialogHeader>
+        </div>
 
-        <ScholarshipInfo scholarship={scholarship} isAuthenticated={isAuthenticated} />
+        {/* Scrollable Content */}
+        <ScrollArea className="flex-1 px-6">
+          <div className="space-y-6 py-4">
+            <ScholarshipInfo scholarship={scholarship} isAuthenticated={isAuthenticated} />
 
-        <DialogFooter className="flex flex-col gap-2">
-          {showApplyButton && (
-            <ScholarshipApplyButton
-              scholarshipLink={scholarship.scholarship_link}
-              onApply={handleApplyToScholarship}
-            />
-          )}
+            {/* Comments Section - Only show for approved scholarships */}
+            {scholarship.is_approved && (
+              <CommentsSection
+                contentType="scholarship"
+                contentId={scholarship.id}
+                title="Scholarship Discussion"
+              />
+            )}
+          </div>
+        </ScrollArea>
 
-          {showActionButtons && (
-            <ScholarshipActionButtons
-              onApprove={handleApprove}
-              onReject={handleReject}
-              onRequestChanges={handleRequestChanges}
-              isApproving={isApproving}
-              isRejecting={isRejecting}
-              isRequestingChanges={isRequestingChanges}
-            />
-          )}
-        </DialogFooter>
+        {/* Fixed Footer */}
+        <div className="flex-shrink-0 border-t">
+          <DialogFooter className="flex flex-col gap-2 p-6">
+            {showApplyButton && (
+              <ScholarshipApplyButton
+                scholarshipLink={scholarship.scholarship_link}
+                onApply={handleApplyToScholarship}
+              />
+            )}
+
+            {showActionButtons && (
+              <ScholarshipActionButtons
+                onApprove={handleApprove}
+                onReject={handleReject}
+                onRequestChanges={handleRequestChanges}
+                isApproving={isApproving}
+                isRejecting={isRejecting}
+                isRequestingChanges={isRequestingChanges}
+              />
+            )}
+          </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );
