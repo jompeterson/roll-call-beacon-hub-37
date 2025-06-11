@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 
 export interface User {
@@ -118,7 +117,7 @@ class CustomAuthService {
       if (hashError) throw hashError;
 
       // Create user
-      const { data: userData: newUser, error: userError } = await supabase
+      const { data: newUser, error: userError } = await supabase
         .from('users')
         .insert({
           email,
@@ -273,3 +272,5 @@ class CustomAuthService {
 }
 
 export const customAuth = new CustomAuthService();
+
+}
