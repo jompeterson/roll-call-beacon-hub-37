@@ -26,7 +26,7 @@ export const Events = () => {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [eventModalOpen, setEventModalOpen] = useState(false);
   
-  const { data: events = [], isLoading, error } = useEvents();
+  const { events, loading } = useEvents();
   const { isAdministrator } = useAuth();
 
   // Handle URL parameter to open specific event modal
@@ -102,7 +102,7 @@ export const Events = () => {
     }
   };
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="space-y-6">
         <div>
@@ -113,22 +113,6 @@ export const Events = () => {
         </div>
         <div className="flex items-center justify-center h-64">
           <p>Loading events...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Events</h1>
-          <p className="text-muted-foreground">
-            Manage and track community events
-          </p>
-        </div>
-        <div className="flex items-center justify-center h-64">
-          <p className="text-red-600">Error loading events: {error.message}</p>
         </div>
       </div>
     );

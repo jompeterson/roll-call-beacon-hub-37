@@ -24,7 +24,7 @@ export const Scholarships = () => {
   const [selectedScholarship, setSelectedScholarship] = useState<Scholarship | null>(null);
   const [scholarshipModalOpen, setScholarshipModalOpen] = useState(false);
   
-  const { data: scholarships = [], isLoading, error } = useScholarships();
+  const { scholarships, isLoading, error } = useScholarships();
   const { isAdministrator } = useAuth();
 
   // Handle URL parameter to open specific scholarship modal
@@ -34,7 +34,7 @@ export const Scholarships = () => {
         // First try to find in current list
         const scholarship = scholarships.find(s => s.id === scholarshipId);
         if (scholarship) {
-          setSelectedScholarship(scholarship);
+          setSelectedScholarship(scholarship as Scholarship);
           setScholarshipModalOpen(true);
         } else if (scholarships.length > 0) {
           // If not found in list but we have scholarships loaded, try database
@@ -43,7 +43,7 @@ export const Scholarships = () => {
               .from('scholarships')
               .select(`
                 *,
-                creator:user_profiles!creator_user_id(email),
+                creator:users!scholarships_creator_user_id_fkey(email),
                 organization:organizations(id, name, type)
               `)
               .eq('id', scholarshipId)
@@ -74,8 +74,8 @@ export const Scholarships = () => {
     }
   };
 
-  const handleScholarshipRowClick = (scholarship: Scholarship) => {
-    setSelectedScholarship(scholarship);
+  const handleScholarshipRowClick = (scholarship: any) => {
+    setSelectedScholarship(scholarship as Scholarship);
     setScholarshipModalOpen(true);
     navigate(`/scholarships/${scholarship.id}`);
   };
@@ -155,7 +155,7 @@ export const Scholarships = () => {
             <h3 className="font-semibold">{scholarship.title}</h3>
             <p className="text-sm text-muted-foreground">{scholarship.description}</p>
             <p className="text-xs text-muted-foreground mt-2">
-              Amount: ${scholarship.amount} | Deadline: {new Date(scholarship.deadline).toLocaleDateString()}
+              Amount: ${scholarship.amount} | Deadline: {new Date(scholarship.application_deadline || '').toLocaleDateString()}
             </p>
           </div>
         ))}
