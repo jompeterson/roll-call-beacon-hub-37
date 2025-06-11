@@ -9,22 +9,43 @@ import {
   Building2,
   Users,
 } from "lucide-react";
+import { customAuth } from "@/lib/customAuth";
+import { useState, useEffect } from "react";
 
 interface SidebarProps {
   open: boolean;
 }
 
-const navigation = [
+const baseNavigation = [
   { name: "Overview", href: "/", icon: BarChart3 },
   { name: "Donations", href: "/donations", icon: DollarSign },
   { name: "Scholarships", href: "/scholarships", icon: GraduationCap },
   { name: "Events", href: "/events", icon: Calendar },
   { name: "Organizations", href: "/organizations", icon: Building2 },
+];
+
+const authenticatedNavigation = [
+  ...baseNavigation,
   { name: "Users", href: "/users", icon: Users },
 ];
 
 export const Sidebar = ({ open }: SidebarProps) => {
   const location = useLocation();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Get initial auth state
+    setIsAuthenticated(!!customAuth.getUser());
+
+    // Listen for auth state changes
+    const unsubscribe = customAuth.onAuthStateChange((user) => {
+      setIsAuthenticated(!!user);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const navigation = isAuthenticated ? authenticatedNavigation : baseNavigation;
 
   return (
     <div

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { UserModal } from "@/components/UserModal";
 import { UserFilters } from "@/components/users/UserFilters";
@@ -5,7 +6,7 @@ import { UserTable } from "@/components/users/UserTable";
 import { useUserProfiles } from "@/hooks/useUserProfiles";
 import { useUserSorting } from "@/hooks/useUserSorting";
 import { useUserFiltering } from "@/hooks/useUserFiltering";
-import { useProfileData } from "@/hooks/useProfileData";
+import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -41,7 +42,7 @@ interface UserProfile {
 export const Users = () => {
   const { toast } = useToast();
   const { userProfiles, loading, refetch } = useUserProfiles();
-  const { userRole } = useProfileData();
+  const { isAdministrator } = useAuth();
   const { sortData } = useUserSorting();
   const { filterData } = useUserFiltering();
   
@@ -55,8 +56,6 @@ export const Users = () => {
   // Modal states
   const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
   const [userModalOpen, setUserModalOpen] = useState(false);
-
-  const isAdministrator = userRole?.name === 'administrator';
 
   const handleUserSort = (field: SortField) => {
     if (userSort === field) {

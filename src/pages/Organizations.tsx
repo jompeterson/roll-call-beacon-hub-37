@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
@@ -7,7 +8,7 @@ import { OrganizationModal } from "@/components/OrganizationModal";
 import { OrganizationSortableTableHead } from "@/components/organizations/OrganizationSortableTableHead";
 import { OrganizationStatusIcon } from "@/components/organizations/OrganizationStatusIcon";
 import { useOrganizations } from "@/hooks/useOrganizations";
-import { useProfileData } from "@/hooks/useProfileData";
+import { useAuth } from "@/hooks/useAuth";
 
 type SortDirection = "asc" | "desc" | null;
 type SortField = "name" | "contact" | "type" | "status" | null;
@@ -32,7 +33,7 @@ interface Organization {
 
 export const Organizations = () => {
   const { organizations, loading, updateOrganizationContact, approveOrganization, rejectOrganization } = useOrganizations();
-  const { userRole } = useProfileData();
+  const { isAuthenticated, isAdministrator } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   
   // Sorting states
@@ -42,8 +43,6 @@ export const Organizations = () => {
   // Modal states
   const [selectedOrganization, setSelectedOrganization] = useState<Organization | null>(null);
   const [organizationModalOpen, setOrganizationModalOpen] = useState(false);
-
-  const isAdministrator = userRole?.name === 'administrator';
 
   const handleOrganizationSort = (field: SortField) => {
     if (organizationSort === field) {
@@ -102,7 +101,7 @@ export const Organizations = () => {
   };
 
   const filterData = (data: Organization[]): Organization[] => {
-    return data.filter((item) => {
+    let filtered = data.filter((item) => {
       const matchesSearch = searchTerm === "" || 
         item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -113,6 +112,13 @@ export const Organizations = () => {
       
       return matchesSearch;
     });
+
+    // If not authenticated, only show approved organizations
+    if (!isAuthenticated) {
+      filtered = filtered.filter(org => org.is_approved && org.approval_decision_made);
+    }
+
+    return filtered;
   };
 
   const filteredOrganizations = filterData(organizations);
@@ -189,7 +195,7 @@ export const Organizations = () => {
                     currentSort={organizationSort}
                     currentDirection={organizationDirection}
                     onSort={handleOrganizationSort}
-                    className="w-1/3"
+                    className={isAuthenticated ? "w-1/3" : "w-1/2"}
                   >
                     Organization
                   </OrganizationSortableTableHead>
@@ -198,7 +204,7 @@ export const Organizations = () => {
                     currentSort={organizationSort}
                     currentDirection={organizationDirection}
                     onSort={handleOrganizationSort}
-                    className="w-1/4"
+                    className={isAuthenticated ? "w-1/4" : "w-1/3"}
                   >
                     Contact Person
                   </OrganizationSortableTableHead>
@@ -207,19 +213,21 @@ export const Organizations = () => {
                     currentSort={organizationSort}
                     currentDirection={organizationDirection}
                     onSort={handleOrganizationSort}
-                    className="w-1/4"
+                    className={isAuthenticated ? "w-1/4" : "w-1/6"}
                   >
                     Type
                   </OrganizationSortableTableHead>
-                  <OrganizationSortableTableHead
-                    field="status"
-                    currentSort={organizationSort}
-                    currentDirection={organizationDirection}
-                    onSort={handleOrganizationSort}
-                    className="w-1/6"
-                  >
-                    Status
-                  </OrganizationSortableTableHead>
+                  {isAuthenticated && (
+                    <OrganizationSortableTableHead
+                      field="status"
+                      currentSort={organizationSort}
+                      currentDirection={organizationDirection}
+                      onSort={handleOrganizationSort}
+                      className="w-1/6"
+                    >
+                      Status
+                    </OrganizationSortableTableHead>
+                  )}
                 </TableRow>
               </TableHeader>
             </Table>
@@ -232,29 +240,31 @@ export const Organizations = () => {
                       className="cursor-pointer hover:bg-muted/50"
                       onClick={() => handleOrganizationRowClick(org)}
                     >
-                      <TableCell className="font-medium w-1/3 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                      <TableCell className={`font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-0 ${isAuthenticated ? 'w-1/3' : 'w-1/2'}`}>
                         {org.name}
                       </TableCell>
-                      <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                      <TableCell className={`whitespace-nowrap overflow-hidden text-ellipsis max-w-0 ${isAuthenticated ? 'w-1/4' : 'w-1/3'}`}>
                         {org.contact_user 
                           ? `${org.contact_user.first_name} ${org.contact_user.last_name}`
                           : ""
                         }
                       </TableCell>
-                      <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                      <TableCell className={`whitespace-nowrap overflow-hidden text-ellipsis max-w-0 ${isAuthenticated ? 'w-1/4' : 'w-1/6'}`}>
                         {org.type}
                       </TableCell>
-                      <TableCell className="w-1/6">
-                        <div className="flex items-center gap-2">
-                          <OrganizationStatusIcon 
-                            isApproved={org.is_approved} 
-                            decisionMade={org.approval_decision_made} 
-                          />
-                          <Badge variant={getStatusVariant(org.is_approved, org.approval_decision_made)}>
-                            {getStatusText(org.is_approved, org.approval_decision_made)}
-                          </Badge>
-                        </div>
-                      </TableCell>
+                      {isAuthenticated && (
+                        <TableCell className="w-1/6">
+                          <div className="flex items-center gap-2">
+                            <OrganizationStatusIcon 
+                              isApproved={org.is_approved} 
+                              decisionMade={org.approval_decision_made} 
+                            />
+                            <Badge variant={getStatusVariant(org.is_approved, org.approval_decision_made)}>
+                              {getStatusText(org.is_approved, org.approval_decision_made)}
+                            </Badge>
+                          </div>
+                        </TableCell>
+                      )}
                     </TableRow>
                   ))}
                 </TableBody>

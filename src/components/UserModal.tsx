@@ -1,3 +1,4 @@
+
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -79,6 +80,7 @@ export const UserModal = ({
   };
 
   const showApprovalButtons = !user.approval_decision_made && isAdministrator;
+  const showRevokeButton = user.approval_decision_made && user.is_approved && isAdministrator;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -179,23 +181,34 @@ export const UserModal = ({
           </div>
         </div>
 
-        {showApprovalButtons && (
-          <div className="flex gap-2 pt-4">
-            <Button
-              onClick={() => onApprove(user.id)}
-              className="flex-1"
-            >
-              Approve User
-            </Button>
+        <div className="flex gap-2 pt-4">
+          {showApprovalButtons && (
+            <>
+              <Button
+                onClick={() => onApprove(user.id)}
+                className="flex-1"
+              >
+                Approve User
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => onReject(user.id)}
+                className="flex-1"
+              >
+                Reject User
+              </Button>
+            </>
+          )}
+          {showRevokeButton && (
             <Button
               variant="destructive"
               onClick={() => onReject(user.id)}
               className="flex-1"
             >
-              Reject User
+              Revoke Access
             </Button>
-          </div>
-        )}
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   );

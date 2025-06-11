@@ -1,3 +1,4 @@
+
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -161,34 +162,36 @@ export const OrganizationModal = ({
               </div>
             </div>
 
-            {/* Update Contact */}
-            <div className="space-y-2">
-              <h4 className="font-medium">Update Contact Person</h4>
-              <div className="flex gap-2">
-                <Select 
-                  value={selectedContactId || "none"} 
-                  onValueChange={(value) => setSelectedContactId(value === "none" ? null : value)}
-                >
-                  <SelectTrigger className="flex-1">
-                    <SelectValue placeholder="Select a contact person" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">No contact</SelectItem>
-                    {userProfiles.map((user) => (
-                      <SelectItem key={user.id} value={user.id}>
-                        {user.first_name} {user.last_name} ({user.email})
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Button 
-                  onClick={handleContactUpdate}
-                  disabled={isUpdating || (selectedContactId === organization.contact_user_id || (selectedContactId === null && organization.contact_user_id === null))}
-                >
-                  {isUpdating ? "Updating..." : "Update"}
-                </Button>
+            {/* Update Contact - Only show for administrators */}
+            {isAdministrator && (
+              <div className="space-y-2">
+                <h4 className="font-medium">Update Contact Person</h4>
+                <div className="flex gap-2">
+                  <Select 
+                    value={selectedContactId || "none"} 
+                    onValueChange={(value) => setSelectedContactId(value === "none" ? null : value)}
+                  >
+                    <SelectTrigger className="flex-1">
+                      <SelectValue placeholder="Select a contact person" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">No contact</SelectItem>
+                      {userProfiles.map((user) => (
+                        <SelectItem key={user.id} value={user.id}>
+                          {user.first_name} {user.last_name} ({user.email})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Button 
+                    onClick={handleContactUpdate}
+                    disabled={isUpdating || (selectedContactId === organization.contact_user_id || (selectedContactId === null && organization.contact_user_id === null))}
+                  >
+                    {isUpdating ? "Updating..." : "Update"}
+                  </Button>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 
