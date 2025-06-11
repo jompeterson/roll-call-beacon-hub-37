@@ -2,12 +2,16 @@
 import { useState } from "react";
 import { UserModal } from "@/components/UserModal";
 import { UserFilters } from "@/components/users/UserFilters";
-import { UserGrid } from "@/components/users/UserGrid";
+import { UserTable } from "@/components/users/UserTable";
 import { useUserProfilesRealtime } from "@/hooks/useUserProfilesRealtime";
+import { useUserSorting } from "@/hooks/useUserSorting";
 import { useUserFiltering } from "@/hooks/useUserFiltering";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+
+type SortDirection = "asc" | "desc" | null;
+type SortField = "firstName" | "lastName" | "organization" | "email" | "dateJoined" | "status" | null;
 
 interface UserProfile {
   id: string;
@@ -37,20 +41,42 @@ interface UserProfile {
 
 export const Users = () => {
   const { toast } = useToast();
-  const { userProfiles, loading } = useUserProfilesRealtime();
+  const { userProfiles, loading, refetch } = useUserProfilesRealtime();
   const { isAdministrator } = useAuth();
+  const { sortData } = useUserSorting();
   const { filterData } = useUserFiltering();
   
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  
+  // Sorting states
+  const [userSort, setUserSort] = useState<SortField>(null);
+  const [userDirection, setUserDirection] = useState<SortDirection>(null);
 
   // Modal states
   const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
   const [userModalOpen, setUserModalOpen] = useState(false);
 
-  const filteredUsers = filterData(userProfiles, searchTerm, statusFilter);
+  const handleUserSort = (field: SortField) => {
+    if (userSort === field) {
+      if (userDirection === "asc") {
+        setUserDirection("desc");
+      } else if (userDirection === "desc") {
+        setUserSort(null);
+        setUserDirection(null);
+      } else {
+        setUserDirection("asc");
+      }
+    } else {
+      setUserSort(field);
+      setUserDirection("asc");
+    }
+  };
 
-  const handleUserCardClick = (user: UserProfile) => {
+  const filteredUsers = filterData(userProfiles, searchTerm, statusFilter);
+  const sortedUsers = sortData(filteredUsers, userSort, userDirection);
+
+  const handleUserRowClick = (user: UserProfile) => {
     setSelectedUser(user);
     setUserModalOpen(true);
   };
@@ -174,9 +200,12 @@ export const Users = () => {
       />
 
       <div className="space-y-4">
-        <UserGrid
-          users={filteredUsers}
-          onUserClick={handleUserCardClick}
+        <UserTable
+          users={sortedUsers}
+          sortField={userSort}
+          sortDirection={userDirection}
+          onSort={handleUserSort}
+          onRowClick={handleUserRowClick}
         />
       </div>
 
