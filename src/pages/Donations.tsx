@@ -469,32 +469,40 @@ export const Donations = () => {
               <ScrollArea className="flex-1">
                 <Table>
                   <TableBody>
-                    {sortedDonationPosts.map((donation) => {
-                      const status = getDonationStatus(donation);
-                      return (
-                        <TableRow 
-                          key={donation.id} 
-                          className="cursor-pointer hover:bg-muted/50"
-                          onClick={() => handleDonationRowClick(donation)}
-                        >
-                          <TableCell className="font-medium w-2/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
-                            {donation.organization_name || "No Organization"}
-                          </TableCell>
-                          <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
-                            {donation.title}
-                          </TableCell>
-                          <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
-                            {donation.description || "No description"}
-                          </TableCell>
-                          <TableCell className="w-1/6">
-                            <div className="flex items-center gap-2 whitespace-nowrap">
-                              <StatusIcon status={status} />
-                              <span>{status}</span>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
+                    {sortedDonationPosts.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                          No donations available
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      sortedDonationPosts.map((donation) => {
+                        const status = getDonationStatus(donation);
+                        return (
+                          <TableRow 
+                            key={donation.id} 
+                            className="cursor-pointer hover:bg-muted/50"
+                            onClick={() => handleDonationRowClick(donation)}
+                          >
+                            <TableCell className="font-medium w-2/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                              {donation.organization_name || "No Organization"}
+                            </TableCell>
+                            <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                              {donation.title}
+                            </TableCell>
+                            <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                              {donation.description || "No description"}
+                            </TableCell>
+                            <TableCell className="w-1/6">
+                              <div className="flex items-center gap-2 whitespace-nowrap">
+                                <StatusIcon status={status} />
+                                <span>{status}</span>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })
+                    )}
                   </TableBody>
                 </Table>
               </ScrollArea>
