@@ -145,28 +145,31 @@ export const ScholarshipModal = ({
         </div>
 
         {showActionButtons && (
-          <DialogFooter className="gap-2">
+          <div className="flex gap-2 pt-4">
             <Button
-              variant="outline"
-              onClick={() => onRequestChanges(scholarship.id)}
-              disabled={isRequestingChanges}
+              onClick={() => onApprove(scholarship.id)}
+              disabled={isApproving}
+              className="flex-1"
             >
-              {isRequestingChanges ? "Requesting..." : "Request Changes"}
+              {isApproving ? "Approving..." : "Approve Scholarship"}
             </Button>
             <Button
               variant="destructive"
               onClick={() => onReject(scholarship.id)}
               disabled={isRejecting}
+              className="flex-1"
             >
-              {isRejecting ? "Rejecting..." : "Reject"}
+              {isRejecting ? "Rejecting..." : "Reject Scholarship"}
             </Button>
             <Button
-              onClick={() => onApprove(scholarship.id)}
-              disabled={isApproving}
+              variant="outline"
+              onClick={() => onRequestChanges(scholarship.id)}
+              disabled={isRequestingChanges}
+              className="flex-1"
             >
-              {isApproving ? "Approving..." : "Approve"}
+              {isRequestingChanges ? "Requesting..." : "Request Changes"}
             </Button>
-          </DialogFooter>
+          </div>
         )}
       </DialogContent>
     </Dialog>
