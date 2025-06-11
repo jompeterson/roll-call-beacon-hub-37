@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useProfileData } from "@/hooks/useProfileData";
 
 interface RequestCreateModalProps {
   open: boolean;
@@ -36,6 +37,7 @@ export const RequestCreateModal = ({
 
   const { toast } = useToast();
   const { user } = useAuth();
+  const { currentOrganization, contactInfo } = useProfileData();
 
   const requestTypes = [
     "Food Donation",
@@ -56,6 +58,18 @@ export const RequestCreateModal = ({
     "High",
     "Urgent"
   ];
+
+  // Prepopulate organization and contact information when modal opens
+  useEffect(() => {
+    if (open && currentOrganization && contactInfo) {
+      setFormData(prev => ({
+        ...prev,
+        organization_name: currentOrganization.name || "",
+        contact_email: contactInfo.email || "",
+        contact_phone: contactInfo.phone || ""
+      }));
+    }
+  }, [open, currentOrganization, contactInfo]);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
@@ -90,6 +104,7 @@ export const RequestCreateModal = ({
         contact_phone: formData.contact_phone || null,
         organization_name: formData.organization_name || null,
         creator_user_id: user.id,
+        organization_id: currentOrganization?.id || null,
         is_approved: false,
         approval_decision_made: false
       };
@@ -115,9 +130,9 @@ export const RequestCreateModal = ({
         deadline: "",
         location: "",
         urgency_level: "",
-        contact_email: "",
-        contact_phone: "",
-        organization_name: ""
+        contact_email: contactInfo.email || "",
+        contact_phone: contactInfo.phone || "",
+        organization_name: currentOrganization?.name || ""
       });
 
       onOpenChange(false);

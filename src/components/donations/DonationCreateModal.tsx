@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useProfileData } from "@/hooks/useProfileData";
 
 interface DonationCreateModalProps {
   open: boolean;
@@ -34,6 +35,19 @@ export const DonationCreateModal = ({
 
   const { toast } = useToast();
   const { user } = useAuth();
+  const { currentOrganization, contactInfo } = useProfileData();
+
+  // Prepopulate organization and contact information when modal opens
+  useEffect(() => {
+    if (open && currentOrganization && contactInfo) {
+      setFormData(prev => ({
+        ...prev,
+        organization_name: currentOrganization.name || "",
+        contact_email: contactInfo.email || "",
+        contact_phone: contactInfo.phone || ""
+      }));
+    }
+  }, [open, currentOrganization, contactInfo]);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
@@ -67,6 +81,7 @@ export const DonationCreateModal = ({
         contact_phone: formData.contact_phone || null,
         organization_name: formData.organization_name || null,
         creator_user_id: user.id,
+        organization_id: currentOrganization?.id || null,
         amount_raised: 0,
         is_approved: false,
         approval_decision_made: false
@@ -92,9 +107,9 @@ export const DonationCreateModal = ({
         amount_needed: "",
         target_date: "",
         donation_link: "",
-        contact_email: "",
-        contact_phone: "",
-        organization_name: ""
+        contact_email: contactInfo.email || "",
+        contact_phone: contactInfo.phone || "",
+        organization_name: currentOrganization?.name || ""
       });
 
       onOpenChange(false);
