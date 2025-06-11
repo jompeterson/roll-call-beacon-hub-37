@@ -2,8 +2,9 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Calendar, MapPin, Users } from "lucide-react";
+import { Calendar, MapPin, Users, UserCheck } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useEventRSVPs } from "@/hooks/useEventRSVPs";
 
 interface Event {
   id: string;
@@ -26,6 +27,7 @@ interface EventModalProps {
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
   onRequestChanges?: (id: string) => void;
+  onOpenRSVPModal?: () => void;
 }
 
 export const EventModal = ({
@@ -35,8 +37,10 @@ export const EventModal = ({
   onApprove,
   onReject,
   onRequestChanges,
+  onOpenRSVPModal,
 }: EventModalProps) => {
-  const { isAdministrator } = useAuth();
+  const { isAdministrator, isAuthenticated } = useAuth();
+  const { rsvpCount } = useEventRSVPs(event?.id || "");
 
   if (!event) return null;
 
@@ -51,6 +55,7 @@ export const EventModal = ({
   };
 
   const showApprovalButtons = !event.approval_decision_made && isAdministrator;
+  const showRSVPButton = event.is_approved && isAuthenticated;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -93,36 +98,58 @@ export const EventModal = ({
                   <span className="text-sm">Max Participants: {event.max_participants}</span>
                 </div>
               )}
+
+              {event.is_approved && (
+                <div className="flex items-center gap-2">
+                  <UserCheck className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm">
+                    {rsvpCount} {rsvpCount === 1 ? 'person' : 'people'} attending
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </div>
 
-        {showApprovalButtons && (
-          <div className="flex gap-2 pt-4">
+        <div className="flex gap-2 pt-4">
+          {showRSVPButton && onOpenRSVPModal && (
             <Button
-              onClick={() => onApprove(event.id)}
+              onClick={onOpenRSVPModal}
               className="flex-1"
+              variant="outline"
             >
-              Approve Event
+              <UserCheck className="h-4 w-4 mr-2" />
+              RSVP to Event
             </Button>
-            <Button
-              variant="destructive"
-              onClick={() => onReject(event.id)}
-              className="flex-1"
-            >
-              Reject Event
-            </Button>
-            {onRequestChanges && (
+          )}
+
+          {showApprovalButtons && (
+            <>
               <Button
-                variant="outline"
-                onClick={() => onRequestChanges(event.id)}
+                onClick={() => onApprove(event.id)}
                 className="flex-1"
               >
-                Request Changes
+                Approve Event
               </Button>
-            )}
-          </div>
-        )}
+              <Button
+                variant="destructive"
+                onClick={() => onReject(event.id)}
+                className="flex-1"
+              >
+                Reject Event
+              </Button>
+              {onRequestChanges && (
+                <Button
+                  variant="outline"
+                  onClick={() => onRequestChanges(event.id)}
+                  className="flex-1"
+                >
+                  Request Changes
+                </Button>
+              )}
+            </>
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   );

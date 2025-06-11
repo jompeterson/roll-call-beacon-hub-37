@@ -1,13 +1,14 @@
-
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ChevronUp, ChevronDown, Clock, CheckCircle, XCircle, Archive } from "lucide-react";
+import { ChevronUp, ChevronDown, Clock, CheckCircle, XCircle, Archive, Users } from "lucide-react";
 import { EventModal } from "@/components/EventModal";
+import { EventRSVPModal } from "@/components/EventRSVPModal";
 import { useEvents } from "@/hooks/useEvents";
 import { useAuth } from "@/hooks/useAuth";
+import { useEventRSVPs } from "@/hooks/useEventRSVPs";
 
 type SortDirection = "asc" | "desc" | null;
 type SortField = "title" | "event_date" | "location" | "status" | null;
@@ -25,6 +26,19 @@ const StatusIcon = ({ status }: { status: string }) => {
     default:
       return null;
   }
+};
+
+const RSVPCount = ({ eventId, isApproved }: { eventId: string; isApproved: boolean }) => {
+  const { rsvpCount } = useEventRSVPs(isApproved ? eventId : "");
+  
+  if (!isApproved) return null;
+  
+  return (
+    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+      <Users className="h-3 w-3" />
+      <span>{rsvpCount}</span>
+    </div>
+  );
 };
 
 const SortableTableHead = ({ 
@@ -75,6 +89,7 @@ export const Events = () => {
   // Modal states
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [eventModalOpen, setEventModalOpen] = useState(false);
+  const [rsvpModalOpen, setRSVPModalOpen] = useState(false);
 
   const handleEventSort = (field: SortField) => {
     if (eventSort === field) {
@@ -163,6 +178,11 @@ export const Events = () => {
   const handleEventRequestChanges = (id: string) => {
     console.log("Requested changes for event:", id);
     setEventModalOpen(false);
+  };
+
+  const handleOpenRSVPModal = () => {
+    setEventModalOpen(false);
+    setRSVPModalOpen(true);
   };
 
   const formatDate = (dateString: string) => {
@@ -285,7 +305,10 @@ export const Events = () => {
                         onClick={() => handleEventRowClick(event)}
                       >
                         <TableCell className={`font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-0 ${isAuthenticated ? "w-1/3" : "w-1/2"}`}>
-                          {event.title}
+                          <div className="flex items-center gap-2">
+                            <span>{event.title}</span>
+                            <RSVPCount eventId={event.id} isApproved={event.is_approved} />
+                          </div>
                         </TableCell>
                         <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
                           {formatDate(event.event_date)}
@@ -311,7 +334,7 @@ export const Events = () => {
         </div>
       </div>
 
-      {/* Modal */}
+      {/* Event Details Modal */}
       <EventModal
         event={selectedEvent}
         open={eventModalOpen}
@@ -319,7 +342,17 @@ export const Events = () => {
         onApprove={handleEventApprove}
         onReject={handleEventReject}
         onRequestChanges={handleEventRequestChanges}
+        onOpenRSVPModal={handleOpenRSVPModal}
+      />
+
+      {/* RSVP Modal */}
+      <EventRSVPModal
+        event={selectedEvent}
+        open={rsvpModalOpen}
+        onOpenChange={setRSVPModalOpen}
       />
     </div>
   );
 };
+
+export default Events;
