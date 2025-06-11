@@ -92,9 +92,14 @@ export const ScholarshipModal = ({
                           scholarship.scholarship_link.trim() !== '' && 
                           scholarship.is_approved;
 
+  // Show comments only for approved scholarships
+  const showComments = scholarship.is_approved;
+  // Use smaller height when comments aren't shown
+  const modalHeight = showComments ? "h-[90vh]" : "h-[70vh]";
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl h-[90vh] flex flex-col p-0">
+      <DialogContent className={`max-w-4xl ${modalHeight} flex flex-col p-0`}>
         {/* Fixed Header */}
         <div className="flex-shrink-0 p-6 border-b">
           <DialogHeader>
@@ -116,7 +121,7 @@ export const ScholarshipModal = ({
             <ScholarshipInfo scholarship={scholarship} isAuthenticated={isAuthenticated} />
 
             {/* Comments Section - Only show for approved scholarships */}
-            {scholarship.is_approved && (
+            {showComments && (
               <CommentsSection
                 contentType="scholarship"
                 contentId={scholarship.id}

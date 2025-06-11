@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -106,9 +107,14 @@ export const RequestModal = ({
 
   if (!request) return null;
 
+  // Show comments only for approved requests
+  const showComments = request.is_approved;
+  // Use smaller height when comments aren't shown
+  const modalHeight = showComments ? "h-[90vh]" : "h-[70vh]";
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl w-full h-[90vh] flex flex-col p-0">
+      <DialogContent className={`max-w-5xl w-full ${modalHeight} flex flex-col p-0`}>
         <RequestModalHeader title={request.title} />
         
         <ScrollArea className="flex-1 px-6">
@@ -124,7 +130,7 @@ export const RequestModal = ({
             </div>
 
             {/* Comments Section - Only show for approved requests */}
-            {request.is_approved && (
+            {showComments && (
               <CommentsSection
                 contentType="request"
                 contentId={request.id}

@@ -1,3 +1,4 @@
+
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -107,9 +108,14 @@ export const DonationModal = ({
     return 'donation' as const;
   };
 
+  // Show comments only for approved donations/scholarships
+  const showComments = donation.is_approved;
+  // Use smaller height when comments aren't shown
+  const modalHeight = showComments ? "h-[90vh]" : "h-[70vh]";
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-5xl w-full h-[90vh] flex flex-col p-0">
+      <DialogContent className={`max-w-5xl w-full ${modalHeight} flex flex-col p-0`}>
         {/* Fixed Header */}
         <div className="flex-shrink-0 p-6 border-b">
           <DialogHeader>
@@ -157,7 +163,7 @@ export const DonationModal = ({
             </div>
 
             {/* Comments Section - Only show for approved donations/scholarships */}
-            {donation.is_approved && (
+            {showComments && (
               <CommentsSection
                 contentType={getCommentsContentType()}
                 contentId={donation.id}
