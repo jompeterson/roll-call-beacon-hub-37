@@ -16,6 +16,7 @@ interface UserProfile {
   organization_id: string | null;
   role_id: string;
   is_approved: boolean;
+  approval_decision_made: boolean;
   user_roles: {
     id: string;
     name: string;
@@ -49,21 +50,36 @@ export const UserModal = ({
 }: UserModalProps) => {
   if (!user) return null;
 
-  const getStatusIcon = (isApproved: boolean) => {
+  const getStatusIcon = (isApproved: boolean, decisionMade: boolean) => {
+    if (!decisionMade) {
+      return <Clock className="h-4 w-4 text-yellow-600" />;
+    }
     if (isApproved) {
       return <CheckCircle className="h-4 w-4 text-green-600" />;
     } else {
-      return <Clock className="h-4 w-4 text-yellow-600" />;
+      return <XCircle className="h-4 w-4 text-red-600" />;
     }
   };
 
-  const getStatusText = (isApproved: boolean) => {
-    return isApproved ? "Approved" : "Pending";
+  const getStatusText = (isApproved: boolean, decisionMade: boolean) => {
+    if (!decisionMade) {
+      return "Pending";
+    }
+    return isApproved ? "Approved" : "Rejected";
+  };
+
+  const getStatusVariant = (isApproved: boolean, decisionMade: boolean) => {
+    if (!decisionMade) {
+      return "secondary";
+    }
+    return isApproved ? "default" : "destructive";
   };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString();
   };
+
+  const showApprovalButtons = !user.approval_decision_made;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -81,9 +97,9 @@ export const UserModal = ({
         <div className="space-y-6">
           {/* Status */}
           <div className="flex items-center gap-2">
-            {getStatusIcon(user.is_approved)}
-            <Badge variant={user.is_approved ? "default" : "secondary"}>
-              {getStatusText(user.is_approved)}
+            {getStatusIcon(user.is_approved, user.approval_decision_made)}
+            <Badge variant={getStatusVariant(user.is_approved, user.approval_decision_made)}>
+              {getStatusText(user.is_approved, user.approval_decision_made)}
             </Badge>
           </div>
 
@@ -164,32 +180,30 @@ export const UserModal = ({
           </div>
         </div>
 
-        <div className="flex gap-2 pt-4">
-          {!user.is_approved && (
-            <>
-              <Button
-                onClick={() => onApprove(user.id)}
-                className="flex-1"
-              >
-                Approve User
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => onRequestChanges(user.id)}
-                className="flex-1"
-              >
-                Request Changes
-              </Button>
-            </>
-          )}
-          <Button
-            variant="destructive"
-            onClick={() => onReject(user.id)}
-            className="flex-1"
-          >
-            {user.is_approved ? "Revoke Access" : "Reject User"}
-          </Button>
-        </div>
+        {showApprovalButtons && (
+          <div className="flex gap-2 pt-4">
+            <Button
+              onClick={() => onApprove(user.id)}
+              className="flex-1"
+            >
+              Approve User
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => onRequestChanges(user.id)}
+              className="flex-1"
+            >
+              Request Changes
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => onReject(user.id)}
+              className="flex-1"
+            >
+              Reject User
+            </Button>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );

@@ -56,6 +56,7 @@ export type Database = {
       user_profiles: {
         Row: {
           address: string
+          approval_decision_made: boolean
           created_at: string
           email: string
           first_name: string
@@ -69,6 +70,7 @@ export type Database = {
         }
         Insert: {
           address: string
+          approval_decision_made?: boolean
           created_at?: string
           email: string
           first_name: string
@@ -82,6 +84,7 @@ export type Database = {
         }
         Update: {
           address?: string
+          approval_decision_made?: boolean
           created_at?: string
           email?: string
           first_name?: string

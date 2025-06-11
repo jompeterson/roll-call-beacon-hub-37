@@ -14,6 +14,7 @@ interface UserProfile {
   organization_id: string | null;
   role_id: string;
   is_approved: boolean;
+  approval_decision_made: boolean;
   user_roles: {
     id: string;
     name: string;

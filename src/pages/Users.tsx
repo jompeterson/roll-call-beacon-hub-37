@@ -7,6 +7,7 @@ import { useUserProfiles } from "@/hooks/useUserProfiles";
 import { useUserSorting } from "@/hooks/useUserSorting";
 import { useUserFiltering } from "@/hooks/useUserFiltering";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 type SortDirection = "asc" | "desc" | null;
 type SortField = "firstName" | "lastName" | "organization" | "email" | "dateJoined" | "status" | null;
@@ -22,6 +23,7 @@ interface UserProfile {
   organization_id: string | null;
   role_id: string;
   is_approved: boolean;
+  approval_decision_made: boolean;
   user_roles: {
     id: string;
     name: string;
@@ -77,35 +79,113 @@ export const Users = () => {
     setUserModalOpen(true);
   };
 
-  const handleUserApprove = (id: string) => {
-    console.log("Approved user:", id);
-    toast({
-      title: "User Approved",
-      description: "User has been successfully approved.",
-    });
-    setUserModalOpen(false);
-    refetch();
+  const handleUserApprove = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('user_profiles')
+        .update({ 
+          is_approved: true, 
+          approval_decision_made: true 
+        })
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error approving user:', error);
+        toast({
+          title: "Error",
+          description: "Failed to approve user.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "User Approved",
+        description: "User has been successfully approved.",
+      });
+      setUserModalOpen(false);
+      refetch();
+    } catch (error) {
+      console.error('Error approving user:', error);
+      toast({
+        title: "Error",
+        description: "Failed to approve user.",
+        variant: "destructive",
+      });
+    }
   };
 
-  const handleUserReject = (id: string) => {
-    console.log("Rejected user:", id);
-    toast({
-      title: "User Rejected",
-      description: "User access has been rejected.",
-      variant: "destructive",
-    });
-    setUserModalOpen(false);
-    refetch();
+  const handleUserReject = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('user_profiles')
+        .update({ 
+          is_approved: false, 
+          approval_decision_made: true 
+        })
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error rejecting user:', error);
+        toast({
+          title: "Error",
+          description: "Failed to reject user.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "User Rejected",
+        description: "User access has been rejected.",
+        variant: "destructive",
+      });
+      setUserModalOpen(false);
+      refetch();
+    } catch (error) {
+      console.error('Error rejecting user:', error);
+      toast({
+        title: "Error",
+        description: "Failed to reject user.",
+        variant: "destructive",
+      });
+    }
   };
 
-  const handleUserRequestChanges = (id: string) => {
-    console.log("Requested changes for user:", id);
-    toast({
-      title: "Changes Requested",
-      description: "User has been notified to make changes.",
-    });
-    setUserModalOpen(false);
-    refetch();
+  const handleUserRequestChanges = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('user_profiles')
+        .update({ 
+          is_approved: false, 
+          approval_decision_made: false 
+        })
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error requesting changes for user:', error);
+        toast({
+          title: "Error",
+          description: "Failed to request changes.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "Changes Requested",
+        description: "User has been notified to make changes.",
+      });
+      setUserModalOpen(false);
+      refetch();
+    } catch (error) {
+      console.error('Error requesting changes for user:', error);
+      toast({
+        title: "Error",
+        description: "Failed to request changes.",
+        variant: "destructive",
+      });
+    }
   };
 
   if (loading) {

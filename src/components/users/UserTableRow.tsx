@@ -13,6 +13,7 @@ interface UserProfile {
   organization_id: string | null;
   role_id: string;
   is_approved: boolean;
+  approval_decision_made: boolean;
   user_roles: {
     id: string;
     name: string;
@@ -37,6 +38,13 @@ export const UserTableRow = ({ user, onRowClick }: UserTableRowProps) => {
     return new Date(dateString).toLocaleDateString();
   };
 
+  const getStatusText = (isApproved: boolean, decisionMade: boolean) => {
+    if (!decisionMade) {
+      return "Pending";
+    }
+    return isApproved ? "Approved" : "Rejected";
+  };
+
   return (
     <TableRow 
       className="cursor-pointer hover:bg-muted/50"
@@ -59,8 +67,8 @@ export const UserTableRow = ({ user, onRowClick }: UserTableRowProps) => {
       </TableCell>
       <TableCell className="w-1/8 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
         <div className="flex items-center gap-2">
-          <StatusIcon isApproved={user.is_approved} />
-          <span>{user.is_approved ? "Approved" : "Pending"}</span>
+          <StatusIcon isApproved={user.is_approved} decisionMade={user.approval_decision_made} />
+          <span>{getStatusText(user.is_approved, user.approval_decision_made)}</span>
         </div>
       </TableCell>
     </TableRow>
