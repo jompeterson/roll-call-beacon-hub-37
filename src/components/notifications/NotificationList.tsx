@@ -28,14 +28,16 @@ export const NotificationList = ({ notifications, loading, onMarkAsRead }: Notif
   }
 
   return (
-    <ScrollArea className="max-h-96">
-      {notifications.map((notification) => (
-        <NotificationItem
-          key={notification.id}
-          notification={notification}
-          onMarkAsRead={onMarkAsRead}
-        />
-      ))}
+    <ScrollArea className="h-96 w-full">
+      <div className="flex flex-col">
+        {notifications.map((notification) => (
+          <NotificationItem
+            key={notification.id}
+            notification={notification}
+            onMarkAsRead={onMarkAsRead}
+          />
+        ))}
+      </div>
     </ScrollArea>
   );
 };
