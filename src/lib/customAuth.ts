@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 
 export interface User {
@@ -23,6 +22,7 @@ class CustomAuthService {
   private currentUser: User | null = null;
   private sessionToken: string | null = null;
   private authListeners: ((user: User | null) => void)[] = [];
+  private isInitialized: boolean = false;
 
   constructor() {
     this.initializeSession();
@@ -40,7 +40,6 @@ class CustomAuthService {
         if (isValid) {
           this.currentUser = user;
           this.sessionToken = token;
-          this.notifyListeners();
         } else {
           this.clearSession();
         }
@@ -49,6 +48,9 @@ class CustomAuthService {
         this.clearSession();
       }
     }
+    
+    this.isInitialized = true;
+    this.notifyListeners();
   }
 
   private async validateSession(token: string): Promise<boolean> {
@@ -93,8 +95,11 @@ class CustomAuthService {
 
   onAuthStateChange(callback: (user: User | null) => void) {
     this.authListeners.push(callback);
-    // Call immediately with current state
-    callback(this.currentUser);
+    
+    // Only call immediately if initialization is complete
+    if (this.isInitialized) {
+      callback(this.currentUser);
+    }
     
     return () => {
       const index = this.authListeners.indexOf(callback);
