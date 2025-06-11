@@ -80,7 +80,7 @@ export const EventModal = ({
   // Show comments only for approved events
   const showComments = event.is_approved;
   // Use smaller height when comments aren't shown
-  const modalHeight = showComments ? "h-[90vh]" : "h-[70vh]";
+  const modalHeight = showComments ? "h-[80vh]" : "h-[60vh]";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
