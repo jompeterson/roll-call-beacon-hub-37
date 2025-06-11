@@ -50,7 +50,7 @@ export const EventModal = ({
   onReject,
   onRequestChanges,
 }: EventModalProps) => {
-  const { isAdministrator } = useAuth();
+  const { isAdministrator, isAuthenticated } = useAuth();
 
   if (!event) return null;
 
@@ -99,15 +99,18 @@ export const EventModal = ({
         </DialogHeader>
 
         <div className="space-y-6">
-          {/* Status */}
-          <div className="flex items-center gap-2">
-            <StatusIcon status={getStatus()} />
-            <Badge variant={getStatusVariant()}>
-              {getStatus()}
-            </Badge>
-          </div>
-
-          <Separator />
+          {/* Status - only show if authenticated */}
+          {isAuthenticated && (
+            <>
+              <div className="flex items-center gap-2">
+                <StatusIcon status={getStatus()} />
+                <Badge variant={getStatusVariant()}>
+                  {getStatus()}
+                </Badge>
+              </div>
+              <Separator />
+            </>
+          )}
 
           {/* Event Information */}
           <div className="space-y-4">

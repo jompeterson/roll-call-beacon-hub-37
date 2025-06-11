@@ -7,6 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChevronUp, ChevronDown, Clock, CheckCircle, XCircle, Archive } from "lucide-react";
 import { EventModal } from "@/components/EventModal";
 import { useEvents } from "@/hooks/useEvents";
+import { useAuth } from "@/hooks/useAuth";
 
 type SortDirection = "asc" | "desc" | null;
 type SortField = "title" | "event_date" | "location" | "status" | null;
@@ -63,6 +64,7 @@ const SortableTableHead = ({
 
 export const Events = () => {
   const { events, loading, approveEvent, rejectEvent } = useEvents();
+  const { isAuthenticated } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   
@@ -127,6 +129,12 @@ export const Events = () => {
         Object.values(item).some(value => 
           value && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
         );
+      
+      if (!isAuthenticated) {
+        // When not authenticated, only show approved events and ignore status filter
+        return matchesSearch && item.is_approved;
+      }
+      
       const status = getEventStatus(item);
       const matchesStatus = statusFilter === "all" || status === statusFilter;
       
@@ -196,17 +204,19 @@ export const Events = () => {
           />
         </div>
 
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[150px]">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="Approved">Approved</SelectItem>
-            <SelectItem value="Pending">Pending</SelectItem>
-            <SelectItem value="Rejected">Rejected</SelectItem>
-          </SelectContent>
-        </Select>
+        {isAuthenticated && (
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-[150px]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="Approved">Approved</SelectItem>
+              <SelectItem value="Pending">Pending</SelectItem>
+              <SelectItem value="Rejected">Rejected</SelectItem>
+            </SelectContent>
+          </Select>
+        )}
       </div>
 
       {/* Events Section */}
@@ -222,7 +232,7 @@ export const Events = () => {
                     currentSort={eventSort}
                     currentDirection={eventDirection}
                     onSort={handleEventSort}
-                    className="w-1/3"
+                    className={isAuthenticated ? "w-1/3" : "w-1/2"}
                   >
                     Event Title
                   </SortableTableHead>
@@ -231,7 +241,7 @@ export const Events = () => {
                     currentSort={eventSort}
                     currentDirection={eventDirection}
                     onSort={handleEventSort}
-                    className="w-1/4"
+                    className={isAuthenticated ? "w-1/4" : "w-1/4"}
                   >
                     Date
                   </SortableTableHead>
@@ -240,19 +250,21 @@ export const Events = () => {
                     currentSort={eventSort}
                     currentDirection={eventDirection}
                     onSort={handleEventSort}
-                    className="w-1/4"
+                    className={isAuthenticated ? "w-1/4" : "w-1/4"}
                   >
                     Location
                   </SortableTableHead>
-                  <SortableTableHead
-                    field="status"
-                    currentSort={eventSort}
-                    currentDirection={eventDirection}
-                    onSort={handleEventSort}
-                    className="w-1/6"
-                  >
-                    Status
-                  </SortableTableHead>
+                  {isAuthenticated && (
+                    <SortableTableHead
+                      field="status"
+                      currentSort={eventSort}
+                      currentDirection={eventDirection}
+                      onSort={handleEventSort}
+                      className="w-1/6"
+                    >
+                      Status
+                    </SortableTableHead>
+                  )}
                 </TableRow>
               </TableHeader>
             </Table>
@@ -261,7 +273,7 @@ export const Events = () => {
                 <TableBody>
                   {sortedEvents.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                      <TableCell colSpan={isAuthenticated ? 4 : 3} className="text-center py-8 text-muted-foreground">
                         No events found
                       </TableCell>
                     </TableRow>
@@ -272,7 +284,7 @@ export const Events = () => {
                         className="cursor-pointer hover:bg-muted/50"
                         onClick={() => handleEventRowClick(event)}
                       >
-                        <TableCell className="font-medium w-1/3 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                        <TableCell className={`font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-0 ${isAuthenticated ? "w-1/3" : "w-1/2"}`}>
                           {event.title}
                         </TableCell>
                         <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
@@ -281,12 +293,14 @@ export const Events = () => {
                         <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
                           {event.location || "TBD"}
                         </TableCell>
-                        <TableCell className="w-1/6">
-                          <div className="flex items-center gap-2 whitespace-nowrap">
-                            <StatusIcon status={getEventStatus(event)} />
-                            <span>{getEventStatus(event)}</span>
-                          </div>
-                        </TableCell>
+                        {isAuthenticated && (
+                          <TableCell className="w-1/6">
+                            <div className="flex items-center gap-2 whitespace-nowrap">
+                              <StatusIcon status={getEventStatus(event)} />
+                              <span>{getEventStatus(event)}</span>
+                            </div>
+                          </TableCell>
+                        )}
                       </TableRow>
                     ))
                   )}
