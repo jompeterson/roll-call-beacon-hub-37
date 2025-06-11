@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Layout } from "./components/Layout";
 import { Overview } from "./pages/Overview";
-import { Donations } from "./pages/Donations";
+import Donations from "./pages/Donations";
 import { Scholarships } from "./pages/Scholarships";
 import { Events } from "./pages/Events";
 import { Organizations } from "./pages/Organizations";
