@@ -14,6 +14,7 @@ export const useScholarships = () => {
     data: scholarships = [],
     isLoading,
     error,
+    refetch,
   } = useQuery({
     queryKey: ["scholarships"],
     queryFn: async () => {
@@ -128,6 +129,7 @@ export const useScholarships = () => {
     scholarships,
     isLoading,
     error,
+    refetch,
     approveScholarship: approveScholarship.mutate,
     rejectScholarship: rejectScholarship.mutate,
     requestChanges: requestChanges.mutate,

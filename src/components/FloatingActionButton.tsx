@@ -5,10 +5,12 @@ import { Plus, User, Building2, GraduationCap, FileText, Calendar } from "lucide
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { EventCreateModal } from "@/components/EventCreateModal";
+import { ScholarshipCreateModal } from "@/components/ScholarshipCreateModal";
 
 export const FloatingActionButton = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [eventModalOpen, setEventModalOpen] = useState(false);
+  const [scholarshipModalOpen, setScholarshipModalOpen] = useState(false);
   const { isAuthenticated, isAdministrator } = useAuth();
 
   // Don't render the FAB if user is not authenticated
@@ -33,6 +35,9 @@ export const FloatingActionButton = () => {
     if (actionName === "New Event") {
       setEventModalOpen(true);
       setIsExpanded(false);
+    } else if (actionName === "New Scholarship") {
+      setScholarshipModalOpen(true);
+      setIsExpanded(false);
     } else {
       console.log(`Creating ${actionName}`);
     }
@@ -41,6 +46,11 @@ export const FloatingActionButton = () => {
   const handleEventCreated = () => {
     // Optionally refresh events list or show success message
     console.log("Event created successfully");
+  };
+
+  const handleScholarshipCreated = () => {
+    // Optionally refresh scholarships list or show success message
+    console.log("Scholarship created successfully");
   };
 
   return (
@@ -95,6 +105,13 @@ export const FloatingActionButton = () => {
         open={eventModalOpen}
         onOpenChange={setEventModalOpen}
         onEventCreated={handleEventCreated}
+      />
+
+      {/* Scholarship Creation Modal */}
+      <ScholarshipCreateModal
+        open={scholarshipModalOpen}
+        onOpenChange={setScholarshipModalOpen}
+        onScholarshipCreated={handleScholarshipCreated}
       />
     </>
   );
