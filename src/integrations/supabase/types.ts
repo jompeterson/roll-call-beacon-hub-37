@@ -122,7 +122,8 @@ export type Database = {
           eligibility_criteria: string | null
           id: string
           is_approved: boolean
-          organization_name: string
+          organization_id: string | null
+          organization_name: string | null
           title: string
           updated_at: string
         }
@@ -138,7 +139,8 @@ export type Database = {
           eligibility_criteria?: string | null
           id?: string
           is_approved?: boolean
-          organization_name: string
+          organization_id?: string | null
+          organization_name?: string | null
           title: string
           updated_at?: string
         }
@@ -154,7 +156,8 @@ export type Database = {
           eligibility_criteria?: string | null
           id?: string
           is_approved?: boolean
-          organization_name?: string
+          organization_id?: string | null
+          organization_name?: string | null
           title?: string
           updated_at?: string
         }
@@ -164,6 +167,13 @@ export type Database = {
             columns: ["creator_user_id"]
             isOneToOne: false
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scholarships_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]

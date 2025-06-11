@@ -10,6 +10,11 @@ type Scholarship = Tables<"scholarships"> & {
   creator?: {
     email: string;
   };
+  organization?: {
+    id: string;
+    name: string;
+    type: string;
+  };
 };
 
 interface ScholarshipModalProps {
@@ -64,6 +69,9 @@ export const ScholarshipModal = ({
 
   const showActionButtons = isAdministrator && !scholarship.approval_decision_made;
 
+  // Get organization name from relationship or fallback to the stored name
+  const organizationName = scholarship.organization?.name || scholarship.organization_name || "Unknown Organization";
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -80,7 +88,10 @@ export const ScholarshipModal = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <h4 className="font-semibold text-sm text-muted-foreground mb-1">Organization</h4>
-              <p className="text-sm">{scholarship.organization_name}</p>
+              <p className="text-sm">{organizationName}</p>
+              {scholarship.organization?.type && (
+                <p className="text-xs text-muted-foreground">{scholarship.organization.type}</p>
+              )}
             </div>
             <div>
               <h4 className="font-semibold text-sm text-muted-foreground mb-1">Amount</h4>

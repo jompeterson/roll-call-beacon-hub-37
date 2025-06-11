@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useProfileData } from "@/hooks/useProfileData";
 
 interface ScholarshipCreateModalProps {
   open: boolean;
@@ -22,11 +23,11 @@ export const ScholarshipCreateModal = ({
 }: ScholarshipCreateModalProps) => {
   const { toast } = useToast();
   const { user } = useAuth();
+  const { currentOrganization } = useProfileData();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const [formData, setFormData] = useState({
     title: "",
-    organization_name: "",
     amount: "",
     description: "",
     eligibility_criteria: "",
@@ -45,7 +46,6 @@ export const ScholarshipCreateModal = ({
   const resetForm = () => {
     setFormData({
       title: "",
-      organization_name: "",
       amount: "",
       description: "",
       eligibility_criteria: "",
@@ -67,7 +67,16 @@ export const ScholarshipCreateModal = ({
       return;
     }
 
-    if (!formData.title || !formData.organization_name || !formData.amount) {
+    if (!currentOrganization) {
+      toast({
+        title: "Error",
+        description: "You must be associated with an organization to create a scholarship",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!formData.title || !formData.amount) {
       toast({
         title: "Error",
         description: "Please fill in all required fields",
@@ -81,7 +90,8 @@ export const ScholarshipCreateModal = ({
     try {
       const scholarshipData = {
         title: formData.title,
-        organization_name: formData.organization_name,
+        organization_id: currentOrganization.id,
+        organization_name: currentOrganization.name,
         amount: parseFloat(formData.amount),
         description: formData.description || null,
         eligibility_criteria: formData.eligibility_criteria || null,
@@ -127,11 +137,35 @@ export const ScholarshipCreateModal = ({
     onOpenChange(open);
   };
 
+  if (!currentOrganization) {
+    return (
+      <Dialog open={open} onOpenChange={handleModalChange}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Cannot Create Scholarship</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <p className="text-sm text-muted-foreground">
+              You must be associated with an organization to create scholarships. 
+              Please contact an administrator to be added to an organization.
+            </p>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => handleModalChange(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
   return (
     <Dialog open={open} onOpenChange={handleModalChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Create New Scholarship</DialogTitle>
+          <p className="text-sm text-muted-foreground">
+            Creating scholarship for: <span className="font-medium">{currentOrganization.name}</span>
+          </p>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -148,19 +182,6 @@ export const ScholarshipCreateModal = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="organization_name">Organization Name *</Label>
-              <Input
-                id="organization_name"
-                value={formData.organization_name}
-                onChange={(e) => handleInputChange("organization_name", e.target.value)}
-                placeholder="Enter organization name"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
               <Label htmlFor="amount">Amount ($) *</Label>
               <Input
                 id="amount"
@@ -173,16 +194,16 @@ export const ScholarshipCreateModal = ({
                 required
               />
             </div>
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="application_deadline">Application Deadline</Label>
-              <Input
-                id="application_deadline"
-                type="date"
-                value={formData.application_deadline}
-                onChange={(e) => handleInputChange("application_deadline", e.target.value)}
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="application_deadline">Application Deadline</Label>
+            <Input
+              id="application_deadline"
+              type="date"
+              value={formData.application_deadline}
+              onChange={(e) => handleInputChange("application_deadline", e.target.value)}
+            />
           </div>
 
           <div className="space-y-2">

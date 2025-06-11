@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
@@ -22,7 +21,8 @@ export const useScholarships = () => {
         .from("scholarships")
         .select(`
           *,
-          creator:users!scholarships_creator_user_id_fkey(email)
+          creator:users!scholarships_creator_user_id_fkey(email),
+          organization:organizations(id, name, type)
         `)
         .order("created_at", { ascending: false });
 
