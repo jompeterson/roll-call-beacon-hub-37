@@ -2,12 +2,14 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { Tables } from "@/integrations/supabase/types";
+import { useAuth } from "@/hooks/useAuth";
 
 type Scholarship = Tables<"scholarships">;
 
 export const useScholarships = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { isAuthenticated } = useAuth();
 
   const {
     data: scholarships = [],
@@ -15,9 +17,9 @@ export const useScholarships = () => {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["scholarships"],
+    queryKey: ["scholarships", isAuthenticated],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("scholarships")
         .select(`
           *,
@@ -25,6 +27,15 @@ export const useScholarships = () => {
           organization:organizations(id, name, type)
         `)
         .order("created_at", { ascending: false });
+
+      // If user is not authenticated, only show approved scholarships
+      if (!isAuthenticated) {
+        query = query
+          .eq("approval_decision_made", true)
+          .eq("is_approved", true);
+      }
+
+      const { data, error } = await query;
 
       if (error) {
         console.error("Error fetching scholarships:", error);
