@@ -8,6 +8,8 @@ interface DonationModalActionButtonsProps {
   onReject: (id: string) => void;
   onRequestChanges: (id: string) => void;
   isUser?: boolean;
+  approvalDecisionMade: boolean;
+  isApproved: boolean;
 }
 
 export const DonationModalActionButtons = ({
@@ -15,7 +17,9 @@ export const DonationModalActionButtons = ({
   onApprove,
   onReject,
   onRequestChanges,
-  isUser = false
+  isUser = false,
+  approvalDecisionMade,
+  isApproved
 }: DonationModalActionButtonsProps) => {
   const handleApprove = async () => {
     try {
@@ -61,6 +65,30 @@ export const DonationModalActionButtons = ({
     }
   };
 
+  const handleAcceptDonation = () => {
+    console.log("Accepting donation:", donationId);
+    // Add your accept donation logic here
+  };
+
+  // If approval decision has been made, show different buttons
+  if (approvalDecisionMade) {
+    if (isApproved) {
+      return (
+        <div className="flex gap-3 pt-6 border-t flex-wrap">
+          <Button 
+            onClick={handleAcceptDonation}
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            Accept Donation
+          </Button>
+        </div>
+      );
+    }
+    // If rejected, show no buttons
+    return null;
+  }
+
+  // Show approval buttons if no decision has been made yet
   if (isUser) {
     return (
       <div className="flex gap-3 pt-6 border-t flex-wrap">

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -146,6 +145,11 @@ export const RequestModal = ({
     }
   };
 
+  const handleFulfillRequest = () => {
+    console.log("Fulfilling request:", request.id);
+    // Add your fulfill request logic here
+  };
+
   if (!request) return null;
 
   // Mock donation need by date based on request type
@@ -158,6 +162,58 @@ export const RequestModal = ({
 
   // Check if the "Mark Completed" button should be shown
   const shouldShowMarkCompleted = request.is_approved && !request.is_completed;
+
+  // Determine which buttons to show based on approval status
+  const renderActionButtons = () => {
+    if (request.approval_decision_made) {
+      if (request.is_approved) {
+        return (
+          <div className="flex gap-3 pt-6 border-t flex-wrap">
+            <Button 
+              onClick={handleFulfillRequest}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              Fulfill Request
+            </Button>
+            {shouldShowMarkCompleted && (
+              <Button 
+                onClick={() => onMarkCompleted && onMarkCompleted(request.id)}
+                className="bg-green-600 hover:bg-green-700 text-white"
+              >
+                Mark Completed
+              </Button>
+            )}
+          </div>
+        );
+      }
+      // If rejected, show no buttons
+      return null;
+    }
+
+    // Show approval buttons if no decision has been made yet
+    return (
+      <div className="flex gap-3 pt-6 border-t flex-wrap">
+        <Button 
+          onClick={() => handleApprove(request.id)}
+          className="bg-green-600 hover:bg-green-700 text-white"
+        >
+          Approve
+        </Button>
+        <Button 
+          onClick={() => handleReject(request.id)}
+          variant="destructive"
+        >
+          Reject
+        </Button>
+        <Button 
+          onClick={() => onRequestChanges(request.id)}
+          variant="outline"
+        >
+          Request Changes
+        </Button>
+      </div>
+    );
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -259,35 +315,8 @@ export const RequestModal = ({
           </div>
         </div>
 
-        {/* Action Buttons at bottom for all modals */}
-        <div className="flex gap-3 pt-6 border-t flex-wrap">
-          <Button 
-            onClick={() => handleApprove(request.id)}
-            className="bg-green-600 hover:bg-green-700 text-white"
-          >
-            Approve
-          </Button>
-          <Button 
-            onClick={() => handleReject(request.id)}
-            variant="destructive"
-          >
-            Reject
-          </Button>
-          <Button 
-            onClick={() => onRequestChanges(request.id)}
-            variant="outline"
-          >
-            Request Changes
-          </Button>
-          {shouldShowMarkCompleted && (
-            <Button 
-              onClick={() => onMarkCompleted && onMarkCompleted(request.id)}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              Mark Completed
-            </Button>
-          )}
-        </div>
+        {/* Conditional Action Buttons */}
+        {renderActionButtons()}
       </DialogContent>
     </Dialog>
   );

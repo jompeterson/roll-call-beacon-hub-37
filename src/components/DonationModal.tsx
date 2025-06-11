@@ -123,6 +123,8 @@ export const DonationModal = ({
           onReject={onReject}
           onRequestChanges={onRequestChanges}
           isUser={isUser}
+          approvalDecisionMade={donation.approval_decision_made}
+          isApproved={donation.is_approved}
         />
       </DialogContent>
     </Dialog>
