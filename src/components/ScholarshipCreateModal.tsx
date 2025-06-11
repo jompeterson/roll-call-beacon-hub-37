@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,7 +23,7 @@ export const ScholarshipCreateModal = ({
 }: ScholarshipCreateModalProps) => {
   const { toast } = useToast();
   const { user } = useAuth();
-  const { currentOrganization } = useProfileData();
+  const { currentOrganization, userProfile } = useProfileData();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const [formData, setFormData] = useState({
@@ -35,6 +35,17 @@ export const ScholarshipCreateModal = ({
     contact_email: "",
     contact_phone: "",
   });
+
+  // Pre-fill contact information when user profile is available
+  useEffect(() => {
+    if (userProfile && open) {
+      setFormData(prev => ({
+        ...prev,
+        contact_email: userProfile.email || "",
+        contact_phone: userProfile.phone || "",
+      }));
+    }
+  }, [userProfile, open]);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
@@ -50,8 +61,8 @@ export const ScholarshipCreateModal = ({
       description: "",
       eligibility_criteria: "",
       application_deadline: "",
-      contact_email: "",
-      contact_phone: "",
+      contact_email: userProfile?.email || "",
+      contact_phone: userProfile?.phone || "",
     });
   };
 
