@@ -77,7 +77,7 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
         <img 
           src="/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png" 
           alt="Roll Call Logo" 
-          className="h-8"
+          className="h-12"
         />
       </div>
 
