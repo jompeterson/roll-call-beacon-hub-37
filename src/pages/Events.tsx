@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -77,6 +78,7 @@ const SortableTableHead = ({
 };
 
 export const Events = () => {
+  const { eventId } = useParams();
   const { events, loading, approveEvent, rejectEvent } = useEvents();
   const { isAuthenticated } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
@@ -90,6 +92,17 @@ export const Events = () => {
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [eventModalOpen, setEventModalOpen] = useState(false);
   const [guestRSVPModalOpen, setGuestRSVPModalOpen] = useState(false);
+
+  // Handle URL parameters for direct modal opening
+  useEffect(() => {
+    if (eventId && events.length > 0) {
+      const event = events.find(e => e.id === eventId);
+      if (event) {
+        setSelectedEvent(event);
+        setEventModalOpen(true);
+      }
+    }
+  }, [eventId, events]);
 
   const handleEventSort = (field: SortField) => {
     if (eventSort === field) {

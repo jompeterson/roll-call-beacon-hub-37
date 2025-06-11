@@ -1,5 +1,5 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { DonationModal } from "@/components/DonationModal";
 import { RequestModal } from "@/components/RequestModal";
 import { DonationFilters } from "@/components/donations/DonationFilters";
@@ -16,6 +16,7 @@ type DonationSortField = "organization_name" | "title" | "description" | "status
 type RequestSortField = "organization_name" | "request_type" | "title" | "description" | "status" | null;
 
 export const Donations = () => {
+  const { donationId, requestId } = useParams();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   
@@ -36,6 +37,27 @@ export const Donations = () => {
   // Fetch data from Supabase
   const { data: donations = [], isLoading: donationsLoading, error: donationsError } = useDonations();
   const { data: requests = [], isLoading: requestsLoading, error: requestsError } = useRequests();
+
+  // Handle URL parameters for direct modal opening
+  useEffect(() => {
+    if (donationId && donations.length > 0) {
+      const donation = donations.find(d => d.id === donationId);
+      if (donation) {
+        setSelectedDonation(donation);
+        setDonationModalOpen(true);
+      }
+    }
+  }, [donationId, donations]);
+
+  useEffect(() => {
+    if (requestId && requests.length > 0) {
+      const request = requests.find(r => r.id === requestId);
+      if (request) {
+        setSelectedRequest(request);
+        setRequestModalOpen(true);
+      }
+    }
+  }, [requestId, requests]);
 
   const handleDonationSort = (field: DonationSortField) => {
     if (donationSort === field) {

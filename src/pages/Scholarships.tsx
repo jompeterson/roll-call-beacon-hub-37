@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -65,6 +66,7 @@ const SortableTableHead = ({
 };
 
 export const Scholarships = () => {
+  const { scholarshipId } = useParams();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   
@@ -90,6 +92,17 @@ export const Scholarships = () => {
   } = useScholarships();
 
   const { isAuthenticated } = useAuth();
+
+  // Handle URL parameters for direct modal opening
+  useEffect(() => {
+    if (scholarshipId && scholarships.length > 0) {
+      const scholarship = scholarships.find(s => s.id === scholarshipId);
+      if (scholarship) {
+        setSelectedScholarship(scholarship);
+        setModalOpen(true);
+      }
+    }
+  }, [scholarshipId, scholarships]);
 
   const handleSort = (field: SortField) => {
     if (sort === field) {
