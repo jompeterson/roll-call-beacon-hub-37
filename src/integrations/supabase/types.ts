@@ -12,10 +12,12 @@ export type Database = {
       organizations: {
         Row: {
           address: string
+          approval_decision_made: boolean
           contact_user_id: string | null
           created_at: string
           description: string | null
           id: string
+          is_approved: boolean
           name: string
           phone: string
           type: Database["public"]["Enums"]["organization_type"]
@@ -23,10 +25,12 @@ export type Database = {
         }
         Insert: {
           address: string
+          approval_decision_made?: boolean
           contact_user_id?: string | null
           created_at?: string
           description?: string | null
           id?: string
+          is_approved?: boolean
           name: string
           phone: string
           type: Database["public"]["Enums"]["organization_type"]
@@ -34,10 +38,12 @@ export type Database = {
         }
         Update: {
           address?: string
+          approval_decision_made?: boolean
           contact_user_id?: string | null
           created_at?: string
           description?: string | null
           id?: string
+          is_approved?: boolean
           name?: string
           phone?: string
           type?: Database["public"]["Enums"]["organization_type"]

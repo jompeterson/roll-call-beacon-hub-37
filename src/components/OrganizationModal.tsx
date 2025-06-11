@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Building, Phone, MapPin, User, Mail } from "lucide-react";
+import { Building, Phone, MapPin, User, Mail, CheckCircle, XCircle, Clock } from "lucide-react";
 import { useState } from "react";
 import { useUserProfiles } from "@/hooks/useUserProfiles";
 
@@ -16,6 +16,8 @@ interface Organization {
   phone: string;
   address: string;
   contact_user_id: string | null;
+  is_approved: boolean;
+  approval_decision_made: boolean;
   contact_user?: {
     id: string;
     first_name: string;
@@ -29,6 +31,8 @@ interface OrganizationModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onUpdateContact: (organizationId: string, contactUserId: string | null) => Promise<boolean>;
+  onApprove: (id: string) => void;
+  onReject: (id: string) => void;
 }
 
 export const OrganizationModal = ({
@@ -36,6 +40,8 @@ export const OrganizationModal = ({
   open,
   onOpenChange,
   onUpdateContact,
+  onApprove,
+  onReject,
 }: OrganizationModalProps) => {
   const { userProfiles } = useUserProfiles();
   const [selectedContactId, setSelectedContactId] = useState<string | null>(null);
@@ -55,9 +61,36 @@ export const OrganizationModal = ({
     setIsUpdating(false);
   };
 
+  const getStatusIcon = (isApproved: boolean, decisionMade: boolean) => {
+    if (!decisionMade) {
+      return <Clock className="h-4 w-4 text-yellow-600" />;
+    }
+    if (isApproved) {
+      return <CheckCircle className="h-4 w-4 text-green-600" />;
+    } else {
+      return <XCircle className="h-4 w-4 text-red-600" />;
+    }
+  };
+
+  const getStatusText = (isApproved: boolean, decisionMade: boolean) => {
+    if (!decisionMade) {
+      return "Pending";
+    }
+    return isApproved ? "Approved" : "Rejected";
+  };
+
+  const getStatusVariant = (isApproved: boolean, decisionMade: boolean) => {
+    if (!decisionMade) {
+      return "secondary";
+    }
+    return isApproved ? "default" : "destructive";
+  };
+
   const currentContactName = organization.contact_user 
     ? `${organization.contact_user.first_name} ${organization.contact_user.last_name}`
     : "No contact assigned";
+
+  const showApprovalButtons = !organization.approval_decision_made;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -73,6 +106,16 @@ export const OrganizationModal = ({
         </DialogHeader>
 
         <div className="space-y-6">
+          {/* Status */}
+          <div className="flex items-center gap-2">
+            {getStatusIcon(organization.is_approved, organization.approval_decision_made)}
+            <Badge variant={getStatusVariant(organization.is_approved, organization.approval_decision_made)}>
+              {getStatusText(organization.is_approved, organization.approval_decision_made)}
+            </Badge>
+          </div>
+
+          <Separator />
+
           {/* Organization Information */}
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">Organization Information</h3>
@@ -147,6 +190,24 @@ export const OrganizationModal = ({
             </div>
           </div>
         </div>
+
+        {showApprovalButtons && (
+          <div className="flex gap-2 pt-4">
+            <Button
+              onClick={() => onApprove(organization.id)}
+              className="flex-1"
+            >
+              Approve Organization
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => onReject(organization.id)}
+              className="flex-1"
+            >
+              Reject Organization
+            </Button>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );

@@ -1,15 +1,16 @@
 
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ChevronUp, ChevronDown } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { OrganizationModal } from "@/components/OrganizationModal";
+import { OrganizationSortableTableHead } from "@/components/organizations/OrganizationSortableTableHead";
+import { OrganizationStatusIcon } from "@/components/organizations/OrganizationStatusIcon";
 import { useOrganizations } from "@/hooks/useOrganizations";
 
 type SortDirection = "asc" | "desc" | null;
-type SortField = "name" | "contact" | "type" | null;
+type SortField = "name" | "contact" | "type" | "status" | null;
 
 interface Organization {
   id: string;
@@ -19,6 +20,8 @@ interface Organization {
   phone: string;
   address: string;
   contact_user_id: string | null;
+  is_approved: boolean;
+  approval_decision_made: boolean;
   contact_user?: {
     id: string;
     first_name: string;
@@ -27,43 +30,8 @@ interface Organization {
   } | null;
 }
 
-const SortableTableHead = ({ 
-  children, 
-  field, 
-  currentSort, 
-  currentDirection, 
-  onSort,
-  className = ""
-}: { 
-  children: React.ReactNode;
-  field: SortField;
-  currentSort: SortField;
-  currentDirection: SortDirection;
-  onSort: (field: SortField) => void;
-  className?: string;
-}) => {
-  const isActive = currentSort === field;
-  
-  return (
-    <TableHead 
-      className={`cursor-pointer hover:bg-[#1e3a52] select-none text-white ${className}`}
-      style={{ backgroundColor: "#294865" }}
-      onClick={() => onSort(field)}
-    >
-      <div className="flex items-center justify-between">
-        <span>{children}</span>
-        <div className="ml-2">
-          {isActive && currentDirection === "asc" && <ChevronUp className="h-4 w-4" />}
-          {isActive && currentDirection === "desc" && <ChevronDown className="h-4 w-4" />}
-          {!isActive && <div className="h-4 w-4" />}
-        </div>
-      </div>
-    </TableHead>
-  );
-};
-
 export const Organizations = () => {
-  const { organizations, loading, updateOrganizationContact } = useOrganizations();
+  const { organizations, loading, updateOrganizationContact, approveOrganization, rejectOrganization } = useOrganizations();
   const [searchTerm, setSearchTerm] = useState("");
   
   // Sorting states
@@ -90,6 +58,20 @@ export const Organizations = () => {
     }
   };
 
+  const getStatusText = (isApproved: boolean, decisionMade: boolean) => {
+    if (!decisionMade) {
+      return "Pending";
+    }
+    return isApproved ? "Approved" : "Rejected";
+  };
+
+  const getStatusVariant = (isApproved: boolean, decisionMade: boolean) => {
+    if (!decisionMade) {
+      return "secondary";
+    }
+    return isApproved ? "default" : "destructive";
+  };
+
   const sortData = (data: Organization[]): Organization[] => {
     if (!organizationSort || !organizationDirection) return data;
     
@@ -100,6 +82,9 @@ export const Organizations = () => {
       if (organizationSort === "contact") {
         aValue = a.contact_user ? `${a.contact_user.first_name} ${a.contact_user.last_name}` : "";
         bValue = b.contact_user ? `${b.contact_user.first_name} ${b.contact_user.last_name}` : "";
+      } else if (organizationSort === "status") {
+        aValue = getStatusText(a.is_approved, a.approval_decision_made);
+        bValue = getStatusText(b.is_approved, b.approval_decision_made);
       } else {
         aValue = a[organizationSort as keyof Organization] as string || "";
         bValue = b[organizationSort as keyof Organization] as string || "";
@@ -133,6 +118,20 @@ export const Organizations = () => {
   const handleOrganizationRowClick = (organization: Organization) => {
     setSelectedOrganization(organization);
     setOrganizationModalOpen(true);
+  };
+
+  const handleOrganizationApprove = async (id: string) => {
+    const success = await approveOrganization(id);
+    if (success) {
+      setOrganizationModalOpen(false);
+    }
+  };
+
+  const handleOrganizationReject = async (id: string) => {
+    const success = await rejectOrganization(id);
+    if (success) {
+      setOrganizationModalOpen(false);
+    }
   };
 
   if (loading) {
@@ -176,16 +175,16 @@ export const Organizations = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <SortableTableHead
+                  <OrganizationSortableTableHead
                     field="name"
                     currentSort={organizationSort}
                     currentDirection={organizationDirection}
                     onSort={handleOrganizationSort}
-                    className="w-2/5"
+                    className="w-1/3"
                   >
                     Organization
-                  </SortableTableHead>
-                  <SortableTableHead
+                  </OrganizationSortableTableHead>
+                  <OrganizationSortableTableHead
                     field="contact"
                     currentSort={organizationSort}
                     currentDirection={organizationDirection}
@@ -193,8 +192,8 @@ export const Organizations = () => {
                     className="w-1/4"
                   >
                     Contact Person
-                  </SortableTableHead>
-                  <SortableTableHead
+                  </OrganizationSortableTableHead>
+                  <OrganizationSortableTableHead
                     field="type"
                     currentSort={organizationSort}
                     currentDirection={organizationDirection}
@@ -202,7 +201,16 @@ export const Organizations = () => {
                     className="w-1/4"
                   >
                     Type
-                  </SortableTableHead>
+                  </OrganizationSortableTableHead>
+                  <OrganizationSortableTableHead
+                    field="status"
+                    currentSort={organizationSort}
+                    currentDirection={organizationDirection}
+                    onSort={handleOrganizationSort}
+                    className="w-1/6"
+                  >
+                    Status
+                  </OrganizationSortableTableHead>
                 </TableRow>
               </TableHeader>
             </Table>
@@ -215,7 +223,7 @@ export const Organizations = () => {
                       className="cursor-pointer hover:bg-muted/50"
                       onClick={() => handleOrganizationRowClick(org)}
                     >
-                      <TableCell className="font-medium w-2/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                      <TableCell className="font-medium w-1/3 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
                         {org.name}
                       </TableCell>
                       <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
@@ -226,6 +234,17 @@ export const Organizations = () => {
                       </TableCell>
                       <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
                         {org.type}
+                      </TableCell>
+                      <TableCell className="w-1/6">
+                        <div className="flex items-center gap-2">
+                          <OrganizationStatusIcon 
+                            isApproved={org.is_approved} 
+                            decisionMade={org.approval_decision_made} 
+                          />
+                          <Badge variant={getStatusVariant(org.is_approved, org.approval_decision_made)}>
+                            {getStatusText(org.is_approved, org.approval_decision_made)}
+                          </Badge>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -242,6 +261,8 @@ export const Organizations = () => {
         open={organizationModalOpen}
         onOpenChange={setOrganizationModalOpen}
         onUpdateContact={updateOrganizationContact}
+        onApprove={handleOrganizationApprove}
+        onReject={handleOrganizationReject}
       />
     </div>
   );

@@ -11,6 +11,8 @@ interface Organization {
   phone: string;
   address: string;
   contact_user_id: string | null;
+  is_approved: boolean;
+  approval_decision_made: boolean;
   contact_user?: {
     id: string;
     first_name: string;
@@ -36,6 +38,8 @@ export const useOrganizations = () => {
           phone, 
           address,
           contact_user_id,
+          is_approved,
+          approval_decision_made,
           contact_user:user_profiles!contact_user_id(
             id,
             first_name,
@@ -104,6 +108,83 @@ export const useOrganizations = () => {
     }
   };
 
+  const approveOrganization = async (organizationId: string) => {
+    try {
+      const { error } = await supabase
+        .from('organizations')
+        .update({ 
+          is_approved: true, 
+          approval_decision_made: true 
+        })
+        .eq('id', organizationId);
+
+      if (error) {
+        console.error('Error approving organization:', error);
+        toast({
+          title: "Error",
+          description: "Failed to approve organization.",
+          variant: "destructive",
+        });
+        return false;
+      }
+
+      toast({
+        title: "Organization Approved",
+        description: "Organization has been successfully approved.",
+      });
+      
+      await fetchOrganizations();
+      return true;
+    } catch (error) {
+      console.error('Error approving organization:', error);
+      toast({
+        title: "Error",
+        description: "Failed to approve organization.",
+        variant: "destructive",
+      });
+      return false;
+    }
+  };
+
+  const rejectOrganization = async (organizationId: string) => {
+    try {
+      const { error } = await supabase
+        .from('organizations')
+        .update({ 
+          is_approved: false, 
+          approval_decision_made: true 
+        })
+        .eq('id', organizationId);
+
+      if (error) {
+        console.error('Error rejecting organization:', error);
+        toast({
+          title: "Error",
+          description: "Failed to reject organization.",
+          variant: "destructive",
+        });
+        return false;
+      }
+
+      toast({
+        title: "Organization Rejected",
+        description: "Organization access has been rejected.",
+        variant: "destructive",
+      });
+      
+      await fetchOrganizations();
+      return true;
+    } catch (error) {
+      console.error('Error rejecting organization:', error);
+      toast({
+        title: "Error",
+        description: "Failed to reject organization.",
+        variant: "destructive",
+      });
+      return false;
+    }
+  };
+
   useEffect(() => {
     fetchOrganizations();
   }, []);
@@ -112,6 +193,8 @@ export const useOrganizations = () => {
     organizations,
     loading,
     refetch: fetchOrganizations,
-    updateOrganizationContact
+    updateOrganizationContact,
+    approveOrganization,
+    rejectOrganization
   };
 };
