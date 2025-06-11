@@ -32,7 +32,7 @@ export const useComments = (contentType: string, contentId: string) => {
         .from('comments')
         .select(`
           *,
-          user_profiles!creator_user_id (
+          user_profiles!fk_comments_creator_user_id (
             first_name,
             last_name,
             email
@@ -96,7 +96,7 @@ export const useComments = (contentType: string, contentId: string) => {
   };
 
   const createComment = async (content: string, parentCommentId?: string) => {
-    if (!content.trim()) return;
+    if (!content.trim()) return false;
 
     try {
       setSubmitting(true);
@@ -141,7 +141,7 @@ export const useComments = (contentType: string, contentId: string) => {
   };
 
   const updateComment = async (commentId: string, content: string) => {
-    if (!content.trim()) return;
+    if (!content.trim()) return false;
 
     try {
       const { error } = await supabase
