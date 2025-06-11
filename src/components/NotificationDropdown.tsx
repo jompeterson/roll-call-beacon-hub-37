@@ -1,5 +1,5 @@
-
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -15,10 +15,44 @@ import { formatDistanceToNow } from "date-fns";
 
 export const NotificationDropdown = () => {
   const { notifications, unreadCount, markAsRead, markAllAsRead, loading } = useNotifications();
+  const navigate = useNavigate();
 
-  const handleNotificationClick = (notificationId: string, isRead: boolean) => {
+  const handleNotificationClick = (notificationId: string, isRead: boolean, notification: any) => {
     if (!isRead) {
       markAsRead(notificationId);
+    }
+
+    // Navigate to the appropriate page based on the content type
+    if (notification.related_content_type && notification.related_content_id) {
+      switch (notification.related_content_type) {
+        case 'donation':
+          navigate('/donations');
+          break;
+        case 'request':
+          navigate('/donations'); // Requests are shown on the donations page
+          break;
+        case 'scholarship':
+          navigate('/scholarships');
+          break;
+        case 'event':
+          navigate('/events');
+          break;
+        case 'comment':
+          // For comments, we need to navigate to the parent content
+          // We can determine this from the notification type
+          if (notification.type === 'comment_reply' || notification.type === 'post_comment') {
+            // For now, we'll navigate to the donations page as it's the most common
+            // In a real implementation, you might want to store the parent content type
+            navigate('/donations');
+          }
+          break;
+        default:
+          // Default to dashboard if we can't determine the content type
+          navigate('/');
+      }
+    } else {
+      // If no specific content, just go to dashboard
+      navigate('/');
     }
   };
 
@@ -79,7 +113,7 @@ export const NotificationDropdown = () => {
                 className={`flex items-start space-x-3 p-3 cursor-pointer ${
                   !notification.is_read ? 'bg-blue-50 dark:bg-blue-950/20' : ''
                 }`}
-                onClick={() => handleNotificationClick(notification.id, notification.is_read)}
+                onClick={() => handleNotificationClick(notification.id, notification.is_read, notification)}
               >
                 <div className="flex-shrink-0 text-lg">
                   {getNotificationIcon(notification.type)}
