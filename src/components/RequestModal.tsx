@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { supabase } from "@/integrations/supabase/client";
+import { CommentsSection } from "@/components/comments/CommentsSection";
 import type { Request } from "@/hooks/useRequests";
 
 interface RequestModalProps {
@@ -337,6 +338,15 @@ export const RequestModal = ({
             </div>
           </div>
         </div>
+
+        {/* Comments Section - Only show for approved requests */}
+        {request.is_approved && (
+          <CommentsSection
+            contentType="request"
+            contentId={request.id}
+            title="Request Discussion"
+          />
+        )}
 
         {/* Conditional Action Buttons */}
         {renderActionButtons()}

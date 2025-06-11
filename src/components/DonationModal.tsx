@@ -5,6 +5,7 @@ import { DonationModalCreatorInfo } from "./donations/DonationModalCreatorInfo";
 import { DonationModalInformation } from "./donations/DonationModalInformation";
 import { DonationModalImageSection } from "./donations/DonationModalImageSection";
 import { DonationModalActionButtons } from "./donations/DonationModalActionButtons";
+import { CommentsSection } from "./comments/CommentsSection";
 
 interface DonationModalProps {
   donation: Donation | null;
@@ -79,9 +80,14 @@ export const DonationModal = ({
     return donation.title;
   };
 
+  const getCommentsContentType = () => {
+    if (isScholarship) return 'scholarship' as const;
+    return 'donation' as const;
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl w-full">
+      <DialogContent className="max-w-5xl w-full max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">{getModalTitle()}</DialogTitle>
           <p className="text-sm text-muted-foreground">{getModalType()}</p>
@@ -116,6 +122,15 @@ export const DonationModal = ({
             isUser={isUser}
           />
         </div>
+
+        {/* Comments Section - Only show for approved donations/scholarships */}
+        {donation.is_approved && (
+          <CommentsSection
+            contentType={getCommentsContentType()}
+            contentId={donation.id}
+            title={isScholarship ? "Scholarship Discussion" : "Donation Discussion"}
+          />
+        )}
 
         <DonationModalActionButtons
           donationId={donation.id}
