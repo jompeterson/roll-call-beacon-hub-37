@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -53,10 +52,10 @@ export const RequestCreateModal = ({
   ];
 
   const urgencyLevels = [
-    "Low",
-    "Medium", 
-    "High",
-    "Urgent"
+    "low",
+    "medium", 
+    "high",
+    "urgent"
   ];
 
   // Fetch organizations for administrators
@@ -139,6 +138,8 @@ export const RequestCreateModal = ({
         is_approved: false,
         approval_decision_made: false
       };
+
+      console.log("Creating request with data:", requestData);
 
       const { error } = await supabase
         .from("requests")
@@ -272,7 +273,7 @@ export const RequestCreateModal = ({
                 <SelectContent>
                   {urgencyLevels.map((level) => (
                     <SelectItem key={level} value={level}>
-                      {level}
+                      {level.charAt(0).toUpperCase() + level.slice(1)}
                     </SelectItem>
                   ))}
                 </SelectContent>
