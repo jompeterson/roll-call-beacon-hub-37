@@ -77,6 +77,7 @@ export const PendingScholarshipsWidget = () => {
         onApprove={approveScholarship}
         onReject={rejectScholarship}
         onRequestChanges={requestChanges}
+        disableNavigation={true}
       />
     </>
   );

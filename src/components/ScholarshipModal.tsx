@@ -1,5 +1,6 @@
+
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tables } from "@/integrations/supabase/types";
@@ -31,6 +32,7 @@ interface ScholarshipModalProps {
   isApproving?: boolean;
   isRejecting?: boolean;
   isRequestingChanges?: boolean;
+  disableNavigation?: boolean;
 }
 
 export const ScholarshipModal = ({
@@ -43,18 +45,24 @@ export const ScholarshipModal = ({
   isApproving = false,
   isRejecting = false,
   isRequestingChanges = false,
+  disableNavigation = false,
 }: ScholarshipModalProps) => {
   const { isAdministrator, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Update URL when modal opens
+  // Update URL when modal opens - only if navigation is enabled and we're on the scholarships page
   useEffect(() => {
-    if (open && scholarship) {
+    if (disableNavigation) return;
+    
+    const isOnScholarshipsPage = location.pathname.startsWith('/scholarships');
+    
+    if (open && scholarship && isOnScholarshipsPage) {
       navigate(`/scholarships/${scholarship.id}`, { replace: true });
-    } else if (!open) {
+    } else if (!open && isOnScholarshipsPage) {
       navigate('/scholarships', { replace: true });
     }
-  }, [open, scholarship, navigate]);
+  }, [open, scholarship, navigate, location.pathname, disableNavigation]);
 
   if (!scholarship) return null;
 
