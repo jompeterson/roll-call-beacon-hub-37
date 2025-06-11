@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -214,17 +213,11 @@ export const DonationModal = ({
                 {!isOrganization && !isUser && (
                   <div>
                     <label className="font-medium text-sm text-muted-foreground">
-                      {isEvent ? "Volunteer Hours" : isScholarship ? "Scholarship Amount" : "Amount Needed"}
+                      {isEvent ? "Volunteer Hours" : isScholarship ? "Scholarship Amount" : "Estimated Amount"}
                     </label>
                     <p className="text-base mt-1">
                       {formatAmount(donation.amount_needed)}
                     </p>
-                  </div>
-                )}
-                {!isOrganization && !isUser && donation.amount_raised !== null && (
-                  <div>
-                    <label className="font-medium text-sm text-muted-foreground">Amount Raised</label>
-                    <p className="text-base mt-1">{formatAmount(donation.amount_raised)}</p>
                   </div>
                 )}
                 {donation.contact_email && (
