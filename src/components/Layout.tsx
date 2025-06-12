@@ -14,7 +14,7 @@ export const Layout = () => {
       <AuthProtection />
       <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar open={sidebarOpen} />
+        <Sidebar open={sidebarOpen} onOpenChange={setSidebarOpen} />
         <main className="flex-1 overflow-y-auto p-6">
           <Outlet />
         </main>

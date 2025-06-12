@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { User, ChevronDown, LogIn } from "lucide-react";
+import { User, ChevronDown, LogIn, Menu } from "lucide-react";
 import { customAuth, type User as CustomUser } from "@/lib/customAuth";
 import { signOut } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
@@ -72,8 +72,18 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
 
   return (
     <header className="bg-card border-b border-border px-6 py-4 flex items-center justify-between relative z-50">
-      {/* Logo */}
+      {/* Left Side - Mobile Menu + Logo */}
       <div className="flex items-center space-x-4">
+        {/* Mobile Menu Button */}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="lg:hidden"
+        >
+          <Menu className="h-5 w-5" />
+        </Button>
+        
         <img 
           src="/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png" 
           alt="Roll Call Logo" 

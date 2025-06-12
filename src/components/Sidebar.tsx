@@ -11,9 +11,15 @@ import {
 } from "lucide-react";
 import { customAuth } from "@/lib/customAuth";
 import { useState, useEffect } from "react";
+import {
+  Sheet,
+  SheetContent,
+} from "@/components/ui/sheet";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface SidebarProps {
   open: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 const baseNavigation = [
@@ -29,8 +35,9 @@ const authenticatedNavigation = [
   { name: "Users", href: "/users", icon: Users },
 ];
 
-export const Sidebar = ({ open }: SidebarProps) => {
+export const Sidebar = ({ open, onOpenChange }: SidebarProps) => {
   const location = useLocation();
+  const isMobile = useIsMobile();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
@@ -47,6 +54,48 @@ export const Sidebar = ({ open }: SidebarProps) => {
 
   const navigation = isAuthenticated ? authenticatedNavigation : baseNavigation;
 
+  const SidebarContent = () => (
+    <div className="flex flex-col h-full pt-6">
+      <nav className="flex-1 px-4 space-y-2">
+        {navigation.map((item) => {
+          const Icon = item.icon;
+          const isActive = location.pathname === item.href;
+          return (
+            <Link
+              key={item.name}
+              to={item.href}
+              onClick={() => {
+                if (isMobile && onOpenChange) {
+                  onOpenChange(false);
+                }
+              }}
+              className={cn(
+                "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors",
+                isActive
+                  ? "text-white"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent"
+              )}
+              style={isActive ? { backgroundColor: "#294865" } : {}}
+            >
+              <Icon className="mr-3 h-5 w-5" />
+              {item.name}
+            </Link>
+          );
+        })}
+      </nav>
+    </div>
+  );
+
+  if (isMobile) {
+    return (
+      <Sheet open={open} onOpenChange={onOpenChange}>
+        <SheetContent side="left" className="w-64 p-0 bg-card">
+          <SidebarContent />
+        </SheetContent>
+      </Sheet>
+    );
+  }
+
   return (
     <div
       className={cn(
@@ -55,28 +104,7 @@ export const Sidebar = ({ open }: SidebarProps) => {
       )}
     >
       <div className="flex flex-col h-full pt-20">
-        <nav className="flex-1 px-4 space-y-2">
-          {navigation.map((item) => {
-            const Icon = item.icon;
-            const isActive = location.pathname === item.href;
-            return (
-              <Link
-                key={item.name}
-                to={item.href}
-                className={cn(
-                  "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors",
-                  isActive
-                    ? "text-white"
-                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                )}
-                style={isActive ? { backgroundColor: "#294865" } : {}}
-              >
-                <Icon className="mr-3 h-5 w-5" />
-                {item.name}
-              </Link>
-            );
-          })}
-        </nav>
+        <SidebarContent />
       </div>
     </div>
   );
