@@ -3,6 +3,7 @@ import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CheckCircle, Clock, XCircle, Archive } from "lucide-react";
 import { RequestSortableTableHead } from "./RequestSortableTableHead";
+import { useAuth } from "@/hooks/useAuth";
 import type { Request } from "@/hooks/useRequests";
 
 type SortDirection = "asc" | "desc" | null;
@@ -46,6 +47,8 @@ export const RequestTable = ({
   onSort,
   onRowClick
 }: RequestTableProps) => {
+  const { isAuthenticated } = useAuth();
+
   return (
     <div className="border rounded-lg h-96">
       <div className="h-full flex flex-col">
@@ -57,7 +60,7 @@ export const RequestTable = ({
                 currentSort={sortField}
                 currentDirection={sortDirection}
                 onSort={onSort}
-                className="w-2/5"
+                className={isAuthenticated ? "w-2/5" : "w-1/2"}
               >
                 Organization
               </RequestSortableTableHead>
@@ -84,19 +87,21 @@ export const RequestTable = ({
                 currentSort={sortField}
                 currentDirection={sortDirection}
                 onSort={onSort}
-                className="w-1/4"
+                className={isAuthenticated ? "w-1/4" : "w-1/6"}
               >
                 Details
               </RequestSortableTableHead>
-              <RequestSortableTableHead
-                field="status"
-                currentSort={sortField}
-                currentDirection={sortDirection}
-                onSort={onSort}
-                className="w-1/6"
-              >
-                Status
-              </RequestSortableTableHead>
+              {isAuthenticated && (
+                <RequestSortableTableHead
+                  field="status"
+                  currentSort={sortField}
+                  currentDirection={sortDirection}
+                  onSort={onSort}
+                  className="w-1/6"
+                >
+                  Status
+                </RequestSortableTableHead>
+              )}
             </TableRow>
           </TableHeader>
         </Table>
@@ -105,7 +110,7 @@ export const RequestTable = ({
             <TableBody>
               {requests.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={isAuthenticated ? 5 : 4} className="text-center py-8 text-muted-foreground">
                     No requests available
                   </TableCell>
                 </TableRow>
@@ -118,20 +123,22 @@ export const RequestTable = ({
                       className="cursor-pointer hover:bg-muted/50"
                       onClick={() => onRowClick(request)}
                     >
-                      <TableCell className="font-medium w-2/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                      <TableCell className={`font-medium ${isAuthenticated ? "w-2/5" : "w-1/2"} whitespace-nowrap overflow-hidden text-ellipsis max-w-0`}>
                         {request.organization_name || "No Organization"}
                       </TableCell>
                       <TableCell className="w-1/6 whitespace-nowrap">{request.request_type}</TableCell>
                       <TableCell className="w-1/6 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">{request.title}</TableCell>
-                      <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                      <TableCell className={`${isAuthenticated ? "w-1/4" : "w-1/6"} whitespace-nowrap overflow-hidden text-ellipsis max-w-0`}>
                         {request.description || "No description"}
                       </TableCell>
-                      <TableCell className="w-1/6">
-                        <div className="flex items-center gap-2 whitespace-nowrap">
-                          <StatusIcon status={status} />
-                          <span>{status}</span>
-                        </div>
-                      </TableCell>
+                      {isAuthenticated && (
+                        <TableCell className="w-1/6">
+                          <div className="flex items-center gap-2 whitespace-nowrap">
+                            <StatusIcon status={status} />
+                            <span>{status}</span>
+                          </div>
+                        </TableCell>
+                      )}
                     </TableRow>
                   );
                 })
