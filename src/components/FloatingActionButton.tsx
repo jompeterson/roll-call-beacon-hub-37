@@ -9,6 +9,7 @@ import { ScholarshipCreateModal } from "@/components/ScholarshipCreateModal";
 import { DonationCreateModal } from "@/components/donations/DonationCreateModal";
 import { RequestCreateModal } from "@/components/donations/RequestCreateModal";
 import { UserCreateModal } from "@/components/UserCreateModal";
+import { OrganizationCreateModal } from "@/components/OrganizationCreateModal";
 
 export const FloatingActionButton = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -17,6 +18,7 @@ export const FloatingActionButton = () => {
   const [donationModalOpen, setDonationModalOpen] = useState(false);
   const [requestModalOpen, setRequestModalOpen] = useState(false);
   const [userModalOpen, setUserModalOpen] = useState(false);
+  const [organizationModalOpen, setOrganizationModalOpen] = useState(false);
   const { isAuthenticated, isAdministrator } = useAuth();
 
   // Don't render the FAB if user is not authenticated
@@ -54,6 +56,9 @@ export const FloatingActionButton = () => {
     } else if (actionName === "New User") {
       setUserModalOpen(true);
       setIsExpanded(false);
+    } else if (actionName === "New Organization") {
+      setOrganizationModalOpen(true);
+      setIsExpanded(false);
     } else {
       console.log(`Creating ${actionName}`);
     }
@@ -82,6 +87,11 @@ export const FloatingActionButton = () => {
   const handleUserCreated = () => {
     // Optionally refresh users list or show success message
     console.log("User created successfully");
+  };
+
+  const handleOrganizationCreated = () => {
+    // Optionally refresh organizations list or show success message
+    console.log("Organization created successfully");
   };
 
   return (
@@ -164,6 +174,13 @@ export const FloatingActionButton = () => {
         open={userModalOpen}
         onOpenChange={setUserModalOpen}
         onUserCreated={handleUserCreated}
+      />
+
+      {/* Organization Creation Modal */}
+      <OrganizationCreateModal
+        open={organizationModalOpen}
+        onOpenChange={setOrganizationModalOpen}
+        onOrganizationCreated={handleOrganizationCreated}
       />
     </>
   );
