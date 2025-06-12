@@ -10,7 +10,6 @@ import { RequestModalCreatorInfo } from "./request/RequestModalCreatorInfo";
 import { RequestModalInformation } from "./request/RequestModalInformation";
 import { RequestModalImageSection } from "./request/RequestModalImageSection";
 import { RequestModalActionButtons } from "./request/RequestModalActionButtons";
-import { useAuth } from "@/hooks/useAuth";
 import type { Request } from "@/hooks/useRequests";
 
 interface RequestModalProps {
@@ -41,7 +40,6 @@ export const RequestModal = ({
   disableNavigation = false
 }: RequestModalProps) => {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
   const [creatorInfo, setCreatorInfo] = useState<CreatorInfo>({
     name: "Loading...",
     email: "Loading...",
@@ -142,8 +140,8 @@ export const RequestModal = ({
           </div>
         </ScrollArea>
 
-        {/* Only show action buttons if user is authenticated and handlers are provided */}
-        {isAuthenticated && (onApprove || onReject || onRequestChanges || onMarkCompleted) && (
+        {/* Only show action buttons if handlers are provided */}
+        {(onApprove || onReject || onRequestChanges || onMarkCompleted) && (
           <RequestModalActionButtons
             request={request}
             onApprove={onApprove || (() => {})}

@@ -1,16 +1,15 @@
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { supabase } from "@/integrations/supabase/client";
-import { CommentsSection } from "@/components/comments/CommentsSection";
+import type { Donation } from "@/hooks/useDonations";
 import { DonationModalCreatorInfo } from "./donations/DonationModalCreatorInfo";
 import { DonationModalInformation } from "./donations/DonationModalInformation";
 import { DonationModalImageSection } from "./donations/DonationModalImageSection";
 import { DonationModalActionButtons } from "./donations/DonationModalActionButtons";
-import { useAuth } from "@/hooks/useAuth";
-import type { Donation } from "@/hooks/useDonations";
+import { CommentsSection } from "./comments/CommentsSection";
+import { ShareButton } from "./ShareButton";
 
 interface DonationModalProps {
   donation: Donation | null;
@@ -19,13 +18,11 @@ interface DonationModalProps {
   onApprove?: (id: string) => void;
   onReject?: (id: string) => void;
   onRequestChanges?: (id: string) => void;
+  isScholarship?: boolean;
+  isEvent?: boolean;
+  isOrganization?: boolean;
+  isUser?: boolean;
   disableNavigation?: boolean;
-}
-
-interface CreatorInfo {
-  name: string;
-  email: string;
-  organization: string;
 }
 
 export const DonationModal = ({ 
@@ -35,140 +32,160 @@ export const DonationModal = ({
   onApprove, 
   onReject, 
   onRequestChanges,
+  isScholarship = false,
+  isEvent = false,
+  isOrganization = false,
+  isUser = false,
   disableNavigation = false
 }: DonationModalProps) => {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
-  const [creatorInfo, setCreatorInfo] = useState<CreatorInfo>({
-    name: "Loading...",
-    email: "Loading...",
-    organization: "Loading..."
-  });
 
-  // Update URL when modal opens - only if navigation is enabled
+  // Update URL when modal opens, but don't navigate back when closing - only if navigation is enabled
   useEffect(() => {
     if (!disableNavigation && open && donation) {
       navigate(`/donations/${donation.id}`, { replace: true });
-    } else if (!disableNavigation && !open) {
-      navigate('/donations', { replace: true });
     }
   }, [open, donation, navigate, disableNavigation]);
 
-  useEffect(() => {
-    const fetchCreatorInfo = async () => {
-      if (!donation?.creator_user_id) return;
-
-      try {
-        const { data: profile, error } = await supabase
-          .from("user_profiles")
-          .select(`
-            first_name,
-            last_name,
-            email,
-            organizations:organization_id (
-              name
-            )
-          `)
-          .eq("id", donation.creator_user_id)
-          .single();
-
-        if (error) {
-          console.error("Error fetching creator info:", error);
-          setCreatorInfo({
-            name: "Unknown User",
-            email: "unknown@example.com",
-            organization: donation.organization_name || "Unknown Organization"
-          });
-          return;
-        }
-
-        if (profile) {
-          setCreatorInfo({
-            name: `${profile.first_name} ${profile.last_name}`,
-            email: profile.email,
-            organization: (profile.organizations as any)?.name || donation.organization_name || "Unknown Organization"
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching creator info:", error);
-        setCreatorInfo({
-          name: "Unknown User",
-          email: "unknown@example.com",
-          organization: donation.organization_name || "Unknown Organization"
-        });
-      }
-    };
-
-    if (open && donation) {
-      fetchCreatorInfo();
+  // Handle modal close by navigating back to donations page - only if navigation is enabled
+  const handleOpenChange = (newOpen: boolean) => {
+    if (!disableNavigation && !newOpen) {
+      navigate('/donations', { replace: true });
     }
-  }, [donation, open]);
+    onOpenChange(newOpen);
+  };
 
   if (!donation) return null;
 
-  // Helper functions for the modal information component
-  const getInformationTitle = () => "Donation Information";
-  const getOrganizationBio = () => "This organization is dedicated to making a positive impact in the community.";
-  const getUserBio = () => "A dedicated member working towards positive change.";
-  const formatAmount = (amount: number) => `$${amount.toLocaleString()}`;
+  const orgName = donation.organization_name || "Unknown Organization";
 
-  // Show comments only for approved donations
+  // Format amount for display
+  const formatAmount = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(amount);
+  };
+
+  const getModalType = () => {
+    if (isUser) return `Administrator • ${orgName}`;
+    if (isOrganization) return "Business";
+    if (isEvent) return "Event - Community Engagement";
+    if (isScholarship) return "Scholarship";
+    return "Give a Donation";
+  };
+
+  const getInformationTitle = () => {
+    if (isUser) return "User Information";
+    if (isOrganization) return "Organization Information";
+    if (isEvent) return "Event Information";
+    if (isScholarship) return "Scholarship Information";
+    return "Donation Information";
+  };
+
+  const getDateLabel = () => {
+    if (isUser) return "Joined on";
+    if (isOrganization) return "Created on";
+    return "Posted on";
+  };
+
+  const getOrganizationBio = () => {
+    return "A leading organization dedicated to making a positive impact in the community through innovative solutions and collaborative partnerships.";
+  };
+
+  const getUserBio = () => {
+    return "An experienced administrator dedicated to supporting community initiatives and driving positive change through effective organizational management.";
+  };
+
+  const getModalTitle = () => {
+    if (isUser) return donation.title; // Full name
+    if (isOrganization) return orgName;
+    return donation.title;
+  };
+
+  const getCommentsContentType = () => {
+    if (isScholarship) return 'scholarship' as const;
+    return 'donation' as const;
+  };
+
+  // Show comments only for approved donations/scholarships
   const showComments = donation.is_approved;
   // Use smaller height when comments aren't shown
   const modalHeight = showComments ? "h-[80vh]" : "h-[60vh]";
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className={`max-w-5xl w-full ${modalHeight} flex flex-col p-0`}>
-        <div className="flex-shrink-0 px-6 py-4 border-b">
-          <h2 className="text-2xl font-bold">{donation.title}</h2>
+        {/* Fixed Header */}
+        <div className="flex-shrink-0 p-6 border-b">
+          <DialogHeader>
+            <div className="flex justify-between items-start">
+              <div>
+                <DialogTitle className="text-2xl font-bold">{getModalTitle()}</DialogTitle>
+                <p className="text-sm text-muted-foreground">{getModalType()}</p>
+              </div>
+              <ShareButton />
+            </div>
+          </DialogHeader>
         </div>
         
+        {/* Scrollable Content */}
         <ScrollArea className="flex-1 px-6">
           <div className="space-y-4 py-4">
             <DonationModalCreatorInfo
               creatorUserId={donation.creator_user_id}
               createdAt={donation.created_at}
-              orgName={creatorInfo.organization}
+              orgName={orgName}
               open={open}
-              getDateLabel={() => "Posted on"}
+              isUser={isUser}
+              getDateLabel={getDateLabel}
             />
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-              <DonationModalInformation 
+              <DonationModalInformation
                 donation={donation}
+                isScholarship={isScholarship}
+                isEvent={isEvent}
+                isOrganization={isOrganization}
+                isUser={isUser}
                 getInformationTitle={getInformationTitle}
                 getOrganizationBio={getOrganizationBio}
                 getUserBio={getUserBio}
                 formatAmount={formatAmount}
               />
-              <DonationModalImageSection 
+
+              <DonationModalImageSection
                 donation={donation}
-                orgName={creatorInfo.organization}
+                orgName={orgName}
+                isOrganization={isOrganization}
+                isUser={isUser}
               />
             </div>
 
-            {/* Comments Section - Only show for approved donations */}
+            {/* Comments Section - Only show for approved donations/scholarships */}
             {showComments && (
               <CommentsSection
-                contentType="donation"
+                contentType={getCommentsContentType()}
                 contentId={donation.id}
-                title="Donation Discussion"
+                title={isScholarship ? "Scholarship Discussion" : "Donation Discussion"}
               />
             )}
           </div>
         </ScrollArea>
 
-        {/* Only show action buttons if user is authenticated and handlers are provided */}
-        {isAuthenticated && (onApprove || onReject || onRequestChanges) && (
-          <DonationModalActionButtons
-            donationId={donation.id}
-            onApprove={onApprove || (() => {})}
-            onReject={onReject || (() => {})}
-            onRequestChanges={onRequestChanges || (() => {})}
-            approvalDecisionMade={donation.approval_decision_made}
-            isApproved={donation.is_approved}
-          />
+        {/* Fixed Footer - Only show action buttons if handlers are provided */}
+        {(onApprove || onReject || onRequestChanges) && (
+          <div className="flex-shrink-0 border-t">
+            <DonationModalActionButtons
+              donationId={donation.id}
+              onApprove={onApprove || (() => {})}
+              onReject={onReject || (() => {})}
+              onRequestChanges={onRequestChanges || (() => {})}
+              isUser={isUser}
+              approvalDecisionMade={donation.approval_decision_made}
+              isApproved={donation.is_approved}
+            />
+          </div>
         )}
       </DialogContent>
     </Dialog>

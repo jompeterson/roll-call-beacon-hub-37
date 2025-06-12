@@ -3,7 +3,6 @@ import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CheckCircle, Clock, XCircle, Archive } from "lucide-react";
 import { DonationSortableTableHead } from "./DonationSortableTableHead";
-import { useAuth } from "@/hooks/useAuth";
 import type { Donation } from "@/hooks/useDonations";
 
 type SortDirection = "asc" | "desc" | null;
@@ -47,8 +46,6 @@ export const DonationTable = ({
   onSort,
   onRowClick
 }: DonationTableProps) => {
-  const { isAuthenticated } = useAuth();
-
   return (
     <div className="border rounded-lg h-96">
       <div className="h-full flex flex-col">
@@ -60,7 +57,7 @@ export const DonationTable = ({
                 currentSort={sortField}
                 currentDirection={sortDirection}
                 onSort={onSort}
-                className={isAuthenticated ? "w-2/5" : "w-1/2"}
+                className="w-2/5"
               >
                 Organization
               </DonationSortableTableHead>
@@ -69,7 +66,7 @@ export const DonationTable = ({
                 currentSort={sortField}
                 currentDirection={sortDirection}
                 onSort={onSort}
-                className={isAuthenticated ? "w-1/4" : "w-1/3"}
+                className="w-1/4"
               >
                 Title
               </DonationSortableTableHead>
@@ -78,21 +75,19 @@ export const DonationTable = ({
                 currentSort={sortField}
                 currentDirection={sortDirection}
                 onSort={onSort}
-                className={isAuthenticated ? "w-1/4" : "w-1/6"}
+                className="w-1/4"
               >
                 Description
               </DonationSortableTableHead>
-              {isAuthenticated && (
-                <DonationSortableTableHead
-                  field="status"
-                  currentSort={sortField}
-                  currentDirection={sortDirection}
-                  onSort={onSort}
-                  className="w-1/6"
-                >
-                  Status
-                </DonationSortableTableHead>
-              )}
+              <DonationSortableTableHead
+                field="status"
+                currentSort={sortField}
+                currentDirection={sortDirection}
+                onSort={onSort}
+                className="w-1/6"
+              >
+                Status
+              </DonationSortableTableHead>
             </TableRow>
           </TableHeader>
         </Table>
@@ -101,7 +96,7 @@ export const DonationTable = ({
             <TableBody>
               {donations.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={isAuthenticated ? 4 : 3} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
                     No donations available
                   </TableCell>
                 </TableRow>
@@ -114,23 +109,21 @@ export const DonationTable = ({
                       className="cursor-pointer hover:bg-muted/50"
                       onClick={() => onRowClick(donation)}
                     >
-                      <TableCell className={`font-medium ${isAuthenticated ? "w-2/5" : "w-1/2"} whitespace-nowrap overflow-hidden text-ellipsis max-w-0`}>
+                      <TableCell className="font-medium w-2/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
                         {donation.organization_name || "No Organization"}
                       </TableCell>
-                      <TableCell className={`${isAuthenticated ? "w-1/4" : "w-1/3"} whitespace-nowrap overflow-hidden text-ellipsis max-w-0`}>
+                      <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
                         {donation.title}
                       </TableCell>
-                      <TableCell className={`${isAuthenticated ? "w-1/4" : "w-1/6"} whitespace-nowrap overflow-hidden text-ellipsis max-w-0`}>
+                      <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
                         {donation.description || "No description"}
                       </TableCell>
-                      {isAuthenticated && (
-                        <TableCell className="w-1/6">
-                          <div className="flex items-center gap-2 whitespace-nowrap">
-                            <StatusIcon status={status} />
-                            <span>{status}</span>
-                          </div>
-                        </TableCell>
-                      )}
+                      <TableCell className="w-1/6">
+                        <div className="flex items-center gap-2 whitespace-nowrap">
+                          <StatusIcon status={status} />
+                          <span>{status}</span>
+                        </div>
+                      </TableCell>
                     </TableRow>
                   );
                 })
