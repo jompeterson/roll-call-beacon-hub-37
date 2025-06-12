@@ -17,7 +17,9 @@ interface OrganizationCreateModalProps {
   onOrganizationCreated: () => void;
 }
 
-const organizationTypes = [
+type OrganizationType = "Non-Profit" | "Educational Institution" | "Community Group" | "Religious Organization" | "Sports Club" | "Professional Association" | "Other";
+
+const organizationTypes: OrganizationType[] = [
   "Non-Profit",
   "Educational Institution",
   "Community Group",
@@ -34,7 +36,7 @@ export const OrganizationCreateModal = ({ open, onOpenChange, onOrganizationCrea
   const [nameExists, setNameExists] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
-    type: "",
+    type: "" as OrganizationType | "",
     description: "",
     phone: "",
     address: ""
@@ -95,7 +97,7 @@ export const OrganizationCreateModal = ({ open, onOpenChange, onOrganizationCrea
         .from('organizations')
         .insert({
           name: formData.name.trim(),
-          type: formData.type,
+          type: formData.type as OrganizationType,
           description: formData.description.trim(),
           phone: formData.phone.trim(),
           address: formData.address.trim(),
@@ -195,7 +197,7 @@ export const OrganizationCreateModal = ({ open, onOpenChange, onOrganizationCrea
             <Label htmlFor="type">Organization Type</Label>
             <Select 
               value={formData.type} 
-              onValueChange={(value) => handleInputChange("type", value)}
+              onValueChange={(value: OrganizationType) => handleInputChange("type", value)}
               disabled={isSubmitting}
             >
               <SelectTrigger>
