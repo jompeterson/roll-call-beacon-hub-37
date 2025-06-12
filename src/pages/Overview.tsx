@@ -5,6 +5,8 @@ import { PendingScholarshipsWidget } from "@/components/PendingScholarshipsWidge
 import { PendingDonationsRequestsWidget } from "@/components/PendingDonationsRequestsWidget";
 import { PendingEventsWidget } from "@/components/PendingEventsWidget";
 import { useAuth } from "@/hooks/useAuth";
+import { useMonthlyMetrics } from "@/hooks/useMonthlyMetrics";
+import { useYearlyMetrics } from "@/hooks/useYearlyMetrics";
 import {
   Users,
   DollarSign,
@@ -18,6 +20,23 @@ import {
 
 export const Overview = () => {
   const { isAdministrator } = useAuth();
+  const { data: monthlyMetrics, isLoading: monthlyLoading } = useMonthlyMetrics();
+  const { data: yearlyMetrics, isLoading: yearlyLoading } = useYearlyMetrics();
+
+  // Format currency values
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
+
+  // Format numbers with commas
+  const formatNumber = (num: number) => {
+    return new Intl.NumberFormat('en-US').format(num);
+  };
 
   return (
     <div className="space-y-8">
@@ -47,35 +66,35 @@ export const Overview = () => {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
           <MetricCard
             title="New Organizations"
-            value="15"
+            value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newOrganizations || 0)}
             change="+3"
             changeType="positive"
             icon={Building2}
           />
           <MetricCard
             title="Scholarships"
-            value="8"
+            value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newScholarships || 0)}
             change="+2"
             changeType="positive"
             icon={GraduationCap}
           />
           <MetricCard
             title="Donations"
-            value="$12,450"
+            value={monthlyLoading ? "..." : formatCurrency(monthlyMetrics?.totalDonations || 0)}
             change="+18.5%"
             changeType="positive"
             icon={DollarSign}
           />
           <MetricCard
             title="Events"
-            value="6"
+            value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newEvents || 0)}
             change="+1"
             changeType="positive"
             icon={Calendar}
           />
           <MetricCard
             title="New Users"
-            value="124"
+            value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newUsers || 0)}
             change="+22.1%"
             changeType="positive"
             icon={Users}
@@ -89,42 +108,42 @@ export const Overview = () => {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <MetricCard
             title="Organizations"
-            value="156"
+            value={yearlyLoading ? "..." : formatNumber(yearlyMetrics?.organizations || 0)}
             change="+32.1%"
             changeType="positive"
             icon={Building2}
           />
           <MetricCard
             title="Donations"
-            value="$245,678"
+            value={yearlyLoading ? "..." : formatCurrency(yearlyMetrics?.totalDonations || 0)}
             change="+28.5%"
             changeType="positive"
             icon={DollarSign}
           />
           <MetricCard
             title="Events"
-            value="48"
+            value={yearlyLoading ? "..." : formatNumber(yearlyMetrics?.events || 0)}
             change="+15.2%"
             changeType="positive"
             icon={Calendar}
           />
           <MetricCard
             title="Hours Donated"
-            value="2,847"
+            value={yearlyLoading ? "..." : formatNumber(yearlyMetrics?.hoursDonated || 0)}
             change="+41.3%"
             changeType="positive"
             icon={Clock}
           />
           <MetricCard
             title="Posts"
-            value="1,234"
+            value={yearlyLoading ? "..." : formatNumber(yearlyMetrics?.posts || 0)}
             change="+19.7%"
             changeType="positive"
             icon={MessageSquare}
           />
           <MetricCard
             title="Financial Totals"
-            value="$425,890"
+            value={yearlyLoading ? "..." : formatCurrency(yearlyMetrics?.financialTotals || 0)}
             change="+24.8%"
             changeType="positive"
             icon={Calculator}
