@@ -1,15 +1,16 @@
-
 import { MetricCard } from "@/components/MetricCard";
 import { PendingOrganizationsWidget } from "@/components/PendingOrganizationsWidget";
 import { PendingScholarshipsWidget } from "@/components/PendingScholarshipsWidget";
 import { PendingDonationsRequestsWidget } from "@/components/PendingDonationsRequestsWidget";
 import { PendingEventsWidget } from "@/components/PendingEventsWidget";
+import { UserCreateModal } from "@/components/users/UserCreateModal";
 import { useAuth } from "@/hooks/useAuth";
 import { useMonthlyMetrics } from "@/hooks/useMonthlyMetrics";
 import { useYearlyMetrics } from "@/hooks/useYearlyMetrics";
 import { usePreviousMonthMetrics } from "@/hooks/usePreviousMonthMetrics";
 import { usePreviousYearMetrics } from "@/hooks/usePreviousYearMetrics";
 import { useMetricChanges } from "@/hooks/useMetricChanges";
+import { useState } from "react";
 import {
   Users,
   DollarSign,
@@ -28,6 +29,9 @@ export const Overview = () => {
   const { data: previousMonthMetrics, isLoading: previousMonthLoading } = usePreviousMonthMetrics();
   const { data: previousYearMetrics, isLoading: previousYearLoading } = usePreviousYearMetrics();
   const { calculateChange, calculateAbsoluteChange } = useMetricChanges();
+
+  // Modal state
+  const [userCreateModalOpen, setUserCreateModalOpen] = useState(false);
 
   // Format currency values
   const formatCurrency = (amount: number) => {
@@ -90,6 +94,17 @@ export const Overview = () => {
     ? calculateChange(yearlyMetrics.financialTotals, previousYearMetrics.financialTotals)
     : { change: "...", changeType: "neutral" as const };
 
+  const handleNewUsersClick = () => {
+    if (isAdministrator) {
+      setUserCreateModalOpen(true);
+    }
+  };
+
+  const handleUserCreated = () => {
+    // Optionally refresh metrics or show success message
+    console.log("User created successfully");
+  };
+
   return (
     <div className="space-y-8">
       <div>
@@ -150,6 +165,8 @@ export const Overview = () => {
             change={userChange.change}
             changeType={userChange.changeType}
             icon={Users}
+            onClick={isAdministrator ? handleNewUsersClick : undefined}
+            isClickable={isAdministrator}
           />
         </div>
       </div>
@@ -202,6 +219,13 @@ export const Overview = () => {
           />
         </div>
       </div>
+
+      {/* User Creation Modal */}
+      <UserCreateModal
+        open={userCreateModalOpen}
+        onOpenChange={setUserCreateModalOpen}
+        onUserCreated={handleUserCreated}
+      />
     </div>
   );
 };
