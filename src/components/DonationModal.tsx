@@ -106,6 +106,12 @@ export const DonationModal = ({
 
   if (!donation) return null;
 
+  // Helper functions for the modal information component
+  const getInformationTitle = () => "Donation Information";
+  const getOrganizationBio = () => "This organization is dedicated to making a positive impact in the community.";
+  const getUserBio = () => "A dedicated member working towards positive change.";
+  const formatAmount = (amount: number) => `$${amount.toLocaleString()}`;
+
   // Show comments only for approved donations
   const showComments = donation.is_approved;
   // Use smaller height when comments aren't shown
@@ -121,13 +127,25 @@ export const DonationModal = ({
         <ScrollArea className="flex-1 px-6">
           <div className="space-y-4 py-4">
             <DonationModalCreatorInfo
-              creatorInfo={creatorInfo}
+              creatorUserId={donation.creator_user_id}
               createdAt={donation.created_at}
+              orgName={creatorInfo.organization}
+              open={open}
+              getDateLabel={() => "Posted on"}
             />
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-              <DonationModalInformation donation={donation} />
-              <DonationModalImageSection title={donation.title} />
+              <DonationModalInformation 
+                donation={donation}
+                getInformationTitle={getInformationTitle}
+                getOrganizationBio={getOrganizationBio}
+                getUserBio={getUserBio}
+                formatAmount={formatAmount}
+              />
+              <DonationModalImageSection 
+                donation={donation}
+                orgName={creatorInfo.organization}
+              />
             </div>
 
             {/* Comments Section - Only show for approved donations */}
