@@ -8,6 +8,7 @@ import { EventCreateModal } from "@/components/EventCreateModal";
 import { ScholarshipCreateModal } from "@/components/ScholarshipCreateModal";
 import { DonationCreateModal } from "@/components/donations/DonationCreateModal";
 import { RequestCreateModal } from "@/components/donations/RequestCreateModal";
+import { UserCreateModal } from "@/components/UserCreateModal";
 
 export const FloatingActionButton = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -15,6 +16,7 @@ export const FloatingActionButton = () => {
   const [scholarshipModalOpen, setScholarshipModalOpen] = useState(false);
   const [donationModalOpen, setDonationModalOpen] = useState(false);
   const [requestModalOpen, setRequestModalOpen] = useState(false);
+  const [userModalOpen, setUserModalOpen] = useState(false);
   const { isAuthenticated, isAdministrator } = useAuth();
 
   // Don't render the FAB if user is not authenticated
@@ -49,6 +51,9 @@ export const FloatingActionButton = () => {
     } else if (actionName === "New Request") {
       setRequestModalOpen(true);
       setIsExpanded(false);
+    } else if (actionName === "New User") {
+      setUserModalOpen(true);
+      setIsExpanded(false);
     } else {
       console.log(`Creating ${actionName}`);
     }
@@ -72,6 +77,11 @@ export const FloatingActionButton = () => {
   const handleRequestCreated = () => {
     // Optionally refresh requests list or show success message
     console.log("Request created successfully");
+  };
+
+  const handleUserCreated = () => {
+    // Optionally refresh users list or show success message
+    console.log("User created successfully");
   };
 
   return (
@@ -147,6 +157,13 @@ export const FloatingActionButton = () => {
         open={requestModalOpen}
         onOpenChange={setRequestModalOpen}
         onRequestCreated={handleRequestCreated}
+      />
+
+      {/* User Creation Modal */}
+      <UserCreateModal
+        open={userModalOpen}
+        onOpenChange={setUserModalOpen}
+        onUserCreated={handleUserCreated}
       />
     </>
   );
