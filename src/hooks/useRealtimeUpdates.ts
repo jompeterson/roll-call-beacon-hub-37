@@ -20,6 +20,10 @@ export const useRealtimeUpdates = () => {
           () => {
             queryClient.invalidateQueries({ queryKey: ['donations'] });
             queryClient.invalidateQueries({ queryKey: ['pending-donations'] });
+            queryClient.invalidateQueries({ queryKey: ['monthly-metrics'] });
+            queryClient.invalidateQueries({ queryKey: ['yearly-metrics'] });
+            queryClient.invalidateQueries({ queryKey: ['previous-monthly-metrics'] });
+            queryClient.invalidateQueries({ queryKey: ['previous-yearly-metrics'] });
           }
         ),
 
@@ -42,6 +46,8 @@ export const useRealtimeUpdates = () => {
           () => {
             queryClient.invalidateQueries({ queryKey: ['scholarships'] });
             queryClient.invalidateQueries({ queryKey: ['pending-scholarships'] });
+            queryClient.invalidateQueries({ queryKey: ['monthly-metrics'] });
+            queryClient.invalidateQueries({ queryKey: ['previous-monthly-metrics'] });
           }
         ),
 
@@ -53,6 +59,10 @@ export const useRealtimeUpdates = () => {
           () => {
             queryClient.invalidateQueries({ queryKey: ['events'] });
             queryClient.invalidateQueries({ queryKey: ['pending-events'] });
+            queryClient.invalidateQueries({ queryKey: ['monthly-metrics'] });
+            queryClient.invalidateQueries({ queryKey: ['yearly-metrics'] });
+            queryClient.invalidateQueries({ queryKey: ['previous-monthly-metrics'] });
+            queryClient.invalidateQueries({ queryKey: ['previous-yearly-metrics'] });
           }
         ),
 
@@ -64,6 +74,10 @@ export const useRealtimeUpdates = () => {
           () => {
             queryClient.invalidateQueries({ queryKey: ['organizations'] });
             queryClient.invalidateQueries({ queryKey: ['pending-organizations'] });
+            queryClient.invalidateQueries({ queryKey: ['monthly-metrics'] });
+            queryClient.invalidateQueries({ queryKey: ['yearly-metrics'] });
+            queryClient.invalidateQueries({ queryKey: ['previous-monthly-metrics'] });
+            queryClient.invalidateQueries({ queryKey: ['previous-yearly-metrics'] });
           }
         ),
 
@@ -75,6 +89,8 @@ export const useRealtimeUpdates = () => {
           () => {
             queryClient.invalidateQueries({ queryKey: ['user-profiles'] });
             queryClient.invalidateQueries({ queryKey: ['pending-users'] });
+            queryClient.invalidateQueries({ queryKey: ['monthly-metrics'] });
+            queryClient.invalidateQueries({ queryKey: ['previous-monthly-metrics'] });
           }
         ),
 
@@ -95,6 +111,8 @@ export const useRealtimeUpdates = () => {
           { event: '*', schema: 'public', table: 'comments' },
           () => {
             queryClient.invalidateQueries({ queryKey: ['comments'] });
+            queryClient.invalidateQueries({ queryKey: ['yearly-metrics'] });
+            queryClient.invalidateQueries({ queryKey: ['previous-yearly-metrics'] });
           }
         ),
 

@@ -7,6 +7,9 @@ import { PendingEventsWidget } from "@/components/PendingEventsWidget";
 import { useAuth } from "@/hooks/useAuth";
 import { useMonthlyMetrics } from "@/hooks/useMonthlyMetrics";
 import { useYearlyMetrics } from "@/hooks/useYearlyMetrics";
+import { usePreviousMonthMetrics } from "@/hooks/usePreviousMonthMetrics";
+import { usePreviousYearMetrics } from "@/hooks/usePreviousYearMetrics";
+import { useMetricChanges } from "@/hooks/useMetricChanges";
 import {
   Users,
   DollarSign,
@@ -22,6 +25,9 @@ export const Overview = () => {
   const { isAdministrator } = useAuth();
   const { data: monthlyMetrics, isLoading: monthlyLoading } = useMonthlyMetrics();
   const { data: yearlyMetrics, isLoading: yearlyLoading } = useYearlyMetrics();
+  const { data: previousMonthMetrics, isLoading: previousMonthLoading } = usePreviousMonthMetrics();
+  const { data: previousYearMetrics, isLoading: previousYearLoading } = usePreviousYearMetrics();
+  const { calculateChange, calculateAbsoluteChange } = useMetricChanges();
 
   // Format currency values
   const formatCurrency = (amount: number) => {
@@ -37,6 +43,52 @@ export const Overview = () => {
   const formatNumber = (num: number) => {
     return new Intl.NumberFormat('en-US').format(num);
   };
+
+  // Calculate monthly changes
+  const orgChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
+    ? calculateAbsoluteChange(monthlyMetrics.newOrganizations, previousMonthMetrics.newOrganizations)
+    : { change: "...", changeType: "neutral" as const };
+
+  const scholarshipChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
+    ? calculateAbsoluteChange(monthlyMetrics.newScholarships, previousMonthMetrics.newScholarships)
+    : { change: "...", changeType: "neutral" as const };
+
+  const monthlyDonationChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
+    ? calculateChange(monthlyMetrics.totalDonations, previousMonthMetrics.totalDonations)
+    : { change: "...", changeType: "neutral" as const };
+
+  const eventChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
+    ? calculateAbsoluteChange(monthlyMetrics.newEvents, previousMonthMetrics.newEvents)
+    : { change: "...", changeType: "neutral" as const };
+
+  const userChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
+    ? calculateChange(monthlyMetrics.newUsers, previousMonthMetrics.newUsers)
+    : { change: "...", changeType: "neutral" as const };
+
+  // Calculate yearly changes
+  const yearlyOrgChange = !yearlyLoading && !previousYearLoading && yearlyMetrics && previousYearMetrics 
+    ? calculateChange(yearlyMetrics.organizations, previousYearMetrics.organizations)
+    : { change: "...", changeType: "neutral" as const };
+
+  const yearlyDonationChange = !yearlyLoading && !previousYearLoading && yearlyMetrics && previousYearMetrics 
+    ? calculateChange(yearlyMetrics.totalDonations, previousYearMetrics.totalDonations)
+    : { change: "...", changeType: "neutral" as const };
+
+  const yearlyEventChange = !yearlyLoading && !previousYearLoading && yearlyMetrics && previousYearMetrics 
+    ? calculateChange(yearlyMetrics.events, previousYearMetrics.events)
+    : { change: "...", changeType: "neutral" as const };
+
+  const hoursChange = !yearlyLoading && !previousYearLoading && yearlyMetrics && previousYearMetrics 
+    ? calculateChange(yearlyMetrics.hoursDonated, previousYearMetrics.hoursDonated)
+    : { change: "...", changeType: "neutral" as const };
+
+  const postsChange = !yearlyLoading && !previousYearLoading && yearlyMetrics && previousYearMetrics 
+    ? calculateChange(yearlyMetrics.posts, previousYearMetrics.posts)
+    : { change: "...", changeType: "neutral" as const };
+
+  const financialChange = !yearlyLoading && !previousYearLoading && yearlyMetrics && previousYearMetrics 
+    ? calculateChange(yearlyMetrics.financialTotals, previousYearMetrics.financialTotals)
+    : { change: "...", changeType: "neutral" as const };
 
   return (
     <div className="space-y-8">
@@ -67,36 +119,36 @@ export const Overview = () => {
           <MetricCard
             title="New Organizations"
             value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newOrganizations || 0)}
-            change="+3"
-            changeType="positive"
+            change={orgChange.change}
+            changeType={orgChange.changeType}
             icon={Building2}
           />
           <MetricCard
             title="Scholarships"
             value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newScholarships || 0)}
-            change="+2"
-            changeType="positive"
+            change={scholarshipChange.change}
+            changeType={scholarshipChange.changeType}
             icon={GraduationCap}
           />
           <MetricCard
             title="Donations"
             value={monthlyLoading ? "..." : formatCurrency(monthlyMetrics?.totalDonations || 0)}
-            change="+18.5%"
-            changeType="positive"
+            change={monthlyDonationChange.change}
+            changeType={monthlyDonationChange.changeType}
             icon={DollarSign}
           />
           <MetricCard
             title="Events"
             value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newEvents || 0)}
-            change="+1"
-            changeType="positive"
+            change={eventChange.change}
+            changeType={eventChange.changeType}
             icon={Calendar}
           />
           <MetricCard
             title="New Users"
             value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newUsers || 0)}
-            change="+22.1%"
-            changeType="positive"
+            change={userChange.change}
+            changeType={userChange.changeType}
             icon={Users}
           />
         </div>
@@ -109,43 +161,43 @@ export const Overview = () => {
           <MetricCard
             title="Organizations"
             value={yearlyLoading ? "..." : formatNumber(yearlyMetrics?.organizations || 0)}
-            change="+32.1%"
-            changeType="positive"
+            change={yearlyOrgChange.change}
+            changeType={yearlyOrgChange.changeType}
             icon={Building2}
           />
           <MetricCard
             title="Donations"
             value={yearlyLoading ? "..." : formatCurrency(yearlyMetrics?.totalDonations || 0)}
-            change="+28.5%"
-            changeType="positive"
+            change={yearlyDonationChange.change}
+            changeType={yearlyDonationChange.changeType}
             icon={DollarSign}
           />
           <MetricCard
             title="Events"
             value={yearlyLoading ? "..." : formatNumber(yearlyMetrics?.events || 0)}
-            change="+15.2%"
-            changeType="positive"
+            change={yearlyEventChange.change}
+            changeType={yearlyEventChange.changeType}
             icon={Calendar}
           />
           <MetricCard
             title="Hours Donated"
             value={yearlyLoading ? "..." : formatNumber(yearlyMetrics?.hoursDonated || 0)}
-            change="+41.3%"
-            changeType="positive"
+            change={hoursChange.change}
+            changeType={hoursChange.changeType}
             icon={Clock}
           />
           <MetricCard
             title="Posts"
             value={yearlyLoading ? "..." : formatNumber(yearlyMetrics?.posts || 0)}
-            change="+19.7%"
-            changeType="positive"
+            change={postsChange.change}
+            changeType={postsChange.changeType}
             icon={MessageSquare}
           />
           <MetricCard
             title="Financial Totals"
             value={yearlyLoading ? "..." : formatCurrency(yearlyMetrics?.financialTotals || 0)}
-            change="+24.8%"
-            changeType="positive"
+            change={financialChange.change}
+            changeType={financialChange.changeType}
             icon={Calculator}
           />
         </div>
