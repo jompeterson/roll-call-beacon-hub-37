@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useUserRoles } from "@/hooks/useUserRoles";
-import { OrganizationSearch } from "@/components/profile/OrganizationSearch";
+import { OrganizationSelector } from "@/components/profile/OrganizationSelector";
 import { customAuth } from "@/lib/customAuth";
 
 interface UserCreateModalProps {
@@ -214,13 +214,10 @@ export const UserCreateModal = ({ open, onOpenChange, onUserCreated }: UserCreat
             </Select>
           </div>
 
-          <div className="space-y-2">
-            <Label>Organization (Optional)</Label>
-            <OrganizationSearch
-              selectedOrganization={selectedOrganization}
-              onOrganizationSelect={setSelectedOrganization}
-            />
-          </div>
+          <OrganizationSelector
+            selectedOrganization={selectedOrganization}
+            onOrganizationSelect={setSelectedOrganization}
+          />
 
           <div className="flex gap-2 pt-4">
             <Button
