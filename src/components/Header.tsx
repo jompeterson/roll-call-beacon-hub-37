@@ -13,13 +13,9 @@ import { customAuth, type User as CustomUser } from "@/lib/customAuth";
 import { signOut } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
 import { NotificationDropdown } from "@/components/NotificationDropdown";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
-interface HeaderProps {
-  sidebarOpen: boolean;
-  setSidebarOpen: (open: boolean) => void;
-}
-
-export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
+export const Header = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [user, setUser] = useState<CustomUser | null>(null);
@@ -71,13 +67,16 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
   };
 
   return (
-    <header className="bg-card border-b border-border px-6 py-4 flex items-center justify-between relative z-50">
-      {/* Logo */}
+    <header className="bg-card border-b border-border px-6 py-4 flex items-center justify-between">
+      {/* Mobile sidebar trigger */}
       <div className="flex items-center space-x-4">
+        <SidebarTrigger className="md:hidden" />
+        
+        {/* Logo - hidden on mobile when sidebar trigger is shown */}
         <img 
           src="/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png" 
           alt="Roll Call Logo" 
-          className="h-12"
+          className="h-12 hidden md:block"
         />
       </div>
 
