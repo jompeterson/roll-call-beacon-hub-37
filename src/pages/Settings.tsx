@@ -36,7 +36,7 @@ export const Settings = () => {
     const fetchSettings = async () => {
       try {
         const { data, error } = await supabase
-          .from('app_settings')
+          .from('app_settings' as any)
           .select('value')
           .eq('key', 'logo_url')
           .single();
@@ -74,7 +74,7 @@ export const Settings = () => {
     setLoading(true);
     try {
       const { error } = await supabase
-        .from('app_settings')
+        .from('app_settings' as any)
         .upsert({
           key: 'logo_url',
           value: logoUrl.trim()
@@ -154,8 +154,12 @@ export const Settings = () => {
                   alt="Logo preview" 
                   className="h-12 object-contain"
                   onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                    e.currentTarget.nextElementSibling!.style.display = 'block';
+                    const target = e.currentTarget;
+                    target.style.display = 'none';
+                    const errorDiv = target.nextElementSibling as HTMLElement;
+                    if (errorDiv) {
+                      errorDiv.style.display = 'block';
+                    }
                   }}
                 />
                 <div className="text-sm text-gray-500 hidden">

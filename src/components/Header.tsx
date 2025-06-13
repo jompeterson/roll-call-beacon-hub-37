@@ -43,7 +43,7 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
     const fetchLogo = async () => {
       try {
         const { data, error } = await supabase
-          .from('app_settings')
+          .from('app_settings' as any)
           .select('value')
           .eq('key', 'logo_url')
           .single();
@@ -70,7 +70,7 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
         }, 
         (payload) => {
           if (payload.new && 'value' in payload.new) {
-            setLogoUrl(payload.new.value);
+            setLogoUrl(payload.new.value as string);
           }
         }
       )
