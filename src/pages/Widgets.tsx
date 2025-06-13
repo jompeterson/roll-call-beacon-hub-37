@@ -46,7 +46,7 @@ export const Widgets = () => {
   const fetchWidgets = async () => {
     try {
       const { data, error } = await supabase
-        .from('custom_widgets' as any)
+        .from('custom_widgets')
         .select('*')
         .order('section', { ascending: true })
         .order('position', { ascending: true });
@@ -76,7 +76,7 @@ export const Widgets = () => {
   const handleToggleActive = async (widget: Widget) => {
     try {
       const { error } = await supabase
-        .from('custom_widgets' as any)
+        .from('custom_widgets')
         .update({ is_active: !widget.is_active })
         .eq('id', widget.id);
 
@@ -113,7 +113,7 @@ export const Widgets = () => {
 
     try {
       const { error } = await supabase
-        .from('custom_widgets' as any)
+        .from('custom_widgets')
         .delete()
         .eq('id', widget.id);
 
