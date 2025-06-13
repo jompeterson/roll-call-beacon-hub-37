@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -48,8 +47,8 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
           .eq('key', 'logo_url')
           .single();
 
-        if (data?.value) {
-          setLogoUrl(data.value);
+        if (data && (data as any).value) {
+          setLogoUrl((data as any).value);
         }
       } catch (error) {
         console.error('Error fetching logo:', error);
@@ -70,7 +69,7 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
         }, 
         (payload) => {
           if (payload.new && 'value' in payload.new) {
-            setLogoUrl(payload.new.value as string);
+            setLogoUrl((payload.new as any).value);
           }
         }
       )

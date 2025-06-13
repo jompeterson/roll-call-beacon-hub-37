@@ -48,8 +48,8 @@ export const Settings = () => {
             description: "Failed to load current settings.",
             variant: "destructive",
           });
-        } else if (data) {
-          setLogoUrl(data.value);
+        } else if (data && (data as any).value) {
+          setLogoUrl((data as any).value);
         }
       } catch (error) {
         console.error('Error fetching settings:', error);
