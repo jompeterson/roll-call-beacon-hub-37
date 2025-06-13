@@ -1,15 +1,16 @@
-
 import { MetricCard } from "@/components/MetricCard";
 import { PendingOrganizationsWidget } from "@/components/PendingOrganizationsWidget";
 import { PendingScholarshipsWidget } from "@/components/PendingScholarshipsWidget";
 import { PendingDonationsRequestsWidget } from "@/components/PendingDonationsRequestsWidget";
 import { PendingEventsWidget } from "@/components/PendingEventsWidget";
+import { CustomWidget } from "@/components/CustomWidget";
 import { useAuth } from "@/hooks/useAuth";
 import { useMonthlyMetrics } from "@/hooks/useMonthlyMetrics";
 import { useYearlyMetrics } from "@/hooks/useYearlyMetrics";
 import { usePreviousMonthMetrics } from "@/hooks/usePreviousMonthMetrics";
 import { usePreviousYearMetrics } from "@/hooks/usePreviousYearMetrics";
 import { useMetricChanges } from "@/hooks/useMetricChanges";
+import { useCustomWidgets } from "@/hooks/useCustomWidgets";
 import {
   Users,
   DollarSign,
@@ -28,6 +29,11 @@ export const Overview = () => {
   const { data: previousMonthMetrics, isLoading: previousMonthLoading } = usePreviousMonthMetrics();
   const { data: previousYearMetrics, isLoading: previousYearLoading } = usePreviousYearMetrics();
   const { calculateChange, calculateAbsoluteChange } = useMetricChanges();
+  
+  // Fetch custom widgets for each section
+  const { data: pendingApprovalsWidgets } = useCustomWidgets('pending_approvals');
+  const { data: monthlyMetricsWidgets } = useCustomWidgets('monthly_metrics');
+  const { data: yearlyMetricsWidgets } = useCustomWidgets('yearly_metrics');
 
   // Format currency values
   const formatCurrency = (amount: number) => {
@@ -108,6 +114,16 @@ export const Overview = () => {
             <PendingScholarshipsWidget />
             <PendingDonationsRequestsWidget />
             <PendingEventsWidget />
+            {/* Add custom widgets for pending approvals */}
+            {pendingApprovalsWidgets?.map((widget) => (
+              <CustomWidget
+                key={widget.id}
+                title={widget.title}
+                description={widget.description}
+                metrics={widget.metrics}
+                displayConfig={widget.display_config}
+              />
+            ))}
           </div>
         </div>
       )}
@@ -151,6 +167,16 @@ export const Overview = () => {
             changeType={userChange.changeType}
             icon={Users}
           />
+          {/* Add custom widgets for monthly metrics */}
+          {monthlyMetricsWidgets?.map((widget) => (
+            <CustomWidget
+              key={widget.id}
+              title={widget.title}
+              description={widget.description}
+              metrics={widget.metrics}
+              displayConfig={widget.display_config}
+            />
+          ))}
         </div>
       </div>
 
@@ -200,6 +226,16 @@ export const Overview = () => {
             changeType={financialChange.changeType}
             icon={Calculator}
           />
+          {/* Add custom widgets for yearly metrics */}
+          {yearlyMetricsWidgets?.map((widget) => (
+            <CustomWidget
+              key={widget.id}
+              title={widget.title}
+              description={widget.description}
+              metrics={widget.metrics}
+              displayConfig={widget.display_config}
+            />
+          ))}
         </div>
       </div>
     </div>
