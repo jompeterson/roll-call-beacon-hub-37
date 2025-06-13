@@ -48,6 +48,7 @@ const FILTER_FIELDS = {
     { id: 'organization_id', label: 'Organization', type: 'text' },
     { id: 'amount_needed', label: 'Amount Needed', type: 'number' },
     { id: 'weight', label: 'Weight', type: 'number' },
+    { id: 'material_type', label: 'Material Type', type: 'text' },
     { id: 'created_at', label: 'Created Date', type: 'date' },
   ],
   requests: [
