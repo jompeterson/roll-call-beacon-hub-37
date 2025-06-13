@@ -9,6 +9,7 @@ import {
   Building2,
   Users,
   Settings,
+  Widget,
 } from "lucide-react";
 import { customAuth } from "@/lib/customAuth";
 import { useState, useEffect } from "react";
@@ -39,6 +40,7 @@ const authenticatedNavigation = [
 
 const adminNavigation = [
   ...authenticatedNavigation,
+  { name: "Widgets", href: "/widgets", icon: Widget },
   { name: "Settings", href: "/settings", icon: Settings },
 ];
 

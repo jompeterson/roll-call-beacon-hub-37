@@ -84,6 +84,48 @@ export type Database = {
           },
         ]
       }
+      custom_widgets: {
+        Row: {
+          created_at: string
+          created_by: string
+          description: string | null
+          display_config: Json
+          id: string
+          is_active: boolean
+          metrics: Json
+          position: number
+          section: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          description?: string | null
+          display_config?: Json
+          id?: string
+          is_active?: boolean
+          metrics?: Json
+          position?: number
+          section: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          display_config?: Json
+          id?: string
+          is_active?: boolean
+          metrics?: Json
+          position?: number
+          section?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       donations: {
         Row: {
           amount_needed: number

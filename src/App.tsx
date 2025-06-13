@@ -14,6 +14,7 @@ import { Users } from "./pages/Users";
 import { ValuedPartners } from "./pages/ValuedPartners";
 import { Profile } from "./pages/Profile";
 import { Settings } from "./pages/Settings";
+import { Widgets } from "./pages/Widgets";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { VerificationPending } from "./pages/VerificationPending";
@@ -45,6 +46,7 @@ const AppContent = () => {
           <Route path="valued-partners" element={<ValuedPartners />} />
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="widgets" element={<Widgets />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
