@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { X, Plus } from "lucide-react";
 
 interface ElementEditModalProps {
   open: boolean;
@@ -39,12 +41,59 @@ const OPERATORS = [
   { id: '/', label: 'Divide (÷)' },
 ];
 
+const FILTER_FIELDS = {
+  donations: [
+    { id: 'is_approved', label: 'Approval Status', type: 'boolean' },
+    { id: 'approval_decision_made', label: 'Decision Made', type: 'boolean' },
+    { id: 'organization_id', label: 'Organization', type: 'text' },
+    { id: 'amount_needed', label: 'Amount Needed', type: 'number' },
+    { id: 'weight', label: 'Weight', type: 'number' },
+    { id: 'created_at', label: 'Created Date', type: 'date' },
+  ],
+  requests: [
+    { id: 'is_approved', label: 'Approval Status', type: 'boolean' },
+    { id: 'approval_decision_made', label: 'Decision Made', type: 'boolean' },
+    { id: 'is_completed', label: 'Completion Status', type: 'boolean' },
+    { id: 'organization_id', label: 'Organization', type: 'text' },
+    { id: 'urgency_level', label: 'Urgency Level', type: 'text' },
+    { id: 'request_type', label: 'Request Type', type: 'text' },
+    { id: 'created_at', label: 'Created Date', type: 'date' },
+  ],
+  scholarships: [
+    { id: 'is_approved', label: 'Approval Status', type: 'boolean' },
+    { id: 'approval_decision_made', label: 'Decision Made', type: 'boolean' },
+    { id: 'organization_id', label: 'Organization', type: 'text' },
+    { id: 'amount', label: 'Amount', type: 'number' },
+    { id: 'created_at', label: 'Created Date', type: 'date' },
+  ],
+  events: [
+    { id: 'is_approved', label: 'Approval Status', type: 'boolean' },
+    { id: 'approval_decision_made', label: 'Decision Made', type: 'boolean' },
+    { id: 'max_participants', label: 'Max Participants', type: 'number' },
+    { id: 'event_date', label: 'Event Date', type: 'date' },
+    { id: 'created_at', label: 'Created Date', type: 'date' },
+  ],
+};
+
+const FILTER_OPERATORS = [
+  { id: 'equals', label: 'Equals (=)' },
+  { id: 'not_equals', label: 'Not Equals (≠)' },
+  { id: 'greater_than', label: 'Greater Than (>)' },
+  { id: 'less_than', label: 'Less Than (<)' },
+  { id: 'greater_equal', label: 'Greater or Equal (≥)' },
+  { id: 'less_equal', label: 'Less or Equal (≤)' },
+  { id: 'contains', label: 'Contains' },
+];
+
 export const ElementEditModal = ({ open, onOpenChange, element, onSave }: ElementEditModalProps) => {
   const [editedElement, setEditedElement] = useState<any>({});
 
   useEffect(() => {
     if (element) {
-      setEditedElement({ ...element });
+      setEditedElement({ 
+        ...element,
+        filters: element.filters || []
+      });
     }
   }, [element]);
 
@@ -57,15 +106,51 @@ export const ElementEditModal = ({ open, onOpenChange, element, onSave }: Elemen
     setEditedElement({ ...editedElement, ...updates });
   };
 
+  const addFilter = () => {
+    const newFilter = {
+      field: '',
+      operator: 'equals',
+      value: ''
+    };
+    const currentFilters = editedElement.filters || [];
+    updateElement({ filters: [...currentFilters, newFilter] });
+  };
+
+  const updateFilter = (index: number, filter: any) => {
+    const newFilters = [...(editedElement.filters || [])];
+    newFilters[index] = filter;
+    updateElement({ filters: newFilters });
+  };
+
+  const removeFilter = (index: number) => {
+    const newFilters = (editedElement.filters || []).filter((_: any, i: number) => i !== index);
+    updateElement({ filters: newFilters });
+  };
+
+  const getAvailableFields = () => {
+    if (editedElement.type !== 'value' || !editedElement.id) return [];
+    
+    const selectedValue = PREDEFINED_VALUES.find(v => v.id === editedElement.id);
+    if (!selectedValue) return [];
+    
+    return FILTER_FIELDS[selectedValue.category as keyof typeof FILTER_FIELDS] || [];
+  };
+
+  const getFieldType = (fieldId: string) => {
+    const availableFields = getAvailableFields();
+    const field = availableFields.find(f => f.id === fieldId);
+    return field?.type || 'text';
+  };
+
   if (!element) return null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[400px]">
+      <DialogContent className="sm:max-w-[500px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Edit Element</DialogTitle>
           <DialogDescription>
-            Modify the selected equation element.
+            Modify the selected equation element and add filters to refine the data.
           </DialogDescription>
         </DialogHeader>
         
@@ -74,7 +159,7 @@ export const ElementEditModal = ({ open, onOpenChange, element, onSave }: Elemen
             <Label>Element Type</Label>
             <Select
               value={editedElement.type || ''}
-              onValueChange={(value) => updateElement({ type: value, id: '', operator: '+', value: 0 })}
+              onValueChange={(value) => updateElement({ type: value, id: '', operator: '+', value: 0, filters: [] })}
             >
               <SelectTrigger>
                 <SelectValue />
@@ -92,7 +177,7 @@ export const ElementEditModal = ({ open, onOpenChange, element, onSave }: Elemen
               <Label>Database Value</Label>
               <Select
                 value={editedElement.id || ''}
-                onValueChange={(value) => updateElement({ id: value })}
+                onValueChange={(value) => updateElement({ id: value, filters: [] })}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select a database value" />
@@ -138,6 +223,116 @@ export const ElementEditModal = ({ open, onOpenChange, element, onSave }: Elemen
                 onChange={(e) => updateElement({ value: parseFloat(e.target.value) || 0 })}
                 placeholder="Enter a number"
               />
+            </div>
+          )}
+
+          {/* Filters Section */}
+          {editedElement.type === 'value' && editedElement.id && (
+            <div className="space-y-4 border-t pt-4">
+              <div className="flex items-center justify-between">
+                <Label className="text-base font-medium">Filters</Label>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={addFilter}
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  Add Filter
+                </Button>
+              </div>
+              
+              <p className="text-sm text-muted-foreground">
+                Add filters to refine which records are included in the calculation.
+              </p>
+
+              {editedElement.filters?.map((filter: any, index: number) => (
+                <div key={index} className="space-y-3 p-3 border rounded-lg bg-gray-50">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">Filter {index + 1}</span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => removeFilter(index)}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  
+                  <div className="grid grid-cols-3 gap-2">
+                    <div>
+                      <Label className="text-xs">Field</Label>
+                      <Select
+                        value={filter.field || ''}
+                        onValueChange={(value) => updateFilter(index, { ...filter, field: value, value: '' })}
+                      >
+                        <SelectTrigger className="h-8">
+                          <SelectValue placeholder="Select field" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {getAvailableFields().map((field) => (
+                            <SelectItem key={field.id} value={field.id}>
+                              {field.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div>
+                      <Label className="text-xs">Operator</Label>
+                      <Select
+                        value={filter.operator || 'equals'}
+                        onValueChange={(value) => updateFilter(index, { ...filter, operator: value })}
+                      >
+                        <SelectTrigger className="h-8">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {FILTER_OPERATORS.map((op) => (
+                            <SelectItem key={op.id} value={op.id}>
+                              {op.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div>
+                      <Label className="text-xs">Value</Label>
+                      {getFieldType(filter.field) === 'boolean' ? (
+                        <Select
+                          value={filter.value || ''}
+                          onValueChange={(value) => updateFilter(index, { ...filter, value })}
+                        >
+                          <SelectTrigger className="h-8">
+                            <SelectValue placeholder="Select value" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="true">True</SelectItem>
+                            <SelectItem value="false">False</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      ) : (
+                        <Input
+                          className="h-8"
+                          type={getFieldType(filter.field) === 'number' ? 'number' : getFieldType(filter.field) === 'date' ? 'date' : 'text'}
+                          value={filter.value || ''}
+                          onChange={(e) => updateFilter(index, { ...filter, value: e.target.value })}
+                          placeholder="Enter value"
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+              
+              {(!editedElement.filters || editedElement.filters.length === 0) && (
+                <p className="text-sm text-muted-foreground text-center py-4">
+                  No filters added. Click "Add Filter" to refine your calculation.
+                </p>
+              )}
             </div>
           )}
         </div>
