@@ -8,7 +8,7 @@ export const useRealtimeUpdates = () => {
 
   useEffect(() => {
     // Create a unique instance identifier to avoid conflicts
-    const instanceId = Math.random().toString(36).substr(2, 9);
+    const instanceId = `${Math.random().toString(36).substr(2, 9)}-${Date.now()}`;
     
     // Set up real-time subscriptions for all tables with unique channel names
     const channels = [
@@ -128,7 +128,7 @@ export const useRealtimeUpdates = () => {
     ];
 
     // Subscribe to all channels
-    const subscriptions = channels.map(channel => channel.subscribe());
+    channels.forEach(channel => channel.subscribe());
 
     // Cleanup function to unsubscribe from all channels
     return () => {

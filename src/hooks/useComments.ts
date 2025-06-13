@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -24,6 +24,7 @@ export const useComments = (contentType: string, contentId: string) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const channelRef = useRef<any>(null);
 
   const fetchComments = async () => {
     if (!contentId || !contentType) return;
@@ -252,9 +253,19 @@ export const useComments = (contentType: string, contentId: string) => {
   useEffect(() => {
     fetchComments();
 
-    // Set up real-time subscription for comments
-    const channel = supabase
-      .channel(`comments-${contentType}-${contentId}`)
+    // Clean up any existing channel
+    if (channelRef.current) {
+      supabase.removeChannel(channelRef.current);
+      channelRef.current = null;
+    }
+
+    if (!contentType || !contentId) return;
+
+    // Set up real-time subscription for comments with unique channel name
+    const channelName = `comments-${contentType}-${contentId}-${Date.now()}`;
+    
+    channelRef.current = supabase
+      .channel(channelName)
       .on(
         'postgres_changes',
         {
@@ -271,7 +282,10 @@ export const useComments = (contentType: string, contentId: string) => {
       .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
+      }
     };
   }, [contentType, contentId]);
 
