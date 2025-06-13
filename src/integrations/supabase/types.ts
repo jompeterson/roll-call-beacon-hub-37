@@ -138,7 +138,6 @@ export type Database = {
           description: string | null
           donation_link: string | null
           id: string
-          images: string[] | null
           is_approved: boolean
           material_type: string | null
           organization_id: string | null
@@ -159,7 +158,6 @@ export type Database = {
           description?: string | null
           donation_link?: string | null
           id?: string
-          images?: string[] | null
           is_approved?: boolean
           material_type?: string | null
           organization_id?: string | null
@@ -180,7 +178,6 @@ export type Database = {
           description?: string | null
           donation_link?: string | null
           id?: string
-          images?: string[] | null
           is_approved?: boolean
           material_type?: string | null
           organization_id?: string | null

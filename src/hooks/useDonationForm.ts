@@ -22,7 +22,6 @@ interface DonationFormData {
   organization_id: string;
   weight: string;
   material_type: string;
-  images: string[];
 }
 
 export const useDonationForm = (open: boolean) => {
@@ -40,8 +39,7 @@ export const useDonationForm = (open: boolean) => {
     organization_name: "",
     organization_id: "",
     weight: "",
-    material_type: "",
-    images: []
+    material_type: ""
   });
 
   const { isAdministrator } = useAuth();
@@ -88,13 +86,6 @@ export const useDonationForm = (open: boolean) => {
     }));
   };
 
-  const handleImagesChange = (images: string[]) => {
-    setFormData(prev => ({
-      ...prev,
-      images
-    }));
-  };
-
   const handleOrganizationChange = (organizationId: string) => {
     const selectedOrg = organizations.find(org => org.id === organizationId);
     setFormData(prev => ({
@@ -117,8 +108,7 @@ export const useDonationForm = (open: boolean) => {
       organization_name: currentOrganization?.name || "",
       organization_id: currentOrganization?.id || "",
       weight: "",
-      material_type: "",
-      images: []
+      material_type: ""
     });
   };
 
@@ -128,7 +118,6 @@ export const useDonationForm = (open: boolean) => {
     isSubmitting,
     setIsSubmitting,
     handleInputChange,
-    handleImagesChange,
     handleOrganizationChange,
     resetForm
   };

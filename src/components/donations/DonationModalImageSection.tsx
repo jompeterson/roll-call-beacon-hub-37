@@ -21,11 +21,6 @@ export const DonationModalImageSection = ({
   isOrganization = false,
   isUser = false
 }: DonationModalImageSectionProps) => {
-  // Use uploaded images if available, otherwise fall back to mock images for demo
-  const imagesToShow = donation.images && donation.images.length > 0 
-    ? donation.images 
-    : mockImages;
-
   return (
     <div className="space-y-4">
       <h3 className="font-semibold text-lg">
@@ -46,7 +41,7 @@ export const DonationModalImageSection = ({
         <div className="relative px-8">
           <Carousel className="w-full max-w-sm mx-auto">
             <CarouselContent>
-              {imagesToShow.map((image, index) => (
+              {mockImages.map((image, index) => (
                 <CarouselItem key={index}>
                   <div className="aspect-square rounded-lg overflow-hidden">
                     <img 
@@ -58,12 +53,8 @@ export const DonationModalImageSection = ({
                 </CarouselItem>
               ))}
             </CarouselContent>
-            {imagesToShow.length > 1 && (
-              <>
-                <CarouselPrevious className="-left-6" />
-                <CarouselNext className="-right-6" />
-              </>
-            )}
+            <CarouselPrevious className="-left-6" />
+            <CarouselNext className="-right-6" />
           </Carousel>
         </div>
       )}
