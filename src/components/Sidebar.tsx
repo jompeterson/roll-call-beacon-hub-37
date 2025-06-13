@@ -1,5 +1,5 @@
 
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import {
   BarChart3,
@@ -10,6 +10,9 @@ import {
   Users,
   Settings,
   Layout,
+  User,
+  ChevronDown,
+  LogIn,
 } from "lucide-react";
 import { customAuth } from "@/lib/customAuth";
 import { useState, useEffect } from "react";
@@ -17,8 +20,18 @@ import {
   Sheet,
   SheetContent,
 } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@/hooks/useAuth";
+import { NotificationDropdown } from "@/components/NotificationDropdown";
+import { signOut } from "@/lib/auth";
+import { useToast } from "@/hooks/use-toast";
 
 interface SidebarProps {
   open: boolean;
@@ -46,17 +59,23 @@ const adminNavigation = [
 
 export const Sidebar = ({ open, onOpenChange }: SidebarProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const isMobile = useIsMobile();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { isAdministrator } = useAuth();
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     // Get initial auth state
-    setIsAuthenticated(!!customAuth.getUser());
+    const currentUser = customAuth.getUser();
+    setIsAuthenticated(!!currentUser);
+    setUser(currentUser);
 
     // Listen for auth state changes
     const unsubscribe = customAuth.onAuthStateChange((user) => {
       setIsAuthenticated(!!user);
+      setUser(user);
     });
 
     return () => unsubscribe();
@@ -70,6 +89,47 @@ export const Sidebar = ({ open, onOpenChange }: SidebarProps) => {
   };
 
   const navigation = getNavigation();
+
+  const handleSignIn = () => {
+    navigate("/login");
+    if (isMobile && onOpenChange) {
+      onOpenChange(false);
+    }
+  };
+
+  const handleCreateAccount = () => {
+    navigate("/register");
+    if (isMobile && onOpenChange) {
+      onOpenChange(false);
+    }
+  };
+
+  const handleSignOut = async () => {
+    const { error } = await signOut();
+    
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to sign out. Please try again.",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Signed Out",
+        description: "You have been successfully signed out.",
+      });
+      navigate("/login");
+    }
+    
+    if (isMobile && onOpenChange) {
+      onOpenChange(false);
+    }
+  };
+
+  const getUserDisplayName = () => {
+    if (!user) return "User";
+    return user.email || "User";
+  };
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full pt-6">
@@ -100,6 +160,61 @@ export const Sidebar = ({ open, onOpenChange }: SidebarProps) => {
           );
         })}
       </nav>
+      
+      {/* Mobile Authentication Section */}
+      {isMobile && (
+        <div className="px-4 py-4 border-t border-border">
+          {isAuthenticated ? (
+            <div className="space-y-2">
+              {/* Notifications */}
+              <div className="flex justify-center">
+                <NotificationDropdown />
+              </div>
+              
+              {/* User Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="w-full flex items-center justify-center space-x-2">
+                    <User className="h-5 w-5" />
+                    <span>{getUserDisplayName()}</span>
+                    <ChevronDown className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center" className="w-48 bg-popover">
+                  <DropdownMenuItem onClick={() => {
+                    navigate("/profile");
+                    if (onOpenChange) onOpenChange(false);
+                  }}>
+                    Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleSignOut}>
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          ) : (
+            /* Sign In Section for non-authenticated users */
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="w-full flex items-center justify-center space-x-2">
+                  <LogIn className="h-4 w-4" />
+                  <span>Sign In</span>
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center" className="w-48 bg-popover">
+                <DropdownMenuItem onClick={handleSignIn}>
+                  Sign In
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleCreateAccount}>
+                  Create Account
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </div>
+      )}
     </div>
   );
 

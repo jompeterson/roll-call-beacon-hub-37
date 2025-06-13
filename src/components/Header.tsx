@@ -14,6 +14,7 @@ import { signOut } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
 import { NotificationDropdown } from "@/components/NotificationDropdown";
 import { supabase } from "@/integrations/supabase/client";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface HeaderProps {
   sidebarOpen: boolean;
@@ -23,6 +24,7 @@ interface HeaderProps {
 export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   const [user, setUser] = useState<CustomUser | null>(null);
   const [logoUrl, setLogoUrl] = useState("/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png");
 
@@ -161,8 +163,8 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
         </Link>
       </div>
 
-      {/* Right Side */}
-      <div className="flex items-center space-x-4">
+      {/* Right Side - Only show on desktop */}
+      <div className="hidden md:flex items-center space-x-4">
         {user ? (
           <>
             {/* Notifications */}
