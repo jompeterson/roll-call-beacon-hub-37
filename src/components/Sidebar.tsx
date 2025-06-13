@@ -8,6 +8,7 @@ import {
   Calendar,
   Building2,
   Users,
+  Settings,
 } from "lucide-react";
 import { customAuth } from "@/lib/customAuth";
 import { useState, useEffect } from "react";
@@ -16,6 +17,7 @@ import {
   SheetContent,
 } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useAuth } from "@/hooks/useAuth";
 
 interface SidebarProps {
   open: boolean;
@@ -35,10 +37,16 @@ const authenticatedNavigation = [
   { name: "Users", href: "/users", icon: Users },
 ];
 
+const adminNavigation = [
+  ...authenticatedNavigation,
+  { name: "Settings", href: "/settings", icon: Settings },
+];
+
 export const Sidebar = ({ open, onOpenChange }: SidebarProps) => {
   const location = useLocation();
   const isMobile = useIsMobile();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { isAdministrator } = useAuth();
 
   useEffect(() => {
     // Get initial auth state
@@ -52,7 +60,14 @@ export const Sidebar = ({ open, onOpenChange }: SidebarProps) => {
     return () => unsubscribe();
   }, []);
 
-  const navigation = isAuthenticated ? authenticatedNavigation : baseNavigation;
+  // Choose navigation based on user role
+  const getNavigation = () => {
+    if (!isAuthenticated) return baseNavigation;
+    if (isAdministrator) return adminNavigation;
+    return authenticatedNavigation;
+  };
+
+  const navigation = getNavigation();
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full pt-6">

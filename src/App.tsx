@@ -13,6 +13,7 @@ import { Organizations } from "./pages/Organizations";
 import { Users } from "./pages/Users";
 import { ValuedPartners } from "./pages/ValuedPartners";
 import { Profile } from "./pages/Profile";
+import { Settings } from "./pages/Settings";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { VerificationPending } from "./pages/VerificationPending";
@@ -43,6 +44,7 @@ const AppContent = () => {
           <Route path="users" element={<Users />} />
           <Route path="valued-partners" element={<ValuedPartners />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -13,6 +13,7 @@ import { customAuth, type User as CustomUser } from "@/lib/customAuth";
 import { signOut } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
 import { NotificationDropdown } from "@/components/NotificationDropdown";
+import { supabase } from "@/integrations/supabase/client";
 
 interface HeaderProps {
   sidebarOpen: boolean;
@@ -23,6 +24,7 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [user, setUser] = useState<CustomUser | null>(null);
+  const [logoUrl, setLogoUrl] = useState("/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png");
 
   useEffect(() => {
     // Get initial user
@@ -34,6 +36,49 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
     });
 
     return () => unsubscribe();
+  }, []);
+
+  // Fetch logo URL from settings
+  useEffect(() => {
+    const fetchLogo = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('app_settings')
+          .select('value')
+          .eq('key', 'logo_url')
+          .single();
+
+        if (data?.value) {
+          setLogoUrl(data.value);
+        }
+      } catch (error) {
+        console.error('Error fetching logo:', error);
+      }
+    };
+
+    fetchLogo();
+
+    // Listen for settings changes
+    const settingsSubscription = supabase
+      .channel('app_settings_changes')
+      .on('postgres_changes', 
+        { 
+          event: '*', 
+          schema: 'public', 
+          table: 'app_settings',
+          filter: 'key=eq.logo_url'
+        }, 
+        (payload) => {
+          if (payload.new && 'value' in payload.new) {
+            setLogoUrl(payload.new.value);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      settingsSubscription.unsubscribe();
+    };
   }, []);
 
   const handleSignIn = () => {
@@ -85,9 +130,13 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
         </Button>
         
         <img 
-          src="/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png" 
+          src={logoUrl} 
           alt="Roll Call Logo" 
           className="h-12"
+          onError={(e) => {
+            // Fallback to default logo if the custom one fails to load
+            e.currentTarget.src = "/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png";
+          }}
         />
       </div>
 
