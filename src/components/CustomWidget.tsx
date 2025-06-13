@@ -34,7 +34,7 @@ export const CustomWidget = ({ title, description, metrics, displayConfig, secti
 
   const getChangeData = () => {
     if (!displayConfig?.equation || displayConfig.equation.length === 0 || !calculatedValues) {
-      return { change: "", changeType: "neutral" as const };
+      return { change: "", changeType: "neutral" as const, label: "" };
     }
 
     const currentValue = calculateEquationValue(displayConfig.equation, calculatedValues);
@@ -60,7 +60,8 @@ export const CustomWidget = ({ title, description, metrics, displayConfig, secti
       };
       
       const previousValue = calculateEquationValue(displayConfig.equation, previousCalculatedValues);
-      return calculateChange(currentValue, previousValue);
+      const changeResult = calculateChange(currentValue, previousValue);
+      return { ...changeResult, label: "from last month" };
     } else if (section === 'yearly_metrics' && previousYearMetrics && !previousYearLoading) {
       const previousCalculatedValues = {
         donations_count: 0,
@@ -81,10 +82,11 @@ export const CustomWidget = ({ title, description, metrics, displayConfig, secti
       };
       
       const previousValue = calculateEquationValue(displayConfig.equation, previousCalculatedValues);
-      return calculateChange(currentValue, previousValue);
+      const changeResult = calculateChange(currentValue, previousValue);
+      return { ...changeResult, label: "from last year" };
     }
 
-    return { change: "...", changeType: "neutral" as const };
+    return { change: "...", changeType: "neutral" as const, label: "" };
   };
 
   const changeData = getChangeData();
@@ -106,15 +108,22 @@ export const CustomWidget = ({ title, description, metrics, displayConfig, secti
             {displayConfig.subtitle || "Custom metric"}
           </p>
           {changeData.change && changeData.change !== "..." && (
-            <p className={`text-xs ${
-              changeData.changeType === "positive" 
-                ? "text-green-600" 
-                : changeData.changeType === "negative" 
-                ? "text-red-600" 
-                : "text-muted-foreground"
-            }`}>
-              {changeData.change}
-            </p>
+            <div className="text-right">
+              <p className={`text-xs ${
+                changeData.changeType === "positive" 
+                  ? "text-green-600" 
+                  : changeData.changeType === "negative" 
+                  ? "text-red-600" 
+                  : "text-muted-foreground"
+              }`}>
+                {changeData.change}
+              </p>
+              {changeData.label && (
+                <p className="text-xs text-muted-foreground">
+                  {changeData.label}
+                </p>
+              )}
+            </div>
           )}
         </div>
       </CardContent>
