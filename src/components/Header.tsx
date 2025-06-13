@@ -116,7 +116,7 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
 
   return (
     <header className="bg-card border-b border-border px-6 py-4 flex items-center justify-between relative z-50">
-      {/* Left Side - Mobile Menu + Logo */}
+      {/* Left Side - Mobile Menu + Images */}
       <div className="flex items-center space-x-4">
         {/* Mobile Menu Button */}
         <Button
@@ -127,6 +127,13 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
         >
           <Menu className="h-5 w-5" />
         </Button>
+        
+        {/* New image before logo */}
+        <img 
+          src="/lovable-uploads/a14a58d2-d588-4005-877c-268a1df60bb2.png" 
+          alt="Header Icon" 
+          className="h-12"
+        />
         
         <img 
           src={logoUrl} 
