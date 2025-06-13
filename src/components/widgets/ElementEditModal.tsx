@@ -16,6 +16,7 @@ interface ElementEditModalProps {
 const PREDEFINED_VALUES = [
   { id: 'donations_count', label: 'Total Donations Count', category: 'donations' },
   { id: 'donations_amount', label: 'Total Donations Amount', category: 'donations' },
+  { id: 'donations_weight', label: 'Total Donations Weight', category: 'donations' },
   { id: 'donations_approved', label: 'Approved Donations Count', category: 'donations' },
   { id: 'donations_pending', label: 'Pending Donations Count', category: 'donations' },
   { id: 'requests_count', label: 'Total Requests Count', category: 'requests' },

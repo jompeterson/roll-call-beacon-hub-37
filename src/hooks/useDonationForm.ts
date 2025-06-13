@@ -20,6 +20,7 @@ interface DonationFormData {
   contact_phone: string;
   organization_name: string;
   organization_id: string;
+  weight: string;
 }
 
 export const useDonationForm = (open: boolean) => {
@@ -35,7 +36,8 @@ export const useDonationForm = (open: boolean) => {
     contact_email: "",
     contact_phone: "",
     organization_name: "",
-    organization_id: ""
+    organization_id: "",
+    weight: ""
   });
 
   const { isAdministrator } = useAuth();
@@ -102,7 +104,8 @@ export const useDonationForm = (open: boolean) => {
       contact_email: contactInfo?.email || "",
       contact_phone: contactInfo?.phone || "",
       organization_name: currentOrganization?.name || "",
-      organization_id: currentOrganization?.id || ""
+      organization_id: currentOrganization?.id || "",
+      weight: ""
     });
   };
 

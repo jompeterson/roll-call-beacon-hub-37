@@ -25,6 +25,7 @@ export const useWidgetCalculations = () => {
       const calculations = {
         donations_count: donations?.length || 0,
         donations_amount: donations?.reduce((sum, d) => sum + (d.amount_needed || 0), 0) || 0,
+        donations_weight: donations?.reduce((sum, d) => sum + (d.weight || 0), 0) || 0,
         donations_approved: donations?.filter(d => d.is_approved).length || 0,
         donations_pending: donations?.filter(d => !d.is_approved && !d.approval_decision_made).length || 0,
         
@@ -106,6 +107,8 @@ export const formatWidgetValue = (value: number, format: string): string => {
       return `${value.toFixed(2)}%`;
     case 'decimal':
       return value.toFixed(2);
+    case 'weight':
+      return `${value.toFixed(2)} lbs`;
     case 'number':
     default:
       return new Intl.NumberFormat('en-US').format(Math.round(value));

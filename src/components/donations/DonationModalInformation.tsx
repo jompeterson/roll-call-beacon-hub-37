@@ -65,6 +65,12 @@ export const DonationModalInformation = ({
               </p>
             </div>
           )}
+          {!isScholarship && !isEvent && !isOrganization && !isUser && donation.weight && donation.weight > 0 && (
+            <div>
+              <label className="font-medium text-sm text-muted-foreground">Weight</label>
+              <p className="text-base mt-1">{donation.weight} lbs</p>
+            </div>
+          )}
           {donation.contact_email && (
             <div>
               <label className="font-medium text-sm text-muted-foreground">Contact Email</label>

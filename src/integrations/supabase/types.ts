@@ -144,6 +144,7 @@ export type Database = {
           target_date: string | null
           title: string
           updated_at: string
+          weight: number | null
         }
         Insert: {
           amount_needed: number
@@ -162,6 +163,7 @@ export type Database = {
           target_date?: string | null
           title: string
           updated_at?: string
+          weight?: number | null
         }
         Update: {
           amount_needed?: number
@@ -180,6 +182,7 @@ export type Database = {
           target_date?: string | null
           title?: string
           updated_at?: string
+          weight?: number | null
         }
         Relationships: [
           {

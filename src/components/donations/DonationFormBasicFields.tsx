@@ -9,6 +9,7 @@ interface DonationFormBasicFieldsProps {
     estimated_value: string;
     donation_type: string;
     target_date: string;
+    weight: string;
   };
   onInputChange: (field: string, value: string) => void;
 }
@@ -56,6 +57,19 @@ export const DonationFormBasicFields = ({ formData, onInputChange }: DonationFor
       </div>
 
       <div className="space-y-2">
+        <Label htmlFor="weight">Weight (lbs)</Label>
+        <Input
+          id="weight"
+          type="number"
+          step="0.01"
+          min="0"
+          value={formData.weight}
+          onChange={(e) => onInputChange("weight", e.target.value)}
+          placeholder="0.00"
+        />
+      </div>
+
+      <div className="space-y-2 md:col-span-2">
         <Label htmlFor="target_date">Deadline</Label>
         <Input
           id="target_date"
