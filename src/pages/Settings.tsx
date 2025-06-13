@@ -15,23 +15,7 @@ export const Settings = () => {
   const [loading, setLoading] = useState(false);
   const [fetchingSettings, setFetchingSettings] = useState(true);
 
-  // Redirect non-administrators
-  if (!isAdministrator) {
-    return (
-      <div className="container mx-auto py-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>Access Denied</CardTitle>
-            <CardDescription>
-              You don't have permission to access this page. Only administrators can view settings.
-            </CardDescription>
-          </CardHeader>
-        </Card>
-      </div>
-    );
-  }
-
-  // Fetch current settings
+  // Fetch current settings - this useEffect must always be called
   useEffect(() => {
     const fetchSettings = async () => {
       try {
@@ -110,6 +94,22 @@ export const Settings = () => {
   const resetToDefault = () => {
     setLogoUrl("/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png");
   };
+
+  // Early return for non-administrators AFTER all hooks are called
+  if (!isAdministrator) {
+    return (
+      <div className="container mx-auto py-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Access Denied</CardTitle>
+            <CardDescription>
+              You don't have permission to access this page. Only administrators can view settings.
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  }
 
   if (fetchingSettings) {
     return (
