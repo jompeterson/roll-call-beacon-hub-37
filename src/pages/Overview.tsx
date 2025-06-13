@@ -1,3 +1,4 @@
+
 import { MetricCard } from "@/components/MetricCard";
 import { PendingOrganizationsWidget } from "@/components/PendingOrganizationsWidget";
 import { PendingScholarshipsWidget } from "@/components/PendingScholarshipsWidget";
@@ -122,6 +123,7 @@ export const Overview = () => {
                 description={widget.description}
                 metrics={widget.metrics}
                 displayConfig={widget.display_config}
+                section="pending_approvals"
               />
             ))}
           </div>
@@ -175,6 +177,7 @@ export const Overview = () => {
               description={widget.description}
               metrics={widget.metrics}
               displayConfig={widget.display_config}
+              section="monthly_metrics"
             />
           ))}
         </div>
@@ -234,6 +237,7 @@ export const Overview = () => {
               description={widget.description}
               metrics={widget.metrics}
               displayConfig={widget.display_config}
+              section="yearly_metrics"
             />
           ))}
         </div>
