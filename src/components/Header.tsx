@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -130,7 +131,7 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
         
         {/* New image before logo */}
         <img 
-          src="/lovable-uploads/a14a58d2-d588-4005-877c-268a1df60bb2.png" 
+          src="/lovable-uploads/3bf5b36b-46ad-420d-8eb5-7435b9aaad17.png" 
           alt="Header Icon" 
           className="h-12"
         />
