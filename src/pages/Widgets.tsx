@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -59,7 +58,7 @@ export const Widgets = () => {
           variant: "destructive",
         });
       } else {
-        setWidgets(data || []);
+        setWidgets((data || []) as Widget[]);
       }
     } catch (error) {
       console.error('Error fetching widgets:', error);
