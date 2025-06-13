@@ -1,12 +1,11 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Minus, X } from "lucide-react";
+import { Plus, Minus, X, Edit } from "lucide-react";
+import { ElementEditModal } from "./ElementEditModal";
 
 interface EquationBuilderModalProps {
   open: boolean;
@@ -33,16 +32,9 @@ const PREDEFINED_VALUES = [
   { id: 'events_pending', label: 'Pending Events Count', category: 'events' },
 ];
 
-const OPERATORS = [
-  { id: '+', label: 'Add (+)' },
-  { id: '-', label: 'Subtract (-)' },
-  { id: '*', label: 'Multiply (×)' },
-  { id: '/', label: 'Divide (÷)' },
-];
-
 export const EquationBuilderModal = ({ open, onOpenChange, onSave, initialEquation }: EquationBuilderModalProps) => {
   const [equation, setEquation] = useState<any[]>([]);
-  const [previewValue, setPreviewValue] = useState<string>('0');
+  const [editingElement, setEditingElement] = useState<{ element: any; index: number } | null>(null);
 
   useEffect(() => {
     if (initialEquation && initialEquation.length > 0) {
@@ -62,9 +54,9 @@ export const EquationBuilderModal = ({ open, onOpenChange, onSave, initialEquati
     setEquation([...equation, newElement]);
   };
 
-  const updateElement = (index: number, updates: any) => {
+  const updateElement = (index: number, updatedElement: any) => {
     const newEquation = [...equation];
-    newEquation[index] = { ...newEquation[index], ...updates };
+    newEquation[index] = updatedElement;
     setEquation(newEquation);
   };
 
@@ -92,133 +84,96 @@ export const EquationBuilderModal = ({ open, onOpenChange, onSave, initialEquati
     return '';
   };
 
+  const handleElementClick = (element: any, index: number) => {
+    setEditingElement({ element, index });
+  };
+
+  const handleElementSave = (updatedElement: any) => {
+    if (editingElement) {
+      updateElement(editingElement.index, updatedElement);
+      setEditingElement(null);
+    }
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>Build Calculation Equation</DialogTitle>
-          <DialogDescription>
-            Create a custom equation using predefined database values, operators, and custom numbers.
-          </DialogDescription>
-        </DialogHeader>
-        
-        <div className="space-y-4">
-          <div className="border rounded-lg p-4 bg-gray-50">
-            <Label className="text-sm font-medium">Current Equation</Label>
-            <div className="flex flex-wrap gap-2 mt-2 min-h-[40px] items-center">
-              {equation.map((element, index) => (
-                <div key={index} className="flex items-center gap-1">
-                  <Badge variant="outline" className="flex items-center gap-1">
-                    {getElementDisplay(element)}
-                    {equation.length > 1 && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-4 w-4 p-0"
-                        onClick={() => removeElement(index)}
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
-                    )}
-                  </Badge>
-                </div>
-              ))}
+    <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Build Calculation Equation</DialogTitle>
+            <DialogDescription>
+              Create a custom equation using predefined database values, operators, and custom numbers. Click on any element to edit it.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div className="border rounded-lg p-4 bg-gray-50">
+              <Label className="text-sm font-medium">Current Equation</Label>
+              <div className="flex flex-wrap gap-2 mt-2 min-h-[40px] items-center">
+                {equation.map((element, index) => (
+                  <div key={index} className="flex items-center gap-1">
+                    <Badge 
+                      variant="outline" 
+                      className="flex items-center gap-1 cursor-pointer hover:bg-gray-100 transition-colors"
+                      onClick={() => handleElementClick(element, index)}
+                    >
+                      <Edit className="h-3 w-3" />
+                      {getElementDisplay(element)}
+                      {equation.length > 1 && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-4 w-4 p-0 ml-1"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeElement(index);
+                          }}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      )}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Click on any element above to edit it, or use the buttons below to add new elements.
+              </p>
+            </div>
+
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => addElement('value')}>
+                <Plus className="h-4 w-4 mr-1" />
+                Add Value
+              </Button>
+              <Button variant="outline" onClick={() => addElement('operator')}>
+                <Plus className="h-4 w-4 mr-1" />
+                Add Operator
+              </Button>
+              <Button variant="outline" onClick={() => addElement('number')}>
+                <Plus className="h-4 w-4 mr-1" />
+                Add Number
+              </Button>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-4">
-            {equation.map((element, index) => (
-              <div key={index} className="border rounded-lg p-3 space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label className="text-sm">Element {index + 1}</Label>
-                  <Select
-                    value={element.type}
-                    onValueChange={(value) => updateElement(index, { type: value, id: '', operator: '+', value: 0 })}
-                  >
-                    <SelectTrigger className="w-32">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="value">Database Value</SelectItem>
-                      <SelectItem value="operator">Operator</SelectItem>
-                      <SelectItem value="number">Custom Number</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {element.type === 'value' && (
-                  <Select
-                    value={element.id}
-                    onValueChange={(value) => updateElement(index, { id: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a database value" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {PREDEFINED_VALUES.map((value) => (
-                        <SelectItem key={value.id} value={value.id}>
-                          {value.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-
-                {element.type === 'operator' && (
-                  <Select
-                    value={element.operator}
-                    onValueChange={(value) => updateElement(index, { operator: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {OPERATORS.map((op) => (
-                        <SelectItem key={op.id} value={op.id}>
-                          {op.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-
-                {element.type === 'number' && (
-                  <Input
-                    type="number"
-                    value={element.value}
-                    onChange={(e) => updateElement(index, { value: parseFloat(e.target.value) || 0 })}
-                    placeholder="Enter a number"
-                  />
-                )}
-              </div>
-            ))}
-          </div>
-
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={() => addElement('value')}>
-              <Plus className="h-4 w-4 mr-1" />
-              Add Value
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+              Cancel
             </Button>
-            <Button variant="outline" onClick={() => addElement('operator')}>
-              <Plus className="h-4 w-4 mr-1" />
-              Add Operator
+            <Button type="button" onClick={handleSave}>
+              Save Equation
             </Button>
-            <Button variant="outline" onClick={() => addElement('number')}>
-              <Plus className="h-4 w-4 mr-1" />
-              Add Number
-            </Button>
-          </div>
-        </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
-        <DialogFooter>
-          <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
-          </Button>
-          <Button type="button" onClick={handleSave}>
-            Save Equation
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      <ElementEditModal
+        open={!!editingElement}
+        onOpenChange={(open) => !open && setEditingElement(null)}
+        element={editingElement?.element}
+        onSave={handleElementSave}
+      />
+    </>
   );
 };
