@@ -15,6 +15,7 @@ interface DonationFormData {
   organization_name: string;
   organization_id: string;
   weight: string;
+  material_type: string;
 }
 
 interface DonationFormSubmissionProps {
@@ -61,7 +62,8 @@ export const useDonationFormSubmission = () => {
         amount_raised: 0,
         is_approved: false,
         approval_decision_made: false,
-        weight: formData.weight ? parseFloat(formData.weight) : 0
+        weight: formData.weight ? parseFloat(formData.weight) : 0,
+        material_type: formData.material_type || null
       };
 
       const { error } = await supabase
