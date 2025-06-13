@@ -24,6 +24,9 @@ export const DonationModalInformation = ({
   getUserBio,
   formatAmount
 }: DonationModalInformationProps) => {
+  // Debug the weight value
+  console.log("Donation weight:", donation.weight, "Type:", typeof donation.weight);
+  
   return (
     <div className="space-y-6">
       <div>
@@ -65,7 +68,7 @@ export const DonationModalInformation = ({
               </p>
             </div>
           )}
-          {!isScholarship && !isEvent && !isOrganization && !isUser && donation.weight && donation.weight > 0 && (
+          {!isScholarship && !isEvent && !isOrganization && !isUser && donation.weight && Number(donation.weight) > 0 && (
             <div>
               <label className="font-medium text-sm text-muted-foreground">Weight of Donation</label>
               <p className="text-base mt-1">{donation.weight} lbs</p>
