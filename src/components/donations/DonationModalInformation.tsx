@@ -68,6 +68,12 @@ export const DonationModalInformation = ({
               </p>
             </div>
           )}
+          {!isScholarship && !isEvent && !isOrganization && !isUser && donation.material_type && (
+            <div>
+              <label className="font-medium text-sm text-muted-foreground">Material Type</label>
+              <p className="text-base mt-1">{donation.material_type}</p>
+            </div>
+          )}
           {!isScholarship && !isEvent && !isOrganization && !isUser && Number(donation.weight) > 0 && (
             <div>
               <label className="font-medium text-sm text-muted-foreground">Weight of Donation</label>

@@ -21,6 +21,7 @@ interface DonationFormData {
   organization_name: string;
   organization_id: string;
   weight: string;
+  material_type: string;
 }
 
 export const useDonationForm = (open: boolean) => {
@@ -37,7 +38,8 @@ export const useDonationForm = (open: boolean) => {
     contact_phone: "",
     organization_name: "",
     organization_id: "",
-    weight: ""
+    weight: "",
+    material_type: ""
   });
 
   const { isAdministrator } = useAuth();
@@ -105,7 +107,8 @@ export const useDonationForm = (open: boolean) => {
       contact_phone: contactInfo?.phone || "",
       organization_name: currentOrganization?.name || "",
       organization_id: currentOrganization?.id || "",
-      weight: ""
+      weight: "",
+      material_type: ""
     });
   };
 

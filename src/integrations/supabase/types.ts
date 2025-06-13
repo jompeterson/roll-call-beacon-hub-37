@@ -139,6 +139,7 @@ export type Database = {
           donation_link: string | null
           id: string
           is_approved: boolean
+          material_type: string | null
           organization_id: string | null
           organization_name: string | null
           target_date: string | null
@@ -158,6 +159,7 @@ export type Database = {
           donation_link?: string | null
           id?: string
           is_approved?: boolean
+          material_type?: string | null
           organization_id?: string | null
           organization_name?: string | null
           target_date?: string | null
@@ -177,6 +179,7 @@ export type Database = {
           donation_link?: string | null
           id?: string
           is_approved?: boolean
+          material_type?: string | null
           organization_id?: string | null
           organization_name?: string | null
           target_date?: string | null

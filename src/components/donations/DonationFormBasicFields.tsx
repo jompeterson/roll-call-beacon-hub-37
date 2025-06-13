@@ -10,6 +10,7 @@ interface DonationFormBasicFieldsProps {
     donation_type: string;
     target_date: string;
     weight: string;
+    material_type: string;
   };
   onInputChange: (field: string, value: string) => void;
 }
@@ -57,6 +58,33 @@ export const DonationFormBasicFields = ({ formData, onInputChange }: DonationFor
       </div>
 
       <div className="space-y-2">
+        <Label htmlFor="material_type">Material Type</Label>
+        <Select value={formData.material_type} onValueChange={(value) => onInputChange("material_type", value)}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select material type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Wood">Wood</SelectItem>
+            <SelectItem value="Metal">Metal</SelectItem>
+            <SelectItem value="Plastic">Plastic</SelectItem>
+            <SelectItem value="Glass">Glass</SelectItem>
+            <SelectItem value="Fabric">Fabric</SelectItem>
+            <SelectItem value="Paper">Paper</SelectItem>
+            <SelectItem value="Electronics">Electronics</SelectItem>
+            <SelectItem value="Food">Food</SelectItem>
+            <SelectItem value="Clothing">Clothing</SelectItem>
+            <SelectItem value="Books">Books</SelectItem>
+            <SelectItem value="Furniture">Furniture</SelectItem>
+            <SelectItem value="Sports Equipment">Sports Equipment</SelectItem>
+            <SelectItem value="Toys">Toys</SelectItem>
+            <SelectItem value="Medical Supplies">Medical Supplies</SelectItem>
+            <SelectItem value="Office Supplies">Office Supplies</SelectItem>
+            <SelectItem value="Other">Other</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-2">
         <Label htmlFor="weight">Weight (lbs)</Label>
         <Input
           id="weight"
@@ -69,7 +97,7 @@ export const DonationFormBasicFields = ({ formData, onInputChange }: DonationFor
         />
       </div>
 
-      <div className="space-y-2 md:col-span-2">
+      <div className="space-y-2">
         <Label htmlFor="target_date">Deadline</Label>
         <Input
           id="target_date"
