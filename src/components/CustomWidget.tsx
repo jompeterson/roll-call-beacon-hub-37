@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useWidgetCalculations, calculateEquationValue, formatWidgetValue } from "@/hooks/useWidgetCalculations";
 import { usePreviousMonthMetrics } from "@/hooks/usePreviousMonthMetrics";
@@ -105,22 +104,15 @@ export const CustomWidget = ({ title, description, metrics, displayConfig, secti
         </div>
         <div className="flex items-center justify-between mt-1">
           {changeData.change && changeData.change !== "..." ? (
-            <div className="flex items-center gap-2">
-              <p className={`text-xs ${
-                changeData.changeType === "positive" 
-                  ? "text-green-600" 
-                  : changeData.changeType === "negative" 
-                  ? "text-red-600" 
-                  : "text-muted-foreground"
-              }`}>
-                {changeData.change}
-              </p>
-              {changeData.label && (
-                <p className="text-xs text-muted-foreground">
-                  {changeData.label}
-                </p>
-              )}
-            </div>
+            <p className={`text-xs ${
+              changeData.changeType === "positive" 
+                ? "text-green-600" 
+                : changeData.changeType === "negative" 
+                ? "text-red-600" 
+                : "text-muted-foreground"
+            }`}>
+              {changeData.change} {changeData.label}
+            </p>
           ) : (
             <p className="text-xs text-muted-foreground">
               {displayConfig.subtitle || "Custom metric"}
