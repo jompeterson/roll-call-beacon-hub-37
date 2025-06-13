@@ -104,11 +104,8 @@ export const CustomWidget = ({ title, description, metrics, displayConfig, secti
           {getDisplayValue()}
         </div>
         <div className="flex items-center justify-between mt-1">
-          <p className="text-xs text-muted-foreground">
-            {displayConfig.subtitle || "Custom metric"}
-          </p>
-          {changeData.change && changeData.change !== "..." && (
-            <div className="text-right">
+          {changeData.change && changeData.change !== "..." ? (
+            <div className="flex items-center gap-2">
               <p className={`text-xs ${
                 changeData.changeType === "positive" 
                   ? "text-green-600" 
@@ -124,6 +121,10 @@ export const CustomWidget = ({ title, description, metrics, displayConfig, secti
                 </p>
               )}
             </div>
+          ) : (
+            <p className="text-xs text-muted-foreground">
+              {displayConfig.subtitle || "Custom metric"}
+            </p>
           )}
         </div>
       </CardContent>
