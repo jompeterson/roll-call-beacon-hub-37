@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -114,7 +115,7 @@ export const Login = () => {
 
       {/* Right Side - Login Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-background">
-        <div className="w-full max-w-md space-y-8">
+        <div className="w-full max-w-sm space-y-8">
           {/* Logo */}
           <div className="text-center">
             <img 
