@@ -37,6 +37,7 @@ interface DonationTableProps {
   sortDirection: SortDirection;
   onSort: (field: DonationSortField) => void;
   onRowClick: (donation: Donation) => void;
+  showStatus?: boolean;
 }
 
 export const DonationTable = ({
@@ -44,8 +45,14 @@ export const DonationTable = ({
   sortField,
   sortDirection,
   onSort,
-  onRowClick
+  onRowClick,
+  showStatus = true
 }: DonationTableProps) => {
+  const organizationWidth = showStatus ? "w-2/5" : "w-1/2";
+  const titleWidth = showStatus ? "w-1/4" : "w-1/4";
+  const descriptionWidth = showStatus ? "w-1/4" : "w-1/4";
+  const colSpan = showStatus ? 4 : 3;
+
   return (
     <div className="border rounded-lg h-96">
       <div className="h-full flex flex-col">
@@ -57,7 +64,7 @@ export const DonationTable = ({
                 currentSort={sortField}
                 currentDirection={sortDirection}
                 onSort={onSort}
-                className="w-2/5"
+                className={organizationWidth}
               >
                 Organization
               </DonationSortableTableHead>
@@ -66,7 +73,7 @@ export const DonationTable = ({
                 currentSort={sortField}
                 currentDirection={sortDirection}
                 onSort={onSort}
-                className="w-1/4"
+                className={titleWidth}
               >
                 Title
               </DonationSortableTableHead>
@@ -75,19 +82,21 @@ export const DonationTable = ({
                 currentSort={sortField}
                 currentDirection={sortDirection}
                 onSort={onSort}
-                className="w-1/4"
+                className={descriptionWidth}
               >
                 Description
               </DonationSortableTableHead>
-              <DonationSortableTableHead
-                field="status"
-                currentSort={sortField}
-                currentDirection={sortDirection}
-                onSort={onSort}
-                className="w-1/6"
-              >
-                Status
-              </DonationSortableTableHead>
+              {showStatus && (
+                <DonationSortableTableHead
+                  field="status"
+                  currentSort={sortField}
+                  currentDirection={sortDirection}
+                  onSort={onSort}
+                  className="w-1/6"
+                >
+                  Status
+                </DonationSortableTableHead>
+              )}
             </TableRow>
           </TableHeader>
         </Table>
@@ -96,7 +105,7 @@ export const DonationTable = ({
             <TableBody>
               {donations.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={colSpan} className="text-center py-8 text-muted-foreground">
                     No donations available
                   </TableCell>
                 </TableRow>
@@ -109,21 +118,23 @@ export const DonationTable = ({
                       className="cursor-pointer hover:bg-muted/50"
                       onClick={() => onRowClick(donation)}
                     >
-                      <TableCell className="font-medium w-2/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                      <TableCell className={`font-medium ${organizationWidth} whitespace-nowrap overflow-hidden text-ellipsis max-w-0`}>
                         {donation.organization_name || "No Organization"}
                       </TableCell>
-                      <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                      <TableCell className={`${titleWidth} whitespace-nowrap overflow-hidden text-ellipsis max-w-0`}>
                         {donation.title}
                       </TableCell>
-                      <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                      <TableCell className={`${descriptionWidth} whitespace-nowrap overflow-hidden text-ellipsis max-w-0`}>
                         {donation.description || "No description"}
                       </TableCell>
-                      <TableCell className="w-1/6">
-                        <div className="flex items-center gap-2 whitespace-nowrap">
-                          <StatusIcon status={status} />
-                          <span>{status}</span>
-                        </div>
-                      </TableCell>
+                      {showStatus && (
+                        <TableCell className="w-1/6">
+                          <div className="flex items-center gap-2 whitespace-nowrap">
+                            <StatusIcon status={status} />
+                            <span>{status}</span>
+                          </div>
+                        </TableCell>
+                      )}
                     </TableRow>
                   );
                 })

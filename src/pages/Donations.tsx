@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { DonationModal } from "@/components/DonationModal";
@@ -7,6 +8,7 @@ import { DonationTable } from "@/components/donations/DonationTable";
 import { RequestTable } from "@/components/donations/RequestTable";
 import { useDonations, type Donation } from "@/hooks/useDonations";
 import { useRequests, type Request } from "@/hooks/useRequests";
+import { useAuth } from "@/hooks/useAuth";
 import { sortDonations } from "@/hooks/useDonationSorting";
 import { sortRequests } from "@/hooks/useRequestSorting";
 import { filterDonations, filterRequests } from "@/hooks/useDonationFiltering";
@@ -17,6 +19,7 @@ type RequestSortField = "organization_name" | "request_type" | "title" | "descri
 
 export const Donations = () => {
   const { donationId, requestId } = useParams();
+  const { isAuthenticated } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   
@@ -198,6 +201,7 @@ export const Donations = () => {
             sortDirection={donationDirection}
             onSort={handleDonationSort}
             onRowClick={handleDonationRowClick}
+            showStatus={isAuthenticated}
           />
         </div>
 
@@ -210,6 +214,7 @@ export const Donations = () => {
             sortDirection={requestDirection}
             onSort={handleRequestSort}
             onRowClick={handleRequestRowClick}
+            showStatus={isAuthenticated}
           />
         </div>
       </div>
