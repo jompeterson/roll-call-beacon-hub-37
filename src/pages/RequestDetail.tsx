@@ -2,6 +2,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { useRequests, type Request } from "@/hooks/useRequests";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { ChevronRight } from "lucide-react";
@@ -15,7 +16,7 @@ import { ShareButton } from "@/components/ShareButton";
 export const RequestDetail = () => {
   const { requestId } = useParams();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isAdministrator } = useAuth();
   const { data: requests = [], isLoading } = useRequests();
 
   const request = requests.find(r => r.id === requestId);
@@ -114,7 +115,14 @@ export const RequestDetail = () => {
         <div className="p-6 border-b">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-3xl font-bold">{request.title}</h1>
+              <div className="flex items-center gap-3 flex-wrap">
+                <h1 className="text-3xl font-bold">{request.title}</h1>
+                {isAdministrator && request.is_completed && (
+                  <Badge variant="secondary" className="bg-green-600 text-white">
+                    Completed
+                  </Badge>
+                )}
+              </div>
               <p className="text-sm text-muted-foreground mt-1">Request a Donation</p>
             </div>
             <ShareButton />
