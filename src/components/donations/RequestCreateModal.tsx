@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -38,7 +39,8 @@ export const RequestCreateModal = ({
     contact_email: "",
     contact_phone: "",
     organization_name: "",
-    organization_id: ""
+    organization_id: "",
+    needs_pickup: false
   });
 
   const { toast } = useToast();
@@ -92,7 +94,7 @@ export const RequestCreateModal = ({
     }
   }, [open, currentOrganization, contactInfo]);
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -135,6 +137,7 @@ export const RequestCreateModal = ({
         organization_name: formData.organization_name || null,
         creator_user_id: user.id,
         organization_id: formData.organization_id || null,
+        needs_pickup: formData.needs_pickup,
         is_approved: false,
         approval_decision_made: false
       };
@@ -165,7 +168,8 @@ export const RequestCreateModal = ({
         contact_email: contactInfo?.email || "",
         contact_phone: contactInfo?.phone || "",
         organization_name: currentOrganization?.name || "",
-        organization_id: currentOrganization?.id || ""
+        organization_id: currentOrganization?.id || "",
+        needs_pickup: false
       });
 
       onOpenChange(false);
@@ -312,6 +316,17 @@ export const RequestCreateModal = ({
               placeholder="Describe what you need..."
               rows={4}
             />
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="needs_pickup"
+              checked={formData.needs_pickup}
+              onCheckedChange={(checked) => handleInputChange("needs_pickup", checked)}
+            />
+            <Label htmlFor="needs_pickup" className="cursor-pointer">
+              Needs Pickup
+            </Label>
           </div>
 
           <div className="flex gap-3 pt-4">

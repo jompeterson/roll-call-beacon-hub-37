@@ -402,6 +402,7 @@ export type Database = {
           is_approved: boolean
           is_completed: boolean
           location: string | null
+          needs_pickup: boolean
           organization_id: string | null
           organization_name: string | null
           request_type: string
@@ -421,6 +422,7 @@ export type Database = {
           is_approved?: boolean
           is_completed?: boolean
           location?: string | null
+          needs_pickup?: boolean
           organization_id?: string | null
           organization_name?: string | null
           request_type: string
@@ -440,6 +442,7 @@ export type Database = {
           is_approved?: boolean
           is_completed?: boolean
           location?: string | null
+          needs_pickup?: boolean
           organization_id?: string | null
           organization_name?: string | null
           request_type?: string

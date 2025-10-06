@@ -60,6 +60,10 @@ export const RequestModalInformation = ({ request }: RequestModalInformationProp
               <p className="text-base mt-1">{request.contact_phone}</p>
             </div>
           )}
+          <div>
+            <label className="font-medium text-sm text-muted-foreground">Needs Pickup</label>
+            <p className="text-base mt-1">{request.needs_pickup ? "Yes" : "No"}</p>
+          </div>
         </div>
       </div>
     </div>
