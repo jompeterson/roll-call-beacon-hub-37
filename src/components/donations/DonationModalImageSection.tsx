@@ -9,7 +9,7 @@ interface DonationModalImageSectionProps {
   isUser?: boolean;
 }
 
-const mockImages = [
+const defaultImages = [
   "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=300&fit=crop",
   "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=300&fit=crop",
   "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop"
@@ -21,6 +21,16 @@ export const DonationModalImageSection = ({
   isOrganization = false,
   isUser = false
 }: DonationModalImageSectionProps) => {
+  // Use actual donation images if available, otherwise fall back to defaults
+  const images = donation.images && donation.images.length > 0 
+    ? donation.images 
+    : defaultImages;
+
+  // Don't show the section if there are no images for non-organization/user views
+  if (!isOrganization && !isUser && (!donation.images || donation.images.length === 0)) {
+    return null;
+  }
+
   return (
     <div className="space-y-4">
       <h3 className="font-semibold text-lg">
@@ -41,7 +51,7 @@ export const DonationModalImageSection = ({
         <div className="relative px-8">
           <Carousel className="w-full max-w-sm mx-auto">
             <CarouselContent>
-              {mockImages.map((image, index) => (
+              {images.map((image, index) => (
                 <CarouselItem key={index}>
                   <div className="aspect-square rounded-lg overflow-hidden">
                     <img 
@@ -53,8 +63,12 @@ export const DonationModalImageSection = ({
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="-left-6" />
-            <CarouselNext className="-right-6" />
+            {images.length > 1 && (
+              <>
+                <CarouselPrevious className="-left-6" />
+                <CarouselNext className="-right-6" />
+              </>
+            )}
           </Carousel>
         </div>
       )}
