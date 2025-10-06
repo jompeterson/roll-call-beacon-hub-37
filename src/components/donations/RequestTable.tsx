@@ -1,7 +1,8 @@
 
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { CheckCircle, Clock, XCircle, Archive } from "lucide-react";
+import { CheckCircle, Clock, XCircle, Archive, ExternalLink } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { RequestSortableTableHead } from "./RequestSortableTableHead";
 import type { Request } from "@/hooks/useRequests";
 
@@ -52,7 +53,7 @@ export const RequestTable = ({
   const typeWidth = showStatus ? "w-1/6" : "w-1/4";
   const titleWidth = showStatus ? "w-1/6" : "w-1/4";
   const descriptionWidth = showStatus ? "w-1/4" : "w-1/4";
-  const colSpan = showStatus ? 5 : 4;
+  const colSpan = showStatus ? 6 : 5;
 
   return (
     <div className="border rounded-lg h-96">
@@ -107,6 +108,15 @@ export const RequestTable = ({
                   Status
                 </RequestSortableTableHead>
               )}
+              <RequestSortableTableHead
+                field={null}
+                currentSort={null}
+                currentDirection={null}
+                onSort={() => {}}
+                className="w-16"
+              >
+                <span className="sr-only">Actions</span>
+              </RequestSortableTableHead>
             </TableRow>
           </TableHeader>
         </Table>
@@ -144,6 +154,19 @@ export const RequestTable = ({
                           </div>
                         </TableCell>
                       )}
+                      <TableCell className="w-16">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            window.open(`/requests/${request.id}`, '_blank');
+                          }}
+                          title="Open in new tab"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   );
                 })

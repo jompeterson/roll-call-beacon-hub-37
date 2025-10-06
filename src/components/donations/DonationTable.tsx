@@ -1,7 +1,8 @@
 
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { CheckCircle, Clock, XCircle, Archive } from "lucide-react";
+import { CheckCircle, Clock, XCircle, Archive, ExternalLink } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { DonationSortableTableHead } from "./DonationSortableTableHead";
 import type { Donation } from "@/hooks/useDonations";
 
@@ -51,7 +52,7 @@ export const DonationTable = ({
   const organizationWidth = showStatus ? "w-2/5" : "w-1/2";
   const titleWidth = showStatus ? "w-1/4" : "w-1/4";
   const descriptionWidth = showStatus ? "w-1/4" : "w-1/4";
-  const colSpan = showStatus ? 4 : 3;
+  const colSpan = showStatus ? 5 : 4;
 
   return (
     <div className="border rounded-lg h-96">
@@ -97,6 +98,15 @@ export const DonationTable = ({
                   Status
                 </DonationSortableTableHead>
               )}
+              <DonationSortableTableHead
+                field={null}
+                currentSort={null}
+                currentDirection={null}
+                onSort={() => {}}
+                className="w-16"
+              >
+                <span className="sr-only">Actions</span>
+              </DonationSortableTableHead>
             </TableRow>
           </TableHeader>
         </Table>
@@ -135,6 +145,19 @@ export const DonationTable = ({
                           </div>
                         </TableCell>
                       )}
+                      <TableCell className="w-16">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            window.open(`/donations/${donation.id}`, '_blank');
+                          }}
+                          title="Open in new tab"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   );
                 })
