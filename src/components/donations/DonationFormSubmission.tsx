@@ -55,10 +55,10 @@ export const useDonationFormSubmission = () => {
       if (formData.images.length > 0) {
         for (const image of formData.images) {
           const fileExt = image.name.split('.').pop();
-          const fileName = `${user.id}-${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-          const filePath = `${fileName}`;
+          const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+          const filePath = fileName;
 
-          const { error: uploadError } = await supabase.storage
+          const { error: uploadError, data: uploadData } = await supabase.storage
             .from('donation-images')
             .upload(filePath, image, {
               cacheControl: '3600',
@@ -67,7 +67,20 @@ export const useDonationFormSubmission = () => {
 
           if (uploadError) {
             console.error('Error uploading image:', uploadError);
-            throw new Error(`Failed to upload image: ${image.name}`);
+            
+            // Provide more specific error message
+            let errorMsg = `Failed to upload image: ${image.name}`;
+            if (uploadError.message.includes('row-level security')) {
+              errorMsg = 'Unable to upload images. Please check your permissions.';
+            }
+            
+            toast({
+              title: "Upload Error",
+              description: errorMsg,
+              variant: "destructive",
+            });
+            
+            throw new Error(errorMsg);
           }
 
           // Get public URL
