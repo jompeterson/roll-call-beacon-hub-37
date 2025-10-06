@@ -17,6 +17,8 @@ interface DonationFormData {
   weight: string;
   material_type: string;
   images: File[];
+  can_deliver: boolean;
+  delivery_miles: string;
 }
 
 interface DonationFormSubmissionProps {
@@ -108,7 +110,9 @@ export const useDonationFormSubmission = () => {
         approval_decision_made: false,
         weight: formData.weight ? parseFloat(formData.weight) : 0,
         material_type: formData.material_type || null,
-        images: imageUrls
+        images: imageUrls,
+        can_deliver: formData.can_deliver,
+        delivery_miles: formData.delivery_miles ? parseFloat(formData.delivery_miles) : null
       };
 
       const { error } = await supabase

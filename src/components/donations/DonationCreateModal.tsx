@@ -3,6 +3,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import { useDonationForm } from "@/hooks/useDonationForm";
 import { useDonationFormSubmission } from "./DonationFormSubmission";
 import { DonationFormBasicFields } from "./DonationFormBasicFields";
@@ -82,6 +84,34 @@ export const DonationCreateModal = ({
               placeholder="Describe your donation needs..."
               rows={4}
             />
+          </div>
+
+          <div className="space-y-4 border-t pt-4">
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="can_deliver"
+                checked={formData.can_deliver}
+                onCheckedChange={(checked) => handleInputChange("can_deliver", checked)}
+              />
+              <Label htmlFor="can_deliver" className="cursor-pointer">
+                Can Deliver
+              </Label>
+            </div>
+            
+            {formData.can_deliver && (
+              <div className="space-y-2 pl-6">
+                <Label htmlFor="delivery_miles">Delivery Miles</Label>
+                <Input
+                  id="delivery_miles"
+                  type="number"
+                  min="0"
+                  step="0.1"
+                  value={formData.delivery_miles}
+                  onChange={(e) => handleInputChange("delivery_miles", e.target.value)}
+                  placeholder="Enter maximum delivery distance in miles"
+                />
+              </div>
+            )}
           </div>
 
           <DonationImageUpload

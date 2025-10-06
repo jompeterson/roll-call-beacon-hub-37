@@ -92,10 +92,18 @@ export const DonationModalInformation = ({
               <p className="text-base mt-1">{donation.contact_phone}</p>
             </div>
           )}
-          {donation.target_date && (
+           {donation.target_date && (
             <div>
               <label className="font-medium text-sm text-muted-foreground">Deadline</label>
               <p className="text-base mt-1">{new Date(donation.target_date).toLocaleDateString()}</p>
+            </div>
+          )}
+          {!isScholarship && !isEvent && !isOrganization && !isUser && donation.can_deliver && (
+            <div>
+              <label className="font-medium text-sm text-muted-foreground">Can Deliver</label>
+              <p className="text-base mt-1">
+                {donation.delivery_miles ? `Up to ${donation.delivery_miles} miles` : 'Yes'}
+              </p>
             </div>
           )}
         </div>

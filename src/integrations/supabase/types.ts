@@ -136,10 +136,12 @@ export type Database = {
           amount_needed: number
           amount_raised: number | null
           approval_decision_made: boolean
+          can_deliver: boolean
           contact_email: string | null
           contact_phone: string | null
           created_at: string
           creator_user_id: string
+          delivery_miles: number | null
           description: string | null
           donation_link: string | null
           id: string
@@ -157,10 +159,12 @@ export type Database = {
           amount_needed: number
           amount_raised?: number | null
           approval_decision_made?: boolean
+          can_deliver?: boolean
           contact_email?: string | null
           contact_phone?: string | null
           created_at?: string
           creator_user_id: string
+          delivery_miles?: number | null
           description?: string | null
           donation_link?: string | null
           id?: string
@@ -178,10 +182,12 @@ export type Database = {
           amount_needed?: number
           amount_raised?: number | null
           approval_decision_made?: boolean
+          can_deliver?: boolean
           contact_email?: string | null
           contact_phone?: string | null
           created_at?: string
           creator_user_id?: string
+          delivery_miles?: number | null
           description?: string | null
           donation_link?: string | null
           id?: string
