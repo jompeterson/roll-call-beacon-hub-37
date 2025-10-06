@@ -8,6 +8,7 @@ import { useDonationFormSubmission } from "./DonationFormSubmission";
 import { DonationFormBasicFields } from "./DonationFormBasicFields";
 import { DonationFormOrganizationField } from "./DonationFormOrganizationField";
 import { DonationFormContactFields } from "./DonationFormContactFields";
+import { DonationImageUpload } from "./DonationImageUpload";
 
 interface DonationCreateModalProps {
   open: boolean;
@@ -82,6 +83,11 @@ export const DonationCreateModal = ({
               rows={4}
             />
           </div>
+
+          <DonationImageUpload
+            images={formData.images}
+            onImagesChange={(images) => handleInputChange("images", images)}
+          />
 
           <div className="flex gap-3 pt-4">
             <Button

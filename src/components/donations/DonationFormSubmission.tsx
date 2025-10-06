@@ -16,6 +16,7 @@ interface DonationFormData {
   organization_id: string;
   weight: string;
   material_type: string;
+  images: File[];
 }
 
 interface DonationFormSubmissionProps {
@@ -48,6 +49,36 @@ export const useDonationFormSubmission = () => {
     setIsSubmitting(true);
 
     try {
+      // Upload images to storage first
+      const imageUrls: string[] = [];
+      
+      if (formData.images.length > 0) {
+        for (const image of formData.images) {
+          const fileExt = image.name.split('.').pop();
+          const fileName = `${user.id}-${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+          const filePath = `${fileName}`;
+
+          const { error: uploadError } = await supabase.storage
+            .from('donation-images')
+            .upload(filePath, image, {
+              cacheControl: '3600',
+              upsert: false
+            });
+
+          if (uploadError) {
+            console.error('Error uploading image:', uploadError);
+            throw new Error(`Failed to upload image: ${image.name}`);
+          }
+
+          // Get public URL
+          const { data: { publicUrl } } = supabase.storage
+            .from('donation-images')
+            .getPublicUrl(filePath);
+
+          imageUrls.push(publicUrl);
+        }
+      }
+
       const donationData = {
         title: formData.title,
         description: formData.description || null,
@@ -63,7 +94,8 @@ export const useDonationFormSubmission = () => {
         is_approved: false,
         approval_decision_made: false,
         weight: formData.weight ? parseFloat(formData.weight) : 0,
-        material_type: formData.material_type || null
+        material_type: formData.material_type || null,
+        images: imageUrls
       };
 
       const { error } = await supabase
