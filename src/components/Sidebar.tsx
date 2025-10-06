@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import {
   BarChart3,
-  DollarSign,
+  Hammer,
   GraduationCap,
   Calendar,
   Building2,
@@ -40,7 +40,7 @@ interface SidebarProps {
 
 const baseNavigation = [
   { name: "Overview", href: "/", icon: BarChart3 },
-  { name: "Donations", href: "/donations", icon: DollarSign },
+  { name: "Donations", href: "/donations", icon: Hammer },
   { name: "Scholarships", href: "/scholarships", icon: GraduationCap },
   { name: "Events", href: "/events", icon: Calendar },
   { name: "Organizations", href: "/organizations", icon: Building2 },
