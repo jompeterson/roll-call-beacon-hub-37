@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Layout } from "./components/Layout";
 import { Overview } from "./pages/Overview";
 import { Donations } from "./pages/Donations";
+import { DonationDetail } from "./pages/DonationDetail";
 import { Scholarships } from "./pages/Scholarships";
 import { Events } from "./pages/Events";
 import { Organizations } from "./pages/Organizations";
@@ -35,7 +36,7 @@ const AppContent = () => {
         <Route path="/" element={<Layout />}>
           <Route index element={<Overview />} />
           <Route path="donations" element={<Donations />} />
-          <Route path="donations/:donationId" element={<Donations />} />
+          <Route path="donations/:donationId" element={<DonationDetail />} />
           <Route path="requests/:requestId" element={<Donations />} />
           <Route path="scholarships" element={<Scholarships />} />
           <Route path="scholarships/:scholarshipId" element={<Scholarships />} />

@@ -1,7 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { DonationModal } from "@/components/DonationModal";
+import { useParams, useNavigate } from "react-router-dom";
 import { RequestModal } from "@/components/RequestModal";
 import { DonationFilters } from "@/components/donations/DonationFilters";
 import { DonationTable } from "@/components/donations/DonationTable";
@@ -18,7 +17,8 @@ type DonationSortField = "organization_name" | "title" | "description" | "status
 type RequestSortField = "organization_name" | "request_type" | "title" | "description" | "status" | null;
 
 export const Donations = () => {
-  const { donationId, requestId } = useParams();
+  const { requestId } = useParams();
+  const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -31,9 +31,7 @@ export const Donations = () => {
   const [requestSort, setRequestSort] = useState<RequestSortField>(null);
   const [requestDirection, setRequestDirection] = useState<SortDirection>(null);
 
-  // Modal states
-  const [selectedDonation, setSelectedDonation] = useState<Donation | null>(null);
-  const [donationModalOpen, setDonationModalOpen] = useState(false);
+  // Modal states for requests only
   const [selectedRequest, setSelectedRequest] = useState<Request | null>(null);
   const [requestModalOpen, setRequestModalOpen] = useState(false);
 
@@ -41,17 +39,7 @@ export const Donations = () => {
   const { data: donations = [], isLoading: donationsLoading, error: donationsError } = useDonations();
   const { data: requests = [], isLoading: requestsLoading, error: requestsError } = useRequests();
 
-  // Handle URL parameters for direct modal opening
-  useEffect(() => {
-    if (donationId && donations.length > 0) {
-      const donation = donations.find(d => d.id === donationId);
-      if (donation) {
-        setSelectedDonation(donation);
-        setDonationModalOpen(true);
-      }
-    }
-  }, [donationId, donations]);
-
+  // Handle URL parameters for request modal opening
   useEffect(() => {
     if (requestId && requests.length > 0) {
       const request = requests.find(r => r.id === requestId);
@@ -101,28 +89,12 @@ export const Donations = () => {
   const sortedRequestPosts = sortRequests(filteredRequestPosts, requestSort, requestDirection);
 
   const handleDonationRowClick = (donation: Donation) => {
-    setSelectedDonation(donation);
-    setDonationModalOpen(true);
+    navigate(`/donations/${donation.id}`);
   };
 
   const handleRequestRowClick = (request: Request) => {
     setSelectedRequest(request);
     setRequestModalOpen(true);
-  };
-
-  const handleDonationApprove = (id: string) => {
-    console.log("Approved donation:", id);
-    setDonationModalOpen(false);
-  };
-
-  const handleDonationReject = (id: string) => {
-    console.log("Rejected donation:", id);
-    setDonationModalOpen(false);
-  };
-
-  const handleDonationRequestChanges = (id: string) => {
-    console.log("Requested changes for donation:", id);
-    setDonationModalOpen(false);
   };
 
   const handleRequestApprove = (id: string) => {
@@ -219,16 +191,7 @@ export const Donations = () => {
         </div>
       </div>
 
-      {/* Modals */}
-      <DonationModal
-        donation={selectedDonation}
-        open={donationModalOpen}
-        onOpenChange={setDonationModalOpen}
-        onApprove={handleDonationApprove}
-        onReject={handleDonationReject}
-        onRequestChanges={handleDonationRequestChanges}
-      />
-
+      {/* Request Modal */}
       <RequestModal
         request={selectedRequest}
         open={requestModalOpen}
