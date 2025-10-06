@@ -131,6 +131,27 @@ export type Database = {
         }
         Relationships: []
       }
+      donation_acceptances: {
+        Row: {
+          created_at: string
+          donation_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          donation_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          donation_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       donations: {
         Row: {
           amount_needed: number

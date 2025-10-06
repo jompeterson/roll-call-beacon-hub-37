@@ -1,6 +1,16 @@
-
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
+import { useState, useEffect } from "react";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 interface DonationModalActionButtonsProps {
   donationId: string;
@@ -23,6 +33,29 @@ export const DonationModalActionButtons = ({
   approvalDecisionMade,
   isApproved
 }: DonationModalActionButtonsProps) => {
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [hasAccepted, setHasAccepted] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [isAccepting, setIsAccepting] = useState(false);
+
+  // Check if user has already accepted this donation
+  useEffect(() => {
+    const checkAcceptance = async () => {
+      if (!user) return;
+      
+      const { data } = await supabase
+        .from('donation_acceptances')
+        .select('id')
+        .eq('donation_id', donationId)
+        .eq('user_id', user.id)
+        .maybeSingle();
+      
+      setHasAccepted(!!data);
+    };
+
+    checkAcceptance();
+  }, [donationId, user]);
   const handleApprove = async () => {
     try {
       const { error } = await supabase
@@ -69,23 +102,73 @@ export const DonationModalActionButtons = ({
     }
   };
 
-  const handleAcceptDonation = () => {
-    console.log("Accepting donation:", donationId);
-    // Add your accept donation logic here
+  const handleAcceptDonation = async () => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "You must be logged in to accept donations.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsAccepting(true);
+    
+    try {
+      const { error } = await supabase
+        .from('donation_acceptances')
+        .insert({
+          donation_id: donationId,
+          user_id: user.id
+        });
+
+      if (error) throw error;
+
+      setHasAccepted(true);
+      setShowConfirmDialog(true);
+    } catch (error) {
+      console.error("Error accepting donation:", error);
+      toast({
+        title: "Error",
+        description: "Failed to accept donation. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsAccepting(false);
+    }
   };
 
   // If approval decision has been made, show different buttons
   if (approvalDecisionMade) {
     if (isApproved) {
       return (
-        <div className="flex gap-3 p-6 flex-wrap">
-          <Button 
-            onClick={handleAcceptDonation}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
-          >
-            Accept Donation
-          </Button>
-        </div>
+        <>
+          <div className="flex gap-3 p-6 flex-wrap">
+            <Button 
+              onClick={handleAcceptDonation}
+              disabled={hasAccepted || isAccepting}
+              className={hasAccepted ? "bg-muted text-muted-foreground cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 text-white"}
+            >
+              {hasAccepted ? "Already Accepted" : isAccepting ? "Accepting..." : "Accept Donation"}
+            </Button>
+          </div>
+          
+          <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Thank You!</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Your interest has been noted. The donation poster will reach out to you soon to coordinate the donation.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <Button onClick={() => setShowConfirmDialog(false)}>
+                  Got it
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </>
       );
     }
     // If rejected, show no buttons
