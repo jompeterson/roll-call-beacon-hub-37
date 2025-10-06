@@ -10,15 +10,16 @@ interface DonationImageUploadProps {
   onImagesChange: (images: File[]) => void;
 }
 
-export const DonationImageUpload = ({ images, onImagesChange }: DonationImageUploadProps) => {
+export const DonationImageUpload = ({ images = [], onImagesChange }: DonationImageUploadProps) => {
   const { toast } = useToast();
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
+    const currentImages = images || [];
     
     // Validate total number of images
-    if (images.length + files.length > 3) {
+    if (currentImages.length + files.length > 3) {
       toast({
         title: "Too many images",
         description: "You can only upload up to 3 images.",
@@ -57,17 +58,19 @@ export const DonationImageUpload = ({ images, onImagesChange }: DonationImageUpl
     setPreviewUrls([...previewUrls, ...newPreviewUrls]);
     
     // Update images
-    onImagesChange([...images, ...files]);
+    onImagesChange([...currentImages, ...files]);
     
     // Clear input
     e.target.value = '';
   };
 
   const removeImage = (index: number) => {
+    const currentImages = images || [];
+    
     // Revoke the preview URL to free memory
     URL.revokeObjectURL(previewUrls[index]);
     
-    const newImages = images.filter((_, i) => i !== index);
+    const newImages = currentImages.filter((_, i) => i !== index);
     const newPreviewUrls = previewUrls.filter((_, i) => i !== index);
     
     onImagesChange(newImages);
@@ -105,7 +108,7 @@ export const DonationImageUpload = ({ images, onImagesChange }: DonationImageUpl
       )}
 
       {/* Upload button */}
-      {images.length < 3 && (
+      {(images?.length || 0) < 3 && (
         <div className="flex items-center gap-2">
           <Input
             id="images"
@@ -122,7 +125,7 @@ export const DonationImageUpload = ({ images, onImagesChange }: DonationImageUpl
             className="w-full"
           >
             <Upload className="h-4 w-4 mr-2" />
-            {images.length === 0 ? 'Upload Images' : `Add More (${images.length}/3)`}
+            {(images?.length || 0) === 0 ? 'Upload Images' : `Add More (${images?.length || 0}/3)`}
           </Button>
         </div>
       )}
