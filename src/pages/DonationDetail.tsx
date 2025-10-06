@@ -178,6 +178,7 @@ export const DonationDetail = () => {
               onApprove={handleApprove}
               onReject={handleReject}
               onRequestChanges={handleRequestChanges}
+              onOpenChange={() => navigate('/donations')}
               approvalDecisionMade={donation.approval_decision_made}
               isApproved={donation.is_approved}
             />

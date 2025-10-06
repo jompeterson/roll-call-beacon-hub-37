@@ -181,6 +181,7 @@ export const DonationModal = ({
               onApprove={onApprove || (() => {})}
               onReject={onReject || (() => {})}
               onRequestChanges={onRequestChanges || (() => {})}
+              onOpenChange={onOpenChange}
               isUser={isUser}
               approvalDecisionMade={donation.approval_decision_made}
               isApproved={donation.is_approved}

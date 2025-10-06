@@ -37,6 +37,7 @@ export const RequestModalActionButtons = ({
 
       console.log("Request approved successfully");
       onApprove(id);
+      onOpenChange(false); // Navigate back after approval
     } catch (error) {
       console.error("Error approving request:", error);
     }
@@ -59,6 +60,7 @@ export const RequestModalActionButtons = ({
 
       console.log("Request rejected successfully");
       onReject(id);
+      onOpenChange(false); // Navigate back after rejection
     } catch (error) {
       console.error("Error rejecting request:", error);
     }

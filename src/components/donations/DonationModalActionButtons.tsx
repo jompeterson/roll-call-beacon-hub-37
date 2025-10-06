@@ -7,6 +7,7 @@ interface DonationModalActionButtonsProps {
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
   onRequestChanges: (id: string) => void;
+  onOpenChange: (open: boolean) => void;
   isUser?: boolean;
   approvalDecisionMade: boolean;
   isApproved: boolean;
@@ -17,6 +18,7 @@ export const DonationModalActionButtons = ({
   onApprove,
   onReject,
   onRequestChanges,
+  onOpenChange,
   isUser = false,
   approvalDecisionMade,
   isApproved
@@ -38,6 +40,7 @@ export const DonationModalActionButtons = ({
 
       console.log("Donation approved successfully");
       onApprove(donationId);
+      onOpenChange(false); // Navigate back after approval
     } catch (error) {
       console.error("Error approving donation:", error);
     }
@@ -60,6 +63,7 @@ export const DonationModalActionButtons = ({
 
       console.log("Donation rejected successfully");
       onReject(donationId);
+      onOpenChange(false); // Navigate back after rejection
     } catch (error) {
       console.error("Error rejecting donation:", error);
     }
