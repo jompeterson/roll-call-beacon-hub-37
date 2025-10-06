@@ -8,7 +8,6 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbP
 import { ChevronRight } from "lucide-react";
 import { RequestModalCreatorInfo } from "@/components/request/RequestModalCreatorInfo";
 import { RequestModalInformation } from "@/components/request/RequestModalInformation";
-import { RequestModalImageSection } from "@/components/request/RequestModalImageSection";
 import { RequestModalActionButtons } from "@/components/request/RequestModalActionButtons";
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ShareButton } from "@/components/ShareButton";
@@ -141,10 +140,7 @@ export const RequestDetail = () => {
               createdAt={request.created_at}
             />
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <RequestModalInformation request={request} />
-              <RequestModalImageSection title={request.title} />
-            </div>
+            <RequestModalInformation request={request} />
 
             {/* Comments Section */}
             {showComments && (
