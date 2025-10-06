@@ -8,6 +8,7 @@ import { Layout } from "./components/Layout";
 import { Overview } from "./pages/Overview";
 import { Donations } from "./pages/Donations";
 import { DonationDetail } from "./pages/DonationDetail";
+import { RequestDetail } from "./pages/RequestDetail";
 import { Scholarships } from "./pages/Scholarships";
 import { Events } from "./pages/Events";
 import { Organizations } from "./pages/Organizations";
@@ -37,7 +38,7 @@ const AppContent = () => {
           <Route index element={<Overview />} />
           <Route path="donations" element={<Donations />} />
           <Route path="donations/:donationId" element={<DonationDetail />} />
-          <Route path="requests/:requestId" element={<Donations />} />
+          <Route path="requests/:requestId" element={<RequestDetail />} />
           <Route path="scholarships" element={<Scholarships />} />
           <Route path="scholarships/:scholarshipId" element={<Scholarships />} />
           <Route path="events" element={<Events />} />

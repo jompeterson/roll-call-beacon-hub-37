@@ -1,7 +1,6 @@
 
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { RequestModal } from "@/components/RequestModal";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { DonationFilters } from "@/components/donations/DonationFilters";
 import { DonationTable } from "@/components/donations/DonationTable";
 import { RequestTable } from "@/components/donations/RequestTable";
@@ -17,7 +16,6 @@ type DonationSortField = "organization_name" | "title" | "description" | "status
 type RequestSortField = "organization_name" | "request_type" | "title" | "description" | "status" | null;
 
 export const Donations = () => {
-  const { requestId } = useParams();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,24 +29,8 @@ export const Donations = () => {
   const [requestSort, setRequestSort] = useState<RequestSortField>(null);
   const [requestDirection, setRequestDirection] = useState<SortDirection>(null);
 
-  // Modal states for requests only
-  const [selectedRequest, setSelectedRequest] = useState<Request | null>(null);
-  const [requestModalOpen, setRequestModalOpen] = useState(false);
-
-  // Fetch data from Supabase
   const { data: donations = [], isLoading: donationsLoading, error: donationsError } = useDonations();
   const { data: requests = [], isLoading: requestsLoading, error: requestsError } = useRequests();
-
-  // Handle URL parameters for request modal opening
-  useEffect(() => {
-    if (requestId && requests.length > 0) {
-      const request = requests.find(r => r.id === requestId);
-      if (request) {
-        setSelectedRequest(request);
-        setRequestModalOpen(true);
-      }
-    }
-  }, [requestId, requests]);
 
   const handleDonationSort = (field: DonationSortField) => {
     if (donationSort === field) {
@@ -93,23 +75,7 @@ export const Donations = () => {
   };
 
   const handleRequestRowClick = (request: Request) => {
-    setSelectedRequest(request);
-    setRequestModalOpen(true);
-  };
-
-  const handleRequestApprove = (id: string) => {
-    console.log("Approved request:", id);
-    setRequestModalOpen(false);
-  };
-
-  const handleRequestReject = (id: string) => {
-    console.log("Rejected request:", id);
-    setRequestModalOpen(false);
-  };
-
-  const handleRequestRequestChanges = (id: string) => {
-    console.log("Requested changes for request:", id);
-    setRequestModalOpen(false);
+    navigate(`/requests/${request.id}`);
   };
 
   if (donationsLoading || requestsLoading) {
@@ -190,16 +156,6 @@ export const Donations = () => {
           />
         </div>
       </div>
-
-      {/* Request Modal */}
-      <RequestModal
-        request={selectedRequest}
-        open={requestModalOpen}
-        onOpenChange={setRequestModalOpen}
-        onApprove={handleRequestApprove}
-        onReject={handleRequestReject}
-        onRequestChanges={handleRequestRequestChanges}
-      />
     </div>
   );
 };
