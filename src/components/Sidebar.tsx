@@ -152,7 +152,7 @@ export const Sidebar = ({ open, onOpenChange }: SidebarProps) => {
                   ? "text-white"
                   : "text-muted-foreground hover:text-foreground hover:bg-accent"
               )}
-              style={isActive ? { backgroundColor: "#0f6e62" } : {}}
+              style={isActive ? { backgroundColor: "#3d7471" } : {}}
             >
               <Icon className="mr-3 h-5 w-5" />
               {item.name}
