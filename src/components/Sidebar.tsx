@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import {
   BarChart3,
   Hammer,
+  HandHeart,
   GraduationCap,
   Calendar,
   Building2,
@@ -43,6 +44,7 @@ const baseNavigation = [
   { name: "Donations", href: "/donations", icon: Hammer },
   { name: "Scholarships", href: "/scholarships", icon: GraduationCap },
   { name: "Events", href: "/events", icon: Calendar },
+  { name: "Volunteers", href: "/volunteers", icon: HandHeart },
   { name: "Organizations", href: "/organizations", icon: Building2 },
 ];
 

@@ -11,6 +11,7 @@ import { DonationDetail } from "./pages/DonationDetail";
 import { RequestDetail } from "./pages/RequestDetail";
 import { Scholarships } from "./pages/Scholarships";
 import { Events } from "./pages/Events";
+import { Volunteers } from "./pages/Volunteers";
 import { Organizations } from "./pages/Organizations";
 import { Users } from "./pages/Users";
 import { ValuedPartners } from "./pages/ValuedPartners";
@@ -43,6 +44,8 @@ const AppContent = () => {
           <Route path="scholarships/:scholarshipId" element={<Scholarships />} />
           <Route path="events" element={<Events />} />
           <Route path="events/:eventId" element={<Events />} />
+          <Route path="volunteers" element={<Volunteers />} />
+          <Route path="volunteers/:volunteerId" element={<Volunteers />} />
           <Route path="organizations" element={<Organizations />} />
           <Route path="users" element={<Users />} />
           <Route path="valued-partners" element={<ValuedPartners />} />

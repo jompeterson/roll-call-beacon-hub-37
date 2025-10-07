@@ -7,7 +7,7 @@ import { CommentForm } from "./CommentForm";
 import { CommentItem } from "./CommentItem";
 
 interface CommentsSectionProps {
-  contentType: 'event' | 'scholarship' | 'donation' | 'request';
+  contentType: 'event' | 'scholarship' | 'donation' | 'request' | 'volunteer';
   contentId: string;
   title?: string;
 }
