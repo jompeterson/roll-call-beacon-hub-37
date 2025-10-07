@@ -140,6 +140,7 @@ export const Overview = () => {
             change={orgChange.change}
             changeType={orgChange.changeType}
             icon={Building2}
+            navigateTo="/organizations"
           />
           <MetricCard
             title="Scholarships"
@@ -147,6 +148,7 @@ export const Overview = () => {
             change={scholarshipChange.change}
             changeType={scholarshipChange.changeType}
             icon={GraduationCap}
+            navigateTo="/scholarships"
           />
           <MetricCard
             title="Donations"
@@ -154,6 +156,7 @@ export const Overview = () => {
             change={monthlyDonationChange.change}
             changeType={monthlyDonationChange.changeType}
             icon={DollarSign}
+            navigateTo="/donations"
           />
           <MetricCard
             title="Events"
@@ -161,6 +164,7 @@ export const Overview = () => {
             change={eventChange.change}
             changeType={eventChange.changeType}
             icon={Calendar}
+            navigateTo="/events"
           />
           <MetricCard
             title="New Users"
@@ -168,6 +172,7 @@ export const Overview = () => {
             change={userChange.change}
             changeType={userChange.changeType}
             icon={Users}
+            navigateTo="/users"
           />
           {/* Add custom widgets for monthly metrics */}
           {monthlyMetricsWidgets?.map((widget) => (
@@ -193,6 +198,7 @@ export const Overview = () => {
             change={yearlyOrgChange.change}
             changeType={yearlyOrgChange.changeType}
             icon={Building2}
+            navigateTo="/organizations"
           />
           <MetricCard
             title="Donations"
@@ -200,6 +206,7 @@ export const Overview = () => {
             change={yearlyDonationChange.change}
             changeType={yearlyDonationChange.changeType}
             icon={DollarSign}
+            navigateTo="/donations"
           />
           <MetricCard
             title="Events"
@@ -207,6 +214,7 @@ export const Overview = () => {
             change={yearlyEventChange.change}
             changeType={yearlyEventChange.changeType}
             icon={Calendar}
+            navigateTo="/events"
           />
           <MetricCard
             title="Hours Donated"
