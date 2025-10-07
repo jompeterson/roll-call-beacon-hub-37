@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,12 +8,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Eye, EyeOff } from "lucide-react";
 import { signIn } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 export const LoginForm = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [logoUrl, setLogoUrl] = useState("/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png");
   const [errors, setErrors] = useState({
     username: "",
     password: "",
@@ -22,6 +24,44 @@ export const LoginForm = () => {
     username: "",
     password: "",
   });
+
+  useEffect(() => {
+    const fetchLogo = async () => {
+      const { data } = await supabase
+        .from('app_settings')
+        .select('value')
+        .eq('key', 'logo_url')
+        .single();
+      
+      if (data?.value) {
+        setLogoUrl(data.value);
+      }
+    };
+
+    fetchLogo();
+
+    const channel = supabase
+      .channel('app_settings_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'app_settings',
+          filter: 'key=eq.logo_url'
+        },
+        (payload) => {
+          if (payload.new && 'value' in payload.new) {
+            setLogoUrl(payload.new.value as string);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -104,9 +144,12 @@ export const LoginForm = () => {
       {/* Logo */}
       <div className="text-center">
         <img 
-          src="/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png" 
-          alt="Roll Call Logo" 
+          src={logoUrl}
+          alt="Logo" 
           className="h-12 mx-auto mb-4"
+          onError={(e) => {
+            e.currentTarget.src = "/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png";
+          }}
         />
         <h2 className="text-3xl font-bold text-foreground">Sign In</h2>
         <p className="text-muted-foreground mt-2">
