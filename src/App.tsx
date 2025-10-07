@@ -9,6 +9,9 @@ import { Overview } from "./pages/Overview";
 import { Donations } from "./pages/Donations";
 import { DonationDetail } from "./pages/DonationDetail";
 import { RequestDetail } from "./pages/RequestDetail";
+import { ScholarshipDetail } from "./pages/ScholarshipDetail";
+import { EventDetail } from "./pages/EventDetail";
+import { VolunteerDetail } from "./pages/VolunteerDetail";
 import { Scholarships } from "./pages/Scholarships";
 import { Events } from "./pages/Events";
 import { Volunteers } from "./pages/Volunteers";
@@ -41,11 +44,11 @@ const AppContent = () => {
           <Route path="donations/:donationId" element={<DonationDetail />} />
           <Route path="requests/:requestId" element={<RequestDetail />} />
           <Route path="scholarships" element={<Scholarships />} />
-          <Route path="scholarships/:scholarshipId" element={<Scholarships />} />
+          <Route path="scholarships/:scholarshipId" element={<ScholarshipDetail />} />
           <Route path="events" element={<Events />} />
-          <Route path="events/:eventId" element={<Events />} />
+          <Route path="events/:eventId" element={<EventDetail />} />
           <Route path="volunteers" element={<Volunteers />} />
-          <Route path="volunteers/:volunteerId" element={<Volunteers />} />
+          <Route path="volunteers/:volunteerId" element={<VolunteerDetail />} />
           <Route path="organizations" element={<Organizations />} />
           <Route path="users" element={<Users />} />
           <Route path="valued-partners" element={<ValuedPartners />} />
