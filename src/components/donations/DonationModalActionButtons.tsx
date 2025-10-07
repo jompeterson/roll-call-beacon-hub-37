@@ -1,7 +1,8 @@
-import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
 import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Edit } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -14,10 +15,12 @@ import { useToast } from "@/hooks/use-toast";
 
 interface DonationModalActionButtonsProps {
   donationId: string;
+  creatorUserId: string;
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
   onRequestChanges: (id: string) => void;
   onOpenChange: (open: boolean) => void;
+  onEdit?: () => void;
   isUser?: boolean;
   approvalDecisionMade: boolean;
   isApproved: boolean;
@@ -25,15 +28,19 @@ interface DonationModalActionButtonsProps {
 
 export const DonationModalActionButtons = ({
   donationId,
+  creatorUserId,
   onApprove,
   onReject,
   onRequestChanges,
   onOpenChange,
+  onEdit,
   isUser = false,
   approvalDecisionMade,
   isApproved
 }: DonationModalActionButtonsProps) => {
-  const { user } = useAuth();
+  const { user, isAdministrator } = useAuth();
+  const isOwner = user?.id === creatorUserId;
+  const canEdit = isOwner || isAdministrator;
   const { toast } = useToast();
   const [hasAccepted, setHasAccepted] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -143,14 +150,24 @@ export const DonationModalActionButtons = ({
     if (isApproved) {
       return (
         <>
-          <div className="flex gap-3 p-6 flex-wrap">
-            <Button 
-              onClick={handleAcceptDonation}
-              disabled={hasAccepted || isAccepting}
-              className={hasAccepted ? "bg-muted text-muted-foreground cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 text-white"}
-            >
-              {hasAccepted ? "Already Accepted" : isAccepting ? "Accepting..." : "Accept Donation"}
-            </Button>
+          <div className="flex gap-3 p-6 justify-between flex-wrap">
+            <div>
+              {canEdit && onEdit && (
+                <Button variant="outline" onClick={onEdit}>
+                  <Edit className="w-4 h-4 mr-2" />
+                  Edit
+                </Button>
+              )}
+            </div>
+            <div className="flex gap-3">
+              <Button 
+                onClick={handleAcceptDonation}
+                disabled={hasAccepted || isAccepting}
+                className={hasAccepted ? "bg-muted text-muted-foreground cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 text-white"}
+              >
+                {hasAccepted ? "Already Accepted" : isAccepting ? "Accepting..." : "Accept Donation"}
+              </Button>
+            </div>
           </div>
           
           <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
@@ -178,18 +195,61 @@ export const DonationModalActionButtons = ({
   // Show approval buttons if no decision has been made yet
   if (isUser) {
     return (
-      <div className="flex gap-3 p-6 flex-wrap">
+      <div className="flex gap-3 p-6 justify-between flex-wrap">
+        <div>
+          {canEdit && onEdit && (
+            <Button variant="outline" onClick={onEdit}>
+              <Edit className="w-4 h-4 mr-2" />
+              Edit
+            </Button>
+          )}
+        </div>
+        <div className="flex gap-3">
+          <Button 
+            onClick={handleApprove}
+            className="bg-green-600 hover:bg-green-700 text-white"
+          >
+            Approve User
+          </Button>
+          <Button 
+            onClick={handleReject}
+            variant="destructive"
+          >
+            Reject User
+          </Button>
+          <Button 
+            onClick={() => onRequestChanges(donationId)}
+            variant="outline"
+          >
+            Request Changes
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex gap-3 p-6 justify-between flex-wrap">
+      <div>
+        {canEdit && onEdit && (
+          <Button variant="outline" onClick={onEdit}>
+            <Edit className="w-4 h-4 mr-2" />
+            Edit
+          </Button>
+        )}
+      </div>
+      <div className="flex gap-3">
         <Button 
           onClick={handleApprove}
           className="bg-green-600 hover:bg-green-700 text-white"
         >
-          Approve User
+          Approve
         </Button>
         <Button 
           onClick={handleReject}
           variant="destructive"
         >
-          Reject User
+          Reject
         </Button>
         <Button 
           onClick={() => onRequestChanges(donationId)}
@@ -198,29 +258,6 @@ export const DonationModalActionButtons = ({
           Request Changes
         </Button>
       </div>
-    );
-  }
-
-  return (
-    <div className="flex gap-3 p-6 flex-wrap">
-      <Button 
-        onClick={handleApprove}
-        className="bg-green-600 hover:bg-green-700 text-white"
-      >
-        Approve
-      </Button>
-      <Button 
-        onClick={handleReject}
-        variant="destructive"
-      >
-        Reject
-      </Button>
-      <Button 
-        onClick={() => onRequestChanges(donationId)}
-        variant="outline"
-      >
-        Request Changes
-      </Button>
     </div>
   );
 };

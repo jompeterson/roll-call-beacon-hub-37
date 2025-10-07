@@ -1,5 +1,7 @@
 
 import { Button } from "@/components/ui/button";
+import { Edit } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 import { UserCheck } from "lucide-react";
 
 interface Event {

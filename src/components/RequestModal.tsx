@@ -10,6 +10,7 @@ import { RequestModalCreatorInfo } from "./request/RequestModalCreatorInfo";
 import { RequestModalInformation } from "./request/RequestModalInformation";
 import { RequestModalImageSection } from "./request/RequestModalImageSection";
 import { RequestModalActionButtons } from "./request/RequestModalActionButtons";
+import { RequestEditModal } from "./donations/RequestEditModal";
 import type { Request } from "@/hooks/useRequests";
 
 interface RequestModalProps {
@@ -40,6 +41,7 @@ export const RequestModal = ({
   disableNavigation = false
 }: RequestModalProps) => {
   const navigate = useNavigate();
+  const [editModalOpen, setEditModalOpen] = useState(false);
   const [creatorInfo, setCreatorInfo] = useState<CreatorInfo>({
     name: "Loading...",
     email: "Loading...",
@@ -148,10 +150,21 @@ export const RequestModal = ({
             onReject={onReject || (() => {})}
             onRequestChanges={onRequestChanges || (() => {})}
             onMarkCompleted={onMarkCompleted}
+            onEdit={() => setEditModalOpen(true)}
             onOpenChange={onOpenChange}
           />
         )}
       </DialogContent>
+
+      <RequestEditModal
+        open={editModalOpen}
+        onOpenChange={setEditModalOpen}
+        request={request}
+        onRequestUpdated={() => {
+          setEditModalOpen(false);
+          window.location.reload();
+        }}
+      />
     </Dialog>
   );
 };

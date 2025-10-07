@@ -1,5 +1,5 @@
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -8,6 +8,7 @@ import { DonationModalCreatorInfo } from "./donations/DonationModalCreatorInfo";
 import { DonationModalInformation } from "./donations/DonationModalInformation";
 import { DonationModalImageSection } from "./donations/DonationModalImageSection";
 import { DonationModalActionButtons } from "./donations/DonationModalActionButtons";
+import { DonationEditModal } from "./donations/DonationEditModal";
 import { CommentsSection } from "./comments/CommentsSection";
 import { ShareButton } from "./ShareButton";
 
@@ -39,6 +40,7 @@ export const DonationModal = ({
   disableNavigation = false
 }: DonationModalProps) => {
   const navigate = useNavigate();
+  const [editModalOpen, setEditModalOpen] = useState(false);
 
   // Update URL when modal opens, but don't navigate back when closing - only if navigation is enabled
   useEffect(() => {
@@ -178,10 +180,12 @@ export const DonationModal = ({
           <div className="flex-shrink-0 border-t">
             <DonationModalActionButtons
               donationId={donation.id}
+              creatorUserId={donation.creator_user_id}
               onApprove={onApprove || (() => {})}
               onReject={onReject || (() => {})}
               onRequestChanges={onRequestChanges || (() => {})}
               onOpenChange={onOpenChange}
+              onEdit={() => setEditModalOpen(true)}
               isUser={isUser}
               approvalDecisionMade={donation.approval_decision_made}
               isApproved={donation.is_approved}
@@ -189,6 +193,16 @@ export const DonationModal = ({
           </div>
         )}
       </DialogContent>
+
+      <DonationEditModal
+        open={editModalOpen}
+        onOpenChange={setEditModalOpen}
+        donation={donation}
+        onDonationUpdated={() => {
+          setEditModalOpen(false);
+          window.location.reload();
+        }}
+      />
     </Dialog>
   );
 };

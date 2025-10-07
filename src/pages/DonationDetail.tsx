@@ -175,6 +175,7 @@ export const DonationDetail = () => {
           <div className="border-t">
             <DonationModalActionButtons
               donationId={donation.id}
+              creatorUserId={donation.creator_user_id}
               onApprove={handleApprove}
               onReject={handleReject}
               onRequestChanges={handleRequestChanges}

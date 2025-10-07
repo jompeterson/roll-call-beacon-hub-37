@@ -1,5 +1,7 @@
 
 import { Button } from "@/components/ui/button";
+import { Edit } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import type { Request } from "@/hooks/useRequests";
 
@@ -9,6 +11,7 @@ interface RequestModalActionButtonsProps {
   onReject: (id: string) => void;
   onRequestChanges: (id: string) => void;
   onMarkCompleted?: (id: string) => void;
+  onEdit?: () => void;
   onOpenChange: (open: boolean) => void;
 }
 
@@ -18,8 +21,12 @@ export const RequestModalActionButtons = ({
   onReject,
   onRequestChanges,
   onMarkCompleted,
+  onEdit,
   onOpenChange,
 }: RequestModalActionButtonsProps) => {
+  const { user, isAdministrator } = useAuth();
+  const isOwner = user?.id === request.creator_user_id;
+  const canEdit = isOwner || isAdministrator;
   const handleApprove = async (id: string) => {
     try {
       const { error } = await supabase
@@ -149,8 +156,18 @@ export const RequestModalActionButtons = ({
   };
 
   return (
-    <div className="flex-shrink-0 border-t p-6">
-      {renderActionButtons()}
+    <div className="flex-shrink-0 border-t p-6 flex justify-between flex-wrap">
+      <div>
+        {canEdit && onEdit && (
+          <Button variant="outline" onClick={onEdit}>
+            <Edit className="w-4 h-4 mr-2" />
+            Edit
+          </Button>
+        )}
+      </div>
+      <div>
+        {renderActionButtons()}
+      </div>
     </div>
   );
 };
