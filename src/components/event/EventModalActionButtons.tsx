@@ -43,6 +43,18 @@ export const EventModalActionButtons = ({
   onRequestChanges,
   onRSVPAction,
 }: EventModalActionButtonsProps) => {
+  const { user, isAdministrator: authIsAdmin } = useAuth();
+  const isOwner = user?.id === event.creator_user_id;
+  const canEdit = isOwner || isAdministrator;
+  
+  console.log('EventActionButtons - Debug:', { 
+    userId: user?.id, 
+    creatorUserId: event.creator_user_id, 
+    isOwner, 
+    isAdministrator, 
+    canEdit 
+  });
+
   const showApprovalButtons = !event.approval_decision_made && isAdministrator;
   const showRSVPButton = event.is_approved;
   const isEventFull = event.max_participants && rsvpCount >= event.max_participants;

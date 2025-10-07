@@ -27,6 +27,15 @@ export const RequestModalActionButtons = ({
   const { user, isAdministrator } = useAuth();
   const isOwner = user?.id === request.creator_user_id;
   const canEdit = isOwner || isAdministrator;
+  
+  console.log('RequestActionButtons - Debug:', { 
+    userId: user?.id, 
+    creatorUserId: request.creator_user_id, 
+    isOwner, 
+    isAdministrator, 
+    canEdit,
+    hasOnEdit: !!onEdit 
+  });
   const handleApprove = async (id: string) => {
     try {
       const { error } = await supabase

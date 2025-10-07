@@ -68,6 +68,14 @@ export const useAuth = () => {
 
   const isAdministrator = userRole?.name === 'administrator';
 
+  console.log('useAuth - Debug:', { 
+    user, 
+    userRole, 
+    isAdministrator, 
+    isAuthenticated, 
+    isInitialized 
+  });
+
   return {
     user,
     isAuthenticated,
