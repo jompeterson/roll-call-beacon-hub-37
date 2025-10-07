@@ -52,8 +52,8 @@ const SortableTableHead = ({
   
   return (
     <TableHead 
-      className={`cursor-pointer hover:bg-[#1e3a52] select-none text-white ${className}`}
-      style={{ backgroundColor: "#294865" }}
+      className={`cursor-pointer hover:bg-[#0d5f56] select-none text-white ${className}`}
+      style={{ backgroundColor: "#0f6e62" }}
       onClick={() => onSort(field)}
     >
       <div className="flex items-center justify-between">
