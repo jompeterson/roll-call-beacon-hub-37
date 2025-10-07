@@ -17,9 +17,11 @@ export const ScholarshipCreateModal = ({
 }: ScholarshipCreateModalProps) => {
   const {
     formData,
+    images,
     isSubmitting,
     currentOrganization,
     handleInputChange,
+    handleImagesChange,
     handleSubmit,
     resetForm,
   } = useScholarshipForm({
@@ -68,7 +70,9 @@ export const ScholarshipCreateModal = ({
         <form onSubmit={handleSubmit}>
           <ScholarshipFormFields
             formData={formData}
+            images={images}
             onInputChange={handleInputChange}
+            onImagesChange={handleImagesChange}
           />
 
           <DialogFooter className="gap-2 mt-6">

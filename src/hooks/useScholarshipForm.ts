@@ -10,7 +10,7 @@ interface UseScholarshipFormProps {
 
 export const useScholarshipForm = ({ onScholarshipCreated, onClose }: UseScholarshipFormProps) => {
   const { validateForm, user, currentOrganization } = useScholarshipFormValidation();
-  const { formData, handleInputChange, resetForm } = useScholarshipFormState();
+  const { formData, images, handleInputChange, handleImagesChange, resetForm } = useScholarshipFormState();
   const { isSubmitting, submitScholarship } = useScholarshipSubmission({ onScholarshipCreated, onClose });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,15 +29,18 @@ export const useScholarshipForm = ({ onScholarshipCreated, onClose }: UseScholar
       user.id,
       currentOrganization.id,
       currentOrganization.name,
+      images,
       resetForm
     );
   };
 
   return {
     formData,
+    images,
     isSubmitting,
     currentOrganization,
     handleInputChange,
+    handleImagesChange,
     handleSubmit,
     resetForm,
   };

@@ -10,6 +10,7 @@ import { ScholarshipActionButtons } from "./scholarship/ScholarshipActionButtons
 import { ScholarshipApplyButton } from "./scholarship/ScholarshipApplyButton";
 import { CommentsSection } from "./comments/CommentsSection";
 import { ShareButton } from "./ShareButton";
+import { ImageCarousel } from "./shared/ImageCarousel";
 
 type Scholarship = Tables<"scholarships"> & {
   creator?: {
@@ -118,6 +119,11 @@ export const ScholarshipModal = ({
         {/* Scrollable Content */}
         <ScrollArea className="flex-1 px-6">
           <div className="space-y-6 py-4">
+            {/* Image Carousel */}
+            {scholarship.images && scholarship.images.length > 0 && (
+              <ImageCarousel images={scholarship.images} title={scholarship.title} />
+            )}
+            
             <ScholarshipInfo scholarship={scholarship} isAuthenticated={isAuthenticated} />
 
             {/* Comments Section - Only show for approved scholarships */}

@@ -9,6 +9,7 @@ import { Calendar, MapPin, Users, CheckCircle, XCircle } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useVolunteerSignups } from "@/hooks/useVolunteerSignups";
 import { CommentsSection } from "@/components/comments/CommentsSection";
+import { ImageCarousel } from "@/components/shared/ImageCarousel";
 
 interface Volunteer {
   id: string;
@@ -22,6 +23,7 @@ interface Volunteer {
   approval_decision_made: boolean;
   created_at: string;
   updated_at: string;
+  images?: string[];
 }
 
 interface VolunteerModalProps {
@@ -115,6 +117,11 @@ export const VolunteerModal = ({
         {/* Scrollable Content */}
         <ScrollArea className="flex-1 px-6">
           <div className="space-y-6 py-4">
+            {/* Image Carousel */}
+            {volunteer.images && volunteer.images.length > 0 && (
+              <ImageCarousel images={volunteer.images} title={volunteer.title} />
+            )}
+            
             {/* Volunteer Information */}
             <div className="space-y-4">
               <div className="flex items-center gap-2 text-muted-foreground">

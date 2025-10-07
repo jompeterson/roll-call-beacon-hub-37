@@ -282,6 +282,7 @@ export type Database = {
           description: string | null
           event_date: string
           id: string
+          images: string[] | null
           is_approved: boolean
           location: string | null
           max_participants: number | null
@@ -295,6 +296,7 @@ export type Database = {
           description?: string | null
           event_date: string
           id?: string
+          images?: string[] | null
           is_approved?: boolean
           location?: string | null
           max_participants?: number | null
@@ -308,6 +310,7 @@ export type Database = {
           description?: string | null
           event_date?: string
           id?: string
+          images?: string[] | null
           is_approved?: boolean
           location?: string | null
           max_participants?: number | null
@@ -506,6 +509,7 @@ export type Database = {
           description: string | null
           eligibility_criteria: string | null
           id: string
+          images: string[] | null
           is_approved: boolean
           organization_id: string | null
           organization_name: string | null
@@ -524,6 +528,7 @@ export type Database = {
           description?: string | null
           eligibility_criteria?: string | null
           id?: string
+          images?: string[] | null
           is_approved?: boolean
           organization_id?: string | null
           organization_name?: string | null
@@ -542,6 +547,7 @@ export type Database = {
           description?: string | null
           eligibility_criteria?: string | null
           id?: string
+          images?: string[] | null
           is_approved?: boolean
           organization_id?: string | null
           organization_name?: string | null
@@ -745,6 +751,7 @@ export type Database = {
           creator_user_id: string
           description: string | null
           id: string
+          images: string[] | null
           is_approved: boolean
           location: string | null
           max_participants: number | null
@@ -758,6 +765,7 @@ export type Database = {
           creator_user_id: string
           description?: string | null
           id?: string
+          images?: string[] | null
           is_approved?: boolean
           location?: string | null
           max_participants?: number | null
@@ -771,6 +779,7 @@ export type Database = {
           creator_user_id?: string
           description?: string | null
           id?: string
+          images?: string[] | null
           is_approved?: boolean
           location?: string | null
           max_participants?: number | null

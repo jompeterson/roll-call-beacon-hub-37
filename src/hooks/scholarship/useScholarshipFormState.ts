@@ -6,6 +6,7 @@ import { ScholarshipFormData, createInitialFormData } from "@/components/scholar
 export const useScholarshipFormState = () => {
   const { userProfile } = useProfileData();
   const [formData, setFormData] = useState<ScholarshipFormData>(createInitialFormData());
+  const [images, setImages] = useState<File[]>([]);
 
   // Pre-fill contact information when user profile is available
   useEffect(() => {
@@ -21,13 +22,20 @@ export const useScholarshipFormState = () => {
     }));
   };
 
+  const handleImagesChange = (newImages: File[]) => {
+    setImages(newImages);
+  };
+
   const resetForm = () => {
     setFormData(createInitialFormData(userProfile));
+    setImages([]);
   };
 
   return {
     formData,
+    images,
     handleInputChange,
+    handleImagesChange,
     resetForm,
   };
 };

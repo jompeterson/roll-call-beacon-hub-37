@@ -10,6 +10,7 @@ import { EventModalHeader } from "@/components/event/EventModalHeader";
 import { EventModalInformation } from "@/components/event/EventModalInformation";
 import { EventModalRSVPStatus } from "@/components/event/EventModalRSVPStatus";
 import { EventModalActionButtons } from "@/components/event/EventModalActionButtons";
+import { ImageCarousel } from "@/components/shared/ImageCarousel";
 
 interface Event {
   id: string;
@@ -23,6 +24,7 @@ interface Event {
   approval_decision_made: boolean;
   created_at: string;
   updated_at: string;
+  images?: string[];
 }
 
 interface EventModalProps {
@@ -91,6 +93,11 @@ export const EventModal = ({
         {/* Scrollable Content */}
         <ScrollArea className="flex-1 px-6">
           <div className="space-y-6 py-4">
+            {/* Image Carousel */}
+            {event.images && event.images.length > 0 && (
+              <ImageCarousel images={event.images} title={event.title} />
+            )}
+            
             {/* Event Information */}
             <EventModalInformation event={event} rsvpCount={rsvpCount} />
 

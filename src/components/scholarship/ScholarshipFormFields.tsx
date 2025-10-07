@@ -3,13 +3,16 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { ScholarshipFormData } from "./ScholarshipFormData";
+import { ImageUpload } from "@/components/shared/ImageUpload";
 
 interface ScholarshipFormFieldsProps {
   formData: ScholarshipFormData;
+  images: File[];
   onInputChange: (field: string, value: string) => void;
+  onImagesChange: (images: File[]) => void;
 }
 
-export const ScholarshipFormFields = ({ formData, onInputChange }: ScholarshipFormFieldsProps) => {
+export const ScholarshipFormFields = ({ formData, images, onInputChange, onImagesChange }: ScholarshipFormFieldsProps) => {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -83,6 +86,12 @@ export const ScholarshipFormFields = ({ formData, onInputChange }: ScholarshipFo
           rows={3}
         />
       </div>
+
+      <ImageUpload 
+        images={images}
+        onImagesChange={onImagesChange}
+        label="Scholarship Images"
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">

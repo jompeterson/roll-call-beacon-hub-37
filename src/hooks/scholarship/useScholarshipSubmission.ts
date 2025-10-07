@@ -23,11 +23,37 @@ export const useScholarshipSubmission = ({
     userId: string,
     organizationId: string,
     organizationName: string,
+    images: File[],
     resetForm: () => void
   ) => {
     setIsSubmitting(true);
 
     try {
+      // Upload images first if there are any
+      const imageUrls: string[] = [];
+      
+      if (images && images.length > 0) {
+        for (const image of images) {
+          const fileExt = image.name.split('.').pop();
+          const fileName = `${userId}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+          
+          const { error: uploadError, data } = await supabase.storage
+            .from('scholarship-images')
+            .upload(fileName, image);
+
+          if (uploadError) {
+            throw uploadError;
+          }
+
+          // Get public URL
+          const { data: { publicUrl } } = supabase.storage
+            .from('scholarship-images')
+            .getPublicUrl(fileName);
+
+          imageUrls.push(publicUrl);
+        }
+      }
+
       const scholarshipData = {
         title: formData.title,
         description: formData.description || null,
@@ -42,6 +68,7 @@ export const useScholarshipSubmission = ({
         creator_user_id: userId,
         organization_id: organizationId,
         organization_name: organizationName,
+        images: imageUrls,
         is_approved: false,
         approval_decision_made: false
       };

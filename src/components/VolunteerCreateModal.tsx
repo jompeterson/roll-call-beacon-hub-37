@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
+import { ImageUpload } from "@/components/shared/ImageUpload";
 
 interface VolunteerCreateModalProps {
   open: boolean;
@@ -35,6 +36,7 @@ export const VolunteerCreateModal = ({
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [images, setImages] = useState<File[]>([]);
 
   const form = useForm<VolunteerFormData>({
     defaultValues: {
@@ -59,6 +61,31 @@ export const VolunteerCreateModal = ({
     setIsSubmitting(true);
 
     try {
+      // Upload images first if there are any
+      const imageUrls: string[] = [];
+      
+      if (images && images.length > 0) {
+        for (const image of images) {
+          const fileExt = image.name.split('.').pop();
+          const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+          
+          const { error: uploadError } = await supabase.storage
+            .from('volunteer-images')
+            .upload(fileName, image);
+
+          if (uploadError) {
+            throw uploadError;
+          }
+
+          // Get public URL
+          const { data: { publicUrl } } = supabase.storage
+            .from('volunteer-images')
+            .getPublicUrl(fileName);
+
+          imageUrls.push(publicUrl);
+        }
+      }
+
       const { error } = await supabase
         .from('volunteers')
         .insert({
@@ -68,6 +95,7 @@ export const VolunteerCreateModal = ({
           location: data.location || null,
           max_participants: data.max_participants,
           creator_user_id: user.id,
+          images: imageUrls,
         });
 
       if (error) {
@@ -105,6 +133,7 @@ export const VolunteerCreateModal = ({
 
   const handleClose = () => {
     form.reset();
+    setImages([]);
     onOpenChange(false);
   };
 
@@ -227,6 +256,12 @@ export const VolunteerCreateModal = ({
                   <FormMessage />
                 </FormItem>
               )}
+            />
+
+            <ImageUpload 
+              images={images}
+              onImagesChange={setImages}
+              label="Volunteer Opportunity Images"
             />
 
             <div className="flex gap-2 pt-4">

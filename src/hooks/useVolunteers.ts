@@ -15,6 +15,7 @@ export interface Volunteer {
   approval_decision_made: boolean;
   created_at: string;
   updated_at: string;
+  images?: string[];
 }
 
 export const useVolunteers = () => {
