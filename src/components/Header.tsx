@@ -135,13 +135,13 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
         <img 
           src="/lovable-uploads/3bf5b36b-46ad-420d-8eb5-7435b9aaad17.png" 
           alt="Header Icon" 
-          className="h-12"
+          className="h-12 object-contain"
         />
         
         <img 
           src={logoUrl} 
           alt="Roll Call Logo" 
-          className="h-12"
+          className="h-12 object-contain"
           onError={(e) => {
             // Fallback to default logo if the custom one fails to load
             e.currentTarget.src = "/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png";
