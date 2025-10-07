@@ -147,7 +147,7 @@ export const LoginForm = () => {
           <img 
             src={logoUrl}
             alt="Logo" 
-            className="h-12 object-contain mt-4"
+            className="h-12 object-contain"
             onError={(e) => {
               e.currentTarget.src = "/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png";
             }}
