@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChevronUp, ChevronDown, Clock, CheckCircle, XCircle } from "lucide-react";
 import { ScholarshipModal } from "@/components/ScholarshipModal";
+import { ScholarshipCreateModal } from "@/components/ScholarshipCreateModal";
 import { useScholarships } from "@/hooks/useScholarships";
 import { useAuth } from "@/hooks/useAuth";
 import { Tables } from "@/integrations/supabase/types";
@@ -77,6 +80,7 @@ export const Scholarships = () => {
   // Modal states
   const [selectedScholarship, setSelectedScholarship] = useState<Scholarship | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
 
   // Use the scholarships hook and auth
   const {
@@ -251,7 +255,15 @@ export const Scholarships = () => {
 
       {/* Scholarship Posts Section */}
       <div className="space-y-4">
-        <h2 className="text-2xl font-semibold">Scholarship Posts</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-semibold">Scholarship Posts</h2>
+          {isAuthenticated && (
+            <Button onClick={() => setCreateModalOpen(true)} size="sm">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Scholarship
+            </Button>
+          )}
+        </div>
         <div className="border rounded-lg h-96">
           <div className="h-full flex flex-col">
             <Table>
@@ -347,7 +359,7 @@ export const Scholarships = () => {
         </div>
       </div>
 
-      {/* Modal */}
+      {/* Modals */}
       <ScholarshipModal
         scholarship={selectedScholarship}
         open={modalOpen}
@@ -358,6 +370,11 @@ export const Scholarships = () => {
         isApproving={isApproving}
         isRejecting={isRejecting}
         isRequestingChanges={isRequestingChanges}
+      />
+      <ScholarshipCreateModal
+        open={createModalOpen}
+        onOpenChange={setCreateModalOpen}
+        onScholarshipCreated={() => setCreateModalOpen(false)}
       />
     </div>
   );

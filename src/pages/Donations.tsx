@@ -1,9 +1,13 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { DonationFilters } from "@/components/donations/DonationFilters";
 import { DonationTable } from "@/components/donations/DonationTable";
 import { RequestTable } from "@/components/donations/RequestTable";
+import { DonationCreateModal } from "@/components/donations/DonationCreateModal";
+import { RequestCreateModal } from "@/components/donations/RequestCreateModal";
 import { useDonations, type Donation } from "@/hooks/useDonations";
 import { useRequests, type Request } from "@/hooks/useRequests";
 import { useAuth } from "@/hooks/useAuth";
@@ -20,6 +24,10 @@ export const Donations = () => {
   const { isAuthenticated } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  
+  // Modal states
+  const [donationModalOpen, setDonationModalOpen] = useState(false);
+  const [requestModalOpen, setRequestModalOpen] = useState(false);
   
   // Sorting states for donation posts
   const [donationSort, setDonationSort] = useState<DonationSortField>(null);
@@ -132,7 +140,15 @@ export const Donations = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Donation Posts Section */}
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold">Donation Posts</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-semibold">Donation Posts</h2>
+            {isAuthenticated && (
+              <Button onClick={() => setDonationModalOpen(true)} size="sm">
+                <Plus className="h-4 w-4 mr-2" />
+                Add Donation
+              </Button>
+            )}
+          </div>
           <DonationTable
             donations={sortedDonationPosts}
             sortField={donationSort}
@@ -145,7 +161,15 @@ export const Donations = () => {
 
         {/* Request Posts Section */}
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold">Request Posts</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-semibold">Request Posts</h2>
+            {isAuthenticated && (
+              <Button onClick={() => setRequestModalOpen(true)} size="sm">
+                <Plus className="h-4 w-4 mr-2" />
+                Add Request
+              </Button>
+            )}
+          </div>
           <RequestTable
             requests={sortedRequestPosts}
             sortField={requestSort}
@@ -156,6 +180,18 @@ export const Donations = () => {
           />
         </div>
       </div>
+
+      {/* Modals */}
+      <DonationCreateModal
+        open={donationModalOpen}
+        onOpenChange={setDonationModalOpen}
+        onDonationCreated={() => setDonationModalOpen(false)}
+      />
+      <RequestCreateModal
+        open={requestModalOpen}
+        onOpenChange={setRequestModalOpen}
+        onRequestCreated={() => setRequestModalOpen(false)}
+      />
     </div>
   );
 };

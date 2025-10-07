@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChevronUp, ChevronDown, Clock, CheckCircle, XCircle, Archive, Users } from "lucide-react";
 import { EventModal } from "@/components/EventModal";
+import { EventCreateModal } from "@/components/EventCreateModal";
 import { GuestRSVPModal } from "@/components/GuestRSVPModal";
 import { useEvents } from "@/hooks/useEvents";
 import { useAuth } from "@/hooks/useAuth";
@@ -91,6 +94,7 @@ export const Events = () => {
   // Modal states
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [eventModalOpen, setEventModalOpen] = useState(false);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
   const [guestRSVPModalOpen, setGuestRSVPModalOpen] = useState(false);
 
   // Handle URL parameters for direct modal opening
@@ -254,7 +258,15 @@ export const Events = () => {
 
       {/* Events Section */}
       <div className="space-y-4">
-        <h2 className="text-2xl font-semibold">Events</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-semibold">Events</h2>
+          {isAuthenticated && (
+            <Button onClick={() => setCreateModalOpen(true)} size="sm">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Event
+            </Button>
+          )}
+        </div>
         <div className="border rounded-lg h-96">
           <div className="h-full flex flex-col">
             <Table>
@@ -347,7 +359,7 @@ export const Events = () => {
         </div>
       </div>
 
-      {/* Event Details Modal */}
+      {/* Modals */}
       <EventModal
         event={selectedEvent}
         open={eventModalOpen}
@@ -358,7 +370,12 @@ export const Events = () => {
         onOpenGuestRSVPModal={handleOpenGuestRSVPModal}
       />
 
-      {/* Guest RSVP Modal */}
+      <EventCreateModal
+        open={createModalOpen}
+        onOpenChange={setCreateModalOpen}
+        onEventCreated={() => setCreateModalOpen(false)}
+      />
+
       <GuestRSVPModal
         event={selectedEvent}
         open={guestRSVPModalOpen}
