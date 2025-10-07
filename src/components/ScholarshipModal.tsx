@@ -1,5 +1,5 @@
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -11,6 +11,7 @@ import { ScholarshipApplyButton } from "./scholarship/ScholarshipApplyButton";
 import { CommentsSection } from "./comments/CommentsSection";
 import { ShareButton } from "./ShareButton";
 import { ImageCarousel } from "./shared/ImageCarousel";
+import { ScholarshipEditModal } from "./scholarship/ScholarshipEditModal";
 
 type Scholarship = Tables<"scholarships"> & {
   creator?: {
@@ -51,6 +52,7 @@ export const ScholarshipModal = ({
   const { isAdministrator, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   // Update URL when modal opens - only if navigation is enabled and we're on the scholarships page
   useEffect(() => {
@@ -86,6 +88,10 @@ export const ScholarshipModal = ({
     if (scholarship.scholarship_link) {
       window.open(scholarship.scholarship_link, '_blank', 'noopener,noreferrer');
     }
+  };
+
+  const handleEdit = () => {
+    setIsEditModalOpen(true);
   };
 
   const showActionButtons = isAdministrator && !scholarship.approval_decision_made;
@@ -152,6 +158,8 @@ export const ScholarshipModal = ({
                 onApprove={handleApprove}
                 onReject={handleReject}
                 onRequestChanges={handleRequestChanges}
+                onEdit={handleEdit}
+                creatorUserId={scholarship.creator_user_id}
                 isApproving={isApproving}
                 isRejecting={isRejecting}
                 isRequestingChanges={isRequestingChanges}
@@ -160,6 +168,14 @@ export const ScholarshipModal = ({
           </DialogFooter>
         </div>
       </DialogContent>
+
+      {scholarship && (
+        <ScholarshipEditModal
+          scholarship={scholarship}
+          open={isEditModalOpen}
+          onOpenChange={setIsEditModalOpen}
+        />
+      )}
     </Dialog>
   );
 };
