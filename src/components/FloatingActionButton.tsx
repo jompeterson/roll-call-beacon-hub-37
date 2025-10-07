@@ -134,7 +134,7 @@ export const FloatingActionButton = () => {
             "h-14 w-14 rounded-full shadow-lg text-white transition-all duration-300 ease-in-out",
             isExpanded && "rotate-45"
           )}
-          style={{ backgroundColor: "#294865" }}
+          style={{ backgroundColor: "#0f6e62" }}
           onClick={() => setIsExpanded(!isExpanded)}
         >
           <Plus className="h-6 w-6 transition-transform duration-300 ease-in-out" />
