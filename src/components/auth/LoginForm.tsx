@@ -155,7 +155,7 @@ export const LoginForm = () => {
           <img 
             src="/lovable-uploads/3bf5b36b-46ad-420d-8eb5-7435b9aaad17.png" 
             alt="Header Icon" 
-            className="h-12 object-contain"
+            className="h-12 object-contain mt-4"
           />
         </div>
         <h2 className="text-3xl font-bold text-foreground">Sign In</h2>
