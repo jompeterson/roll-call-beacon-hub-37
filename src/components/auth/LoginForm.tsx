@@ -143,14 +143,21 @@ export const LoginForm = () => {
     <div className="w-full max-w-sm space-y-8">
       {/* Logo */}
       <div className="text-center">
-        <img 
-          src={logoUrl}
-          alt="Logo" 
-          className="h-12 mx-auto mb-4"
-          onError={(e) => {
-            e.currentTarget.src = "/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png";
-          }}
-        />
+        <div className="flex items-center justify-center space-x-4 mb-4">
+          <img 
+            src="/lovable-uploads/3bf5b36b-46ad-420d-8eb5-7435b9aaad17.png" 
+            alt="Header Icon" 
+            className="h-12 object-contain"
+          />
+          <img 
+            src={logoUrl}
+            alt="Logo" 
+            className="h-12 object-contain"
+            onError={(e) => {
+              e.currentTarget.src = "/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png";
+            }}
+          />
+        </div>
         <h2 className="text-3xl font-bold text-foreground">Sign In</h2>
         <p className="text-muted-foreground mt-2">
           Enter your credentials to access your account
