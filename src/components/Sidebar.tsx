@@ -134,7 +134,7 @@ export const Sidebar = ({ open, onOpenChange }: SidebarProps) => {
   };
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full pt-6">
+    <div className="flex flex-col h-full pt-20">
       <nav className="flex-1 px-4 space-y-2">
         {navigation.map((item) => {
           const Icon = item.icon;
@@ -237,9 +237,7 @@ export const Sidebar = ({ open, onOpenChange }: SidebarProps) => {
         open ? "translate-x-0" : "-translate-x-full"
       )}
     >
-      <div className="flex flex-col h-full pt-20">
-        <SidebarContent />
-      </div>
+      <SidebarContent />
     </div>
   );
 };
