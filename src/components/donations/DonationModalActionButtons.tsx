@@ -41,15 +41,6 @@ export const DonationModalActionButtons = ({
   const { user, isAdministrator } = useAuth();
   const isOwner = user?.id === creatorUserId;
   const canEdit = isOwner || isAdministrator;
-  
-  console.log('DonationActionButtons - Debug:', { 
-    userId: user?.id, 
-    creatorUserId, 
-    isOwner, 
-    isAdministrator, 
-    canEdit,
-    hasOnEdit: !!onEdit 
-  });
   const { toast } = useToast();
   const [hasAccepted, setHasAccepted] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);

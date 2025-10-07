@@ -1,15 +1,16 @@
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, MapPin, Users, CheckCircle, XCircle } from "lucide-react";
+import { Calendar, MapPin, Users, CheckCircle, XCircle, Edit } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useVolunteerSignups } from "@/hooks/useVolunteerSignups";
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
+import { VolunteerEditModal } from "@/components/volunteer/VolunteerEditModal";
 
 interface Volunteer {
   id: string;
@@ -47,9 +48,13 @@ export const VolunteerModal = ({
   onOpenGuestSignupModal,
   disableNavigation = false,
 }: VolunteerModalProps) => {
-  const { isAdministrator, isAuthenticated } = useAuth();
+  const { user, isAdministrator, isAuthenticated } = useAuth();
   const { signupCount, hasSignedUp, submitting, signUp, cancelSignup, userSignup } = useVolunteerSignups(volunteer?.id || "");
   const navigate = useNavigate();
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  
+  const isOwner = user?.id === volunteer?.creator_user_id;
+  const canEdit = isOwner || isAdministrator;
 
   // Update URL when modal opens - only if navigation is enabled
   useEffect(() => {
@@ -179,49 +184,70 @@ export const VolunteerModal = ({
           </div>
         </ScrollArea>
 
-        {/* Fixed Footer - Only show action buttons if handlers are provided */}
-        {(onApprove || onReject || onRequestChanges) && (
-          <div className="px-6 py-4 border-t bg-card flex gap-2">
-            {isAdministrator && !volunteer.approval_decision_made && (
-              <>
-                <Button
-                  onClick={() => onApprove(volunteer.id)}
-                  className="flex-1"
-                  variant="default"
-                >
-                  <CheckCircle className="h-4 w-4 mr-2" />
-                  Approve
-                </Button>
-                <Button
-                  onClick={() => onReject(volunteer.id)}
-                  className="flex-1"
-                  variant="destructive"
-                >
-                  <XCircle className="h-4 w-4 mr-2" />
-                  Reject
-                </Button>
-              </>
-            )}
-
-            {volunteer.is_approved && (
-              <Button
-                onClick={handleSignupAction}
-                disabled={submitting}
-                className="flex-1"
-                variant={hasSignedUp ? "outline" : "default"}
-              >
-                {submitting ? (
-                  "Processing..."
-                ) : hasSignedUp ? (
-                  "Cancel Signup"
-                ) : (
-                  "Sign Up"
+        {/* Fixed Footer - Show action buttons if handlers are provided OR if user can edit */}
+        {(onApprove || onReject || onRequestChanges || canEdit) && (
+          <div className="px-6 py-4 border-t bg-card">
+            <div className="flex justify-between items-center gap-2">
+              <div>
+                {canEdit && (
+                  <Button variant="outline" onClick={() => setIsEditModalOpen(true)}>
+                    <Edit className="w-4 h-4 mr-2" />
+                    Edit
+                  </Button>
                 )}
-              </Button>
-            )}
+              </div>
+              
+              <div className="flex gap-2">
+                {isAdministrator && !volunteer.approval_decision_made && (
+                  <>
+                    <Button
+                      onClick={() => onApprove(volunteer.id)}
+                      className="flex-1"
+                      variant="default"
+                    >
+                      <CheckCircle className="h-4 w-4 mr-2" />
+                      Approve
+                    </Button>
+                    <Button
+                      onClick={() => onReject(volunteer.id)}
+                      className="flex-1"
+                      variant="destructive"
+                    >
+                      <XCircle className="h-4 w-4 mr-2" />
+                      Reject
+                    </Button>
+                  </>
+                )}
+
+                {volunteer.is_approved && (
+                  <Button
+                    onClick={handleSignupAction}
+                    disabled={submitting}
+                    className="flex-1"
+                    variant={hasSignedUp ? "outline" : "default"}
+                  >
+                    {submitting ? (
+                      "Processing..."
+                    ) : hasSignedUp ? (
+                      "Cancel Signup"
+                    ) : (
+                      "Sign Up"
+                    )}
+                  </Button>
+                )}
+              </div>
+            </div>
           </div>
         )}
       </DialogContent>
+      
+      {volunteer && (
+        <VolunteerEditModal
+          volunteer={volunteer}
+          open={isEditModalOpen}
+          onOpenChange={setIsEditModalOpen}
+        />
+      )}
     </Dialog>
   );
 };

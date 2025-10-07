@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { RequestModalHeader } from "./request/RequestModalHeader";
 import { RequestModalCreatorInfo } from "./request/RequestModalCreatorInfo";
@@ -40,6 +41,7 @@ export const RequestModal = ({
   onMarkCompleted,
   disableNavigation = false
 }: RequestModalProps) => {
+  const { user, isAdministrator } = useAuth();
   const navigate = useNavigate();
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [creatorInfo, setCreatorInfo] = useState<CreatorInfo>({
@@ -47,6 +49,9 @@ export const RequestModal = ({
     email: "Loading...",
     organization: "Loading..."
   });
+  
+  const isOwner = user?.id === request?.creator_user_id;
+  const canEdit = isOwner || isAdministrator;
 
   // Update URL when modal opens - only if navigation is enabled
   useEffect(() => {
@@ -142,8 +147,8 @@ export const RequestModal = ({
           </div>
         </ScrollArea>
 
-        {/* Only show action buttons if handlers are provided */}
-        {(onApprove || onReject || onRequestChanges || onMarkCompleted) && (
+        {/* Show action buttons if handlers are provided OR if user can edit */}
+        {(onApprove || onReject || onRequestChanges || onMarkCompleted || canEdit) && (
           <RequestModalActionButtons
             request={request}
             onApprove={onApprove || (() => {})}

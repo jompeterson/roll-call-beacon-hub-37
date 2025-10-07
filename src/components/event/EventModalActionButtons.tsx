@@ -29,6 +29,7 @@ interface EventModalActionButtonsProps {
   onReject: (id: string) => void;
   onRequestChanges?: (id: string) => void;
   onRSVPAction: () => void;
+  onEdit?: () => void;
 }
 
 export const EventModalActionButtons = ({
@@ -42,18 +43,11 @@ export const EventModalActionButtons = ({
   onReject,
   onRequestChanges,
   onRSVPAction,
+  onEdit,
 }: EventModalActionButtonsProps) => {
   const { user, isAdministrator: authIsAdmin } = useAuth();
   const isOwner = user?.id === event.creator_user_id;
   const canEdit = isOwner || isAdministrator;
-  
-  console.log('EventActionButtons - Debug:', { 
-    userId: user?.id, 
-    creatorUserId: event.creator_user_id, 
-    isOwner, 
-    isAdministrator, 
-    canEdit 
-  });
 
   const showApprovalButtons = !event.approval_decision_made && isAdministrator;
   const showRSVPButton = event.is_approved;
@@ -73,63 +67,74 @@ export const EventModalActionButtons = ({
         </div>
       )}
 
-      <div className="flex gap-2">
-        {showRSVPButton && canRSVP && (
-          <Button
-            onClick={onRSVPAction}
-            disabled={submitting}
-            className="flex-1"
-            variant={isAuthenticated && hasRsvp ? "destructive" : "outline"}
-          >
-            {submitting ? (
-              "Processing..."
-            ) : isAuthenticated ? (
-              hasRsvp ? (
-                <>
-                  <UserCheck className="h-4 w-4 mr-2" />
-                  Cancel RSVP
-                </>
+      <div className="flex justify-between items-center gap-2">
+        <div>
+          {canEdit && onEdit && (
+            <Button variant="outline" onClick={onEdit}>
+              <Edit className="w-4 h-4 mr-2" />
+              Edit
+            </Button>
+          )}
+        </div>
+        
+        <div className="flex gap-2">
+          {showRSVPButton && canRSVP && (
+            <Button
+              onClick={onRSVPAction}
+              disabled={submitting}
+              className="flex-1"
+              variant={isAuthenticated && hasRsvp ? "destructive" : "outline"}
+            >
+              {submitting ? (
+                "Processing..."
+              ) : isAuthenticated ? (
+                hasRsvp ? (
+                  <>
+                    <UserCheck className="h-4 w-4 mr-2" />
+                    Cancel RSVP
+                  </>
+                ) : (
+                  <>
+                    <UserCheck className="h-4 w-4 mr-2" />
+                    RSVP to Event
+                  </>
+                )
               ) : (
                 <>
                   <UserCheck className="h-4 w-4 mr-2" />
                   RSVP to Event
                 </>
-              )
-            ) : (
-              <>
-                <UserCheck className="h-4 w-4 mr-2" />
-                RSVP to Event
-              </>
-            )}
-          </Button>
-        )}
+              )}
+            </Button>
+          )}
 
-        {showApprovalButtons && (
-          <>
-            <Button
-              onClick={() => onApprove(event.id)}
-              className="flex-1"
-            >
-              Approve Event
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={() => onReject(event.id)}
-              className="flex-1"
-            >
-              Reject Event
-            </Button>
-            {onRequestChanges && (
+          {showApprovalButtons && (
+            <>
               <Button
-                variant="outline"
-                onClick={() => onRequestChanges(event.id)}
+                onClick={() => onApprove(event.id)}
                 className="flex-1"
               >
-                Request Changes
+                Approve Event
               </Button>
-            )}
-          </>
-        )}
+              <Button
+                variant="destructive"
+                onClick={() => onReject(event.id)}
+                className="flex-1"
+              >
+                Reject Event
+              </Button>
+              {onRequestChanges && (
+                <Button
+                  variant="outline"
+                  onClick={() => onRequestChanges(event.id)}
+                  className="flex-1"
+                >
+                  Request Changes
+                </Button>
+              )}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

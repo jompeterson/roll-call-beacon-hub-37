@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useAuth } from "@/hooks/useAuth";
 import type { Donation } from "@/hooks/useDonations";
 import { DonationModalCreatorInfo } from "./donations/DonationModalCreatorInfo";
 import { DonationModalInformation } from "./donations/DonationModalInformation";
@@ -39,8 +40,12 @@ export const DonationModal = ({
   isUser = false,
   disableNavigation = false
 }: DonationModalProps) => {
+  const { user, isAdministrator } = useAuth();
   const navigate = useNavigate();
   const [editModalOpen, setEditModalOpen] = useState(false);
+  
+  const isOwner = user?.id === donation?.creator_user_id;
+  const canEdit = isOwner || isAdministrator;
 
   // Update URL when modal opens, but don't navigate back when closing - only if navigation is enabled
   useEffect(() => {
@@ -175,8 +180,8 @@ export const DonationModal = ({
           </div>
         </ScrollArea>
 
-        {/* Fixed Footer - Only show action buttons if handlers are provided */}
-        {(onApprove || onReject || onRequestChanges) && (
+        {/* Fixed Footer - Show action buttons if handlers are provided OR if user can edit */}
+        {(onApprove || onReject || onRequestChanges || canEdit) && (
           <div className="flex-shrink-0 border-t">
             <DonationModalActionButtons
               donationId={donation.id}

@@ -1,5 +1,5 @@
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -11,6 +11,7 @@ import { EventModalInformation } from "@/components/event/EventModalInformation"
 import { EventModalRSVPStatus } from "@/components/event/EventModalRSVPStatus";
 import { EventModalActionButtons } from "@/components/event/EventModalActionButtons";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
+import { EventEditModal } from "@/components/event/EventEditModal";
 
 interface Event {
   id: string;
@@ -48,9 +49,13 @@ export const EventModal = ({
   onOpenGuestRSVPModal,
   disableNavigation = false,
 }: EventModalProps) => {
-  const { isAdministrator, isAuthenticated } = useAuth();
+  const { user, isAdministrator, isAuthenticated } = useAuth();
   const { rsvpCount, hasRsvp, submitting, createRSVP, deleteRSVP } = useEventRSVPs(event?.id || "");
   const navigate = useNavigate();
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  
+  const isOwner = user?.id === event?.creator_user_id;
+  const canEdit = isOwner || isAdministrator;
 
   // Update URL when modal opens - only if navigation is enabled
   useEffect(() => {
@@ -120,8 +125,8 @@ export const EventModal = ({
           </div>
         </ScrollArea>
 
-        {/* Fixed Footer - Only show action buttons if handlers are provided */}
-        {(onApprove || onReject || onRequestChanges) && (
+        {/* Fixed Footer - Show action buttons if handlers are provided OR if user can edit */}
+        {(onApprove || onReject || onRequestChanges || canEdit) && (
           <EventModalActionButtons
             event={event}
             isAdministrator={isAdministrator}
@@ -133,9 +138,18 @@ export const EventModal = ({
             onReject={onReject}
             onRequestChanges={onRequestChanges}
             onRSVPAction={handleRSVPAction}
+            onEdit={() => setIsEditModalOpen(true)}
           />
         )}
       </DialogContent>
+      
+      {event && (
+        <EventEditModal
+          event={event}
+          open={isEditModalOpen}
+          onOpenChange={setIsEditModalOpen}
+        />
+      )}
     </Dialog>
   );
 };

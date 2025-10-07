@@ -26,15 +26,6 @@ export const ScholarshipActionButtons = ({
 }: ScholarshipActionButtonsProps) => {
   const { user, isAdministrator } = useAuth();
   const canEdit = user?.id === creatorUserId || isAdministrator;
-  
-  console.log('ScholarshipActionButtons - Debug:', { 
-    userId: user?.id, 
-    creatorUserId, 
-    isOwner: user?.id === creatorUserId, 
-    isAdministrator, 
-    canEdit,
-    hasOnEdit: !!onEdit 
-  });
 
   return (
     <div className="flex justify-between w-full">
