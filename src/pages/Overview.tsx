@@ -184,7 +184,7 @@ export const Overview = () => {
             navigateTo="/users"
           />
           <MetricCard
-            title="Volunteers"
+            title="Volunteer Events"
             value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newVolunteers || 0)}
             change={volunteerChange.change}
             changeType={volunteerChange.changeType}
@@ -255,7 +255,7 @@ export const Overview = () => {
             icon={Calculator}
           />
           <MetricCard
-            title="Volunteers"
+            title="Volunteer Events"
             value={yearlyLoading ? "..." : formatNumber(yearlyMetrics?.volunteers || 0)}
             change={yearlyVolunteerChange.change}
             changeType={yearlyVolunteerChange.changeType}
