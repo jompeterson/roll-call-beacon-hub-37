@@ -75,6 +75,19 @@ export const usePreviousMonthMetrics = () => {
         throw userError;
       }
 
+      // Get volunteers from previous month
+      const { data: previousVolunteers, error: volunteerError } = await supabase
+        .from("volunteers")
+        .select("id")
+        .eq("is_approved", true)
+        .gte("created_at", startOfPreviousMonth.toISOString())
+        .lte("created_at", endOfPreviousMonth.toISOString());
+
+      if (volunteerError) {
+        console.error("Error fetching previous month volunteers:", volunteerError);
+        throw volunteerError;
+      }
+
       // Calculate total donations amount
       const totalDonations = previousDonations?.reduce((sum, donation) => {
         return sum + (Number(donation.amount_raised) || 0);
@@ -86,6 +99,7 @@ export const usePreviousMonthMetrics = () => {
         totalDonations,
         newEvents: previousEvents?.length || 0,
         newUsers: previousUsers?.length || 0,
+        newVolunteers: previousVolunteers?.length || 0,
       };
     },
     refetchInterval: 30000, // Refetch every 30 seconds

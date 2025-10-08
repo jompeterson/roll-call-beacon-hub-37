@@ -21,6 +21,7 @@ import {
   Clock,
   MessageSquare,
   Calculator,
+  HandHeart,
 } from "lucide-react";
 
 export const Overview = () => {
@@ -72,6 +73,10 @@ export const Overview = () => {
     ? calculateChange(monthlyMetrics.newUsers, previousMonthMetrics.newUsers)
     : { change: "...", changeType: "neutral" as const };
 
+  const volunteerChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
+    ? calculateAbsoluteChange(monthlyMetrics.newVolunteers, previousMonthMetrics.newVolunteers)
+    : { change: "...", changeType: "neutral" as const };
+
   // Calculate yearly changes
   const yearlyOrgChange = !yearlyLoading && !previousYearLoading && yearlyMetrics && previousYearMetrics 
     ? calculateChange(yearlyMetrics.organizations, previousYearMetrics.organizations)
@@ -95,6 +100,10 @@ export const Overview = () => {
 
   const financialChange = !yearlyLoading && !previousYearLoading && yearlyMetrics && previousYearMetrics 
     ? calculateChange(yearlyMetrics.financialTotals, previousYearMetrics.financialTotals)
+    : { change: "...", changeType: "neutral" as const };
+
+  const yearlyVolunteerChange = !yearlyLoading && !previousYearLoading && yearlyMetrics && previousYearMetrics 
+    ? calculateChange(yearlyMetrics.volunteers, previousYearMetrics.volunteers)
     : { change: "...", changeType: "neutral" as const };
 
   return (
@@ -133,7 +142,7 @@ export const Overview = () => {
       {/* This Month's Metrics Section */}
       <div className="space-y-4">
         <h2 className="text-2xl font-semibold">This Month's Metrics</h2>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-6">
           <MetricCard
             title="New Organizations"
             value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newOrganizations || 0)}
@@ -174,6 +183,14 @@ export const Overview = () => {
             icon={Users}
             navigateTo="/users"
           />
+          <MetricCard
+            title="Volunteers"
+            value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newVolunteers || 0)}
+            change={volunteerChange.change}
+            changeType={volunteerChange.changeType}
+            icon={HandHeart}
+            navigateTo="/volunteers"
+          />
           {/* Add custom widgets for monthly metrics */}
           {monthlyMetricsWidgets?.map((widget) => (
             <CustomWidget
@@ -191,7 +208,7 @@ export const Overview = () => {
       {/* Year Metrics Section */}
       <div className="space-y-4">
         <h2 className="text-2xl font-semibold">Year Metrics</h2>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <MetricCard
             title="Organizations"
             value={yearlyLoading ? "..." : formatNumber(yearlyMetrics?.organizations || 0)}
@@ -236,6 +253,14 @@ export const Overview = () => {
             change={financialChange.change}
             changeType={financialChange.changeType}
             icon={Calculator}
+          />
+          <MetricCard
+            title="Volunteers"
+            value={yearlyLoading ? "..." : formatNumber(yearlyMetrics?.volunteers || 0)}
+            change={yearlyVolunteerChange.change}
+            changeType={yearlyVolunteerChange.changeType}
+            icon={HandHeart}
+            navigateTo="/volunteers"
           />
           {/* Add custom widgets for yearly metrics */}
           {yearlyMetricsWidgets?.map((widget) => (

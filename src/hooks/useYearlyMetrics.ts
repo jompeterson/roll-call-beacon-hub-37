@@ -69,6 +69,19 @@ export const useYearlyMetrics = () => {
         throw commentError;
       }
 
+      // Get volunteers this year
+      const { data: volunteers, error: volunteerError } = await supabase
+        .from("volunteers")
+        .select("id")
+        .eq("is_approved", true)
+        .gte("created_at", startOfYear.toISOString())
+        .lte("created_at", endOfYear.toISOString());
+
+      if (volunteerError) {
+        console.error("Error fetching volunteers:", volunteerError);
+        throw volunteerError;
+      }
+
       return {
         organizations: organizations?.length || 0,
         totalDonations,
@@ -76,6 +89,7 @@ export const useYearlyMetrics = () => {
         hoursDonated: estimatedHours,
         posts: comments?.length || 0,
         financialTotals: totalDonations, // Same as donations for now
+        volunteers: volunteers?.length || 0,
       };
     },
     refetchInterval: 30000, // Refetch every 30 seconds
