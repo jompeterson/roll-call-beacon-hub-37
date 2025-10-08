@@ -14,7 +14,7 @@ import { useMetricChanges } from "@/hooks/useMetricChanges";
 import { useCustomWidgets } from "@/hooks/useCustomWidgets";
 import {
   Users,
-  DollarSign,
+  Hammer,
   GraduationCap,
   Calendar,
   Building2,
@@ -164,7 +164,7 @@ export const Overview = () => {
             value={monthlyLoading ? "..." : formatCurrency(monthlyMetrics?.totalDonations || 0)}
             change={monthlyDonationChange.change}
             changeType={monthlyDonationChange.changeType}
-            icon={DollarSign}
+            icon={Hammer}
             navigateTo="/donations"
           />
           <MetricCard
@@ -222,7 +222,7 @@ export const Overview = () => {
             value={yearlyLoading ? "..." : formatCurrency(yearlyMetrics?.totalDonations || 0)}
             change={yearlyDonationChange.change}
             changeType={yearlyDonationChange.changeType}
-            icon={DollarSign}
+            icon={Hammer}
             navigateTo="/donations"
           />
           <MetricCard
