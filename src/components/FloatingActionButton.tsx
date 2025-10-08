@@ -1,15 +1,17 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, User, Building2, GraduationCap, FileText, Calendar, Heart } from "lucide-react";
+import { Plus, User, Building2, GraduationCap, FileText, Calendar, Heart, HandHeart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
+import { useLocation } from "react-router-dom";
 import { EventCreateModal } from "@/components/EventCreateModal";
 import { ScholarshipCreateModal } from "@/components/ScholarshipCreateModal";
 import { DonationCreateModal } from "@/components/donations/DonationCreateModal";
 import { RequestCreateModal } from "@/components/donations/RequestCreateModal";
 import { UserCreateModal } from "@/components/UserCreateModal";
 import { OrganizationCreateModal } from "@/components/OrganizationCreateModal";
+import { VolunteerCreateModal } from "@/components/VolunteerCreateModal";
 
 export const FloatingActionButton = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -19,7 +21,9 @@ export const FloatingActionButton = () => {
   const [requestModalOpen, setRequestModalOpen] = useState(false);
   const [userModalOpen, setUserModalOpen] = useState(false);
   const [organizationModalOpen, setOrganizationModalOpen] = useState(false);
+  const [volunteerModalOpen, setVolunteerModalOpen] = useState(false);
   const { isAuthenticated, isAdministrator } = useAuth();
+  const location = useLocation();
 
   // Don't render the FAB if user is not authenticated
   if (!isAuthenticated) {
@@ -27,16 +31,21 @@ export const FloatingActionButton = () => {
   }
 
   const allActions = [
-    { name: "New User", icon: User, color: "bg-blue-500 hover:bg-blue-600", adminOnly: true },
-    { name: "New Organization", icon: Building2, color: "bg-green-500 hover:bg-green-600", adminOnly: true },
-    { name: "New Scholarship", icon: GraduationCap, color: "bg-purple-500 hover:bg-purple-600", adminOnly: false },
-    { name: "New Request", icon: FileText, color: "bg-orange-500 hover:bg-orange-600", adminOnly: false },
-    { name: "New Donation", icon: Heart, color: "bg-pink-500 hover:bg-pink-600", adminOnly: false },
-    { name: "New Event", icon: Calendar, color: "bg-red-500 hover:bg-red-600", adminOnly: false },
+    { name: "New User", icon: User, color: "bg-blue-500 hover:bg-blue-600", adminOnly: true, pages: ["/users"] },
+    { name: "New Organization", icon: Building2, color: "bg-green-500 hover:bg-green-600", adminOnly: true, pages: ["/organizations"] },
+    { name: "New Scholarship", icon: GraduationCap, color: "bg-purple-500 hover:bg-purple-600", adminOnly: false, pages: ["/scholarships"] },
+    { name: "New Request", icon: FileText, color: "bg-orange-500 hover:bg-orange-600", adminOnly: false, pages: ["/donations"] },
+    { name: "New Donation", icon: Heart, color: "bg-pink-500 hover:bg-pink-600", adminOnly: false, pages: ["/donations"] },
+    { name: "New Event", icon: Calendar, color: "bg-red-500 hover:bg-red-600", adminOnly: false, pages: ["/events"] },
+    { name: "New Volunteer Event", icon: HandHeart, color: "bg-teal-500 hover:bg-teal-600", adminOnly: false, pages: ["/volunteers"] },
   ];
 
-  // Filter actions based on user role
-  const actions = allActions.filter(action => !action.adminOnly || isAdministrator);
+  // Filter actions based on user role and current page
+  const actions = allActions.filter(action => {
+    const roleMatches = !action.adminOnly || isAdministrator;
+    const pageMatches = action.pages.includes(location.pathname);
+    return roleMatches && pageMatches;
+  });
 
   const handleActionClick = (actionName: string) => {
     console.log(`Creating ${actionName}`);
@@ -58,6 +67,9 @@ export const FloatingActionButton = () => {
       setIsExpanded(false);
     } else if (actionName === "New Organization") {
       setOrganizationModalOpen(true);
+      setIsExpanded(false);
+    } else if (actionName === "New Volunteer Event") {
+      setVolunteerModalOpen(true);
       setIsExpanded(false);
     } else {
       console.log(`Creating ${actionName}`);
@@ -92,6 +104,11 @@ export const FloatingActionButton = () => {
   const handleOrganizationCreated = () => {
     // Optionally refresh organizations list or show success message
     console.log("Organization created successfully");
+  };
+
+  const handleVolunteerCreated = () => {
+    // Optionally refresh volunteers list or show success message
+    console.log("Volunteer event created successfully");
   };
 
   return (
@@ -181,6 +198,13 @@ export const FloatingActionButton = () => {
         open={organizationModalOpen}
         onOpenChange={setOrganizationModalOpen}
         onOrganizationCreated={handleOrganizationCreated}
+      />
+
+      {/* Volunteer Creation Modal */}
+      <VolunteerCreateModal
+        open={volunteerModalOpen}
+        onOpenChange={setVolunteerModalOpen}
+        onVolunteerCreated={handleVolunteerCreated}
       />
     </>
   );
