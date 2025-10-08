@@ -2,7 +2,6 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { useVolunteers } from "@/hooks/useVolunteers";
 import { useAuth } from "@/hooks/useAuth";
 import { useVolunteerSignups } from "@/hooks/useVolunteerSignups";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
@@ -155,76 +154,74 @@ export const VolunteerDetail = () => {
           </div>
         </div>
 
-        {/* Scrollable Content */}
-        <ScrollArea className="h-[calc(100vh-280px)]">
-          <div className="p-6 space-y-6">
-            {/* Status Badge */}
-            <div className="flex items-center gap-2">
-              {getStatusBadge()}
-              {isVolunteerFull && (
-                <Badge variant="outline" className="bg-gray-100 text-gray-800 border-gray-300">
-                  Full
-                </Badge>
-              )}
-            </div>
-
-            {/* Image Carousel */}
-            {volunteer.images && volunteer.images.length > 0 && (
-              <ImageCarousel images={volunteer.images} title={volunteer.title} />
-            )}
-
-            {/* Volunteer Information */}
-            <div className="space-y-4">
-              {volunteer.description && (
-                <div>
-                  <h3 className="font-semibold mb-2">Description</h3>
-                  <p className="text-muted-foreground">{volunteer.description}</p>
-                </div>
-              )}
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex items-start gap-2">
-                  <Calendar className="h-5 w-5 text-muted-foreground mt-0.5" />
-                  <div>
-                    <p className="font-medium">Date & Time</p>
-                    <p className="text-sm text-muted-foreground">{formatDate(volunteer.volunteer_date)}</p>
-                  </div>
-                </div>
-
-                {volunteer.location && (
-                  <div className="flex items-start gap-2">
-                    <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
-                    <div>
-                      <p className="font-medium">Location</p>
-                      <p className="text-sm text-muted-foreground">{volunteer.location}</p>
-                    </div>
-                  </div>
-                )}
-
-                {volunteer.max_participants && (
-                  <div className="flex items-start gap-2">
-                    <Users className="h-5 w-5 text-muted-foreground mt-0.5" />
-                    <div>
-                      <p className="font-medium">Participants</p>
-                      <p className="text-sm text-muted-foreground">
-                        {signupCount} / {volunteer.max_participants} signed up
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Comments Section */}
-            {showComments && (
-              <CommentsSection
-                contentType="volunteer"
-                contentId={volunteer.id}
-                title="Volunteer Discussion"
-              />
+        {/* Content */}
+        <div className="p-6 space-y-6">
+          {/* Status Badge */}
+          <div className="flex items-center gap-2">
+            {getStatusBadge()}
+            {isVolunteerFull && (
+              <Badge variant="outline" className="bg-gray-100 text-gray-800 border-gray-300">
+                Full
+              </Badge>
             )}
           </div>
-        </ScrollArea>
+
+          {/* Image Carousel */}
+          {volunteer.images && volunteer.images.length > 0 && (
+            <ImageCarousel images={volunteer.images} title={volunteer.title} />
+          )}
+
+          {/* Volunteer Information */}
+          <div className="space-y-4">
+            {volunteer.description && (
+              <div>
+                <h3 className="font-semibold mb-2">Description</h3>
+                <p className="text-muted-foreground">{volunteer.description}</p>
+              </div>
+            )}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex items-start gap-2">
+                <Calendar className="h-5 w-5 text-muted-foreground mt-0.5" />
+                <div>
+                  <p className="font-medium">Date & Time</p>
+                  <p className="text-sm text-muted-foreground">{formatDate(volunteer.volunteer_date)}</p>
+                </div>
+              </div>
+
+              {volunteer.location && (
+                <div className="flex items-start gap-2">
+                  <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
+                  <div>
+                    <p className="font-medium">Location</p>
+                    <p className="text-sm text-muted-foreground">{volunteer.location}</p>
+                  </div>
+                </div>
+              )}
+
+              {volunteer.max_participants && (
+                <div className="flex items-start gap-2">
+                  <Users className="h-5 w-5 text-muted-foreground mt-0.5" />
+                  <div>
+                    <p className="font-medium">Participants</p>
+                    <p className="text-sm text-muted-foreground">
+                      {signupCount} / {volunteer.max_participants} signed up
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Comments Section */}
+          {showComments && (
+            <CommentsSection
+              contentType="volunteer"
+              contentId={volunteer.id}
+              title="Volunteer Discussion"
+            />
+          )}
+        </div>
 
         {/* Footer with Action Buttons */}
         <div className="px-6 py-4 border-t bg-card">

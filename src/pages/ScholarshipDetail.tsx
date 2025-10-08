@@ -1,7 +1,6 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useScholarships } from "@/hooks/useScholarships";
 import { useAuth } from "@/hooks/useAuth";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { ChevronRight } from "lucide-react";
 import { ScholarshipInfo } from "@/components/scholarship/ScholarshipInfo";
@@ -144,26 +143,24 @@ export const ScholarshipDetail = () => {
           </div>
         </div>
 
-        {/* Scrollable Content */}
-        <ScrollArea className="h-[calc(100vh-280px)]">
-          <div className="p-6 space-y-6">
-            {/* Image Carousel */}
-            {scholarship.images && scholarship.images.length > 0 && (
-              <ImageCarousel images={scholarship.images} title={scholarship.title} />
-            )}
-            
-            <ScholarshipInfo scholarship={scholarship} isAuthenticated={isAuthenticated} />
+        {/* Content */}
+        <div className="p-6 space-y-6">
+          {/* Image Carousel */}
+          {scholarship.images && scholarship.images.length > 0 && (
+            <ImageCarousel images={scholarship.images} title={scholarship.title} />
+          )}
+          
+          <ScholarshipInfo scholarship={scholarship} isAuthenticated={isAuthenticated} />
 
-            {/* Comments Section */}
-            {showComments && (
-              <CommentsSection
-                contentType="scholarship"
-                contentId={scholarship.id}
-                title="Scholarship Discussion"
-              />
-            )}
-          </div>
-        </ScrollArea>
+          {/* Comments Section */}
+          {showComments && (
+            <CommentsSection
+              contentType="scholarship"
+              contentId={scholarship.id}
+              title="Scholarship Discussion"
+            />
+          )}
+        </div>
 
         {/* Footer with Action Buttons */}
         {(showApplyButton || showActionButtons) && (

@@ -3,7 +3,6 @@ import { useRequests, type Request } from "@/hooks/useRequests";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { ChevronRight } from "lucide-react";
 import { RequestModalCreatorInfo } from "@/components/request/RequestModalCreatorInfo";
@@ -128,30 +127,28 @@ export const RequestDetail = () => {
           </div>
         </div>
 
-        {/* Scrollable Content */}
-        <ScrollArea className="h-[calc(100vh-280px)]">
-          <div className="p-6 space-y-6">
-            <RequestModalCreatorInfo
-              creatorInfo={{
-                name: "User Name",
-                email: "user@example.com",
-                organization: orgName
-              }}
-              createdAt={request.created_at}
+        {/* Content */}
+        <div className="p-6 space-y-6">
+          <RequestModalCreatorInfo
+            creatorInfo={{
+              name: "User Name",
+              email: "user@example.com",
+              organization: orgName
+            }}
+            createdAt={request.created_at}
+          />
+
+          <RequestModalInformation request={request} />
+
+          {/* Comments Section */}
+          {showComments && (
+            <CommentsSection
+              contentType="request"
+              contentId={request.id}
+              title="Request Discussion"
             />
-
-            <RequestModalInformation request={request} />
-
-            {/* Comments Section */}
-            {showComments && (
-              <CommentsSection
-                contentType="request"
-                contentId={request.id}
-                title="Request Discussion"
-              />
-            )}
-          </div>
-        </ScrollArea>
+          )}
+        </div>
 
         {/* Footer with Action Buttons */}
         {isAuthenticated && !request.is_completed && (

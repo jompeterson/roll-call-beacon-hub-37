@@ -2,7 +2,6 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { useEvents } from "@/hooks/useEvents";
 import { useAuth } from "@/hooks/useAuth";
 import { useEventRSVPs } from "@/hooks/useEventRSVPs";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { ChevronRight } from "lucide-react";
 import { EventModalHeader } from "@/components/event/EventModalHeader";
@@ -136,35 +135,33 @@ export const EventDetail = () => {
           </div>
         </div>
 
-        {/* Scrollable Content */}
-        <ScrollArea className="h-[calc(100vh-280px)]">
-          <div className="p-6 space-y-6">
-            {/* Image Carousel */}
-            {event.images && event.images.length > 0 && (
-              <ImageCarousel images={event.images} title={event.title} />
-            )}
-            
-            {/* Event Information */}
-            <EventModalInformation event={event} rsvpCount={rsvpCount} />
+        {/* Content */}
+        <div className="p-6 space-y-6">
+          {/* Image Carousel */}
+          {event.images && event.images.length > 0 && (
+            <ImageCarousel images={event.images} title={event.title} />
+          )}
+          
+          {/* Event Information */}
+          <EventModalInformation event={event} rsvpCount={rsvpCount} />
 
-            {/* RSVP Status for authenticated users */}
-            <EventModalRSVPStatus 
-              event={event}
-              hasRsvp={hasRsvp}
-              rsvpCount={rsvpCount}
-              isAuthenticated={isAuthenticated}
+          {/* RSVP Status for authenticated users */}
+          <EventModalRSVPStatus 
+            event={event}
+            hasRsvp={hasRsvp}
+            rsvpCount={rsvpCount}
+            isAuthenticated={isAuthenticated}
+          />
+
+          {/* Comments Section */}
+          {showComments && (
+            <CommentsSection
+              contentType="event"
+              contentId={event.id}
+              title="Event Discussion"
             />
-
-            {/* Comments Section */}
-            {showComments && (
-              <CommentsSection
-                contentType="event"
-                contentId={event.id}
-                title="Event Discussion"
-              />
-            )}
-          </div>
-        </ScrollArea>
+          )}
+        </div>
 
         {/* Footer with Action Buttons */}
         <EventModalActionButtons

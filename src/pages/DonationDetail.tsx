@@ -2,7 +2,6 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { useDonations, type Donation } from "@/hooks/useDonations";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { ChevronRight } from "lucide-react";
 import { DonationModalCreatorInfo } from "@/components/donations/DonationModalCreatorInfo";
@@ -133,42 +132,40 @@ export const DonationDetail = () => {
           </div>
         </div>
 
-        {/* Scrollable Content */}
-        <ScrollArea className="h-[calc(100vh-280px)]">
-          <div className="p-6 space-y-6">
-            <DonationModalCreatorInfo
-              creatorUserId={donation.creator_user_id}
-              createdAt={donation.created_at}
-              orgName={orgName}
-              open={true}
-              getDateLabel={getDateLabel}
+        {/* Content */}
+        <div className="p-6 space-y-6">
+          <DonationModalCreatorInfo
+            creatorUserId={donation.creator_user_id}
+            createdAt={donation.created_at}
+            orgName={orgName}
+            open={true}
+            getDateLabel={getDateLabel}
+          />
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <DonationModalInformation
+              donation={donation}
+              getInformationTitle={getInformationTitle}
+              getOrganizationBio={getOrganizationBio}
+              getUserBio={getUserBio}
+              formatAmount={formatAmount}
             />
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <DonationModalInformation
-                donation={donation}
-                getInformationTitle={getInformationTitle}
-                getOrganizationBio={getOrganizationBio}
-                getUserBio={getUserBio}
-                formatAmount={formatAmount}
-              />
-
-              <DonationModalImageSection
-                donation={donation}
-                orgName={orgName}
-              />
-            </div>
-
-            {/* Comments Section */}
-            {showComments && (
-              <CommentsSection
-                contentType="donation"
-                contentId={donation.id}
-                title="Donation Discussion"
-              />
-            )}
+            <DonationModalImageSection
+              donation={donation}
+              orgName={orgName}
+            />
           </div>
-        </ScrollArea>
+
+          {/* Comments Section */}
+          {showComments && (
+            <CommentsSection
+              contentType="donation"
+              contentId={donation.id}
+              title="Donation Discussion"
+            />
+          )}
+        </div>
 
         {/* Footer with Action Buttons */}
         {isAuthenticated && (
