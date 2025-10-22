@@ -112,7 +112,7 @@ export const FloatingActionButton = () => {
       <div className="fixed bottom-6 right-6 z-50">
         {/* Action Buttons */}
         {isExpanded && (
-          <div className="flex flex-col space-y-3 mb-4">
+          <div className="absolute bottom-20 right-0 flex flex-col space-y-3">
             {actions.map((action, index) => {
               const Icon = action.icon;
               return (
