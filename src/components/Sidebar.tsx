@@ -134,7 +134,7 @@ export const Sidebar = ({ open, onOpenChange }: SidebarProps) => {
   };
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full pt-20">
+    <div className="flex flex-col h-full pt-2">
       <nav className="flex-1 px-4 space-y-2">
         {navigation.map((item) => {
           const Icon = item.icon;
