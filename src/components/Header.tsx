@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -23,11 +23,30 @@ interface HeaderProps {
 
 export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   const isMobile = useIsMobile();
   const [user, setUser] = useState<CustomUser | null>(null);
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [logoLoading, setLogoLoading] = useState(true);
+
+  // Define dashboard routes (routes shown in sidebar)
+  const dashboardRoutes = [
+    "/",
+    "/donations",
+    "/scholarships",
+    "/events",
+    "/volunteers",
+    "/organizations",
+    "/users",
+    "/widgets",
+    "/settings",
+  ];
+
+  // Check if current route is a dashboard page
+  const isDashboardPage = dashboardRoutes.some(route => 
+    route === "/" ? location.pathname === "/" : location.pathname.startsWith(route)
+  );
 
   useEffect(() => {
     // Get initial user
@@ -161,12 +180,20 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
       {/* Center Navigation */}
       <div className="hidden md:flex items-center space-x-6">
         <Link to="/">
-          <Button variant="ghost" className="text-foreground hover:text-primary">
+          <Button 
+            variant="ghost" 
+            className={isDashboardPage ? "text-white" : "text-foreground hover:text-primary"}
+            style={isDashboardPage ? { backgroundColor: "#3d7471" } : {}}
+          >
             Dashboard
           </Button>
         </Link>
         <Link to="/valued-partners">
-          <Button variant="ghost" className="text-foreground hover:text-primary">
+          <Button 
+            variant="ghost" 
+            className={location.pathname === "/valued-partners" ? "text-white" : "text-foreground hover:text-primary"}
+            style={location.pathname === "/valued-partners" ? { backgroundColor: "#3d7471" } : {}}
+          >
             Valued Partners
           </Button>
         </Link>
