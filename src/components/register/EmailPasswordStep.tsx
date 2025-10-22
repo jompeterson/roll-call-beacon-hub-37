@@ -20,18 +20,27 @@ export const EmailPasswordStep = ({ data, onNext, onBack, onUpdate }: EmailPassw
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [logoUrl, setLogoUrl] = useState("/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png");
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
+  const [logoLoading, setLogoLoading] = useState(true);
 
   useEffect(() => {
     const fetchLogo = async () => {
-      const { data } = await supabase
-        .from('app_settings')
-        .select('value')
-        .eq('key', 'logo_url')
-        .single();
-      
-      if (data?.value) {
-        setLogoUrl(data.value);
+      try {
+        const { data } = await supabase
+          .from('app_settings')
+          .select('value')
+          .eq('key', 'logo_url')
+          .single();
+        
+        if (data?.value) {
+          setLogoUrl(data.value);
+        } else {
+          setLogoUrl("/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png");
+        }
+      } catch (error) {
+        setLogoUrl("/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png");
+      } finally {
+        setLogoLoading(false);
       }
     };
 
@@ -95,14 +104,16 @@ export const EmailPasswordStep = ({ data, onNext, onBack, onUpdate }: EmailPassw
       {/* Header */}
       <div className="text-center">
         <div className="flex items-center justify-center space-x-4 mb-4">
-          <img 
-            src={logoUrl}
-            alt="Logo" 
-            className="h-12 object-contain"
-            onError={(e) => {
-              e.currentTarget.src = "/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png";
-            }}
-          />
+          {!logoLoading && logoUrl && (
+            <img 
+              src={logoUrl}
+              alt="Logo" 
+              className="h-12 object-contain"
+              onError={(e) => {
+                e.currentTarget.src = "/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png";
+              }}
+            />
+          )}
           <img 
             src="/lovable-uploads/3bf5b36b-46ad-420d-8eb5-7435b9aaad17.png" 
             alt="Header Icon" 

@@ -26,7 +26,8 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
   const { toast } = useToast();
   const isMobile = useIsMobile();
   const [user, setUser] = useState<CustomUser | null>(null);
-  const [logoUrl, setLogoUrl] = useState("/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png");
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
+  const [logoLoading, setLogoLoading] = useState(true);
 
   useEffect(() => {
     // Get initial user
@@ -52,9 +53,15 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
 
         if (data && (data as any).value) {
           setLogoUrl((data as any).value);
+        } else {
+          // Use default if no custom logo is set
+          setLogoUrl("/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png");
         }
       } catch (error) {
         console.error('Error fetching logo:', error);
+        setLogoUrl("/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png");
+      } finally {
+        setLogoLoading(false);
       }
     };
 
@@ -138,15 +145,17 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
           className="h-12 object-contain"
         />
         
-        <img 
-          src={logoUrl} 
-          alt="Roll Call Logo" 
-          className="h-12 object-contain"
-          onError={(e) => {
-            // Fallback to default logo if the custom one fails to load
-            e.currentTarget.src = "/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png";
-          }}
-        />
+        {!logoLoading && logoUrl && (
+          <img 
+            src={logoUrl} 
+            alt="Roll Call Logo" 
+            className="h-12 object-contain"
+            onError={(e) => {
+              // Fallback to default logo if the custom one fails to load
+              e.currentTarget.src = "/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png";
+            }}
+          />
+        )}
       </div>
 
       {/* Center Navigation */}
