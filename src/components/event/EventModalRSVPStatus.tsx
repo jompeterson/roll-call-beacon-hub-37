@@ -6,7 +6,8 @@ interface Event {
   id: string;
   title: string;
   description: string | null;
-  event_date: string;
+  start_date: string;
+  end_date?: string | null;
   location: string | null;
   max_participants: number | null;
   creator_user_id: string;

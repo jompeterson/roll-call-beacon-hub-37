@@ -15,7 +15,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useEventRSVPs } from "@/hooks/useEventRSVPs";
 
 type SortDirection = "asc" | "desc" | null;
-type SortField = "title" | "event_date" | "location" | "status" | null;
+type SortField = "title" | "start_date" | "location" | "status" | null;
 
 const StatusIcon = ({ status }: { status: string }) => {
   switch (status) {
@@ -139,9 +139,9 @@ export const Events = () => {
       if (sortField === "status") {
         aValue = getEventStatus(a);
         bValue = getEventStatus(b);
-      } else if (sortField === "event_date") {
-        aValue = a.event_date;
-        bValue = b.event_date;
+      } else if (sortField === "start_date") {
+        aValue = a.start_date;
+        bValue = b.start_date;
       } else {
         aValue = a[sortField as keyof typeof a] || "";
         bValue = b[sortField as keyof typeof b] || "";
@@ -282,13 +282,13 @@ export const Events = () => {
                     Event Title
                   </SortableTableHead>
                   <SortableTableHead
-                    field="event_date"
+                    field="start_date"
                     currentSort={eventSort}
                     currentDirection={eventDirection}
                     onSort={handleEventSort}
                     className={isAuthenticated ? "w-1/4" : "w-1/4"}
                   >
-                    Date
+                    Start Date
                   </SortableTableHead>
                   <SortableTableHead
                     field="location"
@@ -336,7 +336,7 @@ export const Events = () => {
                           </div>
                         </TableCell>
                         <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
-                          {formatDate(event.event_date)}
+                          {formatDate(event.start_date)}
                         </TableCell>
                         <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
                           {event.location || "TBD"}

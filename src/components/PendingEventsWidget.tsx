@@ -10,7 +10,8 @@ interface Event {
   id: string;
   title: string;
   description: string | null;
-  event_date: string;
+  start_date: string;
+  end_date?: string | null;
   location: string | null;
   max_participants: number | null;
   creator_user_id: string;
@@ -84,7 +85,7 @@ export const PendingEventsWidget = () => {
                   >
                     <div className="font-medium text-sm">{event.title}</div>
                     <div className="text-xs text-muted-foreground">
-                      {formatDate(event.event_date)} • {event.location || 'Location TBD'}
+                      {formatDate(event.start_date)} • {event.location || 'Location TBD'}
                     </div>
                   </div>
                 ))}

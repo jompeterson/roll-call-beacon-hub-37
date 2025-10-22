@@ -280,12 +280,13 @@ export type Database = {
           created_at: string
           creator_user_id: string
           description: string | null
-          event_date: string
+          end_date: string | null
           id: string
           images: string[] | null
           is_approved: boolean
           location: string | null
           max_participants: number | null
+          start_date: string
           title: string
           updated_at: string
         }
@@ -294,12 +295,13 @@ export type Database = {
           created_at?: string
           creator_user_id: string
           description?: string | null
-          event_date: string
+          end_date?: string | null
           id?: string
           images?: string[] | null
           is_approved?: boolean
           location?: string | null
           max_participants?: number | null
+          start_date: string
           title: string
           updated_at?: string
         }
@@ -308,12 +310,13 @@ export type Database = {
           created_at?: string
           creator_user_id?: string
           description?: string | null
-          event_date?: string
+          end_date?: string | null
           id?: string
           images?: string[] | null
           is_approved?: boolean
           location?: string | null
           max_participants?: number | null
+          start_date?: string
           title?: string
           updated_at?: string
         }
@@ -794,14 +797,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      generate_salt: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
-      generate_session_token: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
+      generate_salt: { Args: never; Returns: string }
+      generate_session_token: { Args: never; Returns: string }
       hash_password: {
         Args: { password: string; salt: string }
         Returns: string

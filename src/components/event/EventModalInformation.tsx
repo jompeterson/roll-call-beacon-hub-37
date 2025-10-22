@@ -5,7 +5,8 @@ interface Event {
   id: string;
   title: string;
   description: string | null;
-  event_date: string;
+  start_date: string;
+  end_date?: string | null;
   location: string | null;
   max_participants: number | null;
   creator_user_id: string;
@@ -42,7 +43,10 @@ export const EventModalInformation = ({ event, rsvpCount }: EventModalInformatio
       <div className="space-y-3">
         <div className="flex items-center gap-2">
           <Calendar className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm">{formatDate(event.event_date)}</span>
+          <div className="text-sm">
+            <div>Start: {formatDate(event.start_date)}</div>
+            {event.end_date && <div>End: {formatDate(event.end_date)}</div>}
+          </div>
         </div>
         
         {event.location && (
