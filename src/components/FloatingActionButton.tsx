@@ -148,7 +148,7 @@ export const FloatingActionButton = () => {
         <Button
           size="lg"
           className={cn(
-            "h-14 w-14 rounded-full shadow-lg text-white transition-all duration-300 ease-in-out",
+            "h-14 w-14 rounded-full shadow-lg text-white transition-all duration-300 ease-in-out px-0",
             isExpanded && "rotate-45"
           )}
           style={{ backgroundColor: "#3d7471" }}
