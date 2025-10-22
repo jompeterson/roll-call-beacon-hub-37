@@ -285,7 +285,7 @@ export const Sidebar = ({ open, onOpenChange }: SidebarProps) => {
   return (
     <div
       className={cn(
-        "fixed top-10 md:top-11 lg:top-14 bottom-0 left-0 z-40 w-64 bg-card border-r border-border transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:flex lg:flex-col",
+        "fixed top-10 md:top-[2.75rem] lg:top-14 bottom-0 left-0 z-40 w-64 bg-card border-r border-border transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:flex lg:flex-col",
         open ? "translate-x-0" : "-translate-x-full"
       )}
     >
