@@ -127,7 +127,7 @@ export const FloatingActionButton = () => {
                   <Button
                     size="lg"
                     className={cn(
-                      "h-12 w-12 rounded-full shadow-lg text-white",
+                      "h-12 w-12 rounded-full shadow-lg text-white px-0",
                       action.color
                     )}
                     onClick={() => handleActionClick(action.name)}
