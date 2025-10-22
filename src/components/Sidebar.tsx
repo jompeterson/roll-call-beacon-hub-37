@@ -192,10 +192,10 @@ export const Sidebar = ({ open, onOpenChange }: SidebarProps) => {
           const Icon = item.icon;
           // Check if current path matches the nav item or related detail pages
           const isActive = location.pathname === item.href || 
-            (item.href === "/donations" && (location.pathname.startsWith("/donation/") || location.pathname.startsWith("/request/"))) ||
-            (item.href === "/events" && location.pathname.startsWith("/event/")) ||
-            (item.href === "/scholarships" && location.pathname.startsWith("/scholarship/")) ||
-            (item.href === "/volunteers" && location.pathname.startsWith("/volunteer/"));
+            (item.href === "/donations" && (location.pathname.startsWith("/donations/") || location.pathname.startsWith("/requests/"))) ||
+            (item.href === "/events" && location.pathname.startsWith("/events/")) ||
+            (item.href === "/scholarships" && location.pathname.startsWith("/scholarships/")) ||
+            (item.href === "/volunteers" && location.pathname.startsWith("/volunteers/"));
           return (
             <Link
               key={item.name}
