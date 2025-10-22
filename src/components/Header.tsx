@@ -178,7 +178,7 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
       </div>
 
       {/* Center Navigation */}
-      <div className="hidden md:flex items-center space-x-6">
+      <div className="hidden lg:flex items-center space-x-6">
         <Link to="/">
           <Button 
             variant="ghost" 

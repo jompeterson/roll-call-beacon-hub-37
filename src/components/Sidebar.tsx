@@ -59,6 +59,11 @@ const adminNavigation = [
   { name: "Settings", href: "/settings", icon: Settings },
 ];
 
+const topNavigationItems = [
+  { name: "Dashboard", href: "/" },
+  { name: "Valued Partners", href: "/valued-partners" },
+];
+
 export const Sidebar = ({ open, onOpenChange }: SidebarProps) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -91,6 +96,23 @@ export const Sidebar = ({ open, onOpenChange }: SidebarProps) => {
   };
 
   const navigation = getNavigation();
+
+  // Dashboard routes to highlight Dashboard button
+  const dashboardRoutes = [
+    "/",
+    "/donations",
+    "/scholarships",
+    "/events",
+    "/volunteers",
+    "/organizations",
+    "/users",
+    "/widgets",
+    "/settings",
+  ];
+
+  const isDashboardPage = dashboardRoutes.some(route => 
+    route === "/" ? location.pathname === "/" : location.pathname.startsWith(route)
+  );
 
   const handleSignIn = () => {
     navigate("/login");
@@ -136,6 +158,36 @@ export const Sidebar = ({ open, onOpenChange }: SidebarProps) => {
   const SidebarContent = () => (
     <div className="flex flex-col h-full pt-2">
       <nav className="flex-1 px-4 space-y-2 overflow-y-auto">
+        {/* Top Navigation Items (Dashboard & Valued Partners) - Only on mobile/tablet */}
+        <div className="lg:hidden space-y-2 pb-4 mb-4 border-b border-border">
+          {topNavigationItems.map((item) => {
+            const isActive = item.href === "/valued-partners" 
+              ? location.pathname === "/valued-partners"
+              : isDashboardPage;
+            return (
+              <Link
+                key={item.name}
+                to={item.href}
+                onClick={() => {
+                  if (isMobile && onOpenChange) {
+                    onOpenChange(false);
+                  }
+                }}
+                className={cn(
+                  "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors",
+                  isActive
+                    ? "text-white"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                )}
+                style={isActive ? { backgroundColor: "#3d7471" } : {}}
+              >
+                {item.name}
+              </Link>
+            );
+          })}
+        </div>
+        
+        {/* Regular Navigation Items */}
         {navigation.map((item) => {
           const Icon = item.icon;
           const isActive = location.pathname === item.href;
