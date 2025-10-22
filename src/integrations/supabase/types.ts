@@ -753,42 +753,45 @@ export type Database = {
           created_at: string
           creator_user_id: string
           description: string | null
+          end_date: string | null
           id: string
           images: string[] | null
           is_approved: boolean
           location: string | null
           max_participants: number | null
+          start_date: string
           title: string
           updated_at: string
-          volunteer_date: string
         }
         Insert: {
           approval_decision_made?: boolean
           created_at?: string
           creator_user_id: string
           description?: string | null
+          end_date?: string | null
           id?: string
           images?: string[] | null
           is_approved?: boolean
           location?: string | null
           max_participants?: number | null
+          start_date: string
           title: string
           updated_at?: string
-          volunteer_date: string
         }
         Update: {
           approval_decision_made?: boolean
           created_at?: string
           creator_user_id?: string
           description?: string | null
+          end_date?: string | null
           id?: string
           images?: string[] | null
           is_approved?: boolean
           location?: string | null
           max_participants?: number | null
+          start_date?: string
           title?: string
           updated_at?: string
-          volunteer_date?: string
         }
         Relationships: []
       }

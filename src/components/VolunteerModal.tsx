@@ -16,7 +16,8 @@ interface Volunteer {
   id: string;
   title: string;
   description: string | null;
-  volunteer_date: string;
+  start_date: string;
+  end_date?: string | null;
   location: string | null;
   max_participants: number | null;
   creator_user_id: string;
@@ -131,7 +132,10 @@ export const VolunteerModal = ({
             <div className="space-y-4">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Calendar className="h-4 w-4" />
-                <span>{formatDate(volunteer.volunteer_date)}</span>
+                <div className="text-sm">
+                  <div>Start: {formatDate(volunteer.start_date)}</div>
+                  {volunteer.end_date && <div>End: {formatDate(volunteer.end_date)}</div>}
+                </div>
               </div>
 
               {volunteer.location && (

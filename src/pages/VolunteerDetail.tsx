@@ -185,7 +185,10 @@ export const VolunteerDetail = () => {
                 <Calendar className="h-5 w-5 text-muted-foreground mt-0.5" />
                 <div>
                   <p className="font-medium">Date & Time</p>
-                  <p className="text-sm text-muted-foreground">{formatDate(volunteer.volunteer_date)}</p>
+                  <div className="text-sm text-muted-foreground">
+                    <div>Start: {formatDate(volunteer.start_date)}</div>
+                    {volunteer.end_date && <div>End: {formatDate(volunteer.end_date)}</div>}
+                  </div>
                 </div>
               </div>
 

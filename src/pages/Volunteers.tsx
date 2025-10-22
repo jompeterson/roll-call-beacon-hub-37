@@ -15,7 +15,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useVolunteerSignups } from "@/hooks/useVolunteerSignups";
 
 type SortDirection = "asc" | "desc" | null;
-type SortField = "title" | "volunteer_date" | "location" | "status" | null;
+type SortField = "title" | "start_date" | "location" | "status" | null;
 
 const StatusIcon = ({ status }: { status: string }) => {
   switch (status) {
@@ -139,9 +139,9 @@ export const Volunteers = () => {
       if (sortField === "status") {
         aValue = getVolunteerStatus(a);
         bValue = getVolunteerStatus(b);
-      } else if (sortField === "volunteer_date") {
-        aValue = a.volunteer_date;
-        bValue = b.volunteer_date;
+      } else if (sortField === "start_date") {
+        aValue = a.start_date;
+        bValue = b.start_date;
       } else {
         aValue = a[sortField as keyof typeof a] || "";
         bValue = b[sortField as keyof typeof b] || "";
@@ -282,13 +282,13 @@ export const Volunteers = () => {
                     Opportunity Title
                   </SortableTableHead>
                   <SortableTableHead
-                    field="volunteer_date"
+                    field="start_date"
                     currentSort={volunteerSort}
                     currentDirection={volunteerDirection}
                     onSort={handleVolunteerSort}
                     className={isAuthenticated ? "w-1/4" : "w-1/4"}
                   >
-                    Date
+                    Start Date
                   </SortableTableHead>
                   <SortableTableHead
                     field="location"
@@ -336,7 +336,7 @@ export const Volunteers = () => {
                           </div>
                         </TableCell>
                         <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
-                          {formatDate(volunteer.volunteer_date)}
+                          {formatDate(volunteer.start_date)}
                         </TableCell>
                         <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
                           {volunteer.location || "TBD"}

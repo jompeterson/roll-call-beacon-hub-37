@@ -27,7 +27,8 @@ export const VolunteerEditModal = ({
   const [formData, setFormData] = useState({
     title: volunteer.title,
     description: volunteer.description || "",
-    volunteer_date: volunteer.volunteer_date ? new Date(volunteer.volunteer_date).toISOString().slice(0, 16) : "",
+    start_date: volunteer.start_date ? new Date(volunteer.start_date).toISOString().slice(0, 16) : "",
+    end_date: volunteer.end_date ? new Date(volunteer.end_date).toISOString().slice(0, 16) : "",
     location: volunteer.location || "",
     max_participants: volunteer.max_participants?.toString() || ""
   });
@@ -74,7 +75,8 @@ export const VolunteerEditModal = ({
       const updateData = {
         title: formData.title,
         description: formData.description || null,
-        volunteer_date: formData.volunteer_date ? new Date(formData.volunteer_date).toISOString() : null,
+        start_date: formData.start_date ? new Date(formData.start_date).toISOString() : null,
+        end_date: formData.end_date ? new Date(formData.end_date).toISOString() : null,
         location: formData.location || null,
         max_participants: formData.max_participants ? parseInt(formData.max_participants) : null,
         images: imageUrls,
@@ -129,13 +131,23 @@ export const VolunteerEditModal = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="volunteer_date">Date & Time *</Label>
+              <Label htmlFor="start_date">Start Date & Time *</Label>
               <Input
-                id="volunteer_date"
+                id="start_date"
                 type="datetime-local"
-                value={formData.volunteer_date}
-                onChange={(e) => handleInputChange("volunteer_date", e.target.value)}
+                value={formData.start_date}
+                onChange={(e) => handleInputChange("start_date", e.target.value)}
                 required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="end_date">End Date & Time</Label>
+              <Input
+                id="end_date"
+                type="datetime-local"
+                value={formData.end_date}
+                onChange={(e) => handleInputChange("end_date", e.target.value)}
               />
             </div>
 
@@ -182,7 +194,7 @@ export const VolunteerEditModal = ({
           <div className="flex gap-3 pt-4">
             <Button
               type="submit"
-              disabled={isSubmitting || !formData.title || !formData.volunteer_date}
+              disabled={isSubmitting || !formData.title || !formData.start_date}
               className="flex-1"
             >
               {isSubmitting ? "Updating..." : "Update Opportunity"}

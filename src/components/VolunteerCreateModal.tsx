@@ -22,7 +22,8 @@ interface VolunteerCreateModalProps {
 interface VolunteerFormData {
   title: string;
   description: string;
-  volunteer_date: string;
+  start_date: string;
+  end_date: string;
   location: string;
   max_participants: number | null;
 }
@@ -42,7 +43,8 @@ export const VolunteerCreateModal = ({
     defaultValues: {
       title: "",
       description: "",
-      volunteer_date: "",
+      start_date: "",
+      end_date: "",
       location: "",
       max_participants: null,
     },
@@ -91,7 +93,8 @@ export const VolunteerCreateModal = ({
         .insert({
           title: data.title,
           description: data.description || null,
-          volunteer_date: new Date(data.volunteer_date).toISOString(),
+          start_date: new Date(data.start_date).toISOString(),
+          end_date: data.end_date ? new Date(data.end_date).toISOString() : null,
           location: data.location || null,
           max_participants: data.max_participants,
           creator_user_id: user.id,
@@ -193,13 +196,33 @@ export const VolunteerCreateModal = ({
 
             <FormField
               control={form.control}
-              name="volunteer_date"
-              rules={{ required: "Volunteer date and time is required" }}
+              name="start_date"
+              rules={{ required: "Start date and time is required" }}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="flex items-center gap-2">
                     <Calendar className="h-4 w-4" />
-                    Volunteer Date & Time *
+                    Start Date & Time *
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="datetime-local"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="end_date"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4" />
+                    End Date & Time
                   </FormLabel>
                   <FormControl>
                     <Input

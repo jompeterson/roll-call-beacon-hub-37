@@ -13,7 +13,8 @@ interface Volunteer {
   id: string;
   title: string;
   description: string | null;
-  volunteer_date: string;
+  start_date: string;
+  end_date?: string | null;
   location: string | null;
   max_participants: number | null;
   creator_user_id: string;
@@ -122,8 +123,9 @@ export const GuestVolunteerSignupModal = ({ volunteer, open, onOpenChange }: Gue
             Sign Up: {volunteer.title}
           </DialogTitle>
           <DialogDescription>
-            {formatDate(volunteer.volunteer_date)}
-            {volunteer.location && ` • ${volunteer.location}`}
+            <div>Start: {formatDate(volunteer.start_date)}</div>
+            {volunteer.end_date && <div>End: {formatDate(volunteer.end_date)}</div>}
+            {volunteer.location && <div>{volunteer.location}</div>}
           </DialogDescription>
         </DialogHeader>
 
