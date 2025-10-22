@@ -190,7 +190,12 @@ export const Sidebar = ({ open, onOpenChange }: SidebarProps) => {
         {/* Regular Navigation Items */}
         {navigation.map((item) => {
           const Icon = item.icon;
-          const isActive = location.pathname === item.href;
+          // Check if current path matches the nav item or related detail pages
+          const isActive = location.pathname === item.href || 
+            (item.href === "/donations" && (location.pathname.startsWith("/donation/") || location.pathname.startsWith("/request/"))) ||
+            (item.href === "/events" && location.pathname.startsWith("/event/")) ||
+            (item.href === "/scholarships" && location.pathname.startsWith("/scholarship/")) ||
+            (item.href === "/volunteers" && location.pathname.startsWith("/volunteer/"));
           return (
             <Link
               key={item.name}
