@@ -25,6 +25,7 @@ interface EventFormData {
   start_date: string;
   end_date: string;
   location: string;
+  event_link: string;
   max_participants: number | null;
 }
 
@@ -46,6 +47,7 @@ export const EventCreateModal = ({
       start_date: "",
       end_date: "",
       location: "",
+      event_link: "",
       max_participants: null,
     },
   });
@@ -96,6 +98,7 @@ export const EventCreateModal = ({
           start_date: new Date(data.start_date).toISOString(),
           end_date: data.end_date ? new Date(data.end_date).toISOString() : null,
           location: data.location || null,
+          event_link: data.event_link || null,
           max_participants: data.max_participants,
           creator_user_id: user.id,
           images: imageUrls,
@@ -248,6 +251,24 @@ export const EventCreateModal = ({
                   <FormControl>
                     <Input
                       placeholder="Enter event location"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="event_link"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Event Link</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="url"
+                      placeholder="https://example.com/event"
                       {...field}
                     />
                   </FormControl>

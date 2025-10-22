@@ -10,6 +10,7 @@ export interface Volunteer {
   start_date: string;
   end_date?: string | null;
   location: string | null;
+  volunteer_link?: string | null;
   max_participants: number | null;
   creator_user_id: string;
   is_approved: boolean;

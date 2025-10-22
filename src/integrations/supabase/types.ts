@@ -281,6 +281,7 @@ export type Database = {
           creator_user_id: string
           description: string | null
           end_date: string | null
+          event_link: string | null
           id: string
           images: string[] | null
           is_approved: boolean
@@ -296,6 +297,7 @@ export type Database = {
           creator_user_id: string
           description?: string | null
           end_date?: string | null
+          event_link?: string | null
           id?: string
           images?: string[] | null
           is_approved?: boolean
@@ -311,6 +313,7 @@ export type Database = {
           creator_user_id?: string
           description?: string | null
           end_date?: string | null
+          event_link?: string | null
           id?: string
           images?: string[] | null
           is_approved?: boolean
@@ -762,6 +765,7 @@ export type Database = {
           start_date: string
           title: string
           updated_at: string
+          volunteer_link: string | null
         }
         Insert: {
           approval_decision_made?: boolean
@@ -777,6 +781,7 @@ export type Database = {
           start_date: string
           title: string
           updated_at?: string
+          volunteer_link?: string | null
         }
         Update: {
           approval_decision_made?: boolean
@@ -792,6 +797,7 @@ export type Database = {
           start_date?: string
           title?: string
           updated_at?: string
+          volunteer_link?: string | null
         }
         Relationships: []
       }

@@ -30,6 +30,7 @@ export const VolunteerEditModal = ({
     start_date: volunteer.start_date ? new Date(volunteer.start_date).toISOString().slice(0, 16) : "",
     end_date: volunteer.end_date ? new Date(volunteer.end_date).toISOString().slice(0, 16) : "",
     location: volunteer.location || "",
+    volunteer_link: volunteer.volunteer_link || "",
     max_participants: volunteer.max_participants?.toString() || ""
   });
 
@@ -78,6 +79,7 @@ export const VolunteerEditModal = ({
         start_date: formData.start_date ? new Date(formData.start_date).toISOString() : null,
         end_date: formData.end_date ? new Date(formData.end_date).toISOString() : null,
         location: formData.location || null,
+        volunteer_link: formData.volunteer_link || null,
         max_participants: formData.max_participants ? parseInt(formData.max_participants) : null,
         images: imageUrls,
         updated_at: new Date().toISOString()
@@ -158,6 +160,17 @@ export const VolunteerEditModal = ({
                 value={formData.location}
                 onChange={(e) => handleInputChange("location", e.target.value)}
                 placeholder="Enter location"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="volunteer_link">Volunteer Link</Label>
+              <Input
+                id="volunteer_link"
+                type="url"
+                value={formData.volunteer_link}
+                onChange={(e) => handleInputChange("volunteer_link", e.target.value)}
+                placeholder="https://example.com/volunteer"
               />
             </div>
 

@@ -19,6 +19,7 @@ interface Volunteer {
   start_date: string;
   end_date?: string | null;
   location: string | null;
+  volunteer_link?: string | null;
   max_participants: number | null;
   creator_user_id: string;
   is_approved: boolean;
@@ -142,6 +143,21 @@ export const VolunteerModal = ({
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <MapPin className="h-4 w-4" />
                   <span>{volunteer.location}</span>
+                </div>
+              )}
+
+              {volunteer.volunteer_link && (
+                <div className="flex items-center gap-2">
+                  <span className="text-sm">
+                    <a 
+                      href={volunteer.volunteer_link} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline"
+                    >
+                      Volunteer Link
+                    </a>
+                  </span>
                 </div>
               )}
 

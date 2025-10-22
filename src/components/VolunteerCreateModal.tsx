@@ -25,6 +25,7 @@ interface VolunteerFormData {
   start_date: string;
   end_date: string;
   location: string;
+  volunteer_link: string;
   max_participants: number | null;
 }
 
@@ -46,6 +47,7 @@ export const VolunteerCreateModal = ({
       start_date: "",
       end_date: "",
       location: "",
+      volunteer_link: "",
       max_participants: null,
     },
   });
@@ -96,6 +98,7 @@ export const VolunteerCreateModal = ({
           start_date: new Date(data.start_date).toISOString(),
           end_date: data.end_date ? new Date(data.end_date).toISOString() : null,
           location: data.location || null,
+          volunteer_link: data.volunteer_link || null,
           max_participants: data.max_participants,
           creator_user_id: user.id,
           images: imageUrls,
@@ -247,6 +250,24 @@ export const VolunteerCreateModal = ({
                   <FormControl>
                     <Input
                       placeholder="Enter location"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="volunteer_link"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Volunteer Opportunity Link</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="url"
+                      placeholder="https://example.com/volunteer"
                       {...field}
                     />
                   </FormControl>

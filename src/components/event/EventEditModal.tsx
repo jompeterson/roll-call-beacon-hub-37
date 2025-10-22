@@ -30,6 +30,7 @@ export const EventEditModal = ({
     start_date: event.start_date ? new Date(event.start_date).toISOString().slice(0, 16) : "",
     end_date: event.end_date ? new Date(event.end_date).toISOString().slice(0, 16) : "",
     location: event.location || "",
+    event_link: event.event_link || "",
     max_participants: event.max_participants?.toString() || ""
   });
 
@@ -78,6 +79,7 @@ export const EventEditModal = ({
         start_date: formData.start_date ? new Date(formData.start_date).toISOString() : null,
         end_date: formData.end_date ? new Date(formData.end_date).toISOString() : null,
         location: formData.location || null,
+        event_link: formData.event_link || null,
         max_participants: formData.max_participants ? parseInt(formData.max_participants) : null,
         images: imageUrls,
         updated_at: new Date().toISOString()
@@ -158,6 +160,17 @@ export const EventEditModal = ({
                 value={formData.location}
                 onChange={(e) => handleInputChange("location", e.target.value)}
                 placeholder="Enter event location"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="event_link">Event Link</Label>
+              <Input
+                id="event_link"
+                type="url"
+                value={formData.event_link}
+                onChange={(e) => handleInputChange("event_link", e.target.value)}
+                placeholder="https://example.com/event"
               />
             </div>
 

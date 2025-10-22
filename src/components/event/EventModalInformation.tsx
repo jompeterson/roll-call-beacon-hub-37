@@ -8,6 +8,7 @@ interface Event {
   start_date: string;
   end_date?: string | null;
   location: string | null;
+  event_link?: string | null;
   max_participants: number | null;
   creator_user_id: string;
   is_approved: boolean;
@@ -53,6 +54,21 @@ export const EventModalInformation = ({ event, rsvpCount }: EventModalInformatio
           <div className="flex items-start gap-2">
             <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
             <span className="text-sm">{event.location}</span>
+          </div>
+        )}
+        
+        {event.event_link && (
+          <div className="flex items-start gap-2">
+            <span className="text-sm">
+              <a 
+                href={event.event_link} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                Event Link
+              </a>
+            </span>
           </div>
         )}
         

@@ -202,6 +202,22 @@ export const VolunteerDetail = () => {
                 </div>
               )}
 
+              {volunteer.volunteer_link && (
+                <div className="flex items-start gap-2">
+                  <div>
+                    <p className="font-medium">Link</p>
+                    <a 
+                      href={volunteer.volunteer_link} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary hover:underline"
+                    >
+                      Visit Volunteer Page
+                    </a>
+                  </div>
+                </div>
+              )}
+
               {volunteer.max_participants && (
                 <div className="flex items-start gap-2">
                   <Users className="h-5 w-5 text-muted-foreground mt-0.5" />
