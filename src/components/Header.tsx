@@ -144,7 +144,7 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
   };
 
   return (
-    <header className="bg-card border-b border-border px-6 py-4 flex items-center justify-between relative z-50">
+    <header className="bg-card border-b border-border px-6 py-2 md:py-3 lg:py-4 flex items-center justify-between relative z-50">
       {/* Left Side - Mobile Menu + Images */}
       <div className="flex items-center space-x-4">
         {/* Mobile Menu Button */}
@@ -161,14 +161,14 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
         <img 
           src="/lovable-uploads/3bf5b36b-46ad-420d-8eb5-7435b9aaad17.png" 
           alt="Header Icon" 
-          className="h-12 object-contain"
+          className="h-8 md:h-10 lg:h-12 object-contain"
         />
         
         {!logoLoading && logoUrl && (
           <img 
             src={logoUrl} 
             alt="Roll Call Logo" 
-            className="h-12 object-contain"
+            className="h-8 md:h-10 lg:h-12 object-contain"
             onError={(e) => {
               // Fallback to default logo if the custom one fails to load
               e.currentTarget.src = "/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png";
