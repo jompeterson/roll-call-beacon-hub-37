@@ -2,16 +2,22 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
 
+export interface UserInfo {
+  id: string;
+  first_name: string;
+  last_name: string;
+}
+
 export interface ActivityPost {
   id: string;
   type: 'donation' | 'request' | 'event' | 'volunteer';
   title: string;
   created_at: string;
-  acceptances?: Array<{ user_id: string; created_at: string }>;
-  fulfillments?: Array<{ user_id: string; created_at: string }>;
-  rsvps?: Array<{ user_id: string; created_at: string; guest_info?: any }>;
-  signups?: Array<{ user_id: string; created_at: string; guest_info?: any }>;
-  comments?: Array<{ id: string; creator_user_id: string; content: string; created_at: string }>;
+  acceptances?: Array<{ user_id: string; created_at: string; user?: UserInfo }>;
+  fulfillments?: Array<{ user_id: string; created_at: string; user?: UserInfo }>;
+  rsvps?: Array<{ user_id: string; created_at: string; guest_info?: any; user?: UserInfo }>;
+  signups?: Array<{ user_id: string; created_at: string; guest_info?: any; user?: UserInfo }>;
+  comments?: Array<{ id: string; creator_user_id: string; content: string; created_at: string; user?: UserInfo }>;
 }
 
 export const useUserActivity = () => {
@@ -25,6 +31,31 @@ export const useUserActivity = () => {
       if (!user?.id) return [];
 
       const activities: ActivityPost[] = [];
+      const userCache = new Map<string, UserInfo>();
+
+      // Helper function to fetch user info
+      const getUserInfo = async (userId: string): Promise<UserInfo | undefined> => {
+        if (userCache.has(userId)) {
+          return userCache.get(userId);
+        }
+
+        const { data } = await supabase
+          .from("user_profiles")
+          .select("id, first_name, last_name")
+          .eq("id", userId)
+          .single();
+
+        if (data) {
+          const userInfo: UserInfo = {
+            id: data.id,
+            first_name: data.first_name,
+            last_name: data.last_name
+          };
+          userCache.set(userId, userInfo);
+          return userInfo;
+        }
+        return undefined;
+      };
 
       // Fetch donations
       const { data: donations } = await supabase
@@ -52,14 +83,31 @@ export const useUserActivity = () => {
           .eq("content_type", "donation")
           .in("content_id", donationIds);
 
+        // Fetch user info for all interactions
+        const allUserIds = new Set<string>();
+        acceptances?.forEach(a => allUserIds.add(a.user_id));
+        donationComments?.forEach(c => allUserIds.add(c.creator_user_id));
+
+        await Promise.all(Array.from(allUserIds).map(id => getUserInfo(id)));
+
         donations.forEach(donation => {
+          const donationAcceptances = acceptances?.filter(a => a.donation_id === donation.id).map(a => ({
+            ...a,
+            user: userCache.get(a.user_id)
+          })) || [];
+
+          const donationCommentsList = donationComments?.filter(c => c.content_id === donation.id).map(c => ({
+            ...c,
+            user: userCache.get(c.creator_user_id)
+          })) || [];
+
           activities.push({
             id: donation.id,
             type: 'donation',
             title: donation.title,
             created_at: donation.created_at,
-            acceptances: acceptances?.filter(a => a.donation_id === donation.id) || [],
-            comments: donationComments?.filter(c => c.content_id === donation.id) || []
+            acceptances: donationAcceptances,
+            comments: donationCommentsList
           });
         });
       }
@@ -90,14 +138,31 @@ export const useUserActivity = () => {
           .eq("content_type", "request")
           .in("content_id", requestIds);
 
+        // Fetch user info for all interactions
+        const allUserIds = new Set<string>();
+        fulfillments?.forEach(f => allUserIds.add(f.user_id));
+        requestComments?.forEach(c => allUserIds.add(c.creator_user_id));
+
+        await Promise.all(Array.from(allUserIds).map(id => getUserInfo(id)));
+
         requests.forEach(request => {
+          const requestFulfillments = fulfillments?.filter(f => f.request_id === request.id).map(f => ({
+            ...f,
+            user: userCache.get(f.user_id)
+          })) || [];
+
+          const requestCommentsList = requestComments?.filter(c => c.content_id === request.id).map(c => ({
+            ...c,
+            user: userCache.get(c.creator_user_id)
+          })) || [];
+
           activities.push({
             id: request.id,
             type: 'request',
             title: request.title,
             created_at: request.created_at,
-            fulfillments: fulfillments?.filter(f => f.request_id === request.id) || [],
-            comments: requestComments?.filter(c => c.content_id === request.id) || []
+            fulfillments: requestFulfillments,
+            comments: requestCommentsList
           });
         });
       }
@@ -128,14 +193,31 @@ export const useUserActivity = () => {
           .eq("content_type", "event")
           .in("content_id", eventIds);
 
+        // Fetch user info for all interactions
+        const allUserIds = new Set<string>();
+        rsvps?.forEach(r => { if (r.user_id) allUserIds.add(r.user_id); });
+        eventComments?.forEach(c => allUserIds.add(c.creator_user_id));
+
+        await Promise.all(Array.from(allUserIds).map(id => getUserInfo(id)));
+
         events.forEach(event => {
+          const eventRsvps = rsvps?.filter(r => r.event_id === event.id).map(r => ({
+            ...r,
+            user: r.user_id ? userCache.get(r.user_id) : undefined
+          })) || [];
+
+          const eventCommentsList = eventComments?.filter(c => c.content_id === event.id).map(c => ({
+            ...c,
+            user: userCache.get(c.creator_user_id)
+          })) || [];
+
           activities.push({
             id: event.id,
             type: 'event',
             title: event.title,
             created_at: event.created_at,
-            rsvps: rsvps?.filter(r => r.event_id === event.id) || [],
-            comments: eventComments?.filter(c => c.content_id === event.id) || []
+            rsvps: eventRsvps,
+            comments: eventCommentsList
           });
         });
       }
@@ -166,14 +248,31 @@ export const useUserActivity = () => {
           .eq("content_type", "volunteer")
           .in("content_id", volunteerIds);
 
+        // Fetch user info for all interactions
+        const allUserIds = new Set<string>();
+        signups?.forEach(s => { if (s.user_id) allUserIds.add(s.user_id); });
+        volunteerComments?.forEach(c => allUserIds.add(c.creator_user_id));
+
+        await Promise.all(Array.from(allUserIds).map(id => getUserInfo(id)));
+
         volunteers.forEach(volunteer => {
+          const volunteerSignups = signups?.filter(s => s.volunteer_id === volunteer.id).map(s => ({
+            ...s,
+            user: s.user_id ? userCache.get(s.user_id) : undefined
+          })) || [];
+
+          const volunteerCommentsList = volunteerComments?.filter(c => c.content_id === volunteer.id).map(c => ({
+            ...c,
+            user: userCache.get(c.creator_user_id)
+          })) || [];
+
           activities.push({
             id: volunteer.id,
             type: 'volunteer',
             title: volunteer.title,
             created_at: volunteer.created_at,
-            signups: signups?.filter(s => s.volunteer_id === volunteer.id) || [],
-            comments: volunteerComments?.filter(c => c.content_id === volunteer.id) || []
+            signups: volunteerSignups,
+            comments: volunteerCommentsList
           });
         });
       }
