@@ -26,7 +26,7 @@ const ActivityItem = ({ activity }: { activity: ActivityPost }) => {
     }
   };
 
-  const getUserName = (user: { first_name: string; last_name: string } | undefined, guestInfo?: any) => {
+  const getUserName = (user: { first_name: string; last_name: string; email: string } | undefined, guestInfo?: any) => {
     if (user) {
       return `${user.first_name} ${user.last_name}`;
     }
@@ -34,6 +34,16 @@ const ActivityItem = ({ activity }: { activity: ActivityPost }) => {
       return guestInfo.name || 'Guest';
     }
     return 'Unknown User';
+  };
+
+  const getUserEmail = (user: { email: string } | undefined, guestInfo?: any) => {
+    if (user?.email) {
+      return user.email;
+    }
+    if (guestInfo?.email) {
+      return guestInfo.email;
+    }
+    return null;
   };
 
   const hasActivity = 
@@ -111,11 +121,24 @@ const ActivityItem = ({ activity }: { activity: ActivityPost }) => {
                     <CheckCircle className="h-3 w-3" /> Acceptances
                   </h5>
                   <ul className="space-y-1 ml-4">
-                    {activity.acceptances.map((acceptance, idx) => (
-                      <li key={idx} className="text-xs">
-                        {getUserName(acceptance.user)} - {new Date(acceptance.created_at).toLocaleDateString()}
-                      </li>
-                    ))}
+                    {activity.acceptances.map((acceptance, idx) => {
+                      const email = getUserEmail(acceptance.user);
+                      return (
+                        <li key={idx} className="text-xs">
+                          {email ? (
+                            <a 
+                              href={`mailto:${email}`}
+                              className="text-primary hover:underline"
+                            >
+                              {getUserName(acceptance.user)}
+                            </a>
+                          ) : (
+                            <span>{getUserName(acceptance.user)}</span>
+                          )}
+                          {' - '}{new Date(acceptance.created_at).toLocaleDateString()}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               )}
@@ -126,11 +149,24 @@ const ActivityItem = ({ activity }: { activity: ActivityPost }) => {
                     <CheckCircle className="h-3 w-3" /> Fulfillments
                   </h5>
                   <ul className="space-y-1 ml-4">
-                    {activity.fulfillments.map((fulfillment, idx) => (
-                      <li key={idx} className="text-xs">
-                        {getUserName(fulfillment.user)} - {new Date(fulfillment.created_at).toLocaleDateString()}
-                      </li>
-                    ))}
+                    {activity.fulfillments.map((fulfillment, idx) => {
+                      const email = getUserEmail(fulfillment.user);
+                      return (
+                        <li key={idx} className="text-xs">
+                          {email ? (
+                            <a 
+                              href={`mailto:${email}`}
+                              className="text-primary hover:underline"
+                            >
+                              {getUserName(fulfillment.user)}
+                            </a>
+                          ) : (
+                            <span>{getUserName(fulfillment.user)}</span>
+                          )}
+                          {' - '}{new Date(fulfillment.created_at).toLocaleDateString()}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               )}
@@ -141,11 +177,24 @@ const ActivityItem = ({ activity }: { activity: ActivityPost }) => {
                     <Users className="h-3 w-3" /> RSVPs
                   </h5>
                   <ul className="space-y-1 ml-4">
-                    {activity.rsvps.map((rsvp, idx) => (
-                      <li key={idx} className="text-xs">
-                        {getUserName(rsvp.user, rsvp.guest_info)} - {new Date(rsvp.created_at).toLocaleDateString()}
-                      </li>
-                    ))}
+                    {activity.rsvps.map((rsvp, idx) => {
+                      const email = getUserEmail(rsvp.user, rsvp.guest_info);
+                      return (
+                        <li key={idx} className="text-xs">
+                          {email ? (
+                            <a 
+                              href={`mailto:${email}`}
+                              className="text-primary hover:underline"
+                            >
+                              {getUserName(rsvp.user, rsvp.guest_info)}
+                            </a>
+                          ) : (
+                            <span>{getUserName(rsvp.user, rsvp.guest_info)}</span>
+                          )}
+                          {' - '}{new Date(rsvp.created_at).toLocaleDateString()}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               )}
@@ -156,11 +205,24 @@ const ActivityItem = ({ activity }: { activity: ActivityPost }) => {
                     <Users className="h-3 w-3" /> Signups
                   </h5>
                   <ul className="space-y-1 ml-4">
-                    {activity.signups.map((signup, idx) => (
-                      <li key={idx} className="text-xs">
-                        {getUserName(signup.user, signup.guest_info)} - {new Date(signup.created_at).toLocaleDateString()}
-                      </li>
-                    ))}
+                    {activity.signups.map((signup, idx) => {
+                      const email = getUserEmail(signup.user, signup.guest_info);
+                      return (
+                        <li key={idx} className="text-xs">
+                          {email ? (
+                            <a 
+                              href={`mailto:${email}`}
+                              className="text-primary hover:underline"
+                            >
+                              {getUserName(signup.user, signup.guest_info)}
+                            </a>
+                          ) : (
+                            <span>{getUserName(signup.user, signup.guest_info)}</span>
+                          )}
+                          {' - '}{new Date(signup.created_at).toLocaleDateString()}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               )}
@@ -171,13 +233,27 @@ const ActivityItem = ({ activity }: { activity: ActivityPost }) => {
                     <MessageSquare className="h-3 w-3" /> Comments
                   </h5>
                   <ul className="space-y-1 ml-4">
-                    {activity.comments.map((comment) => (
-                      <li key={comment.id} className="text-xs">
-                        <span className="font-medium">{getUserName(comment.user)}:</span>{' '}
-                        <span className="text-muted-foreground">{comment.content.substring(0, 50)}{comment.content.length > 50 ? '...' : ''}</span>
-                        {' - '}{new Date(comment.created_at).toLocaleDateString()}
-                      </li>
-                    ))}
+                    {activity.comments.map((comment) => {
+                      const email = getUserEmail(comment.user);
+                      return (
+                        <li key={comment.id} className="text-xs">
+                          <span className="font-medium">
+                            {email ? (
+                              <a 
+                                href={`mailto:${email}`}
+                                className="text-primary hover:underline"
+                              >
+                                {getUserName(comment.user)}
+                              </a>
+                            ) : (
+                              <span>{getUserName(comment.user)}</span>
+                            )}:
+                          </span>{' '}
+                          <span className="text-muted-foreground">{comment.content.substring(0, 50)}{comment.content.length > 50 ? '...' : ''}</span>
+                          {' - '}{new Date(comment.created_at).toLocaleDateString()}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               )}

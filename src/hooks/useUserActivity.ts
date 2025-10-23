@@ -6,6 +6,7 @@ export interface UserInfo {
   id: string;
   first_name: string;
   last_name: string;
+  email: string;
 }
 
 export interface ActivityPost {
@@ -41,7 +42,7 @@ export const useUserActivity = () => {
 
         const { data } = await supabase
           .from("user_profiles")
-          .select("id, first_name, last_name")
+          .select("id, first_name, last_name, email")
           .eq("id", userId)
           .single();
 
@@ -49,7 +50,8 @@ export const useUserActivity = () => {
           const userInfo: UserInfo = {
             id: data.id,
             first_name: data.first_name,
-            last_name: data.last_name
+            last_name: data.last_name,
+            email: data.email
           };
           userCache.set(userId, userInfo);
           return userInfo;
