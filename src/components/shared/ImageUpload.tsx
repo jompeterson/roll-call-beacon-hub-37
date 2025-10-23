@@ -9,21 +9,30 @@ interface ImageUploadProps {
   images: File[];
   onImagesChange: (images: File[]) => void;
   label?: string;
+  maxImages?: number;
+  existingImagesCount?: number;
 }
 
-export const ImageUpload = ({ images = [], onImagesChange, label = "Images" }: ImageUploadProps) => {
+export const ImageUpload = ({ 
+  images = [], 
+  onImagesChange, 
+  label = "Images",
+  maxImages = 3,
+  existingImagesCount = 0
+}: ImageUploadProps) => {
   const { toast } = useToast();
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     const currentImages = images || [];
+    const totalCount = existingImagesCount + currentImages.length + files.length;
     
     // Validate total number of images
-    if (currentImages.length + files.length > 3) {
+    if (totalCount > maxImages) {
       toast({
         title: "Too many images",
-        description: "You can only upload up to 3 images.",
+        description: `You can only upload up to ${maxImages} images in total.`,
         variant: "destructive",
       });
       return;
@@ -81,7 +90,7 @@ export const ImageUpload = ({ images = [], onImagesChange, label = "Images" }: I
   return (
     <div className="space-y-2">
       <Label htmlFor="images">
-        {label} <span className="text-sm text-muted-foreground">(Optional, max 3)</span>
+        {label} <span className="text-sm text-muted-foreground">(Optional, max {maxImages})</span>
       </Label>
       
       {/* Image previews */}
@@ -109,7 +118,7 @@ export const ImageUpload = ({ images = [], onImagesChange, label = "Images" }: I
       )}
 
       {/* Upload button */}
-      {(images?.length || 0) < 3 && (
+      {(existingImagesCount + (images?.length || 0)) < maxImages && (
         <div className="flex items-center gap-2">
           <Input
             id="images"
@@ -126,7 +135,7 @@ export const ImageUpload = ({ images = [], onImagesChange, label = "Images" }: I
             className="w-full"
           >
             <Upload className="h-4 w-4 mr-2" />
-            {(images?.length || 0) === 0 ? 'Upload Images' : `Add More (${images?.length || 0}/3)`}
+            {(images?.length || 0) === 0 ? 'Upload Images' : `Add More (${existingImagesCount + (images?.length || 0)}/${maxImages})`}
           </Button>
         </div>
       )}

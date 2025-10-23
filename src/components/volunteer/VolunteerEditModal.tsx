@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { ImageUpload } from "@/components/shared/ImageUpload";
+import { X } from "lucide-react";
 import type { Volunteer } from "@/hooks/useVolunteers";
 
 interface VolunteerEditModalProps {
@@ -24,6 +25,7 @@ export const VolunteerEditModal = ({
 }: VolunteerEditModalProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [images, setImages] = useState<File[]>([]);
+  const [existingImages, setExistingImages] = useState<string[]>(volunteer.images || []);
   const [formData, setFormData] = useState({
     title: volunteer.title,
     description: volunteer.description || "",
@@ -49,7 +51,7 @@ export const VolunteerEditModal = ({
 
     try {
       // Upload new images if any
-      let imageUrls = volunteer.images || [];
+      let imageUrls = [...existingImages];
       if (images.length > 0) {
         const uploadPromises = images.map(async (file) => {
           const fileExt = file.name.split('.').pop();
@@ -111,6 +113,12 @@ export const VolunteerEditModal = ({
       setIsSubmitting(false);
     }
   };
+
+  const removeExistingImage = (index: number) => {
+    setExistingImages(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const totalImagesCount = existingImages.length + images.length;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -198,11 +206,43 @@ export const VolunteerEditModal = ({
             />
           </div>
 
-          <ImageUpload
-            images={images}
-            onImagesChange={setImages}
-            label="Opportunity Images"
-          />
+          {/* Existing Images */}
+          {existingImages.length > 0 && (
+            <div className="space-y-2">
+              <Label>Current Images ({existingImages.length}/3)</Label>
+              <div className="grid grid-cols-3 gap-2">
+                {existingImages.map((url, index) => (
+                  <div key={index} className="relative aspect-square rounded-lg overflow-hidden border">
+                    <img 
+                      src={url} 
+                      alt={`Volunteer ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="icon"
+                      className="absolute top-1 right-1 h-6 w-6"
+                      onClick={() => removeExistingImage(index)}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* New Images Upload */}
+          {totalImagesCount < 3 && (
+            <ImageUpload
+              images={images}
+              onImagesChange={setImages}
+              label={`Add Images`}
+              maxImages={3}
+              existingImagesCount={existingImages.length}
+            />
+          )}
 
           <div className="flex gap-3 pt-4">
             <Button
