@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Edit } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { useRequestFulfillments } from "@/hooks/useRequestFulfillments";
 import type { Request } from "@/hooks/useRequests";
 
 interface RequestModalActionButtonsProps {
@@ -25,6 +26,7 @@ export const RequestModalActionButtons = ({
   onOpenChange,
 }: RequestModalActionButtonsProps) => {
   const { user, isAdministrator } = useAuth();
+  const { hasFulfilled, fulfillRequest, submitting } = useRequestFulfillments(request.id);
   const isOwner = user?.id === request.creator_user_id;
   const canEdit = isOwner || isAdministrator;
   const handleApprove = async (id: string) => {
@@ -74,8 +76,7 @@ export const RequestModalActionButtons = ({
   };
 
   const handleFulfillRequest = () => {
-    console.log("Fulfilling request:", request.id);
-    // Add your fulfill request logic here
+    fulfillRequest();
   };
 
   const handleMarkCompleted = async (id: string) => {
@@ -109,13 +110,16 @@ export const RequestModalActionButtons = ({
       if (request.is_approved) {
         return (
           <div className="flex gap-3 flex-wrap">
-            <Button 
-              onClick={handleFulfillRequest}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              Fulfill Request
-            </Button>
-            {shouldShowMarkCompleted && (
+            {!isOwner && (
+              <Button 
+                onClick={handleFulfillRequest}
+                disabled={hasFulfilled || submitting}
+                className="bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {hasFulfilled ? "Already Fulfilled" : submitting ? "Submitting..." : "Fulfill Request"}
+              </Button>
+            )}
+            {shouldShowMarkCompleted && isOwner && (
               <Button 
                 onClick={() => handleMarkCompleted(request.id)}
                 className="bg-green-600 hover:bg-green-700 text-white"

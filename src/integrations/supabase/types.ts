@@ -425,6 +425,35 @@ export type Database = {
           },
         ]
       }
+      request_fulfillments: {
+        Row: {
+          created_at: string | null
+          id: string
+          request_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          request_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          request_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "request_fulfillments_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       requests: {
         Row: {
           approval_decision_made: boolean
