@@ -2,6 +2,7 @@
 import { ProfileImageSection } from "./ProfileImageSection";
 import { AccountInformation } from "./AccountInformation";
 import { ContactInformation } from "./ContactInformation";
+import { YourActivity } from "./YourActivity";
 
 interface ContactInfo {
   firstName: string;
@@ -29,6 +30,7 @@ export const PersonalInformationTab = ({
         contactInfo={contactInfo} 
         onContactInfoChange={onContactInfoChange} 
       />
+      <YourActivity />
     </div>
   );
 };
