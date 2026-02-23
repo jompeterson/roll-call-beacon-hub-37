@@ -70,36 +70,28 @@ export const OrganizationImageUpload = ({
   };
 
   return (
-    <div className="flex items-center gap-4">
-      <Avatar className="h-16 w-16">
-        <AvatarImage src={imageUrl || undefined} alt={organizationName} />
-        <AvatarFallback>
-          <Building className="h-6 w-6" />
-        </AvatarFallback>
-      </Avatar>
-      <div>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={handleImageUpload}
-          className="hidden"
-          disabled={uploading || disabled}
-        />
-        <Button
-          variant="outline"
-          size="sm"
-          disabled={uploading || disabled}
-          onClick={() => fileInputRef.current?.click()}
-        >
-          {uploading ? (
-            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-          ) : (
-            <Camera className="h-4 w-4 mr-2" />
-          )}
-          {uploading ? "Uploading..." : "Change Photo"}
-        </Button>
-      </div>
+    <div>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleImageUpload}
+        className="hidden"
+        disabled={uploading || disabled}
+      />
+      <Button
+        variant="outline"
+        size="sm"
+        disabled={uploading || disabled}
+        onClick={() => fileInputRef.current?.click()}
+      >
+        {uploading ? (
+          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+        ) : (
+          <Camera className="h-4 w-4 mr-2" />
+        )}
+        {uploading ? "Uploading..." : "Change Photo"}
+      </Button>
     </div>
   );
 };
