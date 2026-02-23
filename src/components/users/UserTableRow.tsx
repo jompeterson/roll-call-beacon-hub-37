@@ -1,6 +1,7 @@
 
 import { TableCell, TableRow } from "@/components/ui/table";
 import { StatusIcon } from "./StatusIcon";
+import { formatDate } from "@/lib/utils";
 
 interface UserProfile {
   id: string;
