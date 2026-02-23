@@ -8,12 +8,7 @@ interface AccountInformationProps {
 }
 
 export const AccountInformation = ({ joinedDate }: AccountInformationProps) => {
-  const formattedDate = new Date(joinedDate).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-
+  const formattedDate = formatDate(joinedDate);
   return (
     <Card>
       <CardHeader>
