@@ -48,6 +48,7 @@ export const EventModal = ({
   onApprove,
   onReject,
   onRequestChanges,
+  onDelete,
   onOpenGuestRSVPModal,
   disableNavigation = false,
 }: EventModalProps) => {
