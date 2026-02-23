@@ -17,7 +17,7 @@ export const MetricCard = ({ title, value, change, changeType, icon: Icon, navig
   
   const changeColor = {
     positive: "text-green-600",
-    negative: "text-red-600",
+    negative: "text-muted-foreground",
     neutral: "text-muted-foreground",
   };
 
