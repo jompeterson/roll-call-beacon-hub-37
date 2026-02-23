@@ -125,6 +125,20 @@ export const OrganizationModal = ({
             </>
           )}
 
+          {/* Organization Image */}
+          {isAdministrator && (
+            <div className="space-y-2">
+              <h3 className="font-semibold text-lg">Organization Image</h3>
+              <OrganizationImageUpload
+                organizationId={organization.id}
+                organizationName={organization.name}
+                imageUrl={organization.image_url}
+              />
+            </div>
+          )}
+
+          <Separator />
+
           {/* Organization Information */}
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">Organization Information</h3>
