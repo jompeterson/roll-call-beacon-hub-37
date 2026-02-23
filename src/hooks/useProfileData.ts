@@ -14,6 +14,7 @@ interface UserProfile {
   created_at: string;
   organization_id: string | null;
   role_id: string;
+  profile_image_url?: string | null;
 }
 
 interface Organization {
