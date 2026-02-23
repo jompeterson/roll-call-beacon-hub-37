@@ -11,16 +11,18 @@ import { EventModalActionButtons } from "@/components/event/EventModalActionButt
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ShareButton } from "@/components/ShareButton";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
+import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 
 export const EventDetail = () => {
   const { eventId } = useParams();
   const navigate = useNavigate();
-  const { isAuthenticated, isAdministrator } = useAuth();
+  const { user, isAuthenticated, isAdministrator } = useAuth();
   const { 
     events,
     loading,
     approveEvent,
-    rejectEvent
+    rejectEvent,
+    deleteEvent
   } = useEvents();
   const { rsvpCount, hasRsvp, submitting, createRSVP, deleteRSVP } = useEventRSVPs(eventId || "");
 
@@ -103,6 +105,12 @@ export const EventDetail = () => {
   };
 
   const showComments = event.is_approved;
+  const canDelete = user && (user.id === event.creator_user_id || isAdministrator);
+
+  const handleDelete = () => {
+    deleteEvent(event.id);
+    navigate('/events');
+  };
 
   return (
     <div className="space-y-6">
@@ -164,17 +172,32 @@ export const EventDetail = () => {
         </div>
 
         {/* Footer with Action Buttons */}
-        <EventModalActionButtons
-          event={event}
-          isAdministrator={isAdministrator}
-          isAuthenticated={isAuthenticated}
-          hasRsvp={hasRsvp}
-          rsvpCount={rsvpCount}
-          submitting={submitting}
-          onApprove={handleApprove}
-          onReject={handleReject}
-          onRSVPAction={handleRSVPAction}
-        />
+        <div className="px-6 py-4 border-t bg-card">
+          <div className="flex justify-between items-center gap-2">
+            <div>
+              {canDelete && (
+                <DeleteConfirmDialog
+                  title="Delete Event"
+                  description="Are you sure you want to delete this event? This action cannot be undone."
+                  onConfirm={handleDelete}
+                />
+              )}
+            </div>
+            <div>
+              <EventModalActionButtons
+                event={event}
+                isAdministrator={isAdministrator}
+                isAuthenticated={isAuthenticated}
+                hasRsvp={hasRsvp}
+                rsvpCount={rsvpCount}
+                submitting={submitting}
+                onApprove={handleApprove}
+                onReject={handleReject}
+                onRSVPAction={handleRSVPAction}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

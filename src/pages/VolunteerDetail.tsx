@@ -5,10 +5,11 @@ import { useVolunteerSignups } from "@/hooks/useVolunteerSignups";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { ChevronRight, Calendar, MapPin, Users, CheckCircle, XCircle, Edit } from "lucide-react";
+import { ChevronRight, Calendar, MapPin, Users, CheckCircle, XCircle } from "lucide-react";
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ShareButton } from "@/components/ShareButton";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
+import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { formatDate } from "@/lib/utils";
 
 export const VolunteerDetail = () => {
@@ -19,7 +20,8 @@ export const VolunteerDetail = () => {
     volunteers,
     loading,
     approveVolunteer,
-    rejectVolunteer
+    rejectVolunteer,
+    deleteVolunteer
   } = useVolunteers();
   const { signupCount, hasSignedUp, submitting, signUp, cancelSignup, userSignup } = useVolunteerSignups(volunteerId || "");
 
@@ -101,8 +103,6 @@ export const VolunteerDetail = () => {
     navigate('/volunteers');
   };
 
-  // formatDate imported from utils
-
   const getStatusBadge = () => {
     if (!volunteer.approval_decision_made) {
       return <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-300">Pending Approval</Badge>;
@@ -115,6 +115,12 @@ export const VolunteerDetail = () => {
 
   const showComments = volunteer.is_approved;
   const isVolunteerFull = volunteer.max_participants && signupCount >= volunteer.max_participants;
+  const canDelete = user && (user.id === volunteer.creator_user_id || isAdministrator);
+
+  const handleDelete = () => {
+    deleteVolunteer(volunteer.id);
+    navigate('/volunteers');
+  };
 
   return (
     <div className="space-y-6">
@@ -239,7 +245,13 @@ export const VolunteerDetail = () => {
         <div className="px-6 py-4 border-t bg-card">
           <div className="flex justify-between items-center gap-2">
             <div>
-              {/* Edit button will be added by the action buttons component */}
+              {canDelete && (
+                <DeleteConfirmDialog
+                  title="Delete Volunteer Opportunity"
+                  description="Are you sure you want to delete this volunteer opportunity? This action cannot be undone."
+                  onConfirm={handleDelete}
+                />
+              )}
             </div>
             
             <div className="flex gap-2">

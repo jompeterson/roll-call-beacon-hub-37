@@ -10,12 +10,13 @@ import { DonationModalImageSection } from "@/components/donations/DonationModalI
 import { DonationModalActionButtons } from "@/components/donations/DonationModalActionButtons";
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ShareButton } from "@/components/ShareButton";
+import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 
 export const DonationDetail = () => {
   const { donationId } = useParams();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
-  const { data: donations = [], isLoading } = useDonations();
+  const { user, isAuthenticated, isAdministrator } = useAuth();
+  const { data: donations = [], isLoading, deleteDonation, isDeletingDonation } = useDonations();
 
   const donation = donations.find(d => d.id === donationId);
 
@@ -99,6 +100,12 @@ export const DonationDetail = () => {
   };
 
   const showComments = donation.is_approved;
+  const canDelete = user && (user.id === donation.creator_user_id || isAdministrator);
+
+  const handleDelete = () => {
+    deleteDonation(donation.id);
+    navigate('/donations');
+  };
 
   return (
     <div className="space-y-6">
@@ -169,17 +176,29 @@ export const DonationDetail = () => {
 
         {/* Footer with Action Buttons */}
         {isAuthenticated && (
-          <div className="border-t">
-            <DonationModalActionButtons
-              donationId={donation.id}
-              creatorUserId={donation.creator_user_id}
-              onApprove={handleApprove}
-              onReject={handleReject}
-              onRequestChanges={handleRequestChanges}
-              onOpenChange={() => navigate('/donations')}
-              approvalDecisionMade={donation.approval_decision_made}
-              isApproved={donation.is_approved}
-            />
+          <div className="border-t p-6">
+            <div className="flex justify-between items-center">
+              <div>
+                {canDelete && (
+                  <DeleteConfirmDialog
+                    title="Delete Donation"
+                    description="Are you sure you want to delete this donation? This action cannot be undone."
+                    onConfirm={handleDelete}
+                    isDeleting={isDeletingDonation}
+                  />
+                )}
+              </div>
+              <DonationModalActionButtons
+                donationId={donation.id}
+                creatorUserId={donation.creator_user_id}
+                onApprove={handleApprove}
+                onReject={handleReject}
+                onRequestChanges={handleRequestChanges}
+                onOpenChange={() => navigate('/donations')}
+                approvalDecisionMade={donation.approval_decision_made}
+                isApproved={donation.is_approved}
+              />
+            </div>
           </div>
         )}
       </div>
