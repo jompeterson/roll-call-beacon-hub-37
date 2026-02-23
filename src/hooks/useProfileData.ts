@@ -22,6 +22,7 @@ interface Organization {
   name: string;
   type: string;
   description: string | null;
+  image_url?: string | null;
 }
 
 interface UserRole {
