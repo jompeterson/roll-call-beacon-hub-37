@@ -94,7 +94,7 @@ export const CurrentOrganization = ({ organization, userOrganizationId }: Curren
       <CardContent className="space-y-6">
         <div className="flex items-center gap-4">
           <Avatar className="h-16 w-16">
-            <AvatarImage src={organization.logo} alt="Organization Logo" />
+            <AvatarImage src={orgImageUrl || organization.logo} alt="Organization Logo" />
             <AvatarFallback>
               {organization.name.split(' ').map(word => word.charAt(0)).join('')}
             </AvatarFallback>
@@ -105,6 +105,15 @@ export const CurrentOrganization = ({ organization, userOrganizationId }: Curren
             <p className="text-xs text-muted-foreground">Joined: {organization.joinedDate}</p>
           </div>
         </div>
+
+        {isAdministrator && organization.organizationId && (
+          <OrganizationImageUpload
+            organizationId={organization.organizationId}
+            organizationName={organization.name}
+            imageUrl={orgImageUrl}
+            onImageUpdated={(url) => setOrgImageUrl(url)}
+          />
+        )}
 
         {userOrganizationId && (
           <div className="space-y-4">
