@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Plus, Edit, Trash2, Eye, EyeOff } from "lucide-react";
+import { formatDate } from "@/lib/utils";
 import { WidgetCreateModal } from "@/components/widgets/WidgetCreateModal";
 import { WidgetEditModal } from "@/components/widgets/WidgetEditModal";
 import {

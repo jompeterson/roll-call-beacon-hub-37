@@ -13,6 +13,7 @@ import { GuestVolunteerSignupModal } from "@/components/GuestVolunteerSignupModa
 import { useVolunteers } from "@/hooks/useVolunteers";
 import { useAuth } from "@/hooks/useAuth";
 import { useVolunteerSignups } from "@/hooks/useVolunteerSignups";
+import { formatDate } from "@/lib/utils";
 
 type SortDirection = "asc" | "desc" | null;
 type SortField = "title" | "start_date" | "location" | "status" | null;

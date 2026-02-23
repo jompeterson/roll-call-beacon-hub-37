@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { CheckCircle, XCircle, Clock, Mail, Phone, MapPin, Building, Calendar, User } from "lucide-react";
+import { formatDate } from "@/lib/utils";
 
 interface UserProfile {
   id: string;

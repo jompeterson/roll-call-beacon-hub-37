@@ -247,7 +247,7 @@ const ActivityItem = ({ activity }: { activity: ActivityPost }) => {
                             )}:
                           </span>{' '}
                           <span className="text-muted-foreground">{comment.content.substring(0, 50)}{comment.content.length > 50 ? '...' : ''}</span>
-                          {' - '}{new Date(comment.created_at).toLocaleDateString()}
+                          {' - '}{formatDate(comment.created_at)}
                         </li>
                       );
                     })}

@@ -9,6 +9,7 @@ import { ChevronRight, Calendar, MapPin, Users, CheckCircle, XCircle, Edit } fro
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ShareButton } from "@/components/ShareButton";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
+import { formatDate } from "@/lib/utils";
 
 export const VolunteerDetail = () => {
   const { volunteerId } = useParams();

@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { UserCheck, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { formatDate } from "@/lib/utils";
 
 interface Volunteer {
   id: string;

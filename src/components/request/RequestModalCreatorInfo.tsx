@@ -23,7 +23,7 @@ export const RequestModalCreatorInfo = ({ creatorInfo, createdAt }: RequestModal
         </div>
         <div className="text-right">
           <p className="text-sm text-muted-foreground">Posted on</p>
-          <p className="text-sm font-medium">{new Date(createdAt).toLocaleDateString()}</p>
+          <p className="text-sm font-medium">{formatDate(createdAt)}</p>
         </div>
       </div>
     </div>

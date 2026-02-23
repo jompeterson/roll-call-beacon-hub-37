@@ -2,6 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Calendar } from "lucide-react";
+import { formatDate } from "@/lib/utils";
 import { useEvents } from "@/hooks/useEvents";
 import { EventModal } from "@/components/EventModal";
 import { useState } from "react";
