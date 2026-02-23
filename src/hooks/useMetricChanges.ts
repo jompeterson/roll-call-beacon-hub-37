@@ -19,7 +19,7 @@ export const useMetricChanges = () => {
     if (percentChange > 0) {
       return { change: `+${formattedChange}%`, changeType: "positive" };
     } else if (percentChange < 0) {
-      return { change: `-${formattedChange}%`, changeType: "negative" };
+      return { change: `0%`, changeType: "neutral" };
     } else {
       return { change: "0%", changeType: "neutral" };
     }
