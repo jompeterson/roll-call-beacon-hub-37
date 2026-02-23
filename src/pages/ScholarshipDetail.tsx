@@ -21,9 +21,11 @@ export const ScholarshipDetail = () => {
     approveScholarship,
     rejectScholarship,
     requestChanges,
+    deleteScholarship,
     isApproving,
     isRejecting,
-    isRequestingChanges
+    isRequestingChanges,
+    isDeleting
   } = useScholarships();
 
   const scholarship = scholarships.find(s => s.id === scholarshipId);
