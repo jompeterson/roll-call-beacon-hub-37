@@ -384,6 +384,7 @@ export const Events = () => {
         onApprove={handleEventApprove}
         onReject={handleEventReject}
         onRequestChanges={handleEventRequestChanges}
+        onDelete={deleteEvent}
         onOpenGuestRSVPModal={handleOpenGuestRSVPModal}
       />
 
