@@ -82,7 +82,7 @@ const SortableTableHead = ({
 
 export const Events = () => {
   const { eventId } = useParams();
-  const { events, loading, approveEvent, rejectEvent } = useEvents();
+  const { events, loading, approveEvent, rejectEvent, deleteEvent } = useEvents();
   const { isAuthenticated } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
