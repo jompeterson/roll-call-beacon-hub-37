@@ -8,6 +8,7 @@ import { Building, Phone, MapPin, User, Mail, CheckCircle, XCircle, Clock } from
 import { useState } from "react";
 import { useUserProfiles } from "@/hooks/useUserProfiles";
 import { useAuth } from "@/hooks/useAuth";
+import { OrganizationImageUpload } from "@/components/organizations/OrganizationImageUpload";
 
 interface Organization {
   id: string;
@@ -19,6 +20,7 @@ interface Organization {
   contact_user_id: string | null;
   is_approved: boolean;
   approval_decision_made: boolean;
+  image_url?: string | null;
   contact_user?: {
     id: string;
     first_name: string;
@@ -122,6 +124,20 @@ export const OrganizationModal = ({
               <Separator />
             </>
           )}
+
+          {/* Organization Image */}
+          {isAdministrator && (
+            <div className="space-y-2">
+              <h3 className="font-semibold text-lg">Organization Image</h3>
+              <OrganizationImageUpload
+                organizationId={organization.id}
+                organizationName={organization.name}
+                imageUrl={organization.image_url}
+              />
+            </div>
+          )}
+
+          <Separator />
 
           {/* Organization Information */}
           <div className="space-y-4">
