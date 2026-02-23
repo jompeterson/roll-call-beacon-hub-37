@@ -1,8 +1,7 @@
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Camera, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -21,7 +20,7 @@ interface ProfileImageSectionProps {
 export const ProfileImageSection = ({ contactInfo, userId, profileImageUrl, onImageUpdated }: ProfileImageSectionProps) => {
   const { toast } = useToast();
   const [uploading, setUploading] = useState(false);
-  const fileInputRef = useState<HTMLInputElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -42,7 +41,6 @@ export const ProfileImageSection = ({ contactInfo, userId, profileImageUrl, onIm
         .from('profile-images')
         .getPublicUrl(fileName);
 
-      // Save URL to user_profiles
       const { error: updateError } = await supabase
         .from('user_profiles')
         .update({ profile_image_url: publicUrl } as any)
@@ -64,7 +62,6 @@ export const ProfileImageSection = ({ contactInfo, userId, profileImageUrl, onIm
       });
     } finally {
       setUploading(false);
-      // Reset input so same file can be re-selected
       event.target.value = '';
     }
   };
@@ -73,9 +70,7 @@ export const ProfileImageSection = ({ contactInfo, userId, profileImageUrl, onIm
     <Card>
       <CardHeader>
         <CardTitle>Profile Image</CardTitle>
-        <CardDescription>
-          Update your profile picture
-        </CardDescription>
+        <CardDescription>Update your profile picture</CardDescription>
       </CardHeader>
       <CardContent className="flex items-center gap-6">
         <Avatar className="h-24 w-24">
@@ -86,23 +81,25 @@ export const ProfileImageSection = ({ contactInfo, userId, profileImageUrl, onIm
         </Avatar>
         <div>
           <input
+            ref={fileInputRef}
             type="file"
             accept="image/*"
             onChange={handleImageUpload}
             className="hidden"
-            id="profile-upload"
             disabled={uploading}
           />
-          <Label htmlFor="profile-upload" asChild>
-            <Button variant="outline" className="cursor-pointer" disabled={uploading}>
-              {uploading ? (
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              ) : (
-                <Camera className="h-4 w-4 mr-2" />
-              )}
-              {uploading ? "Uploading..." : "Change Photo"}
-            </Button>
-          </Label>
+          <Button
+            variant="outline"
+            disabled={uploading}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            {uploading ? (
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
+              <Camera className="h-4 w-4 mr-2" />
+            )}
+            {uploading ? "Uploading..." : "Change Photo"}
+          </Button>
         </div>
       </CardContent>
     </Card>
