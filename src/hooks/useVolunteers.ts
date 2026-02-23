@@ -104,6 +104,32 @@ export const useVolunteers = () => {
     },
   });
 
+  const deleteVolunteerMutation = useMutation({
+    mutationFn: async (volunteerId: string) => {
+      const { error } = await supabase
+        .from("volunteers")
+        .delete()
+        .eq("id", volunteerId);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["volunteers"] });
+      toast({
+        title: "Success",
+        description: "Volunteer opportunity deleted successfully.",
+      });
+    },
+    onError: (error) => {
+      console.error("Error deleting volunteer:", error);
+      toast({
+        title: "Error",
+        description: "Failed to delete volunteer opportunity. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const approveVolunteer = (volunteerId: string) => {
     approveVolunteerMutation.mutate(volunteerId);
   };
@@ -112,11 +138,16 @@ export const useVolunteers = () => {
     rejectVolunteerMutation.mutate(volunteerId);
   };
 
+  const deleteVolunteer = (volunteerId: string) => {
+    deleteVolunteerMutation.mutate(volunteerId);
+  };
+
   return {
     volunteers,
     loading,
     error,
     approveVolunteer,
     rejectVolunteer,
+    deleteVolunteer,
   };
 };
