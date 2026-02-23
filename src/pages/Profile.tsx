@@ -12,7 +12,8 @@ export const Profile = () => {
     userRole,
     loading,
     contactInfo,
-    handleContactInfoChange
+    handleContactInfoChange,
+    handleProfileImageUpdated
   } = useProfileData();
 
   if (loading) {
