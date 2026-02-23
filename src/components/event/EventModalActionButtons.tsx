@@ -1,8 +1,18 @@
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Edit } from "lucide-react";
+import { Edit, Trash2, UserCheck } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import { UserCheck } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface Event {
   id: string;
@@ -31,6 +41,7 @@ interface EventModalActionButtonsProps {
   onRequestChanges?: (id: string) => void;
   onRSVPAction: () => void;
   onEdit?: () => void;
+  onDelete?: (id: string) => void;
 }
 
 export const EventModalActionButtons = ({
@@ -45,17 +56,17 @@ export const EventModalActionButtons = ({
   onRequestChanges,
   onRSVPAction,
   onEdit,
+  onDelete,
 }: EventModalActionButtonsProps) => {
-  const { user, isAdministrator: authIsAdmin } = useAuth();
+  const { user } = useAuth();
   const isOwner = user?.id === event.creator_user_id;
   const canEdit = isOwner || isAdministrator;
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const showApprovalButtons = !event.approval_decision_made && isAdministrator;
   const showRSVPButton = event.is_approved;
   const isEventFull = event.max_participants && rsvpCount >= event.max_participants;
   const canRSVP = event.is_approved && (!isEventFull || hasRsvp);
-
-  // Show guest RSVP info for non-authenticated users
   const showGuestInfo = !isAuthenticated && showRSVPButton;
 
   return (
@@ -69,11 +80,17 @@ export const EventModalActionButtons = ({
       )}
 
       <div className="flex justify-between items-center gap-2">
-        <div>
+        <div className="flex gap-2">
           {canEdit && onEdit && (
             <Button variant="outline" onClick={onEdit}>
               <Edit className="w-4 h-4 mr-2" />
               Edit
+            </Button>
+          )}
+          {canEdit && onDelete && (
+            <Button variant="destructive" onClick={() => setShowDeleteConfirm(true)}>
+              <Trash2 className="w-4 h-4 mr-2" />
+              Delete
             </Button>
           )}
         </div>
@@ -111,25 +128,14 @@ export const EventModalActionButtons = ({
 
           {showApprovalButtons && (
             <>
-              <Button
-                onClick={() => onApprove(event.id)}
-                className="flex-1"
-              >
+              <Button onClick={() => onApprove(event.id)} className="flex-1">
                 Approve Event
               </Button>
-              <Button
-                variant="destructive"
-                onClick={() => onReject(event.id)}
-                className="flex-1"
-              >
+              <Button variant="destructive" onClick={() => onReject(event.id)} className="flex-1">
                 Reject Event
               </Button>
               {onRequestChanges && (
-                <Button
-                  variant="outline"
-                  onClick={() => onRequestChanges(event.id)}
-                  className="flex-1"
-                >
+                <Button variant="outline" onClick={() => onRequestChanges(event.id)} className="flex-1">
                   Request Changes
                 </Button>
               )}
@@ -137,6 +143,26 @@ export const EventModalActionButtons = ({
           )}
         </div>
       </div>
+
+      <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Event</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{event.title}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => onDelete?.(event.id)}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

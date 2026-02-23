@@ -36,6 +36,7 @@ interface EventModalProps {
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
   onRequestChanges?: (id: string) => void;
+  onDelete?: (id: string) => void;
   onOpenGuestRSVPModal?: () => void;
   disableNavigation?: boolean;
 }
@@ -47,6 +48,7 @@ export const EventModal = ({
   onApprove,
   onReject,
   onRequestChanges,
+  onDelete,
   onOpenGuestRSVPModal,
   disableNavigation = false,
 }: EventModalProps) => {
@@ -140,6 +142,7 @@ export const EventModal = ({
             onRequestChanges={onRequestChanges}
             onRSVPAction={handleRSVPAction}
             onEdit={() => setIsEditModalOpen(true)}
+            onDelete={onDelete ? (id) => { onDelete(id); onOpenChange(false); } : undefined}
           />
         )}
       </DialogContent>
