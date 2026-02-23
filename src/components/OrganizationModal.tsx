@@ -8,6 +8,7 @@ import { Building, Phone, MapPin, User, Mail, CheckCircle, XCircle, Clock } from
 import { useState } from "react";
 import { useUserProfiles } from "@/hooks/useUserProfiles";
 import { useAuth } from "@/hooks/useAuth";
+import { OrganizationImageUpload } from "@/components/organizations/OrganizationImageUpload";
 
 interface Organization {
   id: string;
