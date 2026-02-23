@@ -157,21 +157,26 @@ export const Events = () => {
   };
 
   const filterData = (data: any[]) => {
+    const now = new Date();
     return data.filter((item) => {
       const matchesSearch = searchTerm === "" || 
         Object.values(item).some(value => 
           value && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
         );
       
+      const eventDate = new Date(item.start_date);
+      const matchesDate = dateFilter === "all" || 
+        (dateFilter === "upcoming" && eventDate >= now) ||
+        (dateFilter === "past" && eventDate < now);
+
       if (!isAuthenticated) {
-        // When not authenticated, only show approved events and ignore status filter
-        return matchesSearch && item.is_approved;
+        return matchesSearch && item.is_approved && matchesDate;
       }
       
       const status = getEventStatus(item);
       const matchesStatus = statusFilter === "all" || status === statusFilter;
       
-      return matchesSearch && matchesStatus;
+      return matchesSearch && matchesStatus && matchesDate;
     });
   };
 
