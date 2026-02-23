@@ -143,6 +143,32 @@ export const useScholarships = () => {
     },
   });
 
+  const deleteScholarship = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from("scholarships")
+        .delete()
+        .eq("id", id);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries();
+      toast({
+        title: "Success",
+        description: "Scholarship deleted successfully",
+      });
+    },
+    onError: (error) => {
+      console.error("Error deleting scholarship:", error);
+      toast({
+        title: "Error",
+        description: "Failed to delete scholarship",
+        variant: "destructive",
+      });
+    },
+  });
+
   return {
     scholarships,
     isLoading,
@@ -151,8 +177,10 @@ export const useScholarships = () => {
     approveScholarship: approveScholarship.mutate,
     rejectScholarship: rejectScholarship.mutate,
     requestChanges: requestChanges.mutate,
+    deleteScholarship: deleteScholarship.mutate,
     isApproving: approveScholarship.isPending,
     isRejecting: rejectScholarship.isPending,
     isRequestingChanges: requestChanges.isPending,
+    isDeleting: deleteScholarship.isPending,
   };
 };

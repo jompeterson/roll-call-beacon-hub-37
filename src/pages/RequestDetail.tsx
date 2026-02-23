@@ -10,12 +10,13 @@ import { RequestModalInformation } from "@/components/request/RequestModalInform
 import { RequestModalActionButtons } from "@/components/request/RequestModalActionButtons";
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ShareButton } from "@/components/ShareButton";
+import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 
 export const RequestDetail = () => {
   const { requestId } = useParams();
   const navigate = useNavigate();
-  const { isAuthenticated, isAdministrator } = useAuth();
-  const { data: requests = [], isLoading } = useRequests();
+  const { user, isAuthenticated, isAdministrator } = useAuth();
+  const { data: requests = [], isLoading, deleteRequest, isDeletingRequest } = useRequests();
 
   const request = requests.find(r => r.id === requestId);
 
@@ -87,6 +88,12 @@ export const RequestDetail = () => {
   };
 
   const showComments = request.is_approved;
+  const canDelete = user && (user.id === request.creator_user_id || isAdministrator);
+
+  const handleDelete = () => {
+    deleteRequest(request.id);
+    navigate('/donations');
+  };
 
   return (
     <div className="space-y-6">
@@ -151,14 +158,30 @@ export const RequestDetail = () => {
         </div>
 
         {/* Footer with Action Buttons */}
-        {isAuthenticated && !request.is_completed && (
-          <RequestModalActionButtons
-            request={request}
-            onApprove={handleApprove}
-            onReject={handleReject}
-            onRequestChanges={handleRequestChanges}
-            onOpenChange={() => navigate('/donations')}
-          />
+        {isAuthenticated && (
+          <div className="border-t p-6">
+            <div className="flex justify-between items-center">
+              <div>
+                {canDelete && (
+                  <DeleteConfirmDialog
+                    title="Delete Request"
+                    description="Are you sure you want to delete this request? This action cannot be undone."
+                    onConfirm={handleDelete}
+                    isDeleting={isDeletingRequest}
+                  />
+                )}
+              </div>
+              {!request.is_completed && (
+                <RequestModalActionButtons
+                  request={request}
+                  onApprove={handleApprove}
+                  onReject={handleReject}
+                  onRequestChanges={handleRequestChanges}
+                  onOpenChange={() => navigate('/donations')}
+                />
+              )}
+            </div>
+          </div>
         )}
       </div>
     </div>

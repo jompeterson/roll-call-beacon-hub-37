@@ -9,20 +9,23 @@ import { ScholarshipApplyButton } from "@/components/scholarship/ScholarshipAppl
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ShareButton } from "@/components/ShareButton";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
+import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 
 export const ScholarshipDetail = () => {
   const { scholarshipId } = useParams();
   const navigate = useNavigate();
-  const { isAuthenticated, isAdministrator } = useAuth();
+  const { user, isAuthenticated, isAdministrator } = useAuth();
   const { 
     scholarships,
     isLoading,
     approveScholarship,
     rejectScholarship,
     requestChanges,
+    deleteScholarship,
     isApproving,
     isRejecting,
-    isRequestingChanges
+    isRequestingChanges,
+    isDeleting
   } = useScholarships();
 
   const scholarship = scholarships.find(s => s.id === scholarshipId);
@@ -111,6 +114,12 @@ export const ScholarshipDetail = () => {
                           scholarship.scholarship_link.trim() !== '' && 
                           scholarship.is_approved;
   const showComments = scholarship.is_approved;
+  const canDelete = user && (user.id === scholarship.creator_user_id || isAdministrator);
+
+  const handleDelete = () => {
+    deleteScholarship(scholarship.id);
+    navigate('/scholarships');
+  };
 
   return (
     <div className="space-y-6">
@@ -163,14 +172,28 @@ export const ScholarshipDetail = () => {
         </div>
 
         {/* Footer with Action Buttons */}
-        {(showApplyButton || showActionButtons) && (
+        {(showApplyButton || showActionButtons || canDelete) && (
           <div className="border-t p-6 space-y-2">
-            {showApplyButton && (
-              <ScholarshipApplyButton
-                scholarshipLink={scholarship.scholarship_link}
-                onApply={handleApplyToScholarship}
-              />
-            )}
+            <div className="flex justify-between items-center">
+              <div>
+                {canDelete && (
+                  <DeleteConfirmDialog
+                    title="Delete Scholarship"
+                    description="Are you sure you want to delete this scholarship? This action cannot be undone."
+                    onConfirm={handleDelete}
+                    isDeleting={isDeleting}
+                  />
+                )}
+              </div>
+              <div className="flex gap-2">
+                {showApplyButton && (
+                  <ScholarshipApplyButton
+                    scholarshipLink={scholarship.scholarship_link}
+                    onApply={handleApplyToScholarship}
+                  />
+                )}
+              </div>
+            </div>
 
             {showActionButtons && (
               <ScholarshipActionButtons
