@@ -9,12 +9,15 @@ import { useToast } from "@/hooks/use-toast";
 import { useState, useMemo } from "react";
 import { OrganizationMembersSearch } from "./OrganizationMembersSearch";
 import { OrganizationMemberCard } from "./OrganizationMemberCard";
+import { OrganizationImageUpload } from "@/components/organizations/OrganizationImageUpload";
 
 interface Organization {
   name: string;
   role: string;
   joinedDate: string;
   logo: string;
+  organizationId?: string;
+  imageUrl?: string | null;
 }
 
 interface CurrentOrganizationProps {
