@@ -42,7 +42,9 @@ export const Profile = () => {
     name: currentOrganization.name,
     role: userRole?.display_name || "Member",
     joinedDate: formatDate(userProfile.created_at),
-    logo: "/placeholder.svg"
+    logo: currentOrganization.image_url || "/placeholder.svg",
+    organizationId: currentOrganization.id,
+    imageUrl: currentOrganization.image_url,
   } : null;
 
   return (

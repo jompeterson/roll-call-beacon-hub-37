@@ -7,6 +7,8 @@ interface OrganizationData {
   role: string;
   joinedDate: string;
   logo: string;
+  organizationId?: string;
+  imageUrl?: string | null;
 }
 
 interface OrganizationTabProps {
