@@ -188,7 +188,7 @@ const ActivityItem = ({ activity }: { activity: ActivityPost }) => {
                           ) : (
                             <span>{getUserName(rsvp.user, rsvp.guest_info)}</span>
                           )}
-                          {' - '}{new Date(rsvp.created_at).toLocaleDateString()}
+                          {' - '}{formatDate(rsvp.created_at)}
                         </li>
                       );
                     })}
