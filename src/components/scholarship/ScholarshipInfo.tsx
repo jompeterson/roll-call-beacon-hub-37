@@ -1,6 +1,7 @@
 
 import { Separator } from "@/components/ui/separator";
 import { Tables } from "@/integrations/supabase/types";
+import { formatDate } from "@/lib/utils";
 
 type Scholarship = Tables<"scholarships"> & {
   creator?: {

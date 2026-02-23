@@ -1,5 +1,6 @@
 
 import type { Donation } from "@/hooks/useDonations";
+import { formatDate } from "@/lib/utils";
 
 interface DonationModalInformationProps {
   donation: Donation;

@@ -13,6 +13,7 @@ import { GuestRSVPModal } from "@/components/GuestRSVPModal";
 import { useEvents } from "@/hooks/useEvents";
 import { useAuth } from "@/hooks/useAuth";
 import { useEventRSVPs } from "@/hooks/useEventRSVPs";
+import { formatDate } from "@/lib/utils";
 
 type SortDirection = "asc" | "desc" | null;
 type SortField = "title" | "start_date" | "location" | "status" | null;
