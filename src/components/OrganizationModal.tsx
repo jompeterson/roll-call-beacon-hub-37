@@ -20,6 +20,7 @@ interface Organization {
   contact_user_id: string | null;
   is_approved: boolean;
   approval_decision_made: boolean;
+  image_url?: string | null;
   contact_user?: {
     id: string;
     first_name: string;
