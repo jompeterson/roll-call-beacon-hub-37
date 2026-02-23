@@ -44,15 +44,7 @@ export const EventRSVPModal = ({
 
   if (!event) return null;
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
+  // formatDate imported from utils
 
   const handleRSVPToggle = () => {
     if (hasRsvp) {
