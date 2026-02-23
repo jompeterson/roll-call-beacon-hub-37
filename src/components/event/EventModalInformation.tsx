@@ -1,5 +1,6 @@
 
 import { Calendar, MapPin, Users, UserCheck } from "lucide-react";
+import { formatDate } from "@/lib/utils";
 
 interface Event {
   id: string;
