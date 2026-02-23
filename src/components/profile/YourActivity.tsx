@@ -132,7 +132,7 @@ const ActivityItem = ({ activity }: { activity: ActivityPost }) => {
                           ) : (
                             <span>{getUserName(acceptance.user)}</span>
                           )}
-                          {' - '}{new Date(acceptance.created_at).toLocaleDateString()}
+                          {' - '}{formatDate(acceptance.created_at)}
                         </li>
                       );
                     })}
