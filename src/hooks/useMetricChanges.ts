@@ -31,7 +31,7 @@ export const useMetricChanges = () => {
     if (absoluteChange > 0) {
       return { change: `+${absoluteChange}`, changeType: "positive" };
     } else if (absoluteChange < 0) {
-      return { change: `${absoluteChange}`, changeType: "negative" };
+      return { change: "0", changeType: "neutral" };
     } else {
       return { change: "0", changeType: "neutral" };
     }
