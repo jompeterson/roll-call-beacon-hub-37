@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PersonalInformationTab } from "@/components/profile/PersonalInformationTab";
 import { OrganizationTab } from "@/components/profile/OrganizationTab";
 import { useProfileData } from "@/hooks/useProfileData";
+import { formatDate } from "@/lib/utils";
 
 export const Profile = () => {
   const {
