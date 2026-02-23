@@ -46,7 +46,7 @@ export const OrganizationImageUpload = ({
 
       const { error: updateError } = await supabase
         .from('organizations')
-        .update({ image_url: publicUrl } as any)
+        .update({ image_url: publicUrl })
         .eq('id', organizationId);
 
       if (updateError) throw updateError;
