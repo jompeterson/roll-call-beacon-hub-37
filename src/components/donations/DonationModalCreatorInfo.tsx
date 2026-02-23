@@ -92,7 +92,7 @@ export const DonationModalCreatorInfo = ({
         <div className="text-right">
           <p className="text-sm text-muted-foreground">{getDateLabel()}</p>
           <p className="text-sm font-medium">
-            {creatorInfo?.postedDate ? new Date(creatorInfo.postedDate).toLocaleDateString() : "Loading..."}
+            {creatorInfo?.postedDate ? formatDate(creatorInfo.postedDate) : "Loading..."}
           </p>
           {isUser && creatorInfo && (creatorInfo as any).lastLogin && (
             <>
