@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { MessageSquare, Edit, Trash2, Reply, Save, X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { CommentForm } from "./CommentForm";
+import { formatDate } from "@/lib/utils";
 import type { Comment } from "@/hooks/useComments";
 
 interface CommentItemProps {
