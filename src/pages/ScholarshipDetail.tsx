@@ -14,7 +14,7 @@ import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 export const ScholarshipDetail = () => {
   const { scholarshipId } = useParams();
   const navigate = useNavigate();
-  const { isAuthenticated, isAdministrator } = useAuth();
+  const { user, isAuthenticated, isAdministrator } = useAuth();
   const { 
     scholarships,
     isLoading,
