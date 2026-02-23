@@ -247,7 +247,7 @@ export const Widgets = () => {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      {new Date(widget.created_at).toLocaleDateString()}
+                      {formatDate(widget.created_at)}
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">

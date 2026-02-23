@@ -116,8 +116,8 @@ export const GuestVolunteerSignupModal = ({ volunteer, open, onOpenChange }: Gue
             Sign Up: {volunteer.title}
           </DialogTitle>
           <DialogDescription>
-            <div>Start: {formatDate(volunteer.start_date)}</div>
-            {volunteer.end_date && <div>End: {formatDate(volunteer.end_date)}</div>}
+            <div>Start: {formatDate(volunteer.start_date, { includeTime: true })}</div>
+            {volunteer.end_date && <div>End: {formatDate(volunteer.end_date, { includeTime: true })}</div>}
             {volunteer.location && <div>{volunteer.location}</div>}
           </DialogDescription>
         </DialogHeader>

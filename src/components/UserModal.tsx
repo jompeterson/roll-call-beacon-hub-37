@@ -76,9 +76,7 @@ export const UserModal = ({
     return isApproved ? "default" : "destructive";
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString();
-  };
+  // formatDate imported from utils
 
   const showApprovalButtons = !user.approval_decision_made && isAdministrator;
   const showRevokeButton = user.approval_decision_made && user.is_approved && isAdministrator;

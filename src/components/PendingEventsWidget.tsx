@@ -44,12 +44,7 @@ export const PendingEventsWidget = () => {
     setEventModalOpen(false);
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric'
-    });
-  };
+  // formatDate imported from utils
 
   if (loading) {
     return (

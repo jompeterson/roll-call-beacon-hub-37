@@ -116,7 +116,7 @@ export const GuestRSVPModal = ({ event, open, onOpenChange }: GuestRSVPModalProp
             RSVP to {event.title}
           </DialogTitle>
           <DialogDescription>
-            {formatDate(event.event_date)}
+            {formatDate(event.event_date, { includeTime: true })}
             {event.location && ` • ${event.location}`}
           </DialogDescription>
         </DialogHeader>

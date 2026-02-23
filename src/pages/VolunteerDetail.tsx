@@ -179,8 +179,8 @@ export const VolunteerDetail = () => {
                 <div>
                   <p className="font-medium">Date & Time</p>
                   <div className="text-sm text-muted-foreground">
-                    <div>Start: {formatDate(volunteer.start_date)}</div>
-                    {volunteer.end_date && <div>End: {formatDate(volunteer.end_date)}</div>}
+                    <div>Start: {formatDate(volunteer.start_date, { includeTime: true })}</div>
+                    {volunteer.end_date && <div>End: {formatDate(volunteer.end_date, { includeTime: true })}</div>}
                   </div>
                 </div>
               </div>
