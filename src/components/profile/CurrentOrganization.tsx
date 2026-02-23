@@ -103,17 +103,16 @@ export const CurrentOrganization = ({ organization, userOrganizationId }: Curren
             <h3 className="text-lg font-semibold">{organization.name}</h3>
             <p className="text-sm text-muted-foreground">{organization.role}</p>
             <p className="text-xs text-muted-foreground">Joined: {organization.joinedDate}</p>
+            {isAdministrator && organization.organizationId && (
+              <OrganizationImageUpload
+                organizationId={organization.organizationId}
+                organizationName={organization.name}
+                imageUrl={orgImageUrl}
+                onImageUpdated={(url) => setOrgImageUrl(url)}
+              />
+            )}
           </div>
         </div>
-
-        {isAdministrator && organization.organizationId && (
-          <OrganizationImageUpload
-            organizationId={organization.organizationId}
-            organizationName={organization.name}
-            imageUrl={orgImageUrl}
-            onImageUpdated={(url) => setOrgImageUrl(url)}
-          />
-        )}
 
         {userOrganizationId && (
           <div className="space-y-4">
