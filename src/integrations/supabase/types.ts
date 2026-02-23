@@ -619,6 +619,7 @@ export type Database = {
           last_name: string
           organization_id: string | null
           phone: string
+          profile_image_url: string | null
           role_id: string
           updated_at: string
         }
@@ -633,6 +634,7 @@ export type Database = {
           last_name: string
           organization_id?: string | null
           phone: string
+          profile_image_url?: string | null
           role_id: string
           updated_at?: string
         }
@@ -647,6 +649,7 @@ export type Database = {
           last_name?: string
           organization_id?: string | null
           phone?: string
+          profile_image_url?: string | null
           role_id?: string
           updated_at?: string
         }
