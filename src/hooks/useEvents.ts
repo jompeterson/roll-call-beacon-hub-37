@@ -106,6 +106,35 @@ export const useEvents = () => {
     },
   });
 
+  const deleteEventMutation = useMutation({
+    mutationFn: async (eventId: string) => {
+      const { error } = await supabase
+        .from("events")
+        .delete()
+        .eq("id", eventId);
+
+      if (error) {
+        throw error;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+      queryClient.invalidateQueries({ queryKey: ["pending-events"] });
+      toast({
+        title: "Success",
+        description: "Event deleted successfully.",
+      });
+    },
+    onError: (error) => {
+      console.error("Error deleting event:", error);
+      toast({
+        title: "Error",
+        description: "Failed to delete event. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const approveEvent = (eventId: string) => {
     approveEventMutation.mutate(eventId);
   };
@@ -114,11 +143,16 @@ export const useEvents = () => {
     rejectEventMutation.mutate(eventId);
   };
 
+  const deleteEvent = (eventId: string) => {
+    deleteEventMutation.mutate(eventId);
+  };
+
   return {
     events,
     loading,
     error,
     approveEvent,
     rejectEvent,
+    deleteEvent,
   };
 };
