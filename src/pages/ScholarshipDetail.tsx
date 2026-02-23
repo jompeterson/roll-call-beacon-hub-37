@@ -114,6 +114,12 @@ export const ScholarshipDetail = () => {
                           scholarship.scholarship_link.trim() !== '' && 
                           scholarship.is_approved;
   const showComments = scholarship.is_approved;
+  const canDelete = user && (user.id === scholarship.creator_user_id || isAdministrator);
+
+  const handleDelete = () => {
+    deleteScholarship(scholarship.id);
+    navigate('/scholarships');
+  };
 
   return (
     <div className="space-y-6">
