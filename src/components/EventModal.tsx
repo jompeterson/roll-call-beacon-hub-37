@@ -142,6 +142,7 @@ export const EventModal = ({
             onRequestChanges={onRequestChanges}
             onRSVPAction={handleRSVPAction}
             onEdit={() => setIsEditModalOpen(true)}
+            onDelete={onDelete ? (id) => { onDelete(id); onOpenChange(false); } : undefined}
           />
         )}
       </DialogContent>
