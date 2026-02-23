@@ -274,7 +274,7 @@ export const Events = () => {
       </div>
 
       {/* Events Section */}
-      <div className="space-y-4">
+      <div className="space-y-4 flex-1 flex flex-col min-h-0">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold">Events</h2>
           {isAuthenticated && (
