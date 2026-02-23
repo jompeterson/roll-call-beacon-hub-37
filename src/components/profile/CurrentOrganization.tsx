@@ -33,11 +33,6 @@ export const CurrentOrganization = ({ organization, userOrganizationId }: Curren
   const [updatingUserId, setUpdatingUserId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [orgImageUrl, setOrgImageUrl] = useState(organization.imageUrl);
-  const { userRoles } = useUserRoles();
-  const { isAdministrator } = useAuth();
-  const { toast } = useToast();
-  const [updatingUserId, setUpdatingUserId] = useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
 
   // Filter members who belong to the current organization
   const organizationMembers = userProfiles.filter(
