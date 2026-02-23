@@ -3,6 +3,7 @@ import { useUserActivity, ActivityPost } from "@/hooks/useUserActivity";
 import { MessageSquare, Users, CheckCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
+import { formatDate } from "@/lib/utils";
 import {
   Accordion,
   AccordionContent,
