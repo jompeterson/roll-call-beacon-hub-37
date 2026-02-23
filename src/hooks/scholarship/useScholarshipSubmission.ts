@@ -66,7 +66,7 @@ export const useScholarshipSubmission = ({
         contact_phone: formData.contact_phone || null,
         scholarship_link: formData.scholarship_link || null,
         creator_user_id: userId,
-        organization_id: organizationId,
+        organization_id: organizationId === "__other__" ? null : organizationId,
         organization_name: organizationName,
         images: imageUrls,
         is_approved: false,

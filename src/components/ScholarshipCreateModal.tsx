@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { useScholarshipForm } from "@/hooks/useScholarshipForm";
@@ -29,6 +30,7 @@ export const ScholarshipCreateModal = ({
   const isAdmin = userRole?.name === "administrator";
   const [allOrganizations, setAllOrganizations] = useState<Organization[]>([]);
   const [selectedOrgId, setSelectedOrgId] = useState<string>("");
+  const [customOrgName, setCustomOrgName] = useState<string>("");
 
   // Fetch all organizations for admin users
   useEffect(() => {
@@ -53,7 +55,9 @@ export const ScholarshipCreateModal = ({
   }, [currentOrganization]);
 
   const overrideOrg = isAdmin && selectedOrgId
-    ? allOrganizations.find(o => o.id === selectedOrgId) || null
+    ? selectedOrgId === "__other__"
+      ? (customOrgName.trim() ? { id: "__other__", name: customOrgName.trim() } : null)
+      : allOrganizations.find(o => o.id === selectedOrgId) || null
     : null;
 
   const {
@@ -108,7 +112,7 @@ export const ScholarshipCreateModal = ({
           {isAdmin ? (
             <div className="space-y-2 pt-2">
               <Label>Creating scholarship for:</Label>
-              <Select value={selectedOrgId} onValueChange={setSelectedOrgId}>
+              <Select value={selectedOrgId} onValueChange={(val) => { setSelectedOrgId(val); if (val !== "__other__") setCustomOrgName(""); }}>
                 <SelectTrigger className="bg-background">
                   <SelectValue placeholder="Select an organization" />
                 </SelectTrigger>
@@ -118,8 +122,16 @@ export const ScholarshipCreateModal = ({
                       {org.name}
                     </SelectItem>
                   ))}
+                  <SelectItem value="__other__">Other</SelectItem>
                 </SelectContent>
               </Select>
+              {selectedOrgId === "__other__" && (
+                <Input
+                  placeholder="Enter organization name"
+                  value={customOrgName}
+                  onChange={(e) => setCustomOrgName(e.target.value)}
+                />
+              )}
             </div>
           ) : (
             <p className="text-sm text-muted-foreground">
@@ -145,7 +157,7 @@ export const ScholarshipCreateModal = ({
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting || (isAdmin && !selectedOrgId)}>
+            <Button type="submit" disabled={isSubmitting || (isAdmin && !selectedOrgId) || (isAdmin && selectedOrgId === "__other__" && !customOrgName.trim())}>
               {isSubmitting ? "Creating..." : "Create Scholarship"}
             </Button>
           </DialogFooter>
