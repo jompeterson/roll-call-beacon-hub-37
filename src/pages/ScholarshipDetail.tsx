@@ -9,6 +9,7 @@ import { ScholarshipApplyButton } from "@/components/scholarship/ScholarshipAppl
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ShareButton } from "@/components/ShareButton";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
+import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 
 export const ScholarshipDetail = () => {
   const { scholarshipId } = useParams();
