@@ -157,7 +157,7 @@ export const ScholarshipCreateModal = ({
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting || (isAdmin && !selectedOrgId)}>
+            <Button type="submit" disabled={isSubmitting || (isAdmin && !selectedOrgId) || (isAdmin && selectedOrgId === "__other__" && !customOrgName.trim())}>
               {isSubmitting ? "Creating..." : "Create Scholarship"}
             </Button>
           </DialogFooter>
