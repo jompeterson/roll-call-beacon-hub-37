@@ -1,4 +1,6 @@
 
+import { formatDate } from "@/lib/utils";
+
 interface CreatorInfo {
   name: string;
   email: string;
