@@ -112,7 +112,7 @@ export const ScholarshipCreateModal = ({
           {isAdmin ? (
             <div className="space-y-2 pt-2">
               <Label>Creating scholarship for:</Label>
-              <Select value={selectedOrgId} onValueChange={setSelectedOrgId}>
+              <Select value={selectedOrgId} onValueChange={(val) => { setSelectedOrgId(val); if (val !== "__other__") setCustomOrgName(""); }}>
                 <SelectTrigger className="bg-background">
                   <SelectValue placeholder="Select an organization" />
                 </SelectTrigger>
@@ -122,8 +122,16 @@ export const ScholarshipCreateModal = ({
                       {org.name}
                     </SelectItem>
                   ))}
+                  <SelectItem value="__other__">Other</SelectItem>
                 </SelectContent>
               </Select>
+              {selectedOrgId === "__other__" && (
+                <Input
+                  placeholder="Enter organization name"
+                  value={customOrgName}
+                  onChange={(e) => setCustomOrgName(e.target.value)}
+                />
+              )}
             </div>
           ) : (
             <p className="text-sm text-muted-foreground">
