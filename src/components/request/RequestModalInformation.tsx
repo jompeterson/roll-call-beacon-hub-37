@@ -1,5 +1,6 @@
 
 import type { Request } from "@/hooks/useRequests";
+import { formatDate } from "@/lib/utils";
 
 interface RequestModalInformationProps {
   request: Request;
