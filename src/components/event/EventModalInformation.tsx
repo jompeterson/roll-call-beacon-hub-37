@@ -24,15 +24,7 @@ interface EventModalInformationProps {
 }
 
 export const EventModalInformation = ({ event, rsvpCount }: EventModalInformationProps) => {
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
+  // formatDate imported from utils
 
   return (
     <div className="space-y-4">
