@@ -12,7 +12,8 @@ export const Profile = () => {
     userRole,
     loading,
     contactInfo,
-    handleContactInfoChange
+    handleContactInfoChange,
+    handleProfileImageUpdated
   } = useProfileData();
 
   if (loading) {
@@ -64,6 +65,9 @@ export const Profile = () => {
             contactInfo={contactInfo}
             joinedDate={userProfile.created_at}
             onContactInfoChange={handleContactInfoChange}
+            userId={userProfile.id}
+            profileImageUrl={userProfile.profile_image_url}
+            onImageUpdated={handleProfileImageUpdated}
           />
         </TabsContent>
 
