@@ -1,6 +1,7 @@
 
 import { Separator } from "@/components/ui/separator";
 import { Tables } from "@/integrations/supabase/types";
+import { formatDate } from "@/lib/utils";
 
 type Scholarship = Tables<"scholarships"> & {
   creator?: {
@@ -26,10 +27,7 @@ export const ScholarshipInfo = ({ scholarship, isAuthenticated }: ScholarshipInf
     }).format(amount);
   };
 
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) return "Not specified";
-    return new Date(dateString).toLocaleDateString();
-  };
+  // formatDate imported from utils
 
   const organizationName = scholarship.organization?.name || scholarship.organization_name || "Unknown Organization";
 

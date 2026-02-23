@@ -9,6 +9,7 @@ import { ChevronRight, Calendar, MapPin, Users, CheckCircle, XCircle, Edit } fro
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ShareButton } from "@/components/ShareButton";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
+import { formatDate } from "@/lib/utils";
 
 export const VolunteerDetail = () => {
   const { volunteerId } = useParams();
@@ -100,15 +101,7 @@ export const VolunteerDetail = () => {
     navigate('/volunteers');
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
+  // formatDate imported from utils
 
   const getStatusBadge = () => {
     if (!volunteer.approval_decision_made) {
@@ -186,8 +179,8 @@ export const VolunteerDetail = () => {
                 <div>
                   <p className="font-medium">Date & Time</p>
                   <div className="text-sm text-muted-foreground">
-                    <div>Start: {formatDate(volunteer.start_date)}</div>
-                    {volunteer.end_date && <div>End: {formatDate(volunteer.end_date)}</div>}
+                    <div>Start: {formatDate(volunteer.start_date, { includeTime: true })}</div>
+                    {volunteer.end_date && <div>End: {formatDate(volunteer.end_date, { includeTime: true })}</div>}
                   </div>
                 </div>
               </div>

@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { formatDate } from "@/lib/utils";
 
 interface CreatorInfo {
   name: string;
@@ -91,12 +92,12 @@ export const DonationModalCreatorInfo = ({
         <div className="text-right">
           <p className="text-sm text-muted-foreground">{getDateLabel()}</p>
           <p className="text-sm font-medium">
-            {creatorInfo?.postedDate ? new Date(creatorInfo.postedDate).toLocaleDateString() : "Loading..."}
+            {creatorInfo?.postedDate ? formatDate(creatorInfo.postedDate) : "Loading..."}
           </p>
           {isUser && creatorInfo && (creatorInfo as any).lastLogin && (
             <>
               <p className="text-sm text-muted-foreground mt-2">Last Login</p>
-              <p className="text-sm font-medium">{new Date((creatorInfo as any).lastLogin).toLocaleDateString()}</p>
+              <p className="text-sm font-medium">{formatDate((creatorInfo as any).lastLogin)}</p>
             </>
           )}
         </div>

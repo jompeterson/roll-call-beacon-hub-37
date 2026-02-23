@@ -3,6 +3,7 @@ import { useUserActivity, ActivityPost } from "@/hooks/useUserActivity";
 import { MessageSquare, Users, CheckCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
+import { formatDate } from "@/lib/utils";
 import {
   Accordion,
   AccordionContent,
@@ -65,11 +66,7 @@ const ActivityItem = ({ activity }: { activity: ActivityPost }) => {
                     {activity.type}
                   </Badge>
                   <span className="text-xs text-muted-foreground">
-                    {new Date(activity.created_at).toLocaleDateString('en-US', {
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric'
-                    })}
+                    {formatDate(activity.created_at)}
                   </span>
                 </div>
                 <h4 className="font-medium text-sm mb-1">{activity.title}</h4>
@@ -135,7 +132,7 @@ const ActivityItem = ({ activity }: { activity: ActivityPost }) => {
                           ) : (
                             <span>{getUserName(acceptance.user)}</span>
                           )}
-                          {' - '}{new Date(acceptance.created_at).toLocaleDateString()}
+                          {' - '}{formatDate(acceptance.created_at)}
                         </li>
                       );
                     })}
@@ -163,7 +160,7 @@ const ActivityItem = ({ activity }: { activity: ActivityPost }) => {
                           ) : (
                             <span>{getUserName(fulfillment.user)}</span>
                           )}
-                          {' - '}{new Date(fulfillment.created_at).toLocaleDateString()}
+                          {' - '}{formatDate(fulfillment.created_at)}
                         </li>
                       );
                     })}
@@ -191,7 +188,7 @@ const ActivityItem = ({ activity }: { activity: ActivityPost }) => {
                           ) : (
                             <span>{getUserName(rsvp.user, rsvp.guest_info)}</span>
                           )}
-                          {' - '}{new Date(rsvp.created_at).toLocaleDateString()}
+                          {' - '}{formatDate(rsvp.created_at)}
                         </li>
                       );
                     })}
@@ -219,7 +216,7 @@ const ActivityItem = ({ activity }: { activity: ActivityPost }) => {
                           ) : (
                             <span>{getUserName(signup.user, signup.guest_info)}</span>
                           )}
-                          {' - '}{new Date(signup.created_at).toLocaleDateString()}
+                          {' - '}{formatDate(signup.created_at)}
                         </li>
                       );
                     })}
@@ -250,7 +247,7 @@ const ActivityItem = ({ activity }: { activity: ActivityPost }) => {
                             )}:
                           </span>{' '}
                           <span className="text-muted-foreground">{comment.content.substring(0, 50)}{comment.content.length > 50 ? '...' : ''}</span>
-                          {' - '}{new Date(comment.created_at).toLocaleDateString()}
+                          {' - '}{formatDate(comment.created_at)}
                         </li>
                       );
                     })}

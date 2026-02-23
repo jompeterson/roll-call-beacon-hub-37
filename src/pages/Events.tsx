@@ -13,6 +13,7 @@ import { GuestRSVPModal } from "@/components/GuestRSVPModal";
 import { useEvents } from "@/hooks/useEvents";
 import { useAuth } from "@/hooks/useAuth";
 import { useEventRSVPs } from "@/hooks/useEventRSVPs";
+import { formatDate } from "@/lib/utils";
 
 type SortDirection = "asc" | "desc" | null;
 type SortField = "title" | "start_date" | "location" | "status" | null;
@@ -208,13 +209,7 @@ export const Events = () => {
     setGuestRSVPModalOpen(true);
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    });
-  };
+  // formatDate imported from utils
 
   if (loading) {
     return (

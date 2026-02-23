@@ -1,18 +1,14 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { formatDate } from "@/lib/utils";
 
 interface AccountInformationProps {
   joinedDate: string;
 }
 
 export const AccountInformation = ({ joinedDate }: AccountInformationProps) => {
-  const formattedDate = new Date(joinedDate).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-
+  const formattedDate = formatDate(joinedDate);
   return (
     <Card>
       <CardHeader>

@@ -1,5 +1,6 @@
 
 import { Calendar, MapPin, Users, UserCheck } from "lucide-react";
+import { formatDate } from "@/lib/utils";
 
 interface Event {
   id: string;
@@ -23,15 +24,7 @@ interface EventModalInformationProps {
 }
 
 export const EventModalInformation = ({ event, rsvpCount }: EventModalInformationProps) => {
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
+  // formatDate imported from utils
 
   return (
     <div className="space-y-4">
@@ -45,8 +38,8 @@ export const EventModalInformation = ({ event, rsvpCount }: EventModalInformatio
         <div className="flex items-center gap-2">
           <Calendar className="h-4 w-4 text-muted-foreground" />
           <div className="text-sm">
-            <div>Start: {formatDate(event.start_date)}</div>
-            {event.end_date && <div>End: {formatDate(event.end_date)}</div>}
+            <div>Start: {formatDate(event.start_date, { includeTime: true })}</div>
+            {event.end_date && <div>End: {formatDate(event.end_date, { includeTime: true })}</div>}
           </div>
         </div>
         

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Calendar, Users, UserCheck, UserX } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { formatDate } from "@/lib/utils";
 import { useEventRSVPs } from "@/hooks/useEventRSVPs";
 
 interface Event {
@@ -43,15 +44,7 @@ export const EventRSVPModal = ({
 
   if (!event) return null;
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
+  // formatDate imported from utils
 
   const handleRSVPToggle = () => {
     if (hasRsvp) {
@@ -89,7 +82,7 @@ export const EventRSVPModal = ({
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm">{formatDate(event.event_date)}</span>
+                <span className="text-sm">{formatDate(event.event_date, { includeTime: true })}</span>
               </div>
               
               {event.location && (

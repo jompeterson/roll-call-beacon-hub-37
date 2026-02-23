@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Plus, Edit, Trash2, Eye, EyeOff } from "lucide-react";
+import { formatDate } from "@/lib/utils";
 import { WidgetCreateModal } from "@/components/widgets/WidgetCreateModal";
 import { WidgetEditModal } from "@/components/widgets/WidgetEditModal";
 import {
@@ -246,7 +247,7 @@ export const Widgets = () => {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      {new Date(widget.created_at).toLocaleDateString()}
+                      {formatDate(widget.created_at)}
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">

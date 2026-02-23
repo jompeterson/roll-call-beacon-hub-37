@@ -1,5 +1,6 @@
 
 import type { Request } from "@/hooks/useRequests";
+import { formatDate } from "@/lib/utils";
 
 interface RequestModalInformationProps {
   request: Request;
@@ -8,7 +9,7 @@ interface RequestModalInformationProps {
 export const RequestModalInformation = ({ request }: RequestModalInformationProps) => {
   const getDonationNeedBy = (deadline: string | null) => {
     if (deadline) {
-      return new Date(deadline).toLocaleDateString();
+      return formatDate(deadline);
     }
     return "Not specified";
   };

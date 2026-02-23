@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { UserCheck, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { formatDate } from "@/lib/utils";
 
 interface Event {
   id: string;
@@ -104,15 +105,7 @@ export const GuestRSVPModal = ({ event, open, onOpenChange }: GuestRSVPModalProp
 
   if (!event) return null;
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
+  // formatDate imported from utils
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -123,7 +116,7 @@ export const GuestRSVPModal = ({ event, open, onOpenChange }: GuestRSVPModalProp
             RSVP to {event.title}
           </DialogTitle>
           <DialogDescription>
-            {formatDate(event.event_date)}
+            {formatDate(event.event_date, { includeTime: true })}
             {event.location && ` • ${event.location}`}
           </DialogDescription>
         </DialogHeader>

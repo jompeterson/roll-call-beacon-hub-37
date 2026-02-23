@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { UserCheck, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { formatDate } from "@/lib/utils";
 
 interface Volunteer {
   id: string;
@@ -104,15 +105,7 @@ export const GuestVolunteerSignupModal = ({ volunteer, open, onOpenChange }: Gue
 
   if (!volunteer) return null;
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
+  // formatDate imported from utils
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -123,8 +116,8 @@ export const GuestVolunteerSignupModal = ({ volunteer, open, onOpenChange }: Gue
             Sign Up: {volunteer.title}
           </DialogTitle>
           <DialogDescription>
-            <div>Start: {formatDate(volunteer.start_date)}</div>
-            {volunteer.end_date && <div>End: {formatDate(volunteer.end_date)}</div>}
+            <div>Start: {formatDate(volunteer.start_date, { includeTime: true })}</div>
+            {volunteer.end_date && <div>End: {formatDate(volunteer.end_date, { includeTime: true })}</div>}
             {volunteer.location && <div>{volunteer.location}</div>}
           </DialogDescription>
         </DialogHeader>

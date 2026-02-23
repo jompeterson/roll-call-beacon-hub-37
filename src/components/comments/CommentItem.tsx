@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { MessageSquare, Edit, Trash2, Reply, Save, X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { CommentForm } from "./CommentForm";
+import { formatDate } from "@/lib/utils";
 import type { Comment } from "@/hooks/useComments";
 
 interface CommentItemProps {
@@ -35,15 +36,7 @@ export const CommentItem = ({
   const isOwner = user?.id === comment.creator_user_id;
   const maxDepth = 3; // Limit nesting depth
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
+  // formatDate imported from utils
 
   const handleEdit = async () => {
     if (!editContent.trim()) return;
@@ -93,7 +86,7 @@ export const CommentItem = ({
           <div className="flex items-center space-x-2">
             <span className="font-semibold text-sm">{comment.creator_name || 'Unknown User'}</span>
             <span className="text-xs text-muted-foreground">
-              {formatDate(comment.created_at)}
+              {formatDate(comment.created_at, { includeTime: true })}
               {comment.updated_at !== comment.created_at && ' (edited)'}
             </span>
           </div>

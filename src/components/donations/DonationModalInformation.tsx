@@ -1,5 +1,6 @@
 
 import type { Donation } from "@/hooks/useDonations";
+import { formatDate } from "@/lib/utils";
 
 interface DonationModalInformationProps {
   donation: Donation;
@@ -95,7 +96,7 @@ export const DonationModalInformation = ({
            {donation.target_date && (
             <div>
               <label className="font-medium text-sm text-muted-foreground">Deadline</label>
-              <p className="text-base mt-1">{new Date(donation.target_date).toLocaleDateString()}</p>
+              <p className="text-base mt-1">{formatDate(donation.target_date)}</p>
             </div>
           )}
           {!isScholarship && !isEvent && !isOrganization && !isUser && donation.can_deliver && (

@@ -6,6 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, MapPin, Users, CheckCircle, XCircle, Edit } from "lucide-react";
+import { formatDate } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { useVolunteerSignups } from "@/hooks/useVolunteerSignups";
 import { CommentsSection } from "@/components/comments/CommentsSection";
@@ -90,15 +91,7 @@ export const VolunteerModal = ({
   // Use smaller height when comments aren't shown
   const modalHeight = showComments ? "h-[80vh]" : "h-[60vh]";
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
+  // formatDate imported from utils
 
   const getStatusBadge = () => {
     if (!volunteer.approval_decision_made) {
@@ -134,8 +127,8 @@ export const VolunteerModal = ({
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Calendar className="h-4 w-4" />
                 <div className="text-sm">
-                  <div>Start: {formatDate(volunteer.start_date)}</div>
-                  {volunteer.end_date && <div>End: {formatDate(volunteer.end_date)}</div>}
+                  <div>Start: {formatDate(volunteer.start_date, { includeTime: true })}</div>
+                  {volunteer.end_date && <div>End: {formatDate(volunteer.end_date, { includeTime: true })}</div>}
                 </div>
               </div>
 

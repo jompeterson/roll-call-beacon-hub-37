@@ -2,6 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Calendar } from "lucide-react";
+import { formatDate } from "@/lib/utils";
 import { useEvents } from "@/hooks/useEvents";
 import { EventModal } from "@/components/EventModal";
 import { useState } from "react";
@@ -43,12 +44,7 @@ export const PendingEventsWidget = () => {
     setEventModalOpen(false);
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric'
-    });
-  };
+  // formatDate imported from utils
 
   if (loading) {
     return (

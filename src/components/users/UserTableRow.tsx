@@ -1,6 +1,7 @@
 
 import { TableCell, TableRow } from "@/components/ui/table";
 import { StatusIcon } from "./StatusIcon";
+import { formatDate } from "@/lib/utils";
 
 interface UserProfile {
   id: string;
@@ -34,9 +35,7 @@ interface UserTableRowProps {
 }
 
 export const UserTableRow = ({ user, onRowClick }: UserTableRowProps) => {
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString();
-  };
+  // formatDate imported from utils
 
   const getStatusText = (isApproved: boolean, decisionMade: boolean) => {
     if (!decisionMade) {

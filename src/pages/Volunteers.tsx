@@ -13,6 +13,7 @@ import { GuestVolunteerSignupModal } from "@/components/GuestVolunteerSignupModa
 import { useVolunteers } from "@/hooks/useVolunteers";
 import { useAuth } from "@/hooks/useAuth";
 import { useVolunteerSignups } from "@/hooks/useVolunteerSignups";
+import { formatDate } from "@/lib/utils";
 
 type SortDirection = "asc" | "desc" | null;
 type SortField = "title" | "start_date" | "location" | "status" | null;
@@ -202,13 +203,7 @@ export const Volunteers = () => {
     setGuestSignupModalOpen(true);
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    });
-  };
+  // formatDate imported from utils
 
   if (loading) {
     return (
