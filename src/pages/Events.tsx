@@ -209,9 +209,7 @@ export const Events = () => {
     setGuestRSVPModalOpen(true);
   };
 
-  const formatDateShort = (dateString: string) => {
-    return formatDate(dateString);
-  };
+  // formatDate imported from utils
 
   if (loading) {
     return (
