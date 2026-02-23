@@ -36,15 +36,7 @@ export const CommentItem = ({
   const isOwner = user?.id === comment.creator_user_id;
   const maxDepth = 3; // Limit nesting depth
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
+  // formatDate imported from utils
 
   const handleEdit = async () => {
     if (!editContent.trim()) return;
