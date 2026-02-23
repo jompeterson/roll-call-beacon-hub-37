@@ -172,14 +172,28 @@ export const ScholarshipDetail = () => {
         </div>
 
         {/* Footer with Action Buttons */}
-        {(showApplyButton || showActionButtons) && (
+        {(showApplyButton || showActionButtons || canDelete) && (
           <div className="border-t p-6 space-y-2">
-            {showApplyButton && (
-              <ScholarshipApplyButton
-                scholarshipLink={scholarship.scholarship_link}
-                onApply={handleApplyToScholarship}
-              />
-            )}
+            <div className="flex justify-between items-center">
+              <div>
+                {canDelete && (
+                  <DeleteConfirmDialog
+                    title="Delete Scholarship"
+                    description="Are you sure you want to delete this scholarship? This action cannot be undone."
+                    onConfirm={handleDelete}
+                    isDeleting={isDeleting}
+                  />
+                )}
+              </div>
+              <div className="flex gap-2">
+                {showApplyButton && (
+                  <ScholarshipApplyButton
+                    scholarshipLink={scholarship.scholarship_link}
+                    onApply={handleApplyToScholarship}
+                  />
+                )}
+              </div>
+            </div>
 
             {showActionButtons && (
               <ScholarshipActionButtons
