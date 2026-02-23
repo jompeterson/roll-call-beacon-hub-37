@@ -66,11 +66,7 @@ const ActivityItem = ({ activity }: { activity: ActivityPost }) => {
                     {activity.type}
                   </Badge>
                   <span className="text-xs text-muted-foreground">
-                    {new Date(activity.created_at).toLocaleDateString('en-US', {
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric'
-                    })}
+                    {formatDate(activity.created_at)}
                   </span>
                 </div>
                 <h4 className="font-medium text-sm mb-1">{activity.title}</h4>
