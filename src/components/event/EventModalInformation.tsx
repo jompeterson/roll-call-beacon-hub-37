@@ -38,8 +38,8 @@ export const EventModalInformation = ({ event, rsvpCount }: EventModalInformatio
         <div className="flex items-center gap-2">
           <Calendar className="h-4 w-4 text-muted-foreground" />
           <div className="text-sm">
-            <div>Start: {formatDate(event.start_date)}</div>
-            {event.end_date && <div>End: {formatDate(event.end_date)}</div>}
+            <div>Start: {formatDate(event.start_date, { includeTime: true })}</div>
+            {event.end_date && <div>End: {formatDate(event.end_date, { includeTime: true })}</div>}
           </div>
         </div>
         

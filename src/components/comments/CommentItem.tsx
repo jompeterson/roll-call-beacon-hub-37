@@ -86,7 +86,7 @@ export const CommentItem = ({
           <div className="flex items-center space-x-2">
             <span className="font-semibold text-sm">{comment.creator_name || 'Unknown User'}</span>
             <span className="text-xs text-muted-foreground">
-              {formatDate(comment.created_at)}
+              {formatDate(comment.created_at, { includeTime: true })}
               {comment.updated_at !== comment.created_at && ' (edited)'}
             </span>
           </div>

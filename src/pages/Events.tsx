@@ -208,12 +208,8 @@ export const Events = () => {
     setGuestRSVPModalOpen(true);
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    });
+  const formatDateShort = (dateString: string) => {
+    return formatDate(dateString);
   };
 
   if (loading) {

@@ -127,8 +127,8 @@ export const VolunteerModal = ({
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Calendar className="h-4 w-4" />
                 <div className="text-sm">
-                  <div>Start: {formatDate(volunteer.start_date)}</div>
-                  {volunteer.end_date && <div>End: {formatDate(volunteer.end_date)}</div>}
+                  <div>Start: {formatDate(volunteer.start_date, { includeTime: true })}</div>
+                  {volunteer.end_date && <div>End: {formatDate(volunteer.end_date, { includeTime: true })}</div>}
                 </div>
               </div>
 
