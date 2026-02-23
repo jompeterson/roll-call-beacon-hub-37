@@ -21,6 +21,7 @@ interface ProfileImageSectionProps {
 export const ProfileImageSection = ({ contactInfo, userId, profileImageUrl, onImageUpdated }: ProfileImageSectionProps) => {
   const { toast } = useToast();
   const [uploading, setUploading] = useState(false);
+  const fileInputRef = useState<HTMLInputElement | null>(null);
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
