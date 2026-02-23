@@ -36,6 +36,7 @@ interface EventModalProps {
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
   onRequestChanges?: (id: string) => void;
+  onDelete?: (id: string) => void;
   onOpenGuestRSVPModal?: () => void;
   disableNavigation?: boolean;
 }
