@@ -260,6 +260,17 @@ export const Events = () => {
             </SelectContent>
           </Select>
         )}
+
+        <Select value={dateFilter} onValueChange={setDateFilter}>
+          <SelectTrigger className="w-[150px]">
+            <SelectValue placeholder="Date" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Events</SelectItem>
+            <SelectItem value="upcoming">Upcoming</SelectItem>
+            <SelectItem value="past">Past</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Events Section */}
