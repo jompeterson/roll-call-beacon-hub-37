@@ -28,10 +28,16 @@ export const OrganizationSearch = ({ userOrganizationId }: OrganizationSearchPro
   const { organizations, loading } = useOrganizations();
   const [organizationSearch, setOrganizationSearch] = useState("");
 
-  const filteredOrganizations = organizations.filter(org =>
-    org.name.toLowerCase().includes(organizationSearch.toLowerCase()) ||
-    org.type.toLowerCase().includes(organizationSearch.toLowerCase())
-  );
+  const filteredOrganizations = organizations
+    .filter(org =>
+      org.name.toLowerCase().includes(organizationSearch.toLowerCase()) ||
+      org.type.toLowerCase().includes(organizationSearch.toLowerCase())
+    )
+    .sort((a, b) => {
+      const aIsUser = a.id === userOrganizationId ? -1 : 0;
+      const bIsUser = b.id === userOrganizationId ? -1 : 0;
+      return aIsUser - bIsUser;
+    });
 
   const handleRequestAccess = (organizationName: string) => {
     toast({
