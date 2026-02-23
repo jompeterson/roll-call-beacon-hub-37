@@ -179,6 +179,12 @@ export const useProfileData = () => {
     return () => unsubscribe();
   }, []);
 
+  const handleProfileImageUpdated = (url: string) => {
+    if (userProfile) {
+      setUserProfile({ ...userProfile, profile_image_url: url });
+    }
+  };
+
   return {
     user,
     userProfile,
@@ -186,6 +192,7 @@ export const useProfileData = () => {
     userRole,
     loading,
     contactInfo,
-    handleContactInfoChange
+    handleContactInfoChange,
+    handleProfileImageUpdated
   };
 };

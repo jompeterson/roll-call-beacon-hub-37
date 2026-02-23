@@ -15,16 +15,27 @@ interface PersonalInformationTabProps {
   contactInfo: ContactInfo;
   joinedDate: string;
   onContactInfoChange: (info: ContactInfo) => Promise<void> | void;
+  userId?: string;
+  profileImageUrl?: string | null;
+  onImageUpdated?: (url: string) => void;
 }
 
 export const PersonalInformationTab = ({ 
   contactInfo, 
   joinedDate, 
-  onContactInfoChange 
+  onContactInfoChange,
+  userId,
+  profileImageUrl,
+  onImageUpdated
 }: PersonalInformationTabProps) => {
   return (
     <div className="space-y-6">
-      <ProfileImageSection contactInfo={contactInfo} />
+      <ProfileImageSection 
+        contactInfo={contactInfo} 
+        userId={userId}
+        profileImageUrl={profileImageUrl}
+        onImageUpdated={onImageUpdated}
+      />
       <AccountInformation joinedDate={joinedDate} />
       <ContactInformation 
         contactInfo={contactInfo} 
