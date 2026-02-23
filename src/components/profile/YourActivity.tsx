@@ -216,7 +216,7 @@ const ActivityItem = ({ activity }: { activity: ActivityPost }) => {
                           ) : (
                             <span>{getUserName(signup.user, signup.guest_info)}</span>
                           )}
-                          {' - '}{new Date(signup.created_at).toLocaleDateString()}
+                          {' - '}{formatDate(signup.created_at)}
                         </li>
                       );
                     })}
