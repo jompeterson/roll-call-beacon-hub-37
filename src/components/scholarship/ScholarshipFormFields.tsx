@@ -28,7 +28,7 @@ export const ScholarshipFormFields = ({ formData, images, onInputChange, onImage
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="amount">Amount ($) *</Label>
+          <Label htmlFor="amount">Amount ($)</Label>
           <Input
             id="amount"
             type="number"
@@ -37,7 +37,6 @@ export const ScholarshipFormFields = ({ formData, images, onInputChange, onImage
             value={formData.amount}
             onChange={(e) => onInputChange("amount", e.target.value)}
             placeholder="0.00"
-            required
           />
         </div>
       </div>

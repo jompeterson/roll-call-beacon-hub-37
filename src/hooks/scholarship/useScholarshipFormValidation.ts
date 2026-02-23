@@ -28,7 +28,7 @@ export const useScholarshipFormValidation = () => {
       return false;
     }
 
-    if (!formData.title || !formData.amount) {
+    if (!formData.title) {
       toast({
         title: "Error",
         description: "Please fill in all required fields",
