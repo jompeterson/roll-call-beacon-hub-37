@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Calendar, Users, UserCheck, UserX } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { formatDate } from "@/lib/utils";
 import { useEventRSVPs } from "@/hooks/useEventRSVPs";
 
 interface Event {
