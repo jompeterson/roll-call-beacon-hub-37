@@ -52,15 +52,15 @@ export const OrganizationSearch = ({ userOrganizationId }: OrganizationSearchPro
   }
 
   return (
-    <Card className="h-96">
-      <CardHeader>
+    <Card className="h-96 flex flex-col">
+      <CardHeader className="flex-shrink-0">
         <CardTitle>Search Organizations</CardTitle>
         <CardDescription>
           Find and explore other organizations
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4 h-full">
-        <div className="relative">
+      <CardContent className="flex-1 flex flex-col min-h-0">
+        <div className="relative flex-shrink-0 mb-4">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search organizations..."
