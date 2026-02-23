@@ -30,6 +30,7 @@ export const ScholarshipCreateModal = ({
   const isAdmin = userRole?.name === "administrator";
   const [allOrganizations, setAllOrganizations] = useState<Organization[]>([]);
   const [selectedOrgId, setSelectedOrgId] = useState<string>("");
+  const [customOrgName, setCustomOrgName] = useState<string>("");
 
   // Fetch all organizations for admin users
   useEffect(() => {
@@ -54,7 +55,9 @@ export const ScholarshipCreateModal = ({
   }, [currentOrganization]);
 
   const overrideOrg = isAdmin && selectedOrgId
-    ? allOrganizations.find(o => o.id === selectedOrgId) || null
+    ? selectedOrgId === "__other__"
+      ? (customOrgName.trim() ? { id: "__other__", name: customOrgName.trim() } : null)
+      : allOrganizations.find(o => o.id === selectedOrgId) || null
     : null;
 
   const {
