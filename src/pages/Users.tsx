@@ -170,6 +170,63 @@ export const Users = () => {
     }
   };
 
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleUserDelete = async (id: string) => {
+    if (!isAdministrator) {
+      toast({
+        title: "Access Denied",
+        description: "Only administrators can delete users.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      // Delete user profile first
+      const { error: profileError } = await supabase
+        .from('user_profiles')
+        .delete()
+        .eq('id', id);
+
+      if (profileError) {
+        console.error('Error deleting user profile:', profileError);
+        toast({
+          title: "Error",
+          description: "Failed to delete user.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Delete from users table
+      const { error: userError } = await supabase
+        .from('users')
+        .delete()
+        .eq('id', id);
+
+      if (userError) {
+        console.error('Error deleting user:', userError);
+      }
+
+      toast({
+        title: "User Deleted",
+        description: "User has been successfully deleted.",
+      });
+      setUserModalOpen(false);
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete user.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="space-y-6">
@@ -215,7 +272,9 @@ export const Users = () => {
         onOpenChange={setUserModalOpen}
         onApprove={handleUserApprove}
         onReject={handleUserReject}
+        onDelete={handleUserDelete}
         isAdministrator={isAdministrator}
+        isDeleting={isDeleting}
       />
     </div>
   );
