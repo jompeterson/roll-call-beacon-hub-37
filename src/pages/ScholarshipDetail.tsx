@@ -1,11 +1,14 @@
+import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useScholarships } from "@/hooks/useScholarships";
 import { useAuth } from "@/hooks/useAuth";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Edit } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { ScholarshipInfo } from "@/components/scholarship/ScholarshipInfo";
 import { ScholarshipActionButtons } from "@/components/scholarship/ScholarshipActionButtons";
 import { ScholarshipApplyButton } from "@/components/scholarship/ScholarshipApplyButton";
+import { ScholarshipEditModal } from "@/components/scholarship/ScholarshipEditModal";
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ShareButton } from "@/components/ShareButton";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
@@ -109,12 +112,15 @@ export const ScholarshipDetail = () => {
     }
   };
 
+  const [editOpen, setEditOpen] = useState(false);
+
   const showActionButtons = isAdministrator && !scholarship.approval_decision_made;
   const showApplyButton = scholarship.scholarship_link && 
                           scholarship.scholarship_link.trim() !== '' && 
                           scholarship.is_approved;
   const showComments = scholarship.is_approved;
   const canDelete = user && (user.id === scholarship.creator_user_id || isAdministrator);
+  const canEdit = user && ((user.id === scholarship.creator_user_id && !scholarship.is_approved) || isAdministrator);
 
   const handleDelete = () => {
     deleteScholarship(scholarship.id);
@@ -175,7 +181,7 @@ export const ScholarshipDetail = () => {
         {(showApplyButton || showActionButtons || canDelete) && (
           <div className="border-t p-6 space-y-2">
             <div className="flex justify-between items-center">
-              <div>
+              <div className="flex gap-2">
                 {canDelete && (
                   <DeleteConfirmDialog
                     title="Delete Scholarship"
@@ -183,6 +189,12 @@ export const ScholarshipDetail = () => {
                     onConfirm={handleDelete}
                     isDeleting={isDeleting}
                   />
+                )}
+                {canEdit && (
+                  <Button variant="outline" onClick={() => setEditOpen(true)}>
+                    <Edit className="w-4 h-4 mr-2" />
+                    Edit
+                  </Button>
                 )}
               </div>
               <div className="flex gap-2">
@@ -209,6 +221,13 @@ export const ScholarshipDetail = () => {
           </div>
         )}
       </div>
+      {canEdit && (
+        <ScholarshipEditModal
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          scholarship={scholarship}
+        />
+      )}
     </div>
   );
 };

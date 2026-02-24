@@ -1,13 +1,16 @@
+import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useEvents } from "@/hooks/useEvents";
 import { useAuth } from "@/hooks/useAuth";
 import { useEventRSVPs } from "@/hooks/useEventRSVPs";
+import { Button } from "@/components/ui/button";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Edit } from "lucide-react";
 import { EventModalHeader } from "@/components/event/EventModalHeader";
 import { EventModalInformation } from "@/components/event/EventModalInformation";
 import { EventModalRSVPStatus } from "@/components/event/EventModalRSVPStatus";
 import { EventModalActionButtons } from "@/components/event/EventModalActionButtons";
+import { EventEditModal } from "@/components/event/EventEditModal";
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ShareButton } from "@/components/ShareButton";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
@@ -104,8 +107,11 @@ export const EventDetail = () => {
     navigate('/events');
   };
 
+  const [editOpen, setEditOpen] = useState(false);
+
   const showComments = event.is_approved;
   const canDelete = user && (user.id === event.creator_user_id || isAdministrator);
+  const canEdit = user && ((user.id === event.creator_user_id && !event.is_approved) || isAdministrator);
 
   const handleDelete = () => {
     deleteEvent(event.id);
@@ -174,13 +180,19 @@ export const EventDetail = () => {
         {/* Footer with Action Buttons */}
         <div className="px-6 py-4 border-t bg-card">
           <div className="flex justify-between items-center gap-2">
-            <div>
+            <div className="flex gap-2">
               {canDelete && (
                 <DeleteConfirmDialog
                   title="Delete Event"
                   description="Are you sure you want to delete this event? This action cannot be undone."
                   onConfirm={handleDelete}
                 />
+              )}
+              {canEdit && (
+                <Button variant="outline" onClick={() => setEditOpen(true)}>
+                  <Edit className="w-4 h-4 mr-2" />
+                  Edit
+                </Button>
               )}
             </div>
             <div>
@@ -199,6 +211,13 @@ export const EventDetail = () => {
           </div>
         </div>
       </div>
+      {canEdit && (
+        <EventEditModal
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          event={event}
+        />
+      )}
     </div>
   );
 };
