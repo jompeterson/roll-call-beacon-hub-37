@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { ScholarshipFormFields } from "./ScholarshipFormFields";
+import { type AmountType } from "./ScholarshipFormData";
 import { ImageUpload } from "@/components/shared/ImageUpload";
 
 interface ScholarshipEditModalProps {
@@ -21,9 +22,18 @@ export const ScholarshipEditModal = ({
 }: ScholarshipEditModalProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [images, setImages] = useState<File[]>([]);
+  const getInitialAmountType = (): AmountType => {
+    const amt = Number(scholarship.amount);
+    const amtMax = Number(scholarship.amount_max);
+    if (amt > 0 && amtMax > 0) return "range";
+    if (amt > 0) return "fixed";
+    return "none";
+  };
+
   const [formData, setFormData] = useState({
     title: scholarship.title,
     description: scholarship.description || "",
+    amount_type: getInitialAmountType(),
     amount: scholarship.amount?.toString() || "",
     amount_max: scholarship.amount_max?.toString() || "",
     application_deadline: scholarship.application_deadline ? new Date(scholarship.application_deadline).toISOString().split('T')[0] : "",
@@ -76,8 +86,8 @@ export const ScholarshipEditModal = ({
       const updateData = {
         title: formData.title,
         description: formData.description || null,
-        amount: parseFloat(formData.amount) || 0,
-        amount_max: formData.amount_max ? parseFloat(formData.amount_max) : null,
+        amount: formData.amount_type !== "none" ? (parseFloat(formData.amount) || 0) : 0,
+        amount_max: formData.amount_type === "range" ? (parseFloat(formData.amount_max) || null) : null,
         application_deadline: formData.application_deadline ? new Date(formData.application_deadline).toISOString() : null,
         eligibility_criteria: formData.eligibility_criteria || null,
         organization_name: formData.organization_name || null,

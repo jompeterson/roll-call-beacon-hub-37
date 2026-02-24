@@ -1,6 +1,9 @@
 
+export type AmountType = "none" | "fixed" | "range";
+
 export interface ScholarshipFormData {
   title: string;
+  amount_type: AmountType;
   amount: string;
   amount_max: string;
   description: string;
@@ -13,6 +16,7 @@ export interface ScholarshipFormData {
 
 export const createInitialFormData = (userProfile?: { email?: string; phone?: string }): ScholarshipFormData => ({
   title: "",
+  amount_type: "none",
   amount: "",
   amount_max: "",
   description: "",

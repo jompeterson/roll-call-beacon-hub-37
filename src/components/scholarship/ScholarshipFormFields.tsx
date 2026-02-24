@@ -2,7 +2,8 @@
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { ScholarshipFormData } from "./ScholarshipFormData";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ScholarshipFormData, AmountType } from "./ScholarshipFormData";
 import { ImageUpload } from "@/components/shared/ImageUpload";
 
 interface ScholarshipFormFieldsProps {
@@ -28,7 +29,23 @@ export const ScholarshipFormFields = ({ formData, images, onInputChange, onImage
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="amount">Amount Min ($)</Label>
+          <Label htmlFor="amount_type">Amount</Label>
+          <Select value={formData.amount_type} onValueChange={(value: AmountType) => onInputChange("amount_type", value)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select amount type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">No Amount</SelectItem>
+              <SelectItem value="fixed">Fixed Amount</SelectItem>
+              <SelectItem value="range">Range</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {formData.amount_type === "fixed" && (
+        <div className="space-y-2">
+          <Label htmlFor="amount">Amount ($)</Label>
           <Input
             id="amount"
             type="number"
@@ -39,20 +56,36 @@ export const ScholarshipFormFields = ({ formData, images, onInputChange, onImage
             placeholder="0.00"
           />
         </div>
+      )}
 
-        <div className="space-y-2">
-          <Label htmlFor="amount_max">Amount Max ($)</Label>
-          <Input
-            id="amount_max"
-            type="number"
-            step="0.01"
-            min="0"
-            value={formData.amount_max}
-            onChange={(e) => onInputChange("amount_max", e.target.value)}
-            placeholder="Leave blank for fixed amount"
-          />
+      {formData.amount_type === "range" && (
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="amount">Min Amount ($)</Label>
+            <Input
+              id="amount"
+              type="number"
+              step="0.01"
+              min="0"
+              value={formData.amount}
+              onChange={(e) => onInputChange("amount", e.target.value)}
+              placeholder="0.00"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="amount_max">Max Amount ($)</Label>
+            <Input
+              id="amount_max"
+              type="number"
+              step="0.01"
+              min="0"
+              value={formData.amount_max}
+              onChange={(e) => onInputChange("amount_max", e.target.value)}
+              placeholder="0.00"
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
