@@ -41,12 +41,14 @@ export const ScholarshipInfo = ({ scholarship, isAuthenticated }: ScholarshipInf
             <p className="text-xs text-muted-foreground">{scholarship.organization.type}</p>
           )}
         </div>
-        {scholarship.amount != null && Number(scholarship.amount) > 0 && (
-          <div>
-            <h4 className="font-semibold text-sm text-muted-foreground mb-1">Amount</h4>
-            <p className="text-sm">{formatCurrency(Number(scholarship.amount))}</p>
-          </div>
-        )}
+        <div>
+          <h4 className="font-semibold text-sm text-muted-foreground mb-1">Amount</h4>
+          <p className="text-sm">
+            {scholarship.amount != null && Number(scholarship.amount) > 0
+              ? formatCurrency(Number(scholarship.amount))
+              : "--"}
+          </p>
+        </div>
         <div>
           <h4 className="font-semibold text-sm text-muted-foreground mb-1">Application Deadline</h4>
           <p className="text-sm">{formatDate(scholarship.application_deadline)}</p>
