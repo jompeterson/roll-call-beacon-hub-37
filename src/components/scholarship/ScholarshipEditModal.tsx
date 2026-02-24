@@ -21,7 +21,7 @@ export const ScholarshipEditModal = ({
 }: ScholarshipEditModalProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [images, setImages] = useState<File[]>([]);
-  const getInitialAmountType = () => {
+  const getInitialAmountType = (): AmountType => {
     const amt = Number(scholarship.amount);
     const amtMax = Number(scholarship.amount_max);
     if (amt > 0 && amtMax > 0) return "range";
