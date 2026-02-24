@@ -23,8 +23,7 @@ export interface ActivityPost {
 
 export const useUserActivity = () => {
   const { user } = useAuth();
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
 
   return useQuery({
     queryKey: ["user-activity", user?.id],
@@ -68,7 +67,6 @@ export const useUserActivity = () => {
           created_at
         `)
         .eq("creator_user_id", user.id)
-        .gte("created_at", thirtyDaysAgo.toISOString())
         .order("created_at", { ascending: false });
 
       // Fetch donation acceptances
@@ -123,7 +121,6 @@ export const useUserActivity = () => {
           created_at
         `)
         .eq("creator_user_id", user.id)
-        .gte("created_at", thirtyDaysAgo.toISOString())
         .order("created_at", { ascending: false });
 
       // Fetch request fulfillments
@@ -178,7 +175,6 @@ export const useUserActivity = () => {
           created_at
         `)
         .eq("creator_user_id", user.id)
-        .gte("created_at", thirtyDaysAgo.toISOString())
         .order("created_at", { ascending: false });
 
       // Fetch event RSVPs
@@ -233,7 +229,6 @@ export const useUserActivity = () => {
           created_at
         `)
         .eq("creator_user_id", user.id)
-        .gte("created_at", thirtyDaysAgo.toISOString())
         .order("created_at", { ascending: false });
 
       // Fetch volunteer signups

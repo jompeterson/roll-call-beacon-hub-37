@@ -293,7 +293,7 @@ export const YourActivity = () => {
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            No posts created in the last 30 days.
+            No posts created yet.
           </p>
         </CardContent>
       </Card>
@@ -305,7 +305,7 @@ export const YourActivity = () => {
       <CardHeader>
         <CardTitle>Your Activity</CardTitle>
         <p className="text-sm text-muted-foreground">
-          Your posts from the last 30 days
+          Your posts and interactions
         </p>
       </CardHeader>
       <CardContent>
