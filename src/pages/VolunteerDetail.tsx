@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useVolunteers } from "@/hooks/useVolunteers";
 import { useAuth } from "@/hooks/useAuth";
@@ -5,11 +6,12 @@ import { useVolunteerSignups } from "@/hooks/useVolunteerSignups";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { ChevronRight, Calendar, MapPin, Users, CheckCircle, XCircle } from "lucide-react";
+import { ChevronRight, Calendar, MapPin, Users, CheckCircle, XCircle, Edit } from "lucide-react";
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ShareButton } from "@/components/ShareButton";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
+import { VolunteerEditModal } from "@/components/volunteer/VolunteerEditModal";
 import { formatDate } from "@/lib/utils";
 
 export const VolunteerDetail = () => {
@@ -24,6 +26,7 @@ export const VolunteerDetail = () => {
     deleteVolunteer
   } = useVolunteers();
   const { signupCount, hasSignedUp, submitting, signUp, cancelSignup, userSignup } = useVolunteerSignups(volunteerId || "");
+  const [editOpen, setEditOpen] = useState(false);
 
   const volunteer = volunteers.find(v => v.id === volunteerId);
 
@@ -116,6 +119,7 @@ export const VolunteerDetail = () => {
   const showComments = volunteer.is_approved;
   const isVolunteerFull = volunteer.max_participants && signupCount >= volunteer.max_participants;
   const canDelete = user && (user.id === volunteer.creator_user_id || isAdministrator);
+  const canEdit = user && ((user.id === volunteer.creator_user_id && !volunteer.is_approved) || isAdministrator);
 
   const handleDelete = () => {
     deleteVolunteer(volunteer.id);
@@ -244,13 +248,19 @@ export const VolunteerDetail = () => {
         {/* Footer with Action Buttons */}
         <div className="px-6 py-4 border-t bg-card">
           <div className="flex justify-between items-center gap-2">
-            <div>
+            <div className="flex gap-2">
               {canDelete && (
                 <DeleteConfirmDialog
                   title="Delete Volunteer Opportunity"
                   description="Are you sure you want to delete this volunteer opportunity? This action cannot be undone."
                   onConfirm={handleDelete}
                 />
+              )}
+              {canEdit && (
+                <Button variant="outline" onClick={() => setEditOpen(true)}>
+                  <Edit className="w-4 h-4 mr-2" />
+                  Edit
+                </Button>
               )}
             </div>
             
@@ -293,6 +303,13 @@ export const VolunteerDetail = () => {
           </div>
         </div>
       </div>
+      {canEdit && (
+        <VolunteerEditModal
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          volunteer={volunteer}
+        />
+      )}
     </div>
   );
 };

@@ -1,13 +1,15 @@
+import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useRequests, type Request } from "@/hooks/useRequests";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Edit } from "lucide-react";
 import { RequestModalCreatorInfo } from "@/components/request/RequestModalCreatorInfo";
 import { RequestModalInformation } from "@/components/request/RequestModalInformation";
 import { RequestModalActionButtons } from "@/components/request/RequestModalActionButtons";
+import { RequestEditModal } from "@/components/donations/RequestEditModal";
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ShareButton } from "@/components/ShareButton";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
@@ -17,6 +19,7 @@ export const RequestDetail = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, isAdministrator } = useAuth();
   const { data: requests = [], isLoading, deleteRequest, isDeletingRequest } = useRequests();
+  const [editOpen, setEditOpen] = useState(false);
 
   const request = requests.find(r => r.id === requestId);
 
@@ -89,6 +92,7 @@ export const RequestDetail = () => {
 
   const showComments = request.is_approved;
   const canDelete = user && (user.id === request.creator_user_id || isAdministrator);
+  const canEdit = user && ((user.id === request.creator_user_id && !request.is_approved) || isAdministrator);
 
   const handleDelete = () => {
     deleteRequest(request.id);
@@ -161,7 +165,7 @@ export const RequestDetail = () => {
         {isAuthenticated && (
           <div className="border-t p-6">
             <div className="flex justify-between items-center">
-              <div>
+              <div className="flex gap-2">
                 {canDelete && (
                   <DeleteConfirmDialog
                     title="Delete Request"
@@ -169,6 +173,12 @@ export const RequestDetail = () => {
                     onConfirm={handleDelete}
                     isDeleting={isDeletingRequest}
                   />
+                )}
+                {canEdit && (
+                  <Button variant="outline" onClick={() => setEditOpen(true)}>
+                    <Edit className="w-4 h-4 mr-2" />
+                    Edit
+                  </Button>
                 )}
               </div>
               {!request.is_completed && (
@@ -184,6 +194,13 @@ export const RequestDetail = () => {
           </div>
         )}
       </div>
+      {canEdit && (
+        <RequestEditModal
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          request={request}
+        />
+      )}
     </div>
   );
 };

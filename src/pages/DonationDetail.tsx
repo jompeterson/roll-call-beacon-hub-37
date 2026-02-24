@@ -1,13 +1,15 @@
+import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useDonations, type Donation } from "@/hooks/useDonations";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Edit } from "lucide-react";
 import { DonationModalCreatorInfo } from "@/components/donations/DonationModalCreatorInfo";
 import { DonationModalInformation } from "@/components/donations/DonationModalInformation";
 import { DonationModalImageSection } from "@/components/donations/DonationModalImageSection";
 import { DonationModalActionButtons } from "@/components/donations/DonationModalActionButtons";
+import { DonationEditModal } from "@/components/donations/DonationEditModal";
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ShareButton } from "@/components/ShareButton";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
@@ -17,6 +19,7 @@ export const DonationDetail = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, isAdministrator } = useAuth();
   const { data: donations = [], isLoading, deleteDonation, isDeletingDonation } = useDonations();
+  const [editOpen, setEditOpen] = useState(false);
 
   const donation = donations.find(d => d.id === donationId);
 
@@ -101,6 +104,7 @@ export const DonationDetail = () => {
 
   const showComments = donation.is_approved;
   const canDelete = user && (user.id === donation.creator_user_id || isAdministrator);
+  const canEdit = user && ((user.id === donation.creator_user_id && !donation.is_approved) || isAdministrator);
 
   const handleDelete = () => {
     deleteDonation(donation.id);
@@ -178,7 +182,7 @@ export const DonationDetail = () => {
         {isAuthenticated && (
           <div className="border-t p-6">
             <div className="flex justify-between items-center">
-              <div>
+              <div className="flex gap-2">
                 {canDelete && (
                   <DeleteConfirmDialog
                     title="Delete Donation"
@@ -186,6 +190,12 @@ export const DonationDetail = () => {
                     onConfirm={handleDelete}
                     isDeleting={isDeletingDonation}
                   />
+                )}
+                {canEdit && (
+                  <Button variant="outline" onClick={() => setEditOpen(true)}>
+                    <Edit className="w-4 h-4 mr-2" />
+                    Edit
+                  </Button>
                 )}
               </div>
               <DonationModalActionButtons
@@ -202,6 +212,13 @@ export const DonationDetail = () => {
           </div>
         )}
       </div>
+      {canEdit && (
+        <DonationEditModal
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          donation={donation}
+        />
+      )}
     </div>
   );
 };
