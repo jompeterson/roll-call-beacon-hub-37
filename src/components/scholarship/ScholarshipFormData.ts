@@ -2,6 +2,7 @@
 export interface ScholarshipFormData {
   title: string;
   amount: string;
+  amount_max: string;
   description: string;
   eligibility_criteria: string;
   application_deadline: string;
@@ -13,6 +14,7 @@ export interface ScholarshipFormData {
 export const createInitialFormData = (userProfile?: { email?: string; phone?: string }): ScholarshipFormData => ({
   title: "",
   amount: "",
+  amount_max: "",
   description: "",
   eligibility_criteria: "",
   application_deadline: "",

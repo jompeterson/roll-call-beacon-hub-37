@@ -538,6 +538,7 @@ export type Database = {
       scholarships: {
         Row: {
           amount: number | null
+          amount_max: number | null
           application_deadline: string | null
           approval_decision_made: boolean
           contact_email: string | null
@@ -557,6 +558,7 @@ export type Database = {
         }
         Insert: {
           amount?: number | null
+          amount_max?: number | null
           application_deadline?: string | null
           approval_decision_made?: boolean
           contact_email?: string | null
@@ -576,6 +578,7 @@ export type Database = {
         }
         Update: {
           amount?: number | null
+          amount_max?: number | null
           application_deadline?: string | null
           approval_decision_made?: boolean
           contact_email?: string | null
