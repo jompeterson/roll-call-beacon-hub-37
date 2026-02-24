@@ -184,7 +184,7 @@ export const Users = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 flex flex-col h-full">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Users</h1>
         <p className="text-muted-foreground">
@@ -199,7 +199,7 @@ export const Users = () => {
         onStatusFilterChange={setStatusFilter}
       />
 
-      <div className="space-y-4">
+      <div className="space-y-4 flex-1 flex flex-col min-h-0">
         <UserTable
           users={sortedUsers}
           sortField={userSort}

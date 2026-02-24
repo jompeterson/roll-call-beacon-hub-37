@@ -121,7 +121,7 @@ export const Donations = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 flex flex-col h-full">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Donations</h1>
         <p className="text-muted-foreground">
@@ -137,7 +137,7 @@ export const Donations = () => {
       />
 
       {/* Two Sections Side by Side */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1 min-h-0">
         {/* Donation Posts Section */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">

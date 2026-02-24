@@ -217,7 +217,7 @@ export const Volunteers = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 flex flex-col h-full">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Volunteers</h1>
         <p className="text-muted-foreground">
@@ -252,7 +252,7 @@ export const Volunteers = () => {
       </div>
 
       {/* Volunteers Section */}
-      <div className="space-y-4">
+      <div className="space-y-4 flex-1 flex flex-col min-h-0">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold">Volunteer Opportunities</h2>
           {isAuthenticated && (
@@ -262,7 +262,7 @@ export const Volunteers = () => {
             </Button>
           )}
         </div>
-        <div className="border rounded-lg h-96">
+        <div className="border rounded-lg flex-1 min-h-0">
           <div className="h-full flex flex-col">
             <Table>
               <TableHeader>
