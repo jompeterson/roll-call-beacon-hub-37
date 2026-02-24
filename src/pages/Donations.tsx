@@ -139,7 +139,7 @@ export const Donations = () => {
       {/* Two Sections Side by Side */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1 min-h-0">
         {/* Donation Posts Section */}
-        <div className="space-y-4">
+        <div className="space-y-4 flex flex-col min-h-0">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-semibold">Donation Posts</h2>
             {isAuthenticated && (
@@ -160,7 +160,7 @@ export const Donations = () => {
         </div>
 
         {/* Request Posts Section */}
-        <div className="space-y-4">
+        <div className="space-y-4 flex flex-col min-h-0">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-semibold">Request Posts</h2>
             {isAuthenticated && (
