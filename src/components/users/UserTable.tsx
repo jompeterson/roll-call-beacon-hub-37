@@ -49,7 +49,7 @@ export const UserTable = ({
   onRowClick
 }: UserTableProps) => {
   return (
-    <div className="border rounded-lg h-96">
+    <div className="border rounded-lg flex-1 min-h-0">
       <div className="h-full flex flex-col">
         <Table>
           <TableHeader>
