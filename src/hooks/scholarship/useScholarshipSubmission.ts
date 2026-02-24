@@ -57,8 +57,8 @@ export const useScholarshipSubmission = ({
       const scholarshipData = {
         title: formData.title,
         description: formData.description || null,
-        amount: parseFloat(formData.amount) || 0,
-        amount_max: formData.amount_max ? parseFloat(formData.amount_max) : null,
+        amount: formData.amount_type !== "none" ? (parseFloat(formData.amount) || 0) : 0,
+        amount_max: formData.amount_type === "range" ? (parseFloat(formData.amount_max) || null) : null,
         application_deadline: formData.application_deadline 
           ? new Date(formData.application_deadline).toISOString() 
           : null,
