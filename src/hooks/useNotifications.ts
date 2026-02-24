@@ -132,7 +132,11 @@ export const useNotifications = () => {
         (payload) => {
           console.log('New notification received:', payload);
           const newNotification = payload.new as Notification;
-          setNotifications(prev => [newNotification, ...prev]);
+          setNotifications(prev => {
+            // Avoid duplicates if already fetched
+            if (prev.some(n => n.id === newNotification.id)) return prev;
+            return [newNotification, ...prev];
+          });
           setUnreadCount(prev => prev + 1);
         }
       )
