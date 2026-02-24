@@ -339,7 +339,11 @@ export const Scholarships = () => {
                           {scholarship.title}
                         </TableCell>
                         <TableCell className="w-1/6 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
-                          {Number(scholarship.amount) > 0 ? formatCurrency(Number(scholarship.amount)) : "--"}
+                          {Number(scholarship.amount) > 0
+                            ? scholarship.amount_max != null && Number(scholarship.amount_max) > 0
+                              ? `${formatCurrency(Number(scholarship.amount))} – ${formatCurrency(Number(scholarship.amount_max))}`
+                              : formatCurrency(Number(scholarship.amount))
+                            : "--"}
                         </TableCell>
                         {isAuthenticated && (
                           <TableCell className="w-1/6">

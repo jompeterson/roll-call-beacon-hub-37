@@ -45,7 +45,9 @@ export const ScholarshipInfo = ({ scholarship, isAuthenticated }: ScholarshipInf
           <h4 className="font-semibold text-sm text-muted-foreground mb-1">Amount</h4>
           <p className="text-sm">
             {scholarship.amount != null && Number(scholarship.amount) > 0
-              ? formatCurrency(Number(scholarship.amount))
+              ? scholarship.amount_max != null && Number(scholarship.amount_max) > 0
+                ? `${formatCurrency(Number(scholarship.amount))} – ${formatCurrency(Number(scholarship.amount_max))}`
+                : formatCurrency(Number(scholarship.amount))
               : "--"}
           </p>
         </div>

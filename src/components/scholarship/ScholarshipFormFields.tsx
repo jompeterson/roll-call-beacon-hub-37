@@ -28,7 +28,7 @@ export const ScholarshipFormFields = ({ formData, images, onInputChange, onImage
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="amount">Amount ($)</Label>
+          <Label htmlFor="amount">Amount Min ($)</Label>
           <Input
             id="amount"
             type="number"
@@ -37,6 +37,19 @@ export const ScholarshipFormFields = ({ formData, images, onInputChange, onImage
             value={formData.amount}
             onChange={(e) => onInputChange("amount", e.target.value)}
             placeholder="0.00"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="amount_max">Amount Max ($)</Label>
+          <Input
+            id="amount_max"
+            type="number"
+            step="0.01"
+            min="0"
+            value={formData.amount_max}
+            onChange={(e) => onInputChange("amount_max", e.target.value)}
+            placeholder="Leave blank for fixed amount"
           />
         </div>
       </div>
