@@ -90,8 +90,6 @@ export const RequestDetail = () => {
     console.log("Requested changes for request:", id);
   };
 
-  const [editOpen, setEditOpen] = useState(false);
-
   const showComments = request.is_approved;
   const canDelete = user && (user.id === request.creator_user_id || isAdministrator);
   const canEdit = user && ((user.id === request.creator_user_id && !request.is_approved) || isAdministrator);

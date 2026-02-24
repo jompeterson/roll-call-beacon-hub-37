@@ -113,8 +113,6 @@ export const ScholarshipDetail = () => {
     }
   };
 
-  const [editOpen, setEditOpen] = useState(false);
-
   const showActionButtons = isAdministrator && !scholarship.approval_decision_made;
   const showApplyButton = scholarship.scholarship_link && 
                           scholarship.scholarship_link.trim() !== '' && 

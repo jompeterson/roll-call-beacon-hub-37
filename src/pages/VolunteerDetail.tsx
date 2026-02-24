@@ -116,8 +116,6 @@ export const VolunteerDetail = () => {
     return <Badge variant="outline" className="bg-red-100 text-red-800 border-red-300">Rejected</Badge>;
   };
 
-  const [editOpen, setEditOpen] = useState(false);
-
   const showComments = volunteer.is_approved;
   const isVolunteerFull = volunteer.max_participants && signupCount >= volunteer.max_participants;
   const canDelete = user && (user.id === volunteer.creator_user_id || isAdministrator);

@@ -102,8 +102,6 @@ export const DonationDetail = () => {
     console.log("Requested changes for donation:", id);
   };
 
-  const [editOpen, setEditOpen] = useState(false);
-
   const showComments = donation.is_approved;
   const canDelete = user && (user.id === donation.creator_user_id || isAdministrator);
   const canEdit = user && ((user.id === donation.creator_user_id && !donation.is_approved) || isAdministrator);

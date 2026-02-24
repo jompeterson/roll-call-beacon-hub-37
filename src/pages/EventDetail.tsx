@@ -108,8 +108,6 @@ export const EventDetail = () => {
     navigate('/events');
   };
 
-  const [editOpen, setEditOpen] = useState(false);
-
   const showComments = event.is_approved;
   const canDelete = user && (user.id === event.creator_user_id || isAdministrator);
   const canEdit = user && ((user.id === event.creator_user_id && !event.is_approved) || isAdministrator);
