@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { CheckCircle, XCircle, Clock, Mail, Phone, MapPin, Building, Calendar, User } from "lucide-react";
+import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { formatDate } from "@/lib/utils";
 
 interface UserProfile {
@@ -38,7 +39,9 @@ interface UserModalProps {
   onOpenChange: (open: boolean) => void;
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
+  onDelete?: (id: string) => void;
   isAdministrator?: boolean;
+  isDeleting?: boolean;
 }
 
 export const UserModal = ({
@@ -47,7 +50,9 @@ export const UserModal = ({
   onOpenChange,
   onApprove,
   onReject,
+  onDelete,
   isAdministrator = false,
+  isDeleting = false,
 }: UserModalProps) => {
   if (!user) return null;
 
@@ -180,33 +185,45 @@ export const UserModal = ({
           </div>
         </div>
 
-        <div className="flex gap-2 pt-4">
-          {showApprovalButtons && (
-            <>
-              <Button
-                onClick={() => onApprove(user.id)}
-                className="flex-1"
-              >
-                Approve User
-              </Button>
+        <div className="flex justify-between items-center gap-2 pt-4">
+          <div>
+            {isAdministrator && onDelete && (
+              <DeleteConfirmDialog
+                title="Delete User"
+                description={`Are you sure you want to delete ${user.first_name} ${user.last_name}? This action cannot be undone.`}
+                onConfirm={() => onDelete(user.id)}
+                isDeleting={isDeleting}
+              />
+            )}
+          </div>
+          <div className="flex gap-2">
+            {showApprovalButtons && (
+              <>
+                <Button
+                  onClick={() => onApprove(user.id)}
+                  className="flex-1"
+                >
+                  Approve User
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={() => onReject(user.id)}
+                  className="flex-1"
+                >
+                  Reject User
+                </Button>
+              </>
+            )}
+            {showRevokeButton && (
               <Button
                 variant="destructive"
                 onClick={() => onReject(user.id)}
                 className="flex-1"
               >
-                Reject User
+                Revoke Access
               </Button>
-            </>
-          )}
-          {showRevokeButton && (
-            <Button
-              variant="destructive"
-              onClick={() => onReject(user.id)}
-              className="flex-1"
-            >
-              Revoke Access
-            </Button>
-          )}
+            )}
+          </div>
         </div>
       </DialogContent>
     </Dialog>
