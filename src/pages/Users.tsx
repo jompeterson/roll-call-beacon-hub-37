@@ -215,6 +215,7 @@ export const Users = () => {
         description: "User has been successfully deleted.",
       });
       setUserModalOpen(false);
+      refetch();
     } catch (error) {
       console.error('Error deleting user:', error);
       toast({
