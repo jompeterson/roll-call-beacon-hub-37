@@ -30,6 +30,7 @@ export const ScholarshipDetail = () => {
     isRequestingChanges,
     isDeleting
   } = useScholarships();
+  const [editOpen, setEditOpen] = useState(false);
 
   const scholarship = scholarships.find(s => s.id === scholarshipId);
 

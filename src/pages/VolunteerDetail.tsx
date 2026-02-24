@@ -26,6 +26,7 @@ export const VolunteerDetail = () => {
     deleteVolunteer
   } = useVolunteers();
   const { signupCount, hasSignedUp, submitting, signUp, cancelSignup, userSignup } = useVolunteerSignups(volunteerId || "");
+  const [editOpen, setEditOpen] = useState(false);
 
   const volunteer = volunteers.find(v => v.id === volunteerId);
 

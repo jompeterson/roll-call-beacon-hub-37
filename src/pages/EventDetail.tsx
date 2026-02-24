@@ -28,6 +28,7 @@ export const EventDetail = () => {
     deleteEvent
   } = useEvents();
   const { rsvpCount, hasRsvp, submitting, createRSVP, deleteRSVP } = useEventRSVPs(eventId || "");
+  const [editOpen, setEditOpen] = useState(false);
 
   const event = events.find(e => e.id === eventId);
 

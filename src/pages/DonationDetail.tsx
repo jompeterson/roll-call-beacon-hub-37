@@ -19,6 +19,7 @@ export const DonationDetail = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, isAdministrator } = useAuth();
   const { data: donations = [], isLoading, deleteDonation, isDeletingDonation } = useDonations();
+  const [editOpen, setEditOpen] = useState(false);
 
   const donation = donations.find(d => d.id === donationId);
 

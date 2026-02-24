@@ -19,6 +19,7 @@ export const RequestDetail = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, isAdministrator } = useAuth();
   const { data: requests = [], isLoading, deleteRequest, isDeletingRequest } = useRequests();
+  const [editOpen, setEditOpen] = useState(false);
 
   const request = requests.find(r => r.id === requestId);
 
