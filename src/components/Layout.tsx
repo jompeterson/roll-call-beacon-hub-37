@@ -1,14 +1,32 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
 import { FloatingActionButton } from "./FloatingActionButton";
 import { AuthProtection } from "./AuthProtection";
 
+const useIsTablet = () => {
+  const [isTablet, setIsTablet] = useState(
+    () => window.innerWidth >= 768 && window.innerWidth < 1024
+  );
+  useEffect(() => {
+    const handleResize = () => setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  return isTablet;
+};
+
 export const Layout = () => {
+  const isTablet = useIsTablet();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(isTablet);
+
+  // Auto-collapse on tablet, expand on desktop
+  useEffect(() => {
+    setSidebarCollapsed(isTablet);
+  }, [isTablet]);
 
   return (
     <div className="h-screen bg-background flex flex-col overflow-hidden">

@@ -176,8 +176,8 @@ export const Sidebar = ({ open, onOpenChange, collapsed, onCollapsedChange }: Si
         </div>
       )}
       <nav className="flex-1 px-2 space-y-1 overflow-y-auto">
-        {/* Top Navigation Items (Dashboard & Valued Partners) - Only on mobile/tablet */}
-        <div className="lg:hidden space-y-2 pb-4 mb-4 border-b border-border">
+        {/* Top Navigation Items - Only on mobile (phone) */}
+        <div className="md:hidden space-y-2 pb-4 mb-4 border-b border-border">
           {topNavigationItems.map((item) => {
             const isActive = item.href === "/valued-partners" 
               ? location.pathname === "/valued-partners"
@@ -311,7 +311,7 @@ export const Sidebar = ({ open, onOpenChange, collapsed, onCollapsedChange }: Si
   return (
     <div
       className={cn(
-        "fixed top-10 md:top-[2.75rem] lg:top-14 bottom-0 left-0 z-40 bg-card border-r border-border transform transition-all duration-300 ease-in-out lg:translate-x-0 lg:static lg:flex lg:flex-col",
+        "fixed top-10 md:top-[2.75rem] lg:top-14 bottom-0 left-0 z-40 bg-card border-r border-border transform transition-all duration-300 ease-in-out md:translate-x-0 md:static md:flex md:flex-col",
         open ? "translate-x-0" : "-translate-x-full",
         collapsed ? "w-14" : "w-64"
       )}
