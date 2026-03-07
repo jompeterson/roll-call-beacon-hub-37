@@ -19,10 +19,11 @@ const videos: { title: string; description: string; icon: typeof BookOpen; categ
     videoUrl: "https://rollcall.pacificcrest.us/lovable-uploads/Roll-Call-Profile-Overview-Tutorial.mp4",
   },
   {
-    title: "Creating & Managing Events",
+    title: "Posting Donations",
     description: "Learn how to create events, manage RSVPs, and track attendance.",
     icon: Calendar,
     category: "Events",
+    videoUrl: "https://rollcall.pacificcrest.us/lovable-uploads/Roll-Call-Posting-Donations-Tutorial.mp4",
   },
   {
     title: "Scholarship Management",
