@@ -39,6 +39,8 @@ import { useToast } from "@/hooks/use-toast";
 interface SidebarProps {
   open: boolean;
   onOpenChange?: (open: boolean) => void;
+  collapsed: boolean;
+  onCollapsedChange: (collapsed: boolean) => void;
 }
 
 const baseNavigation = [
