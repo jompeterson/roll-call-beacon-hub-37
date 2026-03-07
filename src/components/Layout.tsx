@@ -19,8 +19,14 @@ const useIsTablet = () => {
 };
 
 export const Layout = () => {
+  const isTablet = useIsTablet();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(isTablet);
+
+  // Auto-collapse on tablet, expand on desktop
+  useEffect(() => {
+    setSidebarCollapsed(isTablet);
+  }, [isTablet]);
 
   return (
     <div className="h-screen bg-background flex flex-col overflow-hidden">
