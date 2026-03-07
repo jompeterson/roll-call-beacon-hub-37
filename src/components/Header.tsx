@@ -147,12 +147,12 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
     <header className="bg-card border-b border-border px-6 py-1.5 md:py-2 lg:py-3 flex items-center justify-between relative z-50">
       {/* Left Side - Mobile Menu + Images */}
       <div className="flex items-center space-x-4">
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu Button - Phone only */}
         <Button
           variant="ghost"
           size="icon"
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="lg:hidden"
+          className="md:hidden"
         >
           <Menu className="h-5 w-5" />
         </Button>
@@ -178,7 +178,7 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
       </div>
 
       {/* Center Navigation */}
-      <div className="hidden lg:flex items-center space-x-6">
+      <div className="hidden md:flex items-center space-x-6">
         <Link to="/">
           <Button 
             variant="ghost" 
