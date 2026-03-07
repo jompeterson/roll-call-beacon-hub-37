@@ -3,7 +3,7 @@ import { Play, BookOpen, Users, Calendar, HandHeart, GraduationCap, Hammer, Sett
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 
-const videos = [
+const videos: { title: string; description: string; icon: typeof BookOpen; category: string; videoUrl?: string }[] = [
   {
     title: "Roll Call Enrollment Tutorial",
     description: "Learn the basics of navigating the platform and setting up your account.",
