@@ -40,10 +40,11 @@ const videos: { title: string; description: string; icon: typeof BookOpen; categ
     videoUrl: "https://rollcall.pacificcrest.us/lovable-uploads/Roll-Call-Posting-Events-Tutorial.mp4",
   },
   {
-    title: "Managing Your Organization",
+    title: "Posting Scholarships",
     description: "How to set up and manage your organization's profile and members.",
     icon: Users,
     category: "Organizations",
+    videoUrl: "https://rollcall.pacificcrest.us/lovable-uploads/Roll-Call-Posting-Scholarships-Tutorial.mp4",
   },
   {
     title: "User Management for Admins",
