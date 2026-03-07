@@ -69,7 +69,7 @@ const topNavigationItems = [
   { name: "Resources", href: "/resources" },
 ];
 
-export const Sidebar = ({ open, onOpenChange }: SidebarProps) => {
+export const Sidebar = ({ open, onOpenChange, collapsed, onCollapsedChange }: SidebarProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
