@@ -213,8 +213,7 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="flex items-center space-x-1">
-              <Menu className="h-4 w-4 mr-1" />
-              <span>Navigate</span>
+              <span>{isDashboardPage ? "Dashboard" : location.pathname === "/valued-partners" ? "Valued Partners" : location.pathname === "/resources" ? "Resources" : "Navigate"}</span>
               <ChevronDown className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
