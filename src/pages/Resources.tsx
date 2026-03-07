@@ -26,10 +26,11 @@ const videos: { title: string; description: string; icon: typeof BookOpen; categ
     videoUrl: "https://rollcall.pacificcrest.us/lovable-uploads/Roll-Call-Posting-Donations-Tutorial.mp4",
   },
   {
-    title: "Scholarship Management",
+    title: "Fulfill Donation",
     description: "How to post scholarships and review applications.",
     icon: GraduationCap,
     category: "Scholarships",
+    videoUrl: "https://rollcall.pacificcrest.us/lovable-uploads/Roll-Call-Fulfill-Donation-Tutorial.mp4",
   },
   {
     title: "Volunteer Opportunities",
