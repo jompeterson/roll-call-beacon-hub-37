@@ -33,10 +33,11 @@ const videos: { title: string; description: string; icon: typeof BookOpen; categ
     videoUrl: "https://rollcall.pacificcrest.us/lovable-uploads/Roll-Call-Fulfill-Donation-Tutorial.mp4",
   },
   {
-    title: "Volunteer Opportunities",
+    title: "Posting Events",
     description: "Create volunteer opportunities and manage sign-ups.",
     icon: HandHeart,
     category: "Volunteers",
+    videoUrl: "https://rollcall.pacificcrest.us/lovable-uploads/Roll-Call-Posting-Events-Tutorial.mp4",
   },
   {
     title: "Managing Your Organization",
