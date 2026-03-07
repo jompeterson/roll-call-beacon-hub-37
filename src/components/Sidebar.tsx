@@ -62,6 +62,7 @@ const adminNavigation = [
 const topNavigationItems = [
   { name: "Dashboard", href: "/" },
   { name: "Valued Partners", href: "/valued-partners" },
+  { name: "Resources", href: "/resources" },
 ];
 
 export const Sidebar = ({ open, onOpenChange }: SidebarProps) => {

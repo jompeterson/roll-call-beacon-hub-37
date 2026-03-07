@@ -197,6 +197,15 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
             Valued Partners
           </Button>
         </Link>
+        <Link to="/resources">
+          <Button 
+            variant="ghost" 
+            className={location.pathname === "/resources" ? "text-white" : "text-foreground hover:text-primary"}
+            style={location.pathname === "/resources" ? { backgroundColor: "#3d7471" } : {}}
+          >
+            Resources
+          </Button>
+        </Link>
       </div>
 
       {/* Right Side - Only show on desktop */}
