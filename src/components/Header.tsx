@@ -177,8 +177,8 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
         )}
       </div>
 
-      {/* Center Navigation */}
-      <div className="hidden md:flex items-center space-x-6">
+      {/* Center Navigation - Full buttons on lg+, dropdown on md */}
+      <div className="hidden lg:flex items-center space-x-6">
         <Link to="/">
           <Button 
             variant="ghost" 
@@ -206,6 +206,30 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
             Resources
           </Button>
         </Link>
+      </div>
+
+      {/* Center Navigation - Dropdown on tablet (md to lg) */}
+      <div className="hidden md:flex lg:hidden">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="flex items-center space-x-1">
+              <Menu className="h-4 w-4 mr-1" />
+              <span>Navigate</span>
+              <ChevronDown className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="center" className="w-48 bg-popover">
+            <DropdownMenuItem onClick={() => navigate("/")}>
+              Dashboard
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate("/valued-partners")}>
+              Valued Partners
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate("/resources")}>
+              Resources
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {/* Right Side - Only show on desktop */}
