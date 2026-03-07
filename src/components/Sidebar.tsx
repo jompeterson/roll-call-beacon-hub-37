@@ -14,6 +14,8 @@ import {
   User,
   ChevronDown,
   LogIn,
+  ChevronsLeft,
+  ChevronsRight,
 } from "lucide-react";
 import { customAuth } from "@/lib/customAuth";
 import { useState, useEffect } from "react";
