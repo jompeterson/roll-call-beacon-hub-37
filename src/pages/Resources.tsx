@@ -1,7 +1,9 @@
 
-import { Play, BookOpen, Users, Calendar, HandHeart, GraduationCap, Hammer, Settings } from "lucide-react";
+import { Play, BookOpen, Users, Calendar, HandHeart, GraduationCap, Hammer, Settings, HelpCircle } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const videos: { title: string; description: string; icon: typeof BookOpen; category: string; videoUrl?: string }[] = [
   {
@@ -55,60 +57,146 @@ const videos: { title: string; description: string; icon: typeof BookOpen; categ
   },
 ];
 
+const faqs: { question: string; answer: string }[] = [
+  {
+    question: "How do I create an account on Roll Call?",
+    answer: "Click the 'Register' button on the login page. You'll need to provide your email, create a password, fill in your personal details, and either join an existing organization or create a new one. Once submitted, your account will be reviewed and approved by an administrator.",
+  },
+  {
+    question: "How do I update my profile information?",
+    answer: "Navigate to the Profile page from the sidebar. There you can update your personal information such as name, phone number, and address. You can also upload or change your profile picture and switch your organization.",
+  },
+  {
+    question: "How do I post a donation?",
+    answer: "Go to the Donations page and click the '+' button. Fill in the donation details including title, description, amount needed, material type, and contact information. You can also upload images. Once submitted, the donation will be reviewed before it becomes visible to others.",
+  },
+  {
+    question: "How do I fulfill a donation request?",
+    answer: "Open any approved donation from the Donations page. If you'd like to contribute, click the 'Fulfill' button on the donation detail page. This lets the posting organization know you're interested in helping with their request.",
+  },
+  {
+    question: "How do I create an event?",
+    answer: "Navigate to the Events page and click the '+' button. Enter the event title, description, date, time, location, and optionally set a maximum number of participants. After submission, the event will go through an approval process before being published.",
+  },
+  {
+    question: "How do I RSVP to an event?",
+    answer: "Open an approved event from the Events page and click the 'RSVP' button. You can cancel your RSVP at any time by clicking the button again. Guest RSVPs are also supported for non-registered attendees.",
+  },
+  {
+    question: "How do I post a scholarship?",
+    answer: "Go to the Scholarships page and click the '+' button. Provide the scholarship title, description, amount, eligibility criteria, application deadline, and a link to the application. The scholarship will need to be approved before it's visible to applicants.",
+  },
+  {
+    question: "How do I post a volunteer opportunity?",
+    answer: "Navigate to the Volunteers page and click the '+' button. Fill in the opportunity details including title, description, dates, location, and maximum number of volunteers. Once approved, community members can sign up directly through the platform.",
+  },
+  {
+    question: "How do I submit a request for help?",
+    answer: "Go to the Donations page and switch to the 'Requests' tab. Click the '+' button to create a new request. Specify what you need, the urgency level, deadline, and your contact information. Approved requests will be visible to other organizations who may be able to help.",
+  },
+  {
+    question: "What happens after I submit content for approval?",
+    answer: "All donations, events, scholarships, volunteer opportunities, and requests go through an approval process. An administrator will review your submission and either approve or decline it. You'll receive a notification once a decision has been made.",
+  },
+  {
+    question: "How do I switch my organization?",
+    answer: "Go to your Profile page and select the 'Organization' tab. From there you can search for and select a different organization to be associated with. Your organization determines which content you can manage.",
+  },
+  {
+    question: "How do I contact the creator of a donation or event?",
+    answer: "Open the donation, event, or other listing you're interested in. The creator's contact information, including email and phone number, is displayed in the detail view if they've provided it.",
+  },
+];
+
 export const Resources = () => {
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Resources</h1>
         <p className="text-muted-foreground">
-          Video tutorials to help you get the most out of the platform
+          FAQs and video tutorials to help you get the most out of the platform
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {videos.map((video, index) => {
-          const Icon = video.icon;
-          return (
-            <Card key={index} className="overflow-hidden hover:shadow-md transition-shadow">
-              {/* Video Placeholder */}
-              <AspectRatio ratio={16 / 9}>
-                {video.videoUrl ? (
-                  <video
-                    className="w-full h-full object-cover rounded-t-lg"
-                    controls
-                    preload="metadata"
-                    src={video.videoUrl}
-                  />
-                ) : (
-                  <div className="w-full h-full bg-muted flex flex-col items-center justify-center gap-3 cursor-pointer group">
-                    <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                      <Play className="h-7 w-7 text-primary ml-1" />
-                    </div>
-                    <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
-                      Video Coming Soon
-                    </span>
-                  </div>
-                )}
-              </AspectRatio>
+      <Tabs defaultValue="faq" className="w-full">
+        <TabsList>
+          <TabsTrigger value="faq" className="gap-2">
+            <HelpCircle className="h-4 w-4" />
+            FAQ
+          </TabsTrigger>
+          <TabsTrigger value="tutorials" className="gap-2">
+            <Play className="h-4 w-4" />
+            Tutorials
+          </TabsTrigger>
+        </TabsList>
 
-              <CardHeader className="pb-2">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                    {video.category}
-                  </span>
-                </div>
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Icon className="h-5 w-5 text-muted-foreground" />
-                  {video.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>{video.description}</CardDescription>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+        <TabsContent value="faq" className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-xl">Frequently Asked Questions</CardTitle>
+              <CardDescription>Common questions about using the Roll Call platform</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Accordion type="single" collapsible className="w-full">
+                {faqs.map((faq, index) => (
+                  <AccordionItem key={index} value={`faq-${index}`}>
+                    <AccordionTrigger className="text-left">{faq.question}</AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground">
+                      {faq.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="tutorials" className="mt-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {videos.map((video, index) => {
+              const Icon = video.icon;
+              return (
+                <Card key={index} className="overflow-hidden hover:shadow-md transition-shadow">
+                  <AspectRatio ratio={16 / 9}>
+                    {video.videoUrl ? (
+                      <video
+                        className="w-full h-full object-cover rounded-t-lg"
+                        controls
+                        preload="metadata"
+                        src={video.videoUrl}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-muted flex flex-col items-center justify-center gap-3 cursor-pointer group">
+                        <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                          <Play className="h-7 w-7 text-primary ml-1" />
+                        </div>
+                        <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
+                          Video Coming Soon
+                        </span>
+                      </div>
+                    )}
+                  </AspectRatio>
+
+                  <CardHeader className="pb-2">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                        {video.category}
+                      </span>
+                    </div>
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <Icon className="h-5 w-5 text-muted-foreground" />
+                      {video.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription>{video.description}</CardDescription>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
