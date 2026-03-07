@@ -14,6 +14,8 @@ import {
   User,
   ChevronDown,
   LogIn,
+  ChevronsLeft,
+  ChevronsRight,
 } from "lucide-react";
 import { customAuth } from "@/lib/customAuth";
 import { useState, useEffect } from "react";
@@ -37,6 +39,8 @@ import { useToast } from "@/hooks/use-toast";
 interface SidebarProps {
   open: boolean;
   onOpenChange?: (open: boolean) => void;
+  collapsed: boolean;
+  onCollapsedChange: (collapsed: boolean) => void;
 }
 
 const baseNavigation = [
@@ -65,7 +69,7 @@ const topNavigationItems = [
   { name: "Resources", href: "/resources" },
 ];
 
-export const Sidebar = ({ open, onOpenChange }: SidebarProps) => {
+export const Sidebar = ({ open, onOpenChange, collapsed, onCollapsedChange }: SidebarProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -158,13 +162,28 @@ export const Sidebar = ({ open, onOpenChange }: SidebarProps) => {
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full pt-2">
-      <nav className="flex-1 px-4 space-y-2 overflow-y-auto">
+      {/* Collapse Toggle - Desktop only */}
+      {!isMobile && (
+        <div className="px-2 pb-2 flex justify-end">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7"
+            onClick={() => onCollapsedChange(!collapsed)}
+          >
+            {collapsed ? <ChevronsRight className="h-4 w-4" /> : <ChevronsLeft className="h-4 w-4" />}
+          </Button>
+        </div>
+      )}
+      <nav className="flex-1 px-2 space-y-1 overflow-y-auto">
         {/* Top Navigation Items (Dashboard & Valued Partners) - Only on mobile/tablet */}
         <div className="lg:hidden space-y-2 pb-4 mb-4 border-b border-border">
           {topNavigationItems.map((item) => {
             const isActive = item.href === "/valued-partners" 
               ? location.pathname === "/valued-partners"
-              : isDashboardPage;
+              : item.href === "/resources"
+                ? location.pathname === "/resources"
+                : isDashboardPage;
             return (
               <Link
                 key={item.name}
@@ -191,7 +210,6 @@ export const Sidebar = ({ open, onOpenChange }: SidebarProps) => {
         {/* Regular Navigation Items */}
         {navigation.map((item) => {
           const Icon = item.icon;
-          // Check if current path matches the nav item or related detail pages
           const isActive = location.pathname === item.href || 
             (item.href === "/donations" && (location.pathname.startsWith("/donations/") || location.pathname.startsWith("/requests/"))) ||
             (item.href === "/events" && location.pathname.startsWith("/events/")) ||
@@ -207,15 +225,17 @@ export const Sidebar = ({ open, onOpenChange }: SidebarProps) => {
                 }
               }}
               className={cn(
-                "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors",
+                "flex items-center py-3 text-sm font-medium rounded-lg transition-colors",
+                collapsed && !isMobile ? "justify-center px-2" : "px-4",
                 isActive
                   ? "text-white"
                   : "text-muted-foreground hover:text-foreground hover:bg-accent"
               )}
               style={isActive ? { backgroundColor: "#3d7471" } : {}}
+              title={collapsed && !isMobile ? item.name : undefined}
             >
-              <Icon className="mr-3 h-5 w-5" />
-              {item.name}
+              <Icon className={cn("h-5 w-5", collapsed && !isMobile ? "" : "mr-3")} />
+              {(!collapsed || isMobile) && item.name}
             </Link>
           );
         })}
@@ -291,8 +311,9 @@ export const Sidebar = ({ open, onOpenChange }: SidebarProps) => {
   return (
     <div
       className={cn(
-        "fixed top-10 md:top-[2.75rem] lg:top-14 bottom-0 left-0 z-40 w-64 bg-card border-r border-border transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:flex lg:flex-col",
-        open ? "translate-x-0" : "-translate-x-full"
+        "fixed top-10 md:top-[2.75rem] lg:top-14 bottom-0 left-0 z-40 bg-card border-r border-border transform transition-all duration-300 ease-in-out lg:translate-x-0 lg:static lg:flex lg:flex-col",
+        open ? "translate-x-0" : "-translate-x-full",
+        collapsed ? "w-14" : "w-64"
       )}
     >
       <SidebarContent />
