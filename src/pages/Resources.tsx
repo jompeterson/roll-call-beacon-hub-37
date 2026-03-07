@@ -47,10 +47,11 @@ const videos: { title: string; description: string; icon: typeof BookOpen; categ
     videoUrl: "https://rollcall.pacificcrest.us/lovable-uploads/Roll-Call-Posting-Scholarships-Tutorial.mp4",
   },
   {
-    title: "User Management for Admins",
+    title: "Posting Volunteer Opportunities",
     description: "Learn how to manage users, roles, and permissions as an administrator.",
     icon: Settings,
     category: "Administration",
+    videoUrl: "https://rollcall.pacificcrest.us/lovable-uploads/Roll-Call-Posting-Volunteer-Opportunities-Tutorial.mp4",
   },
   {
     title: "Using Widgets & Custom Reports",
