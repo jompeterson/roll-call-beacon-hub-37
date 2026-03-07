@@ -12,10 +12,11 @@ const videos: { title: string; description: string; icon: typeof BookOpen; categ
     videoUrl: "https://rollcall.pacificcrest.us/lovable-uploads/Roll-Call-Enrollment-Tutorial.mp4",
   },
   {
-    title: "Managing Donations",
+    title: "Roll Call Profile Overview",
     description: "How to create, track, and manage donations and material requests.",
     icon: Hammer,
     category: "Donations",
+    videoUrl: "https://rollcall.pacificcrest.us/lovable-uploads/Roll-Call-Profile-Overview-Tutorial.mp4",
   },
   {
     title: "Creating & Managing Events",
