@@ -5,10 +5,11 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 const videos = [
   {
-    title: "Getting Started with Roll Call",
+    title: "Roll Call Enrollment Tutorial",
     description: "Learn the basics of navigating the platform and setting up your account.",
     icon: BookOpen,
     category: "Getting Started",
+    videoUrl: "https://rollcall.pacificcrest.us/lovable-uploads/Roll-Call-Enrollment-Tutorial.mp4",
   },
   {
     title: "Managing Donations",
@@ -71,14 +72,23 @@ export const Resources = () => {
             <Card key={index} className="overflow-hidden hover:shadow-md transition-shadow">
               {/* Video Placeholder */}
               <AspectRatio ratio={16 / 9}>
-                <div className="w-full h-full bg-muted flex flex-col items-center justify-center gap-3 cursor-pointer group">
-                  <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <Play className="h-7 w-7 text-primary ml-1" />
+                {video.videoUrl ? (
+                  <video
+                    className="w-full h-full object-cover rounded-t-lg"
+                    controls
+                    preload="metadata"
+                    src={video.videoUrl}
+                  />
+                ) : (
+                  <div className="w-full h-full bg-muted flex flex-col items-center justify-center gap-3 cursor-pointer group">
+                    <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                      <Play className="h-7 w-7 text-primary ml-1" />
+                    </div>
+                    <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
+                      Video Coming Soon
+                    </span>
                   </div>
-                  <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
-                    Video Coming Soon
-                  </span>
-                </div>
+                )}
               </AspectRatio>
 
               <CardHeader className="pb-2">
