@@ -53,12 +53,6 @@ const videos: { title: string; description: string; icon: typeof BookOpen; categ
     category: "Administration",
     videoUrl: "https://rollcall.pacificcrest.us/lovable-uploads/Roll-Call-Posting-Volunteer-Opportunities-Tutorial.mp4",
   },
-  {
-    title: "Using Widgets & Custom Reports",
-    description: "How to create custom widgets and generate reports from your data.",
-    icon: BookOpen,
-    category: "Advanced",
-  },
 ];
 
 export const Resources = () => {
