@@ -1,4 +1,5 @@
 
+import { useState, useRef, useCallback } from "react";
 import { Play, BookOpen, Users, Calendar, HandHeart, GraduationCap, Hammer, Settings, HelpCircle } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
