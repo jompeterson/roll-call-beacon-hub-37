@@ -136,12 +136,7 @@ export const Resources = () => {
                 <Card key={index} className="overflow-hidden hover:shadow-md transition-shadow">
                   <AspectRatio ratio={16 / 9}>
                     {video.videoUrl ? (
-                      <video
-                        className="w-full h-full object-cover rounded-t-lg"
-                        controls
-                        preload="metadata"
-                        src={`${video.videoUrl}#t=10`}
-                      />
+                      <VideoThumbnail videoUrl={video.videoUrl} />
                     ) : (
                       <div className="w-full h-full bg-muted flex flex-col items-center justify-center gap-3 cursor-pointer group">
                         <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
