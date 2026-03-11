@@ -139,7 +139,7 @@ export const Resources = () => {
                         className="w-full h-full object-cover rounded-t-lg"
                         controls
                         preload="metadata"
-                        src={video.videoUrl}
+                        src={`${video.videoUrl}#t=10`}
                       />
                     ) : (
                       <div className="w-full h-full bg-muted flex flex-col items-center justify-center gap-3 cursor-pointer group">
