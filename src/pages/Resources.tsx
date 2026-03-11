@@ -60,6 +60,10 @@ const videos: { title: string; description: string; icon: typeof BookOpen; categ
 
 const faqs: { question: string; answer: string }[] = [
   {
+    question: "How do I create an account on Roll Call?",
+    answer: "Click the 'Register' button on the login page. You'll need to provide your email, create a password, fill in your personal details, and either join an existing organization or create a new one. Once submitted, your account will be reviewed and approved by an administrator.",
+  },
+  {
     question: "How do I update my profile information?",
     answer: "Navigate to your Profile page, located in the top navigation bar. There, you can update your personal information such as name, phone number, and address. You can also upload or change your profile picture, see your post activity, and request access to an organization.",
   },
@@ -68,8 +72,16 @@ const faqs: { question: string; answer: string }[] = [
     answer: "Go to the Donations page and click the '+ Add Donation' button, or use the circle '+' button in the bottom right corner while on any page. Fill in the donation details, including title, description, amount needed, material type, and contact information. You can also upload images. Once submitted, the donation will be reviewed before it becomes visible to others.",
   },
   {
+    question: "How do I fulfill a donation request?",
+    answer: "Open any approved donation from the Donations page. If you'd like to contribute, click the 'Fulfill' button on the donation detail page. This lets the posting organization know you're interested in helping with their request.",
+  },
+  {
     question: "How do I create an event?",
     answer: "Navigate to the Events page and click the '+ Add Event' button, or use the circle '+' button in the bottom right corner while on any page. Enter the event title, description, date, time, location, and optionally set a maximum number of participants. After submission, the event will go through an approval process before being published.",
+  },
+  {
+    question: "How do I RSVP to an event?",
+    answer: "Open an approved event from the Events page and click the 'RSVP' button. You can cancel your RSVP at any time by clicking the button again. Guest RSVPs are also supported for non-registered attendees.",
   },
   {
     question: "How do I post a scholarship?",
@@ -78,6 +90,22 @@ const faqs: { question: string; answer: string }[] = [
   {
     question: "How do I post a volunteer opportunity?",
     answer: "Navigate to the Volunteers page and click the '+ Add Opportunity' button, or use the circle '+' button in the bottom right corner while on any page. Fill in the opportunity details, including title, description, dates, location, and maximum number of volunteers. Once approved, community members can sign up directly through the platform.",
+  },
+  {
+    question: "How do I submit a request for help?",
+    answer: "Go to the Donations page and switch to the 'Requests' tab. Click the '+' button to create a new request. Specify what you need, the urgency level, deadline, and your contact information. Approved requests will be visible to other organizations who may be able to help.",
+  },
+  {
+    question: "What happens after I submit content for approval?",
+    answer: "All donations, events, scholarships, volunteer opportunities, and requests go through an approval process. An administrator will review your submission and either approve or decline it. You'll receive a notification once a decision has been made.",
+  },
+  {
+    question: "How do I switch my organization?",
+    answer: "Go to your Profile page and select the 'Organization' tab. From there you can search for and select a different organization to be associated with. Your organization determines which content you can manage.",
+  },
+  {
+    question: "How do I contact the creator of a donation or event?",
+    answer: "Open the donation, event, or other listing you're interested in. The creator's contact information, including email and phone number, is displayed in the detail view if they've provided it.",
   },
   {
     question: "How do I submit a Request for donations?",
