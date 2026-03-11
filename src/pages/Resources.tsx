@@ -85,6 +85,76 @@ const faqs: { question: string; answer: string }[] = [
   },
 ];
 
+const VideoThumbnail = ({ videoUrl }: { videoUrl: string }) => {
+  const [playing, setPlaying] = useState(false);
+  const [thumbnail, setThumbnail] = useState<string | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(document.createElement("canvas"));
+
+  const captureThumbnail = useCallback((video: HTMLVideoElement) => {
+    const canvas = canvasRef.current;
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      try {
+        setThumbnail(canvas.toDataURL("image/jpeg", 0.8));
+      } catch {
+        // CORS fallback - just show video at 10s
+        setThumbnail(null);
+      }
+    }
+  }, []);
+
+  if (playing) {
+    return (
+      <video
+        className="w-full h-full object-cover rounded-t-lg"
+        controls
+        autoPlay
+        src={videoUrl}
+      />
+    );
+  }
+
+  return (
+    <>
+      {thumbnail ? (
+        <div
+          className="w-full h-full cursor-pointer group relative"
+          onClick={() => setPlaying(true)}
+        >
+          <img src={thumbnail} alt="Video thumbnail" className="w-full h-full object-cover rounded-t-lg" />
+          <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
+            <div className="h-14 w-14 rounded-full bg-primary/90 flex items-center justify-center group-hover:bg-primary transition-colors">
+              <Play className="h-7 w-7 text-primary-foreground ml-1" />
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="w-full h-full relative cursor-pointer group" onClick={() => setPlaying(true)}>
+          <video
+            className="w-full h-full object-cover rounded-t-lg"
+            muted
+            preload="metadata"
+            src={`${videoUrl}#t=10`}
+            onLoadedData={(e) => {
+              const video = e.currentTarget;
+              video.currentTime = 10;
+            }}
+            onSeeked={(e) => captureThumbnail(e.currentTarget)}
+          />
+          <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
+            <div className="h-14 w-14 rounded-full bg-primary/90 flex items-center justify-center group-hover:bg-primary transition-colors">
+              <Play className="h-7 w-7 text-primary-foreground ml-1" />
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
 export const Resources = () => {
   return (
     <div className="space-y-6">
