@@ -69,7 +69,7 @@ const faqs: { question: string; answer: string }[] = [
   },
   {
     question: "How do I post a donation?",
-    answer: "Go to the Donations page and click the '+ Add Donation' button, or use the circle '+' button in the bottom right corner while on any page. Fill in the donation details, including title, description, amount needed, material type, and contact information. You can also upload images. Once submitted, the donation will be reviewed before it becomes visible to others.",
+    answer: "Go to the In-Kind Donations page and click the '+ Add Donation' button, or use the circle '+' button in the bottom right corner while on any page. Fill in the donation details, including title, description, amount needed, material type, and contact information. You can also upload images. Once submitted, the donation will be reviewed before it becomes visible to others.",
   },
   {
     question: "How do I fulfill a donation request?",
