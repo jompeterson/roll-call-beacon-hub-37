@@ -73,7 +73,7 @@ const faqs: { question: string; answer: string }[] = [
   },
   {
     question: "How do I fulfill a donation request?",
-    answer: "Open any approved donation from the Donations page. If you'd like to contribute, click the 'Fulfill' button on the donation detail page. This lets the posting organization know you're interested in helping with their request.",
+    answer: "Open any approved donation from the In-Kind Donations page. If you'd like to contribute, click the 'Fulfill' button on the donation detail page. This lets the posting organization know you're interested in helping with their request.",
   },
   {
     question: "How do I create an event?",
