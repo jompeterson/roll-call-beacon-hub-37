@@ -52,7 +52,7 @@ export const FloatingActionButton = () => {
     } else if (actionName === "New Scholarship") {
       setScholarshipModalOpen(true);
       setIsExpanded(false);
-    } else if (actionName === "New Donation") {
+    } else if (actionName === "New In-Kind Donation") {
       setDonationModalOpen(true);
       setIsExpanded(false);
     } else if (actionName === "New Request") {
