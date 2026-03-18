@@ -30,7 +30,7 @@ export const DonationDetail = () => {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link to="/donations">Donations</Link>
+              <Link to="/donations">In-Kind Donations</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator>
