@@ -215,8 +215,8 @@ export const Events = () => {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Events</h1>
-          <p className="text-muted-foreground">Loading events...</p>
+          <h1 className="text-3xl font-bold tracking-tight">Networking Events</h1>
+          <p className="text-muted-foreground">Loading networking events...</p>
         </div>
       </div>
     );
