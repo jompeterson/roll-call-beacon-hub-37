@@ -25,14 +25,14 @@ const videos: { title: string; description: string; icon: typeof BookOpen; categ
     title: "Posting Donations",
     description: "How to create and post donation listings for your organization.",
     icon: HandHeart,
-    category: "Donations",
+    category: "In-Kind Donations",
     videoUrl: "https://rollcall.pacificcrest.us/lovable-uploads/Roll-Call-Posting-Donations-Tutorial.mp4",
   },
   {
     title: "Fulfill Donation",
     description: "Learn how to fulfill and complete donation requests from other organizations.",
     icon: Hammer,
-    category: "Donations",
+    category: "In-Kind Donations",
     videoUrl: "https://rollcall.pacificcrest.us/lovable-uploads/Roll-Call-Fulfill-Donation-Tutorial.mp4",
   },
   {
@@ -69,11 +69,11 @@ const faqs: { question: string; answer: string }[] = [
   },
   {
     question: "How do I post a donation?",
-    answer: "Go to the Donations page and click the '+ Add Donation' button, or use the circle '+' button in the bottom right corner while on any page. Fill in the donation details, including title, description, amount needed, material type, and contact information. You can also upload images. Once submitted, the donation will be reviewed before it becomes visible to others.",
+    answer: "Go to the In-Kind Donations page and click the '+ Add Donation' button, or use the circle '+' button in the bottom right corner while on any page. Fill in the donation details, including title, description, amount needed, material type, and contact information. You can also upload images. Once submitted, the donation will be reviewed before it becomes visible to others.",
   },
   {
     question: "How do I fulfill a donation request?",
-    answer: "Open any approved donation from the Donations page. If you'd like to contribute, click the 'Fulfill' button on the donation detail page. This lets the posting organization know you're interested in helping with their request.",
+    answer: "Open any approved donation from the In-Kind Donations page. If you'd like to contribute, click the 'Fulfill' button on the donation detail page. This lets the posting organization know you're interested in helping with their request.",
   },
   {
     question: "How do I create an event?",
@@ -93,11 +93,11 @@ const faqs: { question: string; answer: string }[] = [
   },
   {
     question: "How do I submit a request for help?",
-    answer: "Go to the Donations page and switch to the 'Requests' tab. Click the '+' button to create a new request. Specify what you need, the urgency level, deadline, and your contact information. Approved requests will be visible to other organizations who may be able to help.",
+    answer: "Go to the In-Kind Donations page and switch to the 'Requests' tab. Click the '+' button to create a new request. Specify what you need, the urgency level, deadline, and your contact information. Approved requests will be visible to other organizations who may be able to help.",
   },
   {
     question: "What happens after I submit content for approval?",
-    answer: "All donations, events, scholarships, volunteer opportunities, and requests go through an approval process. An administrator will review your submission and either approve or decline it. You'll receive a notification once a decision has been made.",
+    answer: "All in-kind donations, events, scholarships, volunteer opportunities, and requests go through an approval process. An administrator will review your submission and either approve or decline it. You'll receive a notification once a decision has been made.",
   },
   {
     question: "How do I switch my organization?",
@@ -109,7 +109,7 @@ const faqs: { question: string; answer: string }[] = [
   },
   {
     question: "How do I submit a Request for donations?",
-    answer: "Go to the Donations page and select the '+ Add Request' button, or use the circle '+' button in the bottom right corner while on any page. Specify what you need, the urgency level, deadline, and your contact information. Approved requests will be visible to other organizations that may be able to help.",
+    answer: "Go to the In-Kind Donations page and select the '+ Add Request' button, or use the circle '+' button in the bottom right corner while on any page. Specify what you need, the urgency level, deadline, and your contact information. Approved requests will be visible to other organizations that may be able to help.",
   },
 ];
 

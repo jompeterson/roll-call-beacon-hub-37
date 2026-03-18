@@ -45,7 +45,7 @@ interface SidebarProps {
 
 const baseNavigation = [
   { name: "Overview", href: "/", icon: BarChart3 },
-  { name: "Donations", href: "/donations", icon: Hammer },
+  { name: "In-Kind Donations", href: "/donations", icon: Hammer },
   { name: "Scholarships", href: "/scholarships", icon: GraduationCap },
   { name: "Events", href: "/events", icon: Calendar },
   { name: "Volunteers", href: "/volunteers", icon: HandHeart },

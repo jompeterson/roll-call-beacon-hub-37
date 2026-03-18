@@ -33,7 +33,7 @@ export const FloatingActionButton = () => {
     { name: "New Organization", icon: Building2, color: "bg-green-500 hover:bg-green-600", adminOnly: true },
     { name: "New Scholarship", icon: GraduationCap, color: "bg-purple-500 hover:bg-purple-600", adminOnly: false },
     { name: "New Request", icon: FileText, color: "bg-orange-500 hover:bg-orange-600", adminOnly: false },
-    { name: "New Donation", icon: Heart, color: "bg-pink-500 hover:bg-pink-600", adminOnly: false },
+    { name: "New In-Kind Donation", icon: Heart, color: "bg-pink-500 hover:bg-pink-600", adminOnly: false },
     { name: "New Event", icon: Calendar, color: "bg-red-500 hover:bg-red-600", adminOnly: false },
     { name: "New Volunteer Event", icon: HandHeart, color: "bg-teal-500 hover:bg-teal-600", adminOnly: false },
   ];
@@ -52,7 +52,7 @@ export const FloatingActionButton = () => {
     } else if (actionName === "New Scholarship") {
       setScholarshipModalOpen(true);
       setIsExpanded(false);
-    } else if (actionName === "New Donation") {
+    } else if (actionName === "New In-Kind Donation") {
       setDonationModalOpen(true);
       setIsExpanded(false);
     } else if (actionName === "New Request") {

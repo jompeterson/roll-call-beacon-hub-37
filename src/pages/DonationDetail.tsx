@@ -30,7 +30,7 @@ export const DonationDetail = () => {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link to="/donations">Donations</Link>
+              <Link to="/donations">In-Kind Donations</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator>
@@ -55,7 +55,7 @@ export const DonationDetail = () => {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link to="/donations">Donations</Link>
+              <Link to="/donations">In-Kind Donations</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator>
@@ -69,7 +69,7 @@ export const DonationDetail = () => {
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <p className="text-lg mb-4">Donation not found</p>
-            <Button onClick={() => navigate('/donations')}>Back to Donations</Button>
+            <Button onClick={() => navigate('/donations')}>Back to In-Kind Donations</Button>
           </div>
         </div>
       </div>
@@ -85,7 +85,7 @@ export const DonationDetail = () => {
     }).format(amount);
   };
 
-  const getInformationTitle = () => "Donation Information";
+  const getInformationTitle = () => "In-Kind Donation Information";
   const getDateLabel = () => "Posted on";
   const getOrganizationBio = () => "A leading organization dedicated to making a positive impact in the community.";
   const getUserBio = () => "An experienced administrator dedicated to supporting community initiatives.";
@@ -118,7 +118,7 @@ export const DonationDetail = () => {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link to="/donations">Donations</Link>
+              <Link to="/donations">In-Kind Donations</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator>
@@ -137,7 +137,7 @@ export const DonationDetail = () => {
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-3xl font-bold">{donation.title}</h1>
-              <p className="text-sm text-muted-foreground mt-1">Give a Donation</p>
+              <p className="text-sm text-muted-foreground mt-1">Give an In-Kind Donation</p>
             </div>
             <ShareButton />
           </div>

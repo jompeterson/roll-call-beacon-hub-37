@@ -79,7 +79,7 @@ export const DonationModal = ({
     if (isOrganization) return "Business";
     if (isEvent) return "Event - Community Engagement";
     if (isScholarship) return "Scholarship";
-    return "Give a Donation";
+    return "Give an In-Kind Donation";
   };
 
   const getInformationTitle = () => {
@@ -87,7 +87,7 @@ export const DonationModal = ({
     if (isOrganization) return "Organization Information";
     if (isEvent) return "Event Information";
     if (isScholarship) return "Scholarship Information";
-    return "Donation Information";
+    return "In-Kind Donation Information";
   };
 
   const getDateLabel = () => {

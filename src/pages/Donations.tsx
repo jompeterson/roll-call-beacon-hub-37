@@ -90,10 +90,10 @@ export const Donations = () => {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Donations</h1>
-          <p className="text-muted-foreground">
-            Manage and track all donation activities
-          </p>
+        <h1 className="text-3xl font-bold tracking-tight">In-Kind Donations</h1>
+        <p className="text-muted-foreground">
+          Manage and track all in-kind donation activities
+        </p>
         </div>
         <div className="flex items-center justify-center h-64">
           <p>Loading donations and requests...</p>
@@ -106,10 +106,10 @@ export const Donations = () => {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Donations</h1>
-          <p className="text-muted-foreground">
-            Manage and track all donation activities
-          </p>
+        <h1 className="text-3xl font-bold tracking-tight">In-Kind Donations</h1>
+        <p className="text-muted-foreground">
+          Manage and track all in-kind donation activities
+        </p>
         </div>
         <div className="flex items-center justify-center h-64">
           <p className="text-red-600">
@@ -123,9 +123,9 @@ export const Donations = () => {
   return (
     <div className="space-y-6 flex flex-col h-full">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Donations</h1>
+        <h1 className="text-3xl font-bold tracking-tight">In-Kind Donations</h1>
         <p className="text-muted-foreground">
-          Manage and track all donation activities
+          Manage and track all in-kind donation activities
         </p>
       </div>
 
@@ -141,7 +141,7 @@ export const Donations = () => {
         {/* Donation Posts Section */}
         <div className="space-y-4 flex flex-col min-h-0">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-semibold">Donation Posts</h2>
+            <h2 className="text-2xl font-semibold">In-Kind Donation Posts</h2>
             {isAuthenticated && (
               <Button onClick={() => setDonationModalOpen(true)} size="sm">
                 <Plus className="h-4 w-4 mr-2" />
