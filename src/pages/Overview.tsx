@@ -255,7 +255,7 @@ export const Overview = () => {
             icon={Calculator}
           />
           <MetricCard
-            title="Volunteer Events"
+            title="Volunteer Opportunities"
             value={yearlyLoading ? "..." : formatNumber(yearlyMetrics?.volunteers || 0)}
             change={yearlyVolunteerChange.change}
             changeType={yearlyVolunteerChange.changeType}

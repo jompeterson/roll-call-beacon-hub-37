@@ -35,7 +35,7 @@ export const FloatingActionButton = () => {
     { name: "New Request", icon: FileText, color: "bg-orange-500 hover:bg-orange-600", adminOnly: false },
     { name: "New In-Kind Donation", icon: Heart, color: "bg-pink-500 hover:bg-pink-600", adminOnly: false },
     { name: "New Event", icon: Calendar, color: "bg-red-500 hover:bg-red-600", adminOnly: false },
-    { name: "New Volunteer Event", icon: HandHeart, color: "bg-teal-500 hover:bg-teal-600", adminOnly: false },
+    { name: "New Volunteer Opportunity", icon: HandHeart, color: "bg-teal-500 hover:bg-teal-600", adminOnly: false },
   ];
 
   // Filter actions based on user role only
