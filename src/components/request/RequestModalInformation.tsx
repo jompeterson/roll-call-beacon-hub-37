@@ -62,7 +62,7 @@ export const RequestModalInformation = ({ request }: RequestModalInformationProp
             </div>
           )}
           <div>
-            <label className="font-medium text-sm text-muted-foreground">Needs Pickup</label>
+            <label className="font-medium text-sm text-muted-foreground">Needs Dropoff</label>
             <p className="text-base mt-1">{request.needs_pickup ? "Yes" : "No"}</p>
           </div>
         </div>
