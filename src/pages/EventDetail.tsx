@@ -82,7 +82,7 @@ export const EventDetail = () => {
               onClick={() => navigate('/events')}
               className="text-primary hover:underline"
             >
-              Back to Events
+              Back to Networking Events
             </button>
           </div>
         </div>
