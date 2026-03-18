@@ -270,7 +270,7 @@ export const RequestEditModal = ({
               onCheckedChange={(checked) => handleInputChange("needs_pickup", checked)}
             />
             <Label htmlFor="needs_pickup" className="cursor-pointer">
-              Needs Pickup
+              Needs Dropoff
             </Label>
           </div>
 
