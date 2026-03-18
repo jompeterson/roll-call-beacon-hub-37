@@ -69,7 +69,7 @@ export const DonationDetail = () => {
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <p className="text-lg mb-4">Donation not found</p>
-            <Button onClick={() => navigate('/donations')}>Back to Donations</Button>
+            <Button onClick={() => navigate('/donations')}>Back to In-Kind Donations</Button>
           </div>
         </div>
       </div>
