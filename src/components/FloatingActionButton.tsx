@@ -64,7 +64,7 @@ export const FloatingActionButton = () => {
     } else if (actionName === "New Organization") {
       setOrganizationModalOpen(true);
       setIsExpanded(false);
-    } else if (actionName === "New Volunteer Event") {
+    } else if (actionName === "New Volunteer Opportunity") {
       setVolunteerModalOpen(true);
       setIsExpanded(false);
     } else {
