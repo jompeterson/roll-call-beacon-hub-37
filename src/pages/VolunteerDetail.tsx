@@ -37,7 +37,7 @@ export const VolunteerDetail = () => {
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link to="/volunteers">Volunteers</Link>
+                <Link to="/volunteers">Volunteer Opportunities</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
@@ -62,7 +62,7 @@ export const VolunteerDetail = () => {
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link to="/volunteers">Volunteers</Link>
+                <Link to="/volunteers">Volunteer Opportunities</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
@@ -80,7 +80,7 @@ export const VolunteerDetail = () => {
               onClick={() => navigate('/volunteers')}
               className="text-primary hover:underline"
             >
-              Back to Volunteers
+              Back to Volunteer Opportunities
             </button>
           </div>
         </div>
@@ -133,7 +133,7 @@ export const VolunteerDetail = () => {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link to="/volunteers">Volunteers</Link>
+              <Link to="/volunteers">Volunteer Opportunities</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator>

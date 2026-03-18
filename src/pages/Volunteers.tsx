@@ -209,7 +209,7 @@ export const Volunteers = () => {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Volunteers</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Volunteer Opportunities</h1>
           <p className="text-muted-foreground">Loading volunteer opportunities...</p>
         </div>
       </div>
@@ -219,7 +219,7 @@ export const Volunteers = () => {
   return (
     <div className="space-y-6 flex flex-col h-full">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Volunteers</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Volunteer Opportunities</h1>
         <p className="text-muted-foreground">
           Find and manage volunteer opportunities
         </p>

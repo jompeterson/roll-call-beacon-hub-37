@@ -53,7 +53,7 @@ const videos: { title: string; description: string; icon: typeof BookOpen; categ
     title: "Posting Volunteer Opportunities",
     description: "How to create and share volunteer opportunities for your organization.",
     icon: Settings,
-    category: "Volunteers",
+    category: "Volunteer Opportunities",
     videoUrl: "https://rollcall.pacificcrest.us/lovable-uploads/Roll-Call-Posting-Volunteer-Opportunities-Tutorial.mp4",
   },
 ];
