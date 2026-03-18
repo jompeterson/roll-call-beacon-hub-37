@@ -97,7 +97,7 @@ const faqs: { question: string; answer: string }[] = [
   },
   {
     question: "What happens after I submit content for approval?",
-    answer: "All in-kind donations, events, scholarships, volunteer opportunities, and requests go through an approval process. An administrator will review your submission and either approve or decline it. You'll receive a notification once a decision has been made.",
+    answer: "All in-kind donations, networking events, scholarships, volunteer opportunities, and requests go through an approval process. An administrator will review your submission and either approve or decline it. You'll receive a notification once a decision has been made.",
   },
   {
     question: "How do I switch my organization?",
