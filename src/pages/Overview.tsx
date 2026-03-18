@@ -160,7 +160,7 @@ export const Overview = () => {
             navigateTo="/scholarships"
           />
           <MetricCard
-            title="Donations"
+            title="In-Kind Donations"
             value={monthlyLoading ? "..." : formatCurrency(monthlyMetrics?.totalDonations || 0)}
             change={monthlyDonationChange.change}
             changeType={monthlyDonationChange.changeType}
