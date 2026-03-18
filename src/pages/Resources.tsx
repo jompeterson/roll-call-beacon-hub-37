@@ -93,7 +93,7 @@ const faqs: { question: string; answer: string }[] = [
   },
   {
     question: "How do I submit a request for help?",
-    answer: "Go to the Donations page and switch to the 'Requests' tab. Click the '+' button to create a new request. Specify what you need, the urgency level, deadline, and your contact information. Approved requests will be visible to other organizations who may be able to help.",
+    answer: "Go to the In-Kind Donations page and switch to the 'Requests' tab. Click the '+' button to create a new request. Specify what you need, the urgency level, deadline, and your contact information. Approved requests will be visible to other organizations who may be able to help.",
   },
   {
     question: "What happens after I submit content for approval?",
