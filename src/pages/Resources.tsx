@@ -109,7 +109,7 @@ const faqs: { question: string; answer: string }[] = [
   },
   {
     question: "How do I submit a Request for donations?",
-    answer: "Go to the Donations page and select the '+ Add Request' button, or use the circle '+' button in the bottom right corner while on any page. Specify what you need, the urgency level, deadline, and your contact information. Approved requests will be visible to other organizations that may be able to help.",
+    answer: "Go to the In-Kind Donations page and select the '+ Add Request' button, or use the circle '+' button in the bottom right corner while on any page. Specify what you need, the urgency level, deadline, and your contact information. Approved requests will be visible to other organizations that may be able to help.",
   },
 ];
 

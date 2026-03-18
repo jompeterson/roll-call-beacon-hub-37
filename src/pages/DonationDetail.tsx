@@ -137,7 +137,7 @@ export const DonationDetail = () => {
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-3xl font-bold">{donation.title}</h1>
-              <p className="text-sm text-muted-foreground mt-1">Give a Donation</p>
+              <p className="text-sm text-muted-foreground mt-1">Give an In-Kind Donation</p>
             </div>
             <ShareButton />
           </div>

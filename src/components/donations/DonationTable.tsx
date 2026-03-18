@@ -116,7 +116,7 @@ export const DonationTable = ({
               {donations.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={colSpan} className="text-center py-8 text-muted-foreground">
-                    No donations available
+                    No in-kind donations available
                   </TableCell>
                 </TableRow>
               ) : (

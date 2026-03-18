@@ -141,7 +141,7 @@ export const Donations = () => {
         {/* Donation Posts Section */}
         <div className="space-y-4 flex flex-col min-h-0">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-semibold">Donation Posts</h2>
+            <h2 className="text-2xl font-semibold">In-Kind Donation Posts</h2>
             {isAuthenticated && (
               <Button onClick={() => setDonationModalOpen(true)} size="sm">
                 <Plus className="h-4 w-4 mr-2" />

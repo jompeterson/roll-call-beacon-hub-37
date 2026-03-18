@@ -88,7 +88,7 @@ export const PendingDonationsRequestsWidget = () => {
                   >
                     <div className="font-medium text-sm">{donation.title}</div>
                     <div className="text-xs text-muted-foreground">
-                      Donation • ${donation.amount_needed}
+                      In-Kind Donation • ${donation.amount_needed}
                     </div>
                   </div>
                 ))}

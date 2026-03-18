@@ -87,7 +87,7 @@ export const DonationModal = ({
     if (isOrganization) return "Organization Information";
     if (isEvent) return "Event Information";
     if (isScholarship) return "Scholarship Information";
-    return "Donation Information";
+    return "In-Kind Donation Information";
   };
 
   const getDateLabel = () => {
