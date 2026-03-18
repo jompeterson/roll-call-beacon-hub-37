@@ -69,7 +69,7 @@ export const PendingEventsWidget = () => {
         </CardHeader>
         <CardContent className="flex-1 p-0">
           {pendingEvents.length === 0 ? (
-            <div className="p-6 text-sm text-muted-foreground">No pending events</div>
+            <div className="p-6 text-sm text-muted-foreground">No pending networking events</div>
           ) : (
             <ScrollArea className="h-44 px-6">
               <div className="space-y-2 py-2">

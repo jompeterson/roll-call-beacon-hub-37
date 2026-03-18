@@ -46,7 +46,7 @@ export const FloatingActionButton = () => {
   const handleActionClick = (actionName: string) => {
     console.log(`Creating ${actionName}`);
     
-    if (actionName === "New Event") {
+    if (actionName === "New Networking Event") {
       setEventModalOpen(true);
       setIsExpanded(false);
     } else if (actionName === "New Scholarship") {

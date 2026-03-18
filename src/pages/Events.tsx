@@ -331,7 +331,7 @@ export const Events = () => {
                   {sortedEvents.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={isAuthenticated ? 4 : 3} className="text-center py-8 text-muted-foreground">
-                        No events found
+                        No networking events found
                       </TableCell>
                     </TableRow>
                   ) : (

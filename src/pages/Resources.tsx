@@ -39,7 +39,7 @@ const videos: { title: string; description: string; icon: typeof BookOpen; categ
     title: "Posting Events",
     description: "How to create and publish events for your community.",
     icon: Calendar,
-    category: "Events",
+    category: "Networking Events",
     videoUrl: "https://rollcall.pacificcrest.us/lovable-uploads/Roll-Call-Posting-Events-Tutorial.mp4",
   },
   {

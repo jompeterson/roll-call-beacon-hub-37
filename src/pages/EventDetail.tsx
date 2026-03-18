@@ -142,7 +142,7 @@ export const EventDetail = () => {
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-2xl font-semibold">{event.title}</h1>
-              <p className="text-sm text-muted-foreground mt-1">Events</p>
+              <p className="text-sm text-muted-foreground mt-1">Networking Events</p>
             </div>
             <ShareButton />
           </div>
