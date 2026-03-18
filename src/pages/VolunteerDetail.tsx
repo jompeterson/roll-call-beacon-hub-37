@@ -80,7 +80,7 @@ export const VolunteerDetail = () => {
               onClick={() => navigate('/volunteers')}
               className="text-primary hover:underline"
             >
-              Back to Volunteers
+              Back to Volunteer Opportunities
             </button>
           </div>
         </div>
