@@ -85,7 +85,7 @@ export const DonationDetail = () => {
     }).format(amount);
   };
 
-  const getInformationTitle = () => "Donation Information";
+  const getInformationTitle = () => "In-Kind Donation Information";
   const getDateLabel = () => "Posted on";
   const getOrganizationBio = () => "A leading organization dedicated to making a positive impact in the community.";
   const getUserBio = () => "An experienced administrator dedicated to supporting community initiatives.";
