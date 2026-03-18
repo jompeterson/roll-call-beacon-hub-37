@@ -235,7 +235,7 @@ export const Events = () => {
       <div className="flex gap-4 items-center">
         <div className="flex-1">
           <Input
-            placeholder="Search for events..."
+            placeholder="Search for networking events..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full"
