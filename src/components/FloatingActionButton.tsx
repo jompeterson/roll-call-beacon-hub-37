@@ -34,7 +34,7 @@ export const FloatingActionButton = () => {
     { name: "New Scholarship", icon: GraduationCap, color: "bg-purple-500 hover:bg-purple-600", adminOnly: false },
     { name: "New Request", icon: FileText, color: "bg-orange-500 hover:bg-orange-600", adminOnly: false },
     { name: "New In-Kind Donation", icon: Heart, color: "bg-pink-500 hover:bg-pink-600", adminOnly: false },
-    { name: "New Event", icon: Calendar, color: "bg-red-500 hover:bg-red-600", adminOnly: false },
+    { name: "New Networking Event", icon: Calendar, color: "bg-red-500 hover:bg-red-600", adminOnly: false },
     { name: "New Volunteer Opportunity", icon: HandHeart, color: "bg-teal-500 hover:bg-teal-600", adminOnly: false },
   ];
 
@@ -46,7 +46,7 @@ export const FloatingActionButton = () => {
   const handleActionClick = (actionName: string) => {
     console.log(`Creating ${actionName}`);
     
-    if (actionName === "New Event") {
+    if (actionName === "New Networking Event") {
       setEventModalOpen(true);
       setIsExpanded(false);
     } else if (actionName === "New Scholarship") {

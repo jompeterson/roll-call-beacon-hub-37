@@ -50,7 +50,7 @@ export const PendingEventsWidget = () => {
     return (
       <Card className="h-64">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Pending Events</CardTitle>
+          <CardTitle className="text-sm font-medium">Pending Networking Events</CardTitle>
           <Calendar className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
@@ -64,12 +64,12 @@ export const PendingEventsWidget = () => {
     <>
       <Card className="h-64">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Pending Events</CardTitle>
+          <CardTitle className="text-sm font-medium">Pending Networking Events</CardTitle>
           <Calendar className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent className="flex-1 p-0">
           {pendingEvents.length === 0 ? (
-            <div className="p-6 text-sm text-muted-foreground">No pending events</div>
+            <div className="p-6 text-sm text-muted-foreground">No pending networking events</div>
           ) : (
             <ScrollArea className="h-44 px-6">
               <div className="space-y-2 py-2">
