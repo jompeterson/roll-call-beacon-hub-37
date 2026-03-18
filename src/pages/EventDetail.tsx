@@ -124,7 +124,7 @@ export const EventDetail = () => {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link to="/events">Events</Link>
+              <Link to="/events">Networking Events</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator>
