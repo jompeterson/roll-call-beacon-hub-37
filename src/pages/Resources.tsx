@@ -89,7 +89,7 @@ const faqs: { question: string; answer: string }[] = [
   },
   {
     question: "How do I post a volunteer opportunity?",
-    answer: "Navigate to the Volunteers page and click the '+ Add Opportunity' button, or use the circle '+' button in the bottom right corner while on any page. Fill in the opportunity details, including title, description, dates, location, and maximum number of volunteers. Once approved, community members can sign up directly through the platform.",
+    answer: "Navigate to the Volunteer Opportunities page and click the '+ Add Opportunity' button, or use the circle '+' button in the bottom right corner while on any page. Fill in the opportunity details, including title, description, dates, location, and maximum number of volunteers. Once approved, community members can sign up directly through the platform.",
   },
   {
     question: "How do I submit a request for help?",
