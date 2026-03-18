@@ -123,9 +123,9 @@ export const Donations = () => {
   return (
     <div className="space-y-6 flex flex-col h-full">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Donations</h1>
+        <h1 className="text-3xl font-bold tracking-tight">In-Kind Donations</h1>
         <p className="text-muted-foreground">
-          Manage and track all donation activities
+          Manage and track all in-kind donation activities
         </p>
       </div>
 
