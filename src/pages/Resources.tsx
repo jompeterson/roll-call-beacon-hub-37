@@ -105,7 +105,7 @@ const faqs: { question: string; answer: string }[] = [
   },
   {
     question: "How do I contact the creator of a donation or event?",
-    answer: "Open the donation, event, or other listing you're interested in. The creator's contact information, including email and phone number, is displayed in the detail view if they've provided it.",
+    answer: "Open the donation, networking event, or other listing you're interested in. The creator's contact information, including email and phone number, is displayed in the detail view if they've provided it.",
   },
   {
     question: "How do I submit a Request for donations?",
