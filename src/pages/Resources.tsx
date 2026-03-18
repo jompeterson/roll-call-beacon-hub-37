@@ -25,7 +25,7 @@ const videos: { title: string; description: string; icon: typeof BookOpen; categ
     title: "Posting Donations",
     description: "How to create and post donation listings for your organization.",
     icon: HandHeart,
-    category: "Donations",
+    category: "In-Kind Donations",
     videoUrl: "https://rollcall.pacificcrest.us/lovable-uploads/Roll-Call-Posting-Donations-Tutorial.mp4",
   },
   {
