@@ -32,7 +32,7 @@ const videos: { title: string; description: string; icon: typeof BookOpen; categ
     title: "Fulfill Donation",
     description: "Learn how to fulfill and complete donation requests from other organizations.",
     icon: Hammer,
-    category: "Donations",
+    category: "In-Kind Donations",
     videoUrl: "https://rollcall.pacificcrest.us/lovable-uploads/Roll-Call-Fulfill-Donation-Tutorial.mp4",
   },
   {
