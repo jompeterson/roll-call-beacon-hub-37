@@ -184,7 +184,7 @@ export const Overview = () => {
             navigateTo="/users"
           />
           <MetricCard
-            title="Volunteer Events"
+            title="Volunteer Opportunities"
             value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newVolunteers || 0)}
             change={volunteerChange.change}
             changeType={volunteerChange.changeType}
