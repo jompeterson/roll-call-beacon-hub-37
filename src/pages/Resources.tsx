@@ -76,12 +76,12 @@ const faqs: { question: string; answer: string }[] = [
     answer: "Open any approved donation from the In-Kind Donations page. If you'd like to contribute, click the 'Fulfill' button on the donation detail page. This lets the posting organization know you're interested in helping with their request.",
   },
   {
-    question: "How do I create an event?",
-    answer: "Navigate to the Events page and click the '+ Add Event' button, or use the circle '+' button in the bottom right corner while on any page. Enter the event title, description, date, time, location, and optionally set a maximum number of participants. After submission, the event will go through an approval process before being published.",
+    question: "How do I create a networking event?",
+    answer: "Navigate to the Networking Events page and click the '+ Add Event' button, or use the circle '+' button in the bottom right corner while on any page. Enter the event title, description, date, time, location, and optionally set a maximum number of participants. After submission, the event will go through an approval process before being published.",
   },
   {
-    question: "How do I RSVP to an event?",
-    answer: "Open an approved event from the Events page and click the 'RSVP' button. You can cancel your RSVP at any time by clicking the button again. Guest RSVPs are also supported for non-registered attendees.",
+    question: "How do I RSVP to a networking event?",
+    answer: "Open an approved event from the Networking Events page and click the 'RSVP' button. You can cancel your RSVP at any time by clicking the button again. Guest RSVPs are also supported for non-registered attendees.",
   },
   {
     question: "How do I post a scholarship?",
