@@ -225,9 +225,9 @@ export const Events = () => {
   return (
     <div className="space-y-6 flex flex-col h-full">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Events</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Networking Events</h1>
         <p className="text-muted-foreground">
-          Create and manage community events
+          Create and manage networking events
         </p>
       </div>
 
