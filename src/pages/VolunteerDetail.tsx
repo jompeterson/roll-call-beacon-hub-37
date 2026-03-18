@@ -37,7 +37,7 @@ export const VolunteerDetail = () => {
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link to="/volunteers">Volunteers</Link>
+                <Link to="/volunteers">Volunteer Opportunities</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
