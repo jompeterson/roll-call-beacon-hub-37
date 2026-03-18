@@ -87,7 +87,7 @@ export const Events = () => {
   const { isAuthenticated } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [dateFilter, setDateFilter] = useState<string>("all");
+  const [dateFilter, setDateFilter] = useState<string>("upcoming");
   
   // Sorting states
   const [eventSort, setEventSort] = useState<SortField>(null);
