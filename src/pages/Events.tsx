@@ -365,7 +365,8 @@ export const Events = () => {
                           </TableCell>
                         )}
                       </TableRow>
-                    ))
+                      );
+                    })
                   )}
                 </TableBody>
               </Table>
