@@ -215,7 +215,7 @@ export const Resources = () => {
               <Accordion type="multiple" className="w-full">
                 {faqs.map((faq, index) => (
                   <AccordionItem key={index} value={`faq-${index}`}>
-                    <AccordionTrigger className="text-left [&>*]:no-underline hover:no-underline [text-decoration:none]">{faq.question}</AccordionTrigger>
+                    <AccordionTrigger className="text-left hover:no-underline">{faq.question}</AccordionTrigger>
                     <AccordionContent className="text-muted-foreground">
                       {faq.answer}
                     </AccordionContent>
