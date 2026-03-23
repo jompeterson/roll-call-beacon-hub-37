@@ -175,6 +175,7 @@ export type Database = {
           is_approved: boolean
           location: string | null
           material_type: string | null
+          mileage: number | null
           organization_id: string | null
           organization_name: string | null
           service_type: string | null
@@ -205,6 +206,7 @@ export type Database = {
           is_approved?: boolean
           location?: string | null
           material_type?: string | null
+          mileage?: number | null
           organization_id?: string | null
           organization_name?: string | null
           service_type?: string | null
@@ -235,6 +237,7 @@ export type Database = {
           is_approved?: boolean
           location?: string | null
           material_type?: string | null
+          mileage?: number | null
           organization_id?: string | null
           organization_name?: string | null
           service_type?: string | null
