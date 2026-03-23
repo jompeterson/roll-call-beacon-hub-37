@@ -19,11 +19,12 @@ interface NewOrganizationStepProps {
 
 const organizationTypes = [
   "Non-Profit",
-  "Educational Institution",
+  "School",
   "Community Group",
   "Religious Organization",
   "Sports Club",
   "Professional Association",
+  "Industry Partner",
   "Other"
 ];
 

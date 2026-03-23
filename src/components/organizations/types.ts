@@ -1,13 +1,14 @@
 
-export type OrganizationType = "Non-Profit" | "Educational Institution" | "Community Group" | "Religious Organization" | "Sports Club" | "Professional Association" | "Other";
+export type OrganizationType = "Non-Profit" | "School" | "Community Group" | "Religious Organization" | "Sports Club" | "Professional Association" | "Industry Partner" | "Other";
 
 export const organizationTypes: OrganizationType[] = [
   "Non-Profit",
-  "Educational Institution",
+  "School",
   "Community Group",
   "Religious Organization",
   "Sports Club",
   "Professional Association",
+  "Industry Partner",
   "Other"
 ];
 
