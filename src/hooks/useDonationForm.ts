@@ -25,6 +25,12 @@ interface DonationFormData {
   images: File[];
   can_deliver: boolean;
   delivery_miles: string;
+  service_type: string;
+  hours_available: string;
+  equipment_type: string;
+  facility_type: string;
+  capacity: string;
+  location: string;
 }
 
 export const useDonationForm = (open: boolean) => {
@@ -45,13 +51,18 @@ export const useDonationForm = (open: boolean) => {
     material_type: "",
     images: [],
     can_deliver: false,
-    delivery_miles: ""
+    delivery_miles: "",
+    service_type: "",
+    hours_available: "",
+    equipment_type: "",
+    facility_type: "",
+    capacity: "",
+    location: ""
   });
 
   const { isAdministrator } = useAuth();
   const { currentOrganization, contactInfo } = useProfileData();
 
-  // Fetch organizations for administrators
   useEffect(() => {
     if (isAdministrator && open) {
       const fetchOrganizations = async () => {
@@ -72,7 +83,6 @@ export const useDonationForm = (open: boolean) => {
     }
   }, [isAdministrator, open]);
 
-  // Prepopulate organization and contact information when modal opens
   useEffect(() => {
     if (open && currentOrganization && contactInfo) {
       setFormData(prev => ({
@@ -117,7 +127,13 @@ export const useDonationForm = (open: boolean) => {
       material_type: "",
       images: [],
       can_deliver: false,
-      delivery_miles: ""
+      delivery_miles: "",
+      service_type: "",
+      hours_available: "",
+      equipment_type: "",
+      facility_type: "",
+      capacity: "",
+      location: ""
     });
   };
 

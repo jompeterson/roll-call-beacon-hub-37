@@ -158,6 +158,7 @@ export type Database = {
           amount_raised: number | null
           approval_decision_made: boolean
           can_deliver: boolean
+          capacity: number | null
           contact_email: string | null
           contact_phone: string | null
           created_at: string
@@ -165,12 +166,18 @@ export type Database = {
           delivery_miles: number | null
           description: string | null
           donation_link: string | null
+          donation_type: string | null
+          equipment_type: string | null
+          facility_type: string | null
+          hours_available: number | null
           id: string
           images: string[] | null
           is_approved: boolean
+          location: string | null
           material_type: string | null
           organization_id: string | null
           organization_name: string | null
+          service_type: string | null
           target_date: string | null
           title: string
           updated_at: string
@@ -181,6 +188,7 @@ export type Database = {
           amount_raised?: number | null
           approval_decision_made?: boolean
           can_deliver?: boolean
+          capacity?: number | null
           contact_email?: string | null
           contact_phone?: string | null
           created_at?: string
@@ -188,12 +196,18 @@ export type Database = {
           delivery_miles?: number | null
           description?: string | null
           donation_link?: string | null
+          donation_type?: string | null
+          equipment_type?: string | null
+          facility_type?: string | null
+          hours_available?: number | null
           id?: string
           images?: string[] | null
           is_approved?: boolean
+          location?: string | null
           material_type?: string | null
           organization_id?: string | null
           organization_name?: string | null
+          service_type?: string | null
           target_date?: string | null
           title: string
           updated_at?: string
@@ -204,6 +218,7 @@ export type Database = {
           amount_raised?: number | null
           approval_decision_made?: boolean
           can_deliver?: boolean
+          capacity?: number | null
           contact_email?: string | null
           contact_phone?: string | null
           created_at?: string
@@ -211,12 +226,18 @@ export type Database = {
           delivery_miles?: number | null
           description?: string | null
           donation_link?: string | null
+          donation_type?: string | null
+          equipment_type?: string | null
+          facility_type?: string | null
+          hours_available?: number | null
           id?: string
           images?: string[] | null
           is_approved?: boolean
+          location?: string | null
           material_type?: string | null
           organization_id?: string | null
           organization_name?: string | null
+          service_type?: string | null
           target_date?: string | null
           title?: string
           updated_at?: string

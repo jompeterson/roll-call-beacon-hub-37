@@ -8,6 +8,7 @@ interface DonationFormData {
   title: string;
   description: string;
   estimated_value: string;
+  donation_type: string;
   target_date: string;
   donation_link: string;
   contact_email: string;
@@ -19,6 +20,12 @@ interface DonationFormData {
   images: File[];
   can_deliver: boolean;
   delivery_miles: string;
+  service_type: string;
+  hours_available: string;
+  equipment_type: string;
+  facility_type: string;
+  capacity: string;
+  location: string;
 }
 
 interface DonationFormSubmissionProps {
@@ -51,7 +58,6 @@ export const useDonationFormSubmission = () => {
     setIsSubmitting(true);
 
     try {
-      // Upload images to storage first
       const imageUrls: string[] = [];
       
       if (formData.images.length > 0) {
@@ -60,7 +66,7 @@ export const useDonationFormSubmission = () => {
           const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
           const filePath = fileName;
 
-          const { error: uploadError, data: uploadData } = await supabase.storage
+          const { error: uploadError } = await supabase.storage
             .from('donation-images')
             .upload(filePath, image, {
               cacheControl: '3600',
@@ -69,23 +75,18 @@ export const useDonationFormSubmission = () => {
 
           if (uploadError) {
             console.error('Error uploading image:', uploadError);
-            
-            // Provide more specific error message
             let errorMsg = `Failed to upload image: ${image.name}`;
             if (uploadError.message.includes('row-level security')) {
               errorMsg = 'Unable to upload images. Please check your permissions.';
             }
-            
             toast({
               title: "Upload Error",
               description: errorMsg,
               variant: "destructive",
             });
-            
             throw new Error(errorMsg);
           }
 
-          // Get public URL
           const { data: { publicUrl } } = supabase.storage
             .from('donation-images')
             .getPublicUrl(filePath);
@@ -94,7 +95,7 @@ export const useDonationFormSubmission = () => {
         }
       }
 
-      const donationData = {
+      const donationData: Record<string, unknown> = {
         title: formData.title,
         description: formData.description || null,
         amount_needed: parseFloat(formData.estimated_value),
@@ -108,22 +109,37 @@ export const useDonationFormSubmission = () => {
         amount_raised: 0,
         is_approved: false,
         approval_decision_made: false,
-        weight: formData.weight ? parseFloat(formData.weight) : 0,
-        material_type: formData.material_type || null,
+        donation_type: formData.donation_type || null,
         images: imageUrls,
         can_deliver: formData.can_deliver,
         delivery_miles: formData.delivery_miles ? parseFloat(formData.delivery_miles) : null
       };
 
-      const { error } = await supabase
-        .from("donations")
-        .insert([donationData]);
-
-      if (error) {
-        throw error;
+      // Type-specific fields
+      const isPhysical = ["Tools", "Materials", "Other"].includes(formData.donation_type);
+      if (isPhysical) {
+        donationData.weight = formData.weight ? parseFloat(formData.weight) : 0;
+        donationData.material_type = formData.material_type || null;
+      }
+      if (formData.donation_type === "Professional Services / Labor") {
+        donationData.service_type = formData.service_type || null;
+        donationData.hours_available = formData.hours_available ? parseFloat(formData.hours_available) : null;
+      }
+      if (formData.donation_type === "Transportation / Equipment Use") {
+        donationData.equipment_type = formData.equipment_type || null;
+      }
+      if (formData.donation_type === "Facility Use") {
+        donationData.facility_type = formData.facility_type || null;
+        donationData.capacity = formData.capacity ? parseInt(formData.capacity) : null;
+        donationData.location = formData.location || null;
       }
 
-      // Invalidate all relevant queries to trigger real-time updates
+      const { error } = await supabase
+        .from("donations")
+        .insert([donationData as any]);
+
+      if (error) throw error;
+
       queryClient.invalidateQueries({ queryKey: ['donations'] });
       queryClient.invalidateQueries({ queryKey: ['pending-donations'] });
 
