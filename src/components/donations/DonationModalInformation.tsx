@@ -25,15 +25,20 @@ export const DonationModalInformation = ({
   getUserBio,
   formatAmount
 }: DonationModalInformationProps) => {
-  // Debug the weight value
-  console.log("Donation weight:", donation.weight, "Type:", typeof donation.weight);
-  
+  const d = donation as any;
+  const donationType = d.donation_type || "";
+  const isPhysical = ["Tools", "Materials", "Other"].includes(donationType);
+  const isServices = donationType === "Professional Services / Labor";
+  const isTransportation = donationType === "Transportation / Equipment Use";
+  const isFacility = donationType === "Facility Use";
+  const isDonationView = !isScholarship && !isEvent && !isOrganization && !isUser;
+
   return (
     <div className="space-y-6">
       <div>
         <h3 className="font-semibold text-lg mb-4">{getInformationTitle()}</h3>
         <div className="space-y-4">
-          {!isScholarship && !isEvent && !isOrganization && !isUser && (
+          {isDonationView && (
             <div>
               <label className="font-medium text-sm text-muted-foreground">Donation Title</label>
               <p className="text-base mt-1">{donation.title}</p>
@@ -69,18 +74,72 @@ export const DonationModalInformation = ({
               </p>
             </div>
           )}
-          {!isScholarship && !isEvent && !isOrganization && !isUser && donation.material_type && (
+
+          {/* Donation Type */}
+          {isDonationView && donationType && (
+            <div>
+              <label className="font-medium text-sm text-muted-foreground">Donation Type</label>
+              <p className="text-base mt-1">{donationType}</p>
+            </div>
+          )}
+
+          {/* Physical goods fields */}
+          {isDonationView && isPhysical && donation.material_type && (
             <div>
               <label className="font-medium text-sm text-muted-foreground">Material Type</label>
               <p className="text-base mt-1">{donation.material_type}</p>
             </div>
           )}
-          {!isScholarship && !isEvent && !isOrganization && !isUser && Number(donation.weight) > 0 && (
+          {isDonationView && isPhysical && Number(donation.weight) > 0 && (
             <div>
               <label className="font-medium text-sm text-muted-foreground">Weight of Donation</label>
               <p className="text-base mt-1">{donation.weight} lbs</p>
             </div>
           )}
+
+          {/* Professional Services fields */}
+          {isDonationView && isServices && d.service_type && (
+            <div>
+              <label className="font-medium text-sm text-muted-foreground">Service Type</label>
+              <p className="text-base mt-1">{d.service_type}</p>
+            </div>
+          )}
+          {isDonationView && isServices && Number(d.hours_available) > 0 && (
+            <div>
+              <label className="font-medium text-sm text-muted-foreground">Hours Available</label>
+              <p className="text-base mt-1">{d.hours_available} hours</p>
+            </div>
+          )}
+
+          {/* Transportation / Equipment fields */}
+          {isDonationView && isTransportation && d.equipment_type && (
+            <div>
+              <label className="font-medium text-sm text-muted-foreground">Equipment Type</label>
+              <p className="text-base mt-1">{d.equipment_type}</p>
+            </div>
+          )}
+
+          {/* Facility Use fields */}
+          {isDonationView && isFacility && d.facility_type && (
+            <div>
+              <label className="font-medium text-sm text-muted-foreground">Facility Type</label>
+              <p className="text-base mt-1">{d.facility_type}</p>
+            </div>
+          )}
+          {isDonationView && isFacility && Number(d.capacity) > 0 && (
+            <div>
+              <label className="font-medium text-sm text-muted-foreground">Capacity</label>
+              <p className="text-base mt-1">{d.capacity} people</p>
+            </div>
+          )}
+          {isDonationView && isFacility && d.location && (
+            <div>
+              <label className="font-medium text-sm text-muted-foreground">Location</label>
+              <p className="text-base mt-1">{d.location}</p>
+            </div>
+          )}
+
+          {/* Contact info */}
           {donation.contact_email && (
             <div>
               <label className="font-medium text-sm text-muted-foreground">Contact Email</label>
@@ -93,13 +152,13 @@ export const DonationModalInformation = ({
               <p className="text-base mt-1">{donation.contact_phone}</p>
             </div>
           )}
-           {donation.target_date && (
+          {donation.target_date && (
             <div>
               <label className="font-medium text-sm text-muted-foreground">Deadline</label>
               <p className="text-base mt-1">{formatDate(donation.target_date)}</p>
             </div>
           )}
-          {!isScholarship && !isEvent && !isOrganization && !isUser && donation.can_deliver && (
+          {isDonationView && donation.can_deliver && (
             <div>
               <label className="font-medium text-sm text-muted-foreground">Can Deliver</label>
               <p className="text-base mt-1">

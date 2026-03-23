@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -36,9 +37,9 @@ export const DonationEditModal = ({
   const [formData, setFormData] = useState({
     title: donation.title,
     description: donation.description || "",
-    material_type: donation.material_type || "",
+    material_type: (donation as any).material_type || "",
     estimated_value: donation.amount_needed?.toString() || "",
-    donation_type: donation.material_type || "",
+    donation_type: (donation as any).donation_type || "",
     target_date: donation.target_date ? new Date(donation.target_date).toISOString().split('T')[0] : "",
     weight: donation.weight?.toString() || "",
     organization_name: donation.organization_name || "",
@@ -48,6 +49,12 @@ export const DonationEditModal = ({
     donation_link: donation.donation_link || "",
     can_deliver: donation.can_deliver || false,
     delivery_miles: donation.delivery_miles?.toString() || "",
+    service_type: (donation as any).service_type || "",
+    hours_available: (donation as any).hours_available?.toString() || "",
+    equipment_type: (donation as any).equipment_type || "",
+    facility_type: (donation as any).facility_type || "",
+    capacity: (donation as any).capacity?.toString() || "",
+    location: (donation as any).location || "",
     images: [] as File[]
   });
 
@@ -92,7 +99,6 @@ export const DonationEditModal = ({
     setIsSubmitting(true);
 
     try {
-      // Upload new images if any
       let imageUrls = donation.images || [];
       if (formData.images.length > 0) {
         const uploadPromises = formData.images.map(async (file) => {
@@ -117,12 +123,11 @@ export const DonationEditModal = ({
         imageUrls = [...imageUrls, ...newImageUrls];
       }
 
-      const updateData = {
+      const updateData: Record<string, unknown> = {
         title: formData.title,
         description: formData.description || null,
-        material_type: formData.donation_type || null,
         amount_needed: parseFloat(formData.estimated_value) || 0,
-        weight: formData.weight ? parseFloat(formData.weight) : null,
+        donation_type: formData.donation_type || null,
         organization_name: formData.organization_name || null,
         organization_id: formData.organization_id || null,
         contact_email: formData.contact_email || null,
@@ -131,8 +136,19 @@ export const DonationEditModal = ({
         can_deliver: formData.can_deliver,
         delivery_miles: formData.delivery_miles ? parseFloat(formData.delivery_miles) : null,
         images: imageUrls,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
+        target_date: formData.target_date ? new Date(formData.target_date).toISOString() : null,
       };
+
+      const isPhysical = ["Tools", "Materials", "Other"].includes(formData.donation_type);
+      updateData.weight = isPhysical && formData.weight ? parseFloat(formData.weight) : null;
+      updateData.material_type = isPhysical ? (formData.material_type || null) : null;
+      updateData.service_type = formData.donation_type === "Professional Services / Labor" ? (formData.service_type || null) : null;
+      updateData.hours_available = formData.donation_type === "Professional Services / Labor" && formData.hours_available ? parseFloat(formData.hours_available) : null;
+      updateData.equipment_type = formData.donation_type === "Transportation / Equipment Use" ? (formData.equipment_type || null) : null;
+      updateData.facility_type = formData.donation_type === "Facility Use" ? (formData.facility_type || null) : null;
+      updateData.capacity = formData.donation_type === "Facility Use" && formData.capacity ? parseInt(formData.capacity) : null;
+      updateData.location = formData.donation_type === "Facility Use" ? (formData.location || null) : null;
 
       const { error } = await supabase
         .from("donations")
