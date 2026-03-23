@@ -212,10 +212,10 @@ export const Resources = () => {
               <CardDescription>Common questions about using the Roll Call platform</CardDescription>
             </CardHeader>
             <CardContent>
-              <Accordion type="single" collapsible className="w-full">
+              <Accordion type="multiple" className="w-full">
                 {faqs.map((faq, index) => (
                   <AccordionItem key={index} value={`faq-${index}`}>
-                    <AccordionTrigger className="text-left">{faq.question}</AccordionTrigger>
+                    <AccordionTrigger className="text-left [&>*]:no-underline hover:no-underline [text-decoration:none]">{faq.question}</AccordionTrigger>
                     <AccordionContent className="text-muted-foreground">
                       {faq.answer}
                     </AccordionContent>
