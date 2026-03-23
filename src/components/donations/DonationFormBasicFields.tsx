@@ -173,26 +173,41 @@ export const DonationFormBasicFields = ({ formData, onInputChange }: DonationFor
 
       {/* Transportation / Equipment Use fields */}
       {isTransportation && (
-        <div className="space-y-2">
-          <Label htmlFor="equipment_type">Equipment Type</Label>
-          <Select value={formData.equipment_type || ""} onValueChange={(value) => onInputChange("equipment_type", value)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select equipment type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Truck">Truck</SelectItem>
-              <SelectItem value="Van">Van</SelectItem>
-              <SelectItem value="Trailer">Trailer</SelectItem>
-              <SelectItem value="Forklift">Forklift</SelectItem>
-              <SelectItem value="Crane">Crane</SelectItem>
-              <SelectItem value="Excavator">Excavator</SelectItem>
-              <SelectItem value="Generator">Generator</SelectItem>
-              <SelectItem value="Power Tools">Power Tools</SelectItem>
-              <SelectItem value="Construction Equipment">Construction Equipment</SelectItem>
-              <SelectItem value="Other">Other</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <>
+          <div className="space-y-2">
+            <Label htmlFor="equipment_type">Equipment Type</Label>
+            <Select value={formData.equipment_type || ""} onValueChange={(value) => onInputChange("equipment_type", value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select equipment type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Truck">Truck</SelectItem>
+                <SelectItem value="Van">Van</SelectItem>
+                <SelectItem value="Trailer">Trailer</SelectItem>
+                <SelectItem value="Forklift">Forklift</SelectItem>
+                <SelectItem value="Crane">Crane</SelectItem>
+                <SelectItem value="Excavator">Excavator</SelectItem>
+                <SelectItem value="Generator">Generator</SelectItem>
+                <SelectItem value="Power Tools">Power Tools</SelectItem>
+                <SelectItem value="Construction Equipment">Construction Equipment</SelectItem>
+                <SelectItem value="Other">Other</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="mileage">Mileage</Label>
+            <Input
+              id="mileage"
+              type="number"
+              step="0.1"
+              min="0"
+              value={formData.mileage || ""}
+              onChange={(e) => onInputChange("mileage", e.target.value)}
+              placeholder="Total mileage"
+            />
+          </div>
+        </>
       )}
 
       {/* Facility Use fields */}
