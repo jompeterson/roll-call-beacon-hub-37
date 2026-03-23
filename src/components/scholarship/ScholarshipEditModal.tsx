@@ -143,7 +143,7 @@ export const ScholarshipEditModal = ({
           <div className="flex gap-3 pt-4">
             <Button
               type="submit"
-              disabled={isSubmitting || !formData.title || !formData.amount}
+              disabled={isSubmitting || !formData.title}
               className="flex-1"
             >
               {isSubmitting ? "Updating..." : "Update Scholarship"}
