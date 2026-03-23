@@ -136,7 +136,7 @@ export const useDonationFormSubmission = () => {
 
       const { error } = await supabase
         .from("donations")
-        .insert([donationData]);
+        .insert([donationData as any]);
 
       if (error) throw error;
 
