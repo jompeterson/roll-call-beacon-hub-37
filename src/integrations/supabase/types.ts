@@ -888,6 +888,8 @@ export type Database = {
         | "Sports Club"
         | "Professional Association"
         | "Other"
+        | "Industry Partner"
+        | "School"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1023,6 +1025,8 @@ export const Constants = {
         "Sports Club",
         "Professional Association",
         "Other",
+        "Industry Partner",
+        "School",
       ],
     },
   },
