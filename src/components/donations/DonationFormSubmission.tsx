@@ -23,6 +23,7 @@ interface DonationFormData {
   service_type: string;
   hours_available: string;
   equipment_type: string;
+  mileage: string;
   facility_type: string;
   capacity: string;
   location: string;
@@ -127,6 +128,7 @@ export const useDonationFormSubmission = () => {
       }
       if (formData.donation_type === "Transportation / Equipment Use") {
         donationData.equipment_type = formData.equipment_type || null;
+        donationData.mileage = formData.mileage ? parseFloat(formData.mileage) : null;
       }
       if (formData.donation_type === "Facility Use") {
         donationData.facility_type = formData.facility_type || null;

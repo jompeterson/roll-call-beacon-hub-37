@@ -52,6 +52,7 @@ export const DonationEditModal = ({
     service_type: (donation as any).service_type || "",
     hours_available: (donation as any).hours_available?.toString() || "",
     equipment_type: (donation as any).equipment_type || "",
+    mileage: (donation as any).mileage?.toString() || "",
     facility_type: (donation as any).facility_type || "",
     capacity: (donation as any).capacity?.toString() || "",
     location: (donation as any).location || "",
@@ -146,6 +147,7 @@ export const DonationEditModal = ({
       updateData.service_type = formData.donation_type === "Professional Services / Labor" ? (formData.service_type || null) : null;
       updateData.hours_available = formData.donation_type === "Professional Services / Labor" && formData.hours_available ? parseFloat(formData.hours_available) : null;
       updateData.equipment_type = formData.donation_type === "Transportation / Equipment Use" ? (formData.equipment_type || null) : null;
+      updateData.mileage = formData.donation_type === "Transportation / Equipment Use" && formData.mileage ? parseFloat(formData.mileage) : null;
       updateData.facility_type = formData.donation_type === "Facility Use" ? (formData.facility_type || null) : null;
       updateData.capacity = formData.donation_type === "Facility Use" && formData.capacity ? parseInt(formData.capacity) : null;
       updateData.location = formData.donation_type === "Facility Use" ? (formData.location || null) : null;

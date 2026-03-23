@@ -118,6 +118,12 @@ export const DonationModalInformation = ({
               <p className="text-base mt-1">{d.equipment_type}</p>
             </div>
           )}
+          {isDonationView && isTransportation && Number(d.mileage) > 0 && (
+            <div>
+              <label className="font-medium text-sm text-muted-foreground">Mileage</label>
+              <p className="text-base mt-1">{d.mileage}</p>
+            </div>
+          )}
 
           {/* Facility Use fields */}
           {isDonationView && isFacility && d.facility_type && (
