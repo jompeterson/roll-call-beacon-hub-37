@@ -335,15 +335,18 @@ export const Events = () => {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    sortedEvents.map((event) => (
+                    sortedEvents.map((event) => {
+                      const isPast = new Date(event.start_date) < new Date();
+                      return (
                       <TableRow 
                         key={event.id} 
-                        className="cursor-pointer hover:bg-muted/50"
+                        className={`cursor-pointer hover:bg-muted/50 ${isPast ? "opacity-60" : ""}`}
                         onClick={() => handleEventRowClick(event)}
                       >
                         <TableCell className={`font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-0 ${isAuthenticated ? "w-1/3" : "w-1/2"}`}>
                           <div className="flex items-center gap-2">
                             <span>{event.title}</span>
+                            {isPast && <span className="text-xs bg-muted text-muted-foreground px-1.5 py-0.5 rounded">Past</span>}
                             <RSVPCount eventId={event.id} isApproved={event.is_approved} />
                           </div>
                         </TableCell>
