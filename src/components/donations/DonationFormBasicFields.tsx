@@ -14,6 +14,7 @@ interface DonationFormBasicFieldsProps {
     service_type?: string;
     hours_available?: string;
     equipment_type?: string;
+    mileage?: string;
     facility_type?: string;
     capacity?: string;
     location?: string;

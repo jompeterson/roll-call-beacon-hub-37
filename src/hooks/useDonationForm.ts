@@ -133,6 +133,7 @@ export const useDonationForm = (open: boolean) => {
       service_type: "",
       hours_available: "",
       equipment_type: "",
+      mileage: "",
       facility_type: "",
       capacity: "",
       location: ""

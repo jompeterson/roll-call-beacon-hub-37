@@ -52,6 +52,7 @@ export const DonationEditModal = ({
     service_type: (donation as any).service_type || "",
     hours_available: (donation as any).hours_available?.toString() || "",
     equipment_type: (donation as any).equipment_type || "",
+    mileage: (donation as any).mileage?.toString() || "",
     facility_type: (donation as any).facility_type || "",
     capacity: (donation as any).capacity?.toString() || "",
     location: (donation as any).location || "",
