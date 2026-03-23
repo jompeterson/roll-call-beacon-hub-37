@@ -1,0 +1,9 @@
+
+ALTER TABLE public.donations
+  ADD COLUMN IF NOT EXISTS donation_type text DEFAULT NULL,
+  ADD COLUMN IF NOT EXISTS service_type text DEFAULT NULL,
+  ADD COLUMN IF NOT EXISTS hours_available numeric DEFAULT NULL,
+  ADD COLUMN IF NOT EXISTS equipment_type text DEFAULT NULL,
+  ADD COLUMN IF NOT EXISTS facility_type text DEFAULT NULL,
+  ADD COLUMN IF NOT EXISTS capacity integer DEFAULT NULL,
+  ADD COLUMN IF NOT EXISTS location text DEFAULT NULL;
