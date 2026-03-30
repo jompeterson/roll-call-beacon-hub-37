@@ -12,6 +12,7 @@ import { useVolunteerSignups } from "@/hooks/useVolunteerSignups";
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
 import { VolunteerEditModal } from "@/components/volunteer/VolunteerEditModal";
+import { RequestChangesModal } from "@/components/shared/RequestChangesModal";
 
 interface Volunteer {
   id: string;
@@ -55,6 +56,7 @@ export const VolunteerModal = ({
   const { signupCount, hasSignedUp, submitting, signUp, cancelSignup, userSignup } = useVolunteerSignups(volunteer?.id || "");
   const navigate = useNavigate();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [showRequestChangesModal, setShowRequestChangesModal] = useState(false);
   
   const isOwner = user?.id === volunteer?.creator_user_id;
   const canEdit = isOwner || isAdministrator;
@@ -229,6 +231,15 @@ export const VolunteerModal = ({
                       <XCircle className="h-4 w-4 mr-2" />
                       Reject
                     </Button>
+                    {onRequestChanges && (
+                      <Button
+                        onClick={() => setShowRequestChangesModal(true)}
+                        className="flex-1"
+                        variant="outline"
+                      >
+                        Request Changes
+                      </Button>
+                    )}
                   </>
                 )}
 
@@ -259,6 +270,15 @@ export const VolunteerModal = ({
           volunteer={volunteer}
           open={isEditModalOpen}
           onOpenChange={setIsEditModalOpen}
+        />
+      )}
+      {volunteer && onRequestChanges && (
+        <RequestChangesModal
+          open={showRequestChangesModal}
+          onOpenChange={setShowRequestChangesModal}
+          contentType="volunteer"
+          contentId={volunteer.id}
+          onSubmit={() => onRequestChanges(volunteer.id)}
         />
       )}
     </Dialog>

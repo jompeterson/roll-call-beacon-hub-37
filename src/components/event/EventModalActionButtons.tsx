@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Edit, Trash2, UserCheck } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { RequestChangesModal } from "@/components/shared/RequestChangesModal";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -62,6 +63,7 @@ export const EventModalActionButtons = ({
   const isOwner = user?.id === event.creator_user_id;
   const canEdit = isOwner || isAdministrator;
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showRequestChangesModal, setShowRequestChangesModal] = useState(false);
 
   const showApprovalButtons = !event.approval_decision_made && isAdministrator;
   const showRSVPButton = event.is_approved;
@@ -135,7 +137,7 @@ export const EventModalActionButtons = ({
                 Reject Event
               </Button>
               {onRequestChanges && (
-                <Button variant="outline" onClick={() => onRequestChanges(event.id)} className="flex-1">
+                <Button variant="outline" onClick={() => setShowRequestChangesModal(true)} className="flex-1">
                   Request Changes
                 </Button>
               )}
@@ -163,6 +165,16 @@ export const EventModalActionButtons = ({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {onRequestChanges && (
+        <RequestChangesModal
+          open={showRequestChangesModal}
+          onOpenChange={setShowRequestChangesModal}
+          contentType="event"
+          contentId={event.id}
+          onSubmit={() => onRequestChanges(event.id)}
+        />
+      )}
     </div>
   );
 };

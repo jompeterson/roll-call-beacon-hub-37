@@ -1,10 +1,12 @@
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Edit } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useRequestFulfillments } from "@/hooks/useRequestFulfillments";
 import type { Request } from "@/hooks/useRequests";
+import { RequestChangesModal } from "@/components/shared/RequestChangesModal";
 
 interface RequestModalActionButtonsProps {
   request: Request;
@@ -29,6 +31,7 @@ export const RequestModalActionButtons = ({
   const { hasFulfilled, fulfillRequest, submitting } = useRequestFulfillments(request.id);
   const isOwner = user?.id === request.creator_user_id;
   const canEdit = isOwner || isAdministrator;
+  const [showRequestChangesModal, setShowRequestChangesModal] = useState(false);
   const handleApprove = async (id: string) => {
     try {
       const { error } = await supabase
@@ -150,7 +153,7 @@ export const RequestModalActionButtons = ({
           Reject
         </Button>
         <Button 
-          onClick={() => onRequestChanges(request.id)}
+          onClick={() => setShowRequestChangesModal(true)}
           variant="outline"
         >
           Request Changes
@@ -160,18 +163,27 @@ export const RequestModalActionButtons = ({
   };
 
   return (
-    <div className="flex-shrink-0 border-t p-6 flex justify-between flex-wrap">
-      <div>
-        {canEdit && onEdit && (
-          <Button variant="outline" onClick={onEdit}>
-            <Edit className="w-4 h-4 mr-2" />
-            Edit
-          </Button>
-        )}
+    <>
+      <div className="flex-shrink-0 border-t p-6 flex justify-between flex-wrap">
+        <div>
+          {canEdit && onEdit && (
+            <Button variant="outline" onClick={onEdit}>
+              <Edit className="w-4 h-4 mr-2" />
+              Edit
+            </Button>
+          )}
+        </div>
+        <div>
+          {renderActionButtons()}
+        </div>
       </div>
-      <div>
-        {renderActionButtons()}
-      </div>
-    </div>
+      <RequestChangesModal
+        open={showRequestChangesModal}
+        onOpenChange={setShowRequestChangesModal}
+        contentType="request"
+        contentId={request.id}
+        onSubmit={() => onRequestChanges(request.id)}
+      />
+    </>
   );
 };

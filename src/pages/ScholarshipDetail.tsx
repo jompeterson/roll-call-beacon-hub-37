@@ -208,6 +208,7 @@ export const ScholarshipDetail = () => {
 
             {showActionButtons && (
               <ScholarshipActionButtons
+                scholarshipId={scholarship.id}
                 onApprove={handleApprove}
                 onReject={handleReject}
                 onRequestChanges={handleRequestChanges}
