@@ -154,20 +154,24 @@ export const LoginForm = () => {
       <div className="text-center">
         <div className="flex items-center justify-center space-x-4 mb-4">
           {!logoLoading && logoUrl && (
-            <img 
-              src={logoUrl}
-              alt="Logo" 
-              className="h-12 object-contain"
-              onError={(e) => {
-                e.currentTarget.src = "/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png";
-              }}
-            />
+            <a href="https://www.buildhopepdx.org/" target="_blank" rel="noopener noreferrer">
+              <img 
+                src={logoUrl}
+                alt="Organization Logo" 
+                className="h-12 object-contain"
+                onError={(e) => {
+                  e.currentTarget.src = "/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png";
+                }}
+              />
+            </a>
           )}
-          <img 
-            src="/lovable-uploads/3bf5b36b-46ad-420d-8eb5-7435b9aaad17.png" 
-            alt="Header Icon" 
-            className="h-12 object-contain mt-4"
-          />
+          <Link to="/">
+            <img 
+              src="/lovable-uploads/3bf5b36b-46ad-420d-8eb5-7435b9aaad17.png" 
+              alt="Roll Call Logo" 
+              className="h-12 object-contain mt-4"
+            />
+          </Link>
         </div>
         <h2 className="text-3xl font-bold text-foreground">Sign In</h2>
         <p className="text-muted-foreground mt-2">

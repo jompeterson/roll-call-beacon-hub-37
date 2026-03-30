@@ -157,23 +157,27 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
           <Menu className="h-5 w-5" />
         </Button>
         
-        {/* New image before logo */}
-        <img 
-          src="/lovable-uploads/3bf5b36b-46ad-420d-8eb5-7435b9aaad17.png" 
-          alt="Header Icon" 
-          className="h-7 md:h-9 lg:h-11 object-contain"
-        />
-        
-        {!logoLoading && logoUrl && (
+        {/* Roll Call logo - links to Overview */}
+        <Link to="/">
           <img 
-            src={logoUrl} 
+            src="/lovable-uploads/3bf5b36b-46ad-420d-8eb5-7435b9aaad17.png" 
             alt="Roll Call Logo" 
             className="h-7 md:h-9 lg:h-11 object-contain"
-            onError={(e) => {
-              // Fallback to default logo if the custom one fails to load
-              e.currentTarget.src = "/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png";
-            }}
           />
+        </Link>
+        
+        {/* Organization logo - links to BuildHope */}
+        {!logoLoading && logoUrl && (
+          <a href="https://www.buildhopepdx.org/" target="_blank" rel="noopener noreferrer">
+            <img 
+              src={logoUrl} 
+              alt="Organization Logo" 
+              className="h-7 md:h-9 lg:h-11 object-contain"
+              onError={(e) => {
+                e.currentTarget.src = "/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png";
+              }}
+            />
+          </a>
         )}
       </div>
 
