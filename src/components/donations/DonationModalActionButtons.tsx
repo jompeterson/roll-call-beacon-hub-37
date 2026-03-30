@@ -236,6 +236,7 @@ export const DonationModalActionButtons = ({
           contentType="donation"
           contentId={donationId}
           onSubmit={() => onRequestChanges(donationId)}
+          onChangeRequestSubmitted={onChangeRequestSubmitted}
         />
       </>
     );
