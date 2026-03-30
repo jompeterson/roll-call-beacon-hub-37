@@ -63,6 +63,7 @@ export const EventModalActionButtons = ({
   const isOwner = user?.id === event.creator_user_id;
   const canEdit = isOwner || isAdministrator;
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showRequestChangesModal, setShowRequestChangesModal] = useState(false);
 
   const showApprovalButtons = !event.approval_decision_made && isAdministrator;
   const showRSVPButton = event.is_approved;
