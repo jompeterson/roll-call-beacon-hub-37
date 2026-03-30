@@ -165,6 +165,16 @@ export const EventModalActionButtons = ({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {onRequestChanges && (
+        <RequestChangesModal
+          open={showRequestChangesModal}
+          onOpenChange={setShowRequestChangesModal}
+          contentType="event"
+          contentId={event.id}
+          onSubmit={() => onRequestChanges(event.id)}
+        />
+      )}
     </div>
   );
 };
