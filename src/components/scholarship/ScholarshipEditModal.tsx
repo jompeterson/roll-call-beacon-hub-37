@@ -6,12 +6,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { ScholarshipFormFields } from "./ScholarshipFormFields";
 import { type AmountType } from "./ScholarshipFormData";
 import { ImageUpload } from "@/components/shared/ImageUpload";
+import { SubmitForReviewDialog } from "@/components/shared/SubmitForReviewDialog";
 
 interface ScholarshipEditModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   scholarship: any;
   onScholarshipUpdated?: () => void;
+  hasChangeRequest?: boolean;
 }
 
 export const ScholarshipEditModal = ({ 
