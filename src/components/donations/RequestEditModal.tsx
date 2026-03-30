@@ -29,9 +29,11 @@ export const RequestEditModal = ({
   open, 
   onOpenChange, 
   request,
-  onRequestUpdated 
+  onRequestUpdated,
+  hasChangeRequest = false,
 }: RequestEditModalProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showReviewDialog, setShowReviewDialog] = useState(false);
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [formData, setFormData] = useState({
     title: request.title,
