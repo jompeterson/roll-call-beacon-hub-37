@@ -10,6 +10,7 @@ interface ScholarshipActionButtonsProps {
   onApprove: () => void;
   onReject: () => void;
   onRequestChanges: () => void;
+  onChangeRequestSubmitted?: () => void;
   onEdit?: () => void;
   creatorUserId: string;
   isApproving: boolean;
