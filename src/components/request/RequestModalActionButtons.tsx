@@ -1,10 +1,12 @@
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Edit } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useRequestFulfillments } from "@/hooks/useRequestFulfillments";
 import type { Request } from "@/hooks/useRequests";
+import { RequestChangesModal } from "@/components/shared/RequestChangesModal";
 
 interface RequestModalActionButtonsProps {
   request: Request;
