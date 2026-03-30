@@ -153,7 +153,7 @@ export const RequestModalActionButtons = ({
           Reject
         </Button>
         <Button 
-          onClick={() => onRequestChanges(request.id)}
+          onClick={() => setShowRequestChangesModal(true)}
           variant="outline"
         >
           Request Changes
