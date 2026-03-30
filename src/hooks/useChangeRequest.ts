@@ -58,6 +58,9 @@ function parseChangeRequestComment(content: string): ChangeRequest | null {
 export const useChangeRequest = (contentType: ContentType, contentId: string) => {
   const [changeRequest, setChangeRequest] = useState<ChangeRequest | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const refetch = () => setRefreshKey(k => k + 1);
 
   useEffect(() => {
     const fetchChangeRequest = async () => {
@@ -98,7 +101,7 @@ export const useChangeRequest = (contentType: ContentType, contentId: string) =>
     };
 
     fetchChangeRequest();
-  }, [contentType, contentId]);
+  }, [contentType, contentId, refreshKey]);
 
-  return { changeRequest, isLoading };
+  return { changeRequest, isLoading, refetch };
 };
