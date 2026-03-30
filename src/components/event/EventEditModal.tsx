@@ -23,9 +23,11 @@ export const EventEditModal = ({
   open, 
   onOpenChange, 
   event,
-  onEventUpdated 
+  onEventUpdated,
+  hasChangeRequest = false,
 }: EventEditModalProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showReviewDialog, setShowReviewDialog] = useState(false);
   const [images, setImages] = useState<File[]>([]);
   const [existingImages, setExistingImages] = useState<string[]>(event.images || []);
   const [formData, setFormData] = useState({
