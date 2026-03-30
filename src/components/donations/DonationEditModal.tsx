@@ -32,9 +32,11 @@ export const DonationEditModal = ({
   open, 
   onOpenChange, 
   donation,
-  onDonationUpdated 
+  onDonationUpdated,
+  hasChangeRequest = false,
 }: DonationEditModalProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showReviewDialog, setShowReviewDialog] = useState(false);
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [formData, setFormData] = useState({
     title: donation.title,
