@@ -277,5 +277,17 @@ export const DonationEditModal = ({
         </form>
       </DialogContent>
     </Dialog>
+    <SubmitForReviewDialog
+      open={showReviewDialog}
+      onOpenChange={setShowReviewDialog}
+      contentType="donation"
+      contentId={donation.id}
+      contentTitle={donation.title}
+      onComplete={() => {
+        onOpenChange(false);
+        onDonationUpdated?.();
+      }}
+    />
+  </>
   );
 };
