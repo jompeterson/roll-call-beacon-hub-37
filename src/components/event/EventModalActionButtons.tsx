@@ -56,6 +56,7 @@ export const EventModalActionButtons = ({
   onApprove,
   onReject,
   onRequestChanges,
+  onChangeRequestSubmitted,
   onRSVPAction,
   onEdit,
   onDelete,
