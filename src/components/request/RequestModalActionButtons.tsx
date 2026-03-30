@@ -31,6 +31,7 @@ export const RequestModalActionButtons = ({
   const { hasFulfilled, fulfillRequest, submitting } = useRequestFulfillments(request.id);
   const isOwner = user?.id === request.creator_user_id;
   const canEdit = isOwner || isAdministrator;
+  const [showRequestChangesModal, setShowRequestChangesModal] = useState(false);
   const handleApprove = async (id: string) => {
     try {
       const { error } = await supabase
