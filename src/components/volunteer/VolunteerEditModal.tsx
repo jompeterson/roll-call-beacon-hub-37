@@ -103,8 +103,12 @@ export const VolunteerEditModal = ({
         description: "Volunteer opportunity updated successfully!",
       });
 
-      onOpenChange(false);
-      onVolunteerUpdated?.();
+      if (hasChangeRequest) {
+        setShowReviewDialog(true);
+      } else {
+        onOpenChange(false);
+        onVolunteerUpdated?.();
+      }
 
     } catch (error) {
       console.error("Error updating volunteer opportunity:", error);
