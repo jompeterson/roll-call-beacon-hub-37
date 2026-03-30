@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { useEvents } from "@/hooks/useEvents";
 import { useAuth } from "@/hooks/useAuth";
 import { useEventRSVPs } from "@/hooks/useEventRSVPs";
+import { useChangeRequest } from "@/hooks/useChangeRequest";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { ChevronRight, Edit } from "lucide-react";
@@ -15,6 +16,7 @@ import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ShareButton } from "@/components/ShareButton";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
+import { ChangeRequestBanner } from "@/components/shared/ChangeRequestBanner";
 
 export const EventDetail = () => {
   const { eventId } = useParams();
@@ -31,6 +33,8 @@ export const EventDetail = () => {
   const [editOpen, setEditOpen] = useState(false);
 
   const event = events.find(e => e.id === eventId);
+  const { changeRequest } = useChangeRequest("event", eventId || "");
+  const isOwner = user?.id === event?.creator_user_id;
 
   if (loading) {
     return (
@@ -150,13 +154,21 @@ export const EventDetail = () => {
 
         {/* Content */}
         <div className="p-6 space-y-6">
+          {/* Change Request Banner */}
+          {changeRequest && isOwner && (
+            <ChangeRequestBanner
+              comment={changeRequest.comment}
+              fieldLabels={changeRequest.fieldLabels}
+            />
+          )}
+
           {/* Image Carousel */}
           {event.images && event.images.length > 0 && (
             <ImageCarousel images={event.images} title={event.title} />
           )}
           
           {/* Event Information */}
-          <EventModalInformation event={event} rsvpCount={rsvpCount} />
+          <EventModalInformation event={event} rsvpCount={rsvpCount} highlightedFields={isOwner && changeRequest ? changeRequest.fieldKeys : undefined} />
 
           {/* RSVP Status for authenticated users */}
           <EventModalRSVPStatus 

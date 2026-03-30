@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useScholarships } from "@/hooks/useScholarships";
 import { useAuth } from "@/hooks/useAuth";
+import { useChangeRequest } from "@/hooks/useChangeRequest";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { ChevronRight, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ShareButton } from "@/components/ShareButton";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
+import { ChangeRequestBanner } from "@/components/shared/ChangeRequestBanner";
 
 export const ScholarshipDetail = () => {
   const { scholarshipId } = useParams();
@@ -31,8 +33,10 @@ export const ScholarshipDetail = () => {
     isDeleting
   } = useScholarships();
   const [editOpen, setEditOpen] = useState(false);
+  const { changeRequest } = useChangeRequest("scholarship", scholarshipId || "");
 
   const scholarship = scholarships.find(s => s.id === scholarshipId);
+  const isOwner = user?.id === scholarship?.creator_user_id;
 
   if (isLoading) {
     return (
@@ -159,12 +163,20 @@ export const ScholarshipDetail = () => {
 
         {/* Content */}
         <div className="p-6 space-y-6">
+          {/* Change Request Banner */}
+          {changeRequest && isOwner && (
+            <ChangeRequestBanner
+              comment={changeRequest.comment}
+              fieldLabels={changeRequest.fieldLabels}
+            />
+          )}
+
           {/* Image Carousel */}
           {scholarship.images && scholarship.images.length > 0 && (
             <ImageCarousel images={scholarship.images} title={scholarship.title} />
           )}
           
-          <ScholarshipInfo scholarship={scholarship} isAuthenticated={isAuthenticated} />
+          <ScholarshipInfo scholarship={scholarship} isAuthenticated={isAuthenticated} highlightedFields={isOwner && changeRequest ? changeRequest.fieldKeys : undefined} />
 
           {/* Comments Section */}
           {showComments && (

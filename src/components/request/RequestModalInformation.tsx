@@ -1,12 +1,22 @@
 
 import type { Request } from "@/hooks/useRequests";
-import { formatDate } from "@/lib/utils";
+import { formatDate, cn } from "@/lib/utils";
 
 interface RequestModalInformationProps {
   request: Request;
+  highlightedFields?: string[];
 }
 
-export const RequestModalInformation = ({ request }: RequestModalInformationProps) => {
+const FieldWrapper = ({ fieldKey, highlightedFields, children }: { fieldKey: string; highlightedFields?: string[]; children: React.ReactNode }) => {
+  const isHighlighted = highlightedFields?.includes(fieldKey);
+  return (
+    <div className={cn(isHighlighted && "bg-destructive/10 border border-destructive/30 rounded-md p-2 -mx-2")}>
+      {children}
+    </div>
+  );
+};
+
+export const RequestModalInformation = ({ request, highlightedFields }: RequestModalInformationProps) => {
   const getDonationNeedBy = (deadline: string | null) => {
     if (deadline) {
       return formatDate(deadline);
@@ -14,52 +24,71 @@ export const RequestModalInformation = ({ request }: RequestModalInformationProp
     return "Not specified";
   };
 
+  const labelClass = (fieldKey: string) =>
+    cn("font-medium text-sm", highlightedFields?.includes(fieldKey) ? "text-destructive" : "text-muted-foreground");
+
   return (
     <div className="space-y-6">
       <div>
         <h3 className="font-semibold text-lg mb-4">Request Information</h3>
         <div className="space-y-4">
-          <div>
-            <label className="font-medium text-sm text-muted-foreground">Request Type</label>
-            <p className="text-base mt-1">{request.request_type}</p>
-          </div>
-          <div>
-            <label className="font-medium text-sm text-muted-foreground">Requested Item</label>
-            <p className="text-base mt-1">{request.title}</p>
-          </div>
+          <FieldWrapper fieldKey="request_type" highlightedFields={highlightedFields}>
+            <div>
+              <label className={labelClass("request_type")}>Request Type</label>
+              <p className="text-base mt-1">{request.request_type}</p>
+            </div>
+          </FieldWrapper>
+          <FieldWrapper fieldKey="title" highlightedFields={highlightedFields}>
+            <div>
+              <label className={labelClass("title")}>Requested Item</label>
+              <p className="text-base mt-1">{request.title}</p>
+            </div>
+          </FieldWrapper>
           {request.description && (
-            <div>
-              <label className="font-medium text-sm text-muted-foreground">Request Details</label>
-              <p className="text-base mt-1">{request.description}</p>
-            </div>
+            <FieldWrapper fieldKey="description" highlightedFields={highlightedFields}>
+              <div>
+                <label className={labelClass("description")}>Request Details</label>
+                <p className="text-base mt-1">{request.description}</p>
+              </div>
+            </FieldWrapper>
           )}
-          <div>
-            <label className="font-medium text-sm text-muted-foreground">Donation Need By</label>
-            <p className="text-base mt-1">{getDonationNeedBy(request.deadline)}</p>
-          </div>
-          {request.location && (
+          <FieldWrapper fieldKey="deadline" highlightedFields={highlightedFields}>
             <div>
-              <label className="font-medium text-sm text-muted-foreground">Location</label>
-              <p className="text-base mt-1">{request.location}</p>
+              <label className={labelClass("deadline")}>Donation Need By</label>
+              <p className="text-base mt-1">{getDonationNeedBy(request.deadline)}</p>
             </div>
+          </FieldWrapper>
+          {request.location && (
+            <FieldWrapper fieldKey="location" highlightedFields={highlightedFields}>
+              <div>
+                <label className={labelClass("location")}>Location</label>
+                <p className="text-base mt-1">{request.location}</p>
+              </div>
+            </FieldWrapper>
           )}
           {request.urgency_level && (
-            <div>
-              <label className="font-medium text-sm text-muted-foreground">Urgency Level</label>
-              <p className="text-base mt-1">{request.urgency_level}</p>
-            </div>
+            <FieldWrapper fieldKey="urgency_level" highlightedFields={highlightedFields}>
+              <div>
+                <label className={labelClass("urgency_level")}>Urgency Level</label>
+                <p className="text-base mt-1">{request.urgency_level}</p>
+              </div>
+            </FieldWrapper>
           )}
           {request.contact_email && (
-            <div>
-              <label className="font-medium text-sm text-muted-foreground">Contact Email</label>
-              <p className="text-base mt-1">{request.contact_email}</p>
-            </div>
+            <FieldWrapper fieldKey="contact_email" highlightedFields={highlightedFields}>
+              <div>
+                <label className={labelClass("contact_email")}>Contact Email</label>
+                <p className="text-base mt-1">{request.contact_email}</p>
+              </div>
+            </FieldWrapper>
           )}
           {request.contact_phone && (
-            <div>
-              <label className="font-medium text-sm text-muted-foreground">Contact Phone</label>
-              <p className="text-base mt-1">{request.contact_phone}</p>
-            </div>
+            <FieldWrapper fieldKey="contact_phone" highlightedFields={highlightedFields}>
+              <div>
+                <label className={labelClass("contact_phone")}>Contact Phone</label>
+                <p className="text-base mt-1">{request.contact_phone}</p>
+              </div>
+            </FieldWrapper>
           )}
           <div>
             <label className="font-medium text-sm text-muted-foreground">Needs Dropoff</label>

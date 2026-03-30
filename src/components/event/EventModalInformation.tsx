@@ -1,6 +1,6 @@
 
 import { Calendar, MapPin, Users, UserCheck } from "lucide-react";
-import { formatDate } from "@/lib/utils";
+import { formatDate, cn } from "@/lib/utils";
 
 interface Event {
   id: string;
@@ -21,55 +21,73 @@ interface Event {
 interface EventModalInformationProps {
   event: Event;
   rsvpCount: number;
+  highlightedFields?: string[];
 }
 
-export const EventModalInformation = ({ event, rsvpCount }: EventModalInformationProps) => {
-  // formatDate imported from utils
+const FieldWrapper = ({ fieldKey, highlightedFields, children }: { fieldKey: string; highlightedFields?: string[]; children: React.ReactNode }) => {
+  const isHighlighted = highlightedFields?.includes(fieldKey);
+  return (
+    <div className={cn(isHighlighted && "bg-destructive/10 border border-destructive/30 rounded-md p-2 -mx-2")}>
+      {children}
+    </div>
+  );
+};
 
+export const EventModalInformation = ({ event, rsvpCount, highlightedFields }: EventModalInformationProps) => {
   return (
     <div className="space-y-4">
       <h3 className="font-semibold text-lg">Event Information</h3>
       
       {event.description && (
-        <p className="text-sm text-muted-foreground">{event.description}</p>
+        <FieldWrapper fieldKey="description" highlightedFields={highlightedFields}>
+          <p className={cn("text-sm", highlightedFields?.includes("description") ? "text-destructive" : "text-muted-foreground")}>{event.description}</p>
+        </FieldWrapper>
       )}
       
       <div className="space-y-3">
-        <div className="flex items-center gap-2">
-          <Calendar className="h-4 w-4 text-muted-foreground" />
-          <div className="text-sm">
-            <div>Start: {formatDate(event.start_date, { includeTime: true })}</div>
-            {event.end_date && <div>End: {formatDate(event.end_date, { includeTime: true })}</div>}
+        <FieldWrapper fieldKey="start_date" highlightedFields={highlightedFields}>
+          <div className="flex items-center gap-2">
+            <Calendar className={cn("h-4 w-4", highlightedFields?.includes("start_date") || highlightedFields?.includes("end_date") ? "text-destructive" : "text-muted-foreground")} />
+            <div className="text-sm">
+              <div>Start: {formatDate(event.start_date, { includeTime: true })}</div>
+              {event.end_date && <div>End: {formatDate(event.end_date, { includeTime: true })}</div>}
+            </div>
           </div>
-        </div>
+        </FieldWrapper>
         
         {event.location && (
-          <div className="flex items-start gap-2">
-            <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
-            <span className="text-sm">{event.location}</span>
-          </div>
+          <FieldWrapper fieldKey="location" highlightedFields={highlightedFields}>
+            <div className="flex items-start gap-2">
+              <MapPin className={cn("h-4 w-4 mt-0.5", highlightedFields?.includes("location") ? "text-destructive" : "text-muted-foreground")} />
+              <span className="text-sm">{event.location}</span>
+            </div>
+          </FieldWrapper>
         )}
         
         {event.event_link && (
-          <div className="flex items-start gap-2">
-            <span className="text-sm">
-              <a 
-                href={event.event_link} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-primary hover:underline"
-              >
-                Event Link
-              </a>
-            </span>
-          </div>
+          <FieldWrapper fieldKey="event_link" highlightedFields={highlightedFields}>
+            <div className="flex items-start gap-2">
+              <span className="text-sm">
+                <a 
+                  href={event.event_link} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline"
+                >
+                  Event Link
+                </a>
+              </span>
+            </div>
+          </FieldWrapper>
         )}
         
         {event.max_participants && (
-          <div className="flex items-center gap-2">
-            <Users className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">Max Participants: {event.max_participants}</span>
-          </div>
+          <FieldWrapper fieldKey="max_participants" highlightedFields={highlightedFields}>
+            <div className="flex items-center gap-2">
+              <Users className={cn("h-4 w-4", highlightedFields?.includes("max_participants") ? "text-destructive" : "text-muted-foreground")} />
+              <span className="text-sm">Max Participants: {event.max_participants}</span>
+            </div>
+          </FieldWrapper>
         )}
 
         {event.is_approved && (

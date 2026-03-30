@@ -1,7 +1,7 @@
 
 import { Separator } from "@/components/ui/separator";
 import { Tables } from "@/integrations/supabase/types";
-import { formatDate } from "@/lib/utils";
+import { formatDate, cn } from "@/lib/utils";
 
 type Scholarship = Tables<"scholarships"> & {
   creator?: {
@@ -17,9 +17,19 @@ type Scholarship = Tables<"scholarships"> & {
 interface ScholarshipInfoProps {
   scholarship: Scholarship;
   isAuthenticated: boolean;
+  highlightedFields?: string[];
 }
 
-export const ScholarshipInfo = ({ scholarship, isAuthenticated }: ScholarshipInfoProps) => {
+const FieldWrapper = ({ fieldKey, highlightedFields, children }: { fieldKey: string; highlightedFields?: string[]; children: React.ReactNode }) => {
+  const isHighlighted = highlightedFields?.includes(fieldKey);
+  return (
+    <div className={cn(isHighlighted && "bg-destructive/10 border border-destructive/30 rounded-md p-2 -m-2")}>
+      {children}
+    </div>
+  );
+};
+
+export const ScholarshipInfo = ({ scholarship, isAuthenticated, highlightedFields }: ScholarshipInfoProps) => {
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -27,9 +37,10 @@ export const ScholarshipInfo = ({ scholarship, isAuthenticated }: ScholarshipInf
     }).format(amount);
   };
 
-  // formatDate imported from utils
-
   const organizationName = scholarship.organization?.name || scholarship.organization_name || "Unknown Organization";
+
+  const labelClass = (fieldKey: string) =>
+    cn("font-semibold text-sm mb-1", highlightedFields?.includes(fieldKey) ? "text-destructive" : "text-muted-foreground");
 
   return (
     <div className="space-y-6">
@@ -41,20 +52,24 @@ export const ScholarshipInfo = ({ scholarship, isAuthenticated }: ScholarshipInf
             <p className="text-xs text-muted-foreground">{scholarship.organization.type}</p>
           )}
         </div>
-        <div>
-          <h4 className="font-semibold text-sm text-muted-foreground mb-1">Amount</h4>
-          <p className="text-sm">
-            {scholarship.amount != null && Number(scholarship.amount) > 0
-              ? scholarship.amount_max != null && Number(scholarship.amount_max) > 0
-                ? `${formatCurrency(Number(scholarship.amount))} – ${formatCurrency(Number(scholarship.amount_max))}`
-                : formatCurrency(Number(scholarship.amount))
-              : "--"}
-          </p>
-        </div>
-        <div>
-          <h4 className="font-semibold text-sm text-muted-foreground mb-1">Application Deadline</h4>
-          <p className="text-sm">{formatDate(scholarship.application_deadline)}</p>
-        </div>
+        <FieldWrapper fieldKey="amount" highlightedFields={highlightedFields}>
+          <div>
+            <h4 className={labelClass("amount")}>Amount</h4>
+            <p className="text-sm">
+              {scholarship.amount != null && Number(scholarship.amount) > 0
+                ? scholarship.amount_max != null && Number(scholarship.amount_max) > 0
+                  ? `${formatCurrency(Number(scholarship.amount))} – ${formatCurrency(Number(scholarship.amount_max))}`
+                  : formatCurrency(Number(scholarship.amount))
+                : "--"}
+            </p>
+          </div>
+        </FieldWrapper>
+        <FieldWrapper fieldKey="application_deadline" highlightedFields={highlightedFields}>
+          <div>
+            <h4 className={labelClass("application_deadline")}>Application Deadline</h4>
+            <p className="text-sm">{formatDate(scholarship.application_deadline)}</p>
+          </div>
+        </FieldWrapper>
         {isAuthenticated && (
           <div>
             <h4 className="font-semibold text-sm text-muted-foreground mb-1">Creator</h4>
@@ -66,31 +81,39 @@ export const ScholarshipInfo = ({ scholarship, isAuthenticated }: ScholarshipInf
       <Separator />
 
       {scholarship.description && (
-        <div>
-          <h4 className="font-semibold text-sm text-muted-foreground mb-2">Description</h4>
-          <p className="text-sm whitespace-pre-wrap">{scholarship.description}</p>
-        </div>
+        <FieldWrapper fieldKey="description" highlightedFields={highlightedFields}>
+          <div>
+            <h4 className={labelClass("description")}>Description</h4>
+            <p className="text-sm whitespace-pre-wrap">{scholarship.description}</p>
+          </div>
+        </FieldWrapper>
       )}
 
       {scholarship.eligibility_criteria && (
-        <div>
-          <h4 className="font-semibold text-sm text-muted-foreground mb-2">Eligibility Criteria</h4>
-          <p className="text-sm whitespace-pre-wrap">{scholarship.eligibility_criteria}</p>
-        </div>
+        <FieldWrapper fieldKey="eligibility_criteria" highlightedFields={highlightedFields}>
+          <div>
+            <h4 className={labelClass("eligibility_criteria")}>Eligibility Criteria</h4>
+            <p className="text-sm whitespace-pre-wrap">{scholarship.eligibility_criteria}</p>
+          </div>
+        </FieldWrapper>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {scholarship.contact_email && (
-          <div>
-            <h4 className="font-semibold text-sm text-muted-foreground mb-1">Contact Email</h4>
-            <p className="text-sm">{scholarship.contact_email}</p>
-          </div>
+          <FieldWrapper fieldKey="contact_email" highlightedFields={highlightedFields}>
+            <div>
+              <h4 className={labelClass("contact_email")}>Contact Email</h4>
+              <p className="text-sm">{scholarship.contact_email}</p>
+            </div>
+          </FieldWrapper>
         )}
         {scholarship.contact_phone && (
-          <div>
-            <h4 className="font-semibold text-sm text-muted-foreground mb-1">Contact Phone</h4>
-            <p className="text-sm">{scholarship.contact_phone}</p>
-          </div>
+          <FieldWrapper fieldKey="contact_phone" highlightedFields={highlightedFields}>
+            <div>
+              <h4 className={labelClass("contact_phone")}>Contact Phone</h4>
+              <p className="text-sm">{scholarship.contact_phone}</p>
+            </div>
+          </FieldWrapper>
         )}
       </div>
 
