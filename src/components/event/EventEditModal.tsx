@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { ImageUpload } from "@/components/shared/ImageUpload";
+import { SubmitForReviewDialog } from "@/components/shared/SubmitForReviewDialog";
 import { X } from "lucide-react";
 import type { Event } from "@/hooks/useEvents";
 
@@ -15,6 +16,7 @@ interface EventEditModalProps {
   onOpenChange: (open: boolean) => void;
   event: Event;
   onEventUpdated?: () => void;
+  hasChangeRequest?: boolean;
 }
 
 export const EventEditModal = ({ 
