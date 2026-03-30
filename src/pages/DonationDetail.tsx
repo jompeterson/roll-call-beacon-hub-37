@@ -147,6 +147,14 @@ export const DonationDetail = () => {
 
         {/* Content */}
         <div className="p-6 space-y-6">
+          {/* Change Request Banner - shown to post creator */}
+          {changeRequest && isOwner && (
+            <ChangeRequestBanner
+              comment={changeRequest.comment}
+              fieldLabels={changeRequest.fieldLabels}
+            />
+          )}
+
           <DonationModalCreatorInfo
             creatorUserId={donation.creator_user_id}
             createdAt={donation.created_at}
@@ -162,6 +170,7 @@ export const DonationDetail = () => {
               getOrganizationBio={getOrganizationBio}
               getUserBio={getUserBio}
               formatAmount={formatAmount}
+              highlightedFields={isOwner && changeRequest ? changeRequest.fieldKeys : undefined}
             />
 
             <DonationModalImageSection
