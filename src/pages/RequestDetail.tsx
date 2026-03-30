@@ -214,6 +214,7 @@ export const RequestDetail = () => {
           open={editOpen}
           onOpenChange={setEditOpen}
           request={request}
+          hasChangeRequest={!!changeRequest}
         />
       )}
     </div>
