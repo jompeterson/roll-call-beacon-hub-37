@@ -24,6 +24,7 @@ export const RequestModalActionButtons = ({
   onApprove,
   onReject,
   onRequestChanges,
+  onChangeRequestSubmitted,
   onMarkCompleted,
   onEdit,
   onOpenChange,
