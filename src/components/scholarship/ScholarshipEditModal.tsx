@@ -169,5 +169,17 @@ export const ScholarshipEditModal = ({
         </form>
       </DialogContent>
     </Dialog>
+    <SubmitForReviewDialog
+      open={showReviewDialog}
+      onOpenChange={setShowReviewDialog}
+      contentType="scholarship"
+      contentId={scholarship.id}
+      contentTitle={scholarship.title}
+      onComplete={() => {
+        onOpenChange(false);
+        onScholarshipUpdated?.();
+      }}
+    />
+    </>
   );
 };

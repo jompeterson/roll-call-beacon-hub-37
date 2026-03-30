@@ -273,5 +273,17 @@ export const EventEditModal = ({
         </form>
       </DialogContent>
     </Dialog>
+    <SubmitForReviewDialog
+      open={showReviewDialog}
+      onOpenChange={setShowReviewDialog}
+      contentType="event"
+      contentId={event.id}
+      contentTitle={event.title}
+      onComplete={() => {
+        onOpenChange(false);
+        onEventUpdated?.();
+      }}
+    />
+    </>
   );
 };

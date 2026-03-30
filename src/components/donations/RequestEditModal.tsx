@@ -303,5 +303,17 @@ export const RequestEditModal = ({
         </form>
       </DialogContent>
     </Dialog>
+    <SubmitForReviewDialog
+      open={showReviewDialog}
+      onOpenChange={setShowReviewDialog}
+      contentType="request"
+      contentId={request.id}
+      contentTitle={request.title}
+      onComplete={() => {
+        onOpenChange(false);
+        onRequestUpdated?.();
+      }}
+    />
+    </>
   );
 };

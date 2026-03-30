@@ -273,5 +273,17 @@ export const VolunteerEditModal = ({
         </form>
       </DialogContent>
     </Dialog>
+    <SubmitForReviewDialog
+      open={showReviewDialog}
+      onOpenChange={setShowReviewDialog}
+      contentType="volunteer"
+      contentId={volunteer.id}
+      contentTitle={volunteer.title}
+      onComplete={() => {
+        onOpenChange(false);
+        onVolunteerUpdated?.();
+      }}
+    />
+    </>
   );
 };
