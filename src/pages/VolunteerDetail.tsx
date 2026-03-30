@@ -163,6 +163,14 @@ export const VolunteerDetail = () => {
 
         {/* Content */}
         <div className="p-6 space-y-6">
+          {/* Change Request Banner */}
+          {changeRequest && isOwner && (
+            <ChangeRequestBanner
+              comment={changeRequest.comment}
+              fieldLabels={changeRequest.fieldLabels}
+            />
+          )}
+
           {/* Status Badge */}
           <div className="flex items-center gap-2">
             {getStatusBadge()}
@@ -181,15 +189,15 @@ export const VolunteerDetail = () => {
           {/* Volunteer Information */}
           <div className="space-y-4">
             {volunteer.description && (
-              <div>
-                <h3 className="font-semibold mb-2">Description</h3>
+              <div className={cn(isOwner && changeRequest?.fieldKeys.includes("description") && "bg-destructive/10 border border-destructive/30 rounded-md p-2")}>
+                <h3 className={cn("font-semibold mb-2", isOwner && changeRequest?.fieldKeys.includes("description") && "text-destructive")}>Description</h3>
                 <p className="text-muted-foreground">{volunteer.description}</p>
               </div>
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex items-start gap-2">
-                <Calendar className="h-5 w-5 text-muted-foreground mt-0.5" />
+              <div className={cn("flex items-start gap-2", isOwner && changeRequest?.fieldKeys.includes("start_date") && "bg-destructive/10 border border-destructive/30 rounded-md p-2")}>
+                <Calendar className={cn("h-5 w-5 mt-0.5", isOwner && changeRequest?.fieldKeys.includes("start_date") ? "text-destructive" : "text-muted-foreground")} />
                 <div>
                   <p className="font-medium">Date & Time</p>
                   <div className="text-sm text-muted-foreground">
@@ -200,8 +208,8 @@ export const VolunteerDetail = () => {
               </div>
 
               {volunteer.location && (
-                <div className="flex items-start gap-2">
-                  <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
+                <div className={cn("flex items-start gap-2", isOwner && changeRequest?.fieldKeys.includes("location") && "bg-destructive/10 border border-destructive/30 rounded-md p-2")}>
+                  <MapPin className={cn("h-5 w-5 mt-0.5", isOwner && changeRequest?.fieldKeys.includes("location") ? "text-destructive" : "text-muted-foreground")} />
                   <div>
                     <p className="font-medium">Location</p>
                     <p className="text-sm text-muted-foreground">{volunteer.location}</p>
@@ -210,7 +218,7 @@ export const VolunteerDetail = () => {
               )}
 
               {volunteer.volunteer_link && (
-                <div className="flex items-start gap-2">
+                <div className={cn("flex items-start gap-2", isOwner && changeRequest?.fieldKeys.includes("volunteer_link") && "bg-destructive/10 border border-destructive/30 rounded-md p-2")}>
                   <div>
                     <p className="font-medium">Link</p>
                     <a 
@@ -226,8 +234,8 @@ export const VolunteerDetail = () => {
               )}
 
               {volunteer.max_participants && (
-                <div className="flex items-start gap-2">
-                  <Users className="h-5 w-5 text-muted-foreground mt-0.5" />
+                <div className={cn("flex items-start gap-2", isOwner && changeRequest?.fieldKeys.includes("max_participants") && "bg-destructive/10 border border-destructive/30 rounded-md p-2")}>
+                  <Users className={cn("h-5 w-5 mt-0.5", isOwner && changeRequest?.fieldKeys.includes("max_participants") ? "text-destructive" : "text-muted-foreground")} />
                   <div>
                     <p className="font-medium">Participants</p>
                     <p className="text-sm text-muted-foreground">
