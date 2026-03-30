@@ -33,8 +33,10 @@ export const ScholarshipDetail = () => {
     isDeleting
   } = useScholarships();
   const [editOpen, setEditOpen] = useState(false);
+  const { changeRequest } = useChangeRequest("scholarship", scholarshipId || "");
 
   const scholarship = scholarships.find(s => s.id === scholarshipId);
+  const isOwner = user?.id === scholarship?.creator_user_id;
 
   if (isLoading) {
     return (

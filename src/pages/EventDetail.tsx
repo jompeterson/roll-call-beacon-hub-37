@@ -154,13 +154,21 @@ export const EventDetail = () => {
 
         {/* Content */}
         <div className="p-6 space-y-6">
+          {/* Change Request Banner */}
+          {changeRequest && isOwner && (
+            <ChangeRequestBanner
+              comment={changeRequest.comment}
+              fieldLabels={changeRequest.fieldLabels}
+            />
+          )}
+
           {/* Image Carousel */}
           {event.images && event.images.length > 0 && (
             <ImageCarousel images={event.images} title={event.title} />
           )}
           
           {/* Event Information */}
-          <EventModalInformation event={event} rsvpCount={rsvpCount} />
+          <EventModalInformation event={event} rsvpCount={rsvpCount} highlightedFields={isOwner && changeRequest ? changeRequest.fieldKeys : undefined} />
 
           {/* RSVP Status for authenticated users */}
           <EventModalRSVPStatus 
