@@ -33,7 +33,7 @@ export const EventDetail = () => {
   const [editOpen, setEditOpen] = useState(false);
 
   const event = events.find(e => e.id === eventId);
-  const { changeRequest } = useChangeRequest("event", eventId || "");
+  const { changeRequest, refetch: refetchChangeRequest } = useChangeRequest("event", eventId || "");
   const isOwner = user?.id === event?.creator_user_id;
 
   if (loading) {
