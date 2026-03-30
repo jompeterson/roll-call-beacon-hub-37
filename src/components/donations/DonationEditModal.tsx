@@ -12,6 +12,7 @@ import { DonationFormBasicFields } from "./DonationFormBasicFields";
 import { DonationFormOrganizationField } from "./DonationFormOrganizationField";
 import { DonationFormContactFields } from "./DonationFormContactFields";
 import { DonationImageUpload } from "./DonationImageUpload";
+import { SubmitForReviewDialog } from "@/components/shared/SubmitForReviewDialog";
 import type { Donation } from "@/hooks/useDonations";
 
 interface DonationEditModalProps {
@@ -19,6 +20,7 @@ interface DonationEditModalProps {
   onOpenChange: (open: boolean) => void;
   donation: Donation;
   onDonationUpdated?: () => void;
+  hasChangeRequest?: boolean;
 }
 
 interface Organization {
