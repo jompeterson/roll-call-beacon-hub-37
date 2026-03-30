@@ -137,7 +137,7 @@ export const EventModalActionButtons = ({
                 Reject Event
               </Button>
               {onRequestChanges && (
-                <Button variant="outline" onClick={() => onRequestChanges(event.id)} className="flex-1">
+                <Button variant="outline" onClick={() => setShowRequestChangesModal(true)} className="flex-1">
                   Request Changes
                 </Button>
               )}
