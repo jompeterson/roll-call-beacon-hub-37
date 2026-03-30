@@ -12,6 +12,7 @@ import { useVolunteerSignups } from "@/hooks/useVolunteerSignups";
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
 import { VolunteerEditModal } from "@/components/volunteer/VolunteerEditModal";
+import { RequestChangesModal } from "@/components/shared/RequestChangesModal";
 
 interface Volunteer {
   id: string;
