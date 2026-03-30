@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Edit, Trash2, UserCheck } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { RequestChangesModal } from "@/components/shared/RequestChangesModal";
 import {
   AlertDialog,
   AlertDialogAction,
