@@ -103,8 +103,12 @@ export const EventEditModal = ({
         description: "Event updated successfully!",
       });
 
-      onOpenChange(false);
-      onEventUpdated?.();
+      if (hasChangeRequest) {
+        setShowReviewDialog(true);
+      } else {
+        onOpenChange(false);
+        onEventUpdated?.();
+      }
 
     } catch (error) {
       console.error("Error updating event:", error);
