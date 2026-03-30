@@ -23,6 +23,7 @@ export const ScholarshipActionButtons = ({
   onApprove,
   onReject,
   onRequestChanges,
+  onChangeRequestSubmitted,
   onEdit,
   creatorUserId,
   isApproving,
