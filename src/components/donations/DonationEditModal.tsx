@@ -168,8 +168,12 @@ export const DonationEditModal = ({
         description: "Donation post updated successfully!",
       });
 
-      onOpenChange(false);
-      onDonationUpdated?.();
+      if (hasChangeRequest) {
+        setShowReviewDialog(true);
+      } else {
+        onOpenChange(false);
+        onDonationUpdated?.();
+      }
 
     } catch (error) {
       console.error("Error updating donation:", error);
