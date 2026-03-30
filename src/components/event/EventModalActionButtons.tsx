@@ -40,6 +40,7 @@ interface EventModalActionButtonsProps {
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
   onRequestChanges?: (id: string) => void;
+  onChangeRequestSubmitted?: () => void;
   onRSVPAction: () => void;
   onEdit?: () => void;
   onDelete?: (id: string) => void;
