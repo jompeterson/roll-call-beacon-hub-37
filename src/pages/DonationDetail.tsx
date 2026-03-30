@@ -24,7 +24,7 @@ export const DonationDetail = () => {
   const [editOpen, setEditOpen] = useState(false);
 
   const donation = donations.find(d => d.id === donationId);
-  const { changeRequest } = useChangeRequest("donation", donationId || "");
+  const { changeRequest, refetch: refetchChangeRequest } = useChangeRequest("donation", donationId || "");
   const isOwner = user?.id === donation?.creator_user_id;
 
   if (isLoading) {
@@ -231,6 +231,7 @@ export const DonationDetail = () => {
           onOpenChange={setEditOpen}
           donation={donation}
           hasChangeRequest={!!changeRequest}
+          onDonationUpdated={refetchChangeRequest}
         />
       )}
     </div>

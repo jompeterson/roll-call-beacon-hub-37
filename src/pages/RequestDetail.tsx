@@ -24,7 +24,7 @@ export const RequestDetail = () => {
   const [editOpen, setEditOpen] = useState(false);
 
   const request = requests.find(r => r.id === requestId);
-  const { changeRequest } = useChangeRequest("request", requestId || "");
+  const { changeRequest, refetch: refetchChangeRequest } = useChangeRequest("request", requestId || "");
   const isOwner = user?.id === request?.creator_user_id;
 
   if (isLoading) {
@@ -215,6 +215,7 @@ export const RequestDetail = () => {
           onOpenChange={setEditOpen}
           request={request}
           hasChangeRequest={!!changeRequest}
+          onRequestUpdated={refetchChangeRequest}
         />
       )}
     </div>

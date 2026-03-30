@@ -29,7 +29,7 @@ export const VolunteerDetail = () => {
   } = useVolunteers();
   const { signupCount, hasSignedUp, submitting, signUp, cancelSignup, userSignup } = useVolunteerSignups(volunteerId || "");
   const [editOpen, setEditOpen] = useState(false);
-  const { changeRequest } = useChangeRequest("volunteer", volunteerId || "");
+  const { changeRequest, refetch: refetchChangeRequest } = useChangeRequest("volunteer", volunteerId || "");
 
   const volunteer = volunteers.find(v => v.id === volunteerId);
   const isOwner = user?.id === volunteer?.creator_user_id;
@@ -321,6 +321,7 @@ export const VolunteerDetail = () => {
           onOpenChange={setEditOpen}
           volunteer={volunteer}
           hasChangeRequest={!!changeRequest}
+          onVolunteerUpdated={refetchChangeRequest}
         />
       )}
     </div>
