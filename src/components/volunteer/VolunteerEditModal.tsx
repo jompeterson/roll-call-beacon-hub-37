@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { ImageUpload } from "@/components/shared/ImageUpload";
+import { SubmitForReviewDialog } from "@/components/shared/SubmitForReviewDialog";
 import { X } from "lucide-react";
 import type { Volunteer } from "@/hooks/useVolunteers";
 
@@ -15,6 +16,7 @@ interface VolunteerEditModalProps {
   onOpenChange: (open: boolean) => void;
   volunteer: Volunteer;
   onVolunteerUpdated?: () => void;
+  hasChangeRequest?: boolean;
 }
 
 export const VolunteerEditModal = ({ 
