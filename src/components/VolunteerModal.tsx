@@ -272,6 +272,15 @@ export const VolunteerModal = ({
           onOpenChange={setIsEditModalOpen}
         />
       )}
+      {volunteer && onRequestChanges && (
+        <RequestChangesModal
+          open={showRequestChangesModal}
+          onOpenChange={setShowRequestChangesModal}
+          contentType="volunteer"
+          contentId={volunteer.id}
+          onSubmit={() => onRequestChanges(volunteer.id)}
+        />
+      )}
     </Dialog>
   );
 };
