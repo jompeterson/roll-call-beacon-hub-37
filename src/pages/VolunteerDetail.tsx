@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { useVolunteers } from "@/hooks/useVolunteers";
 import { useAuth } from "@/hooks/useAuth";
 import { useVolunteerSignups } from "@/hooks/useVolunteerSignups";
+import { useChangeRequest } from "@/hooks/useChangeRequest";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
@@ -12,7 +13,8 @@ import { ShareButton } from "@/components/ShareButton";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { VolunteerEditModal } from "@/components/volunteer/VolunteerEditModal";
-import { formatDate } from "@/lib/utils";
+import { ChangeRequestBanner } from "@/components/shared/ChangeRequestBanner";
+import { formatDate, cn } from "@/lib/utils";
 
 export const VolunteerDetail = () => {
   const { volunteerId } = useParams();

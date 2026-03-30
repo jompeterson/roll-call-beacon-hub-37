@@ -163,12 +163,20 @@ export const ScholarshipDetail = () => {
 
         {/* Content */}
         <div className="p-6 space-y-6">
+          {/* Change Request Banner */}
+          {changeRequest && isOwner && (
+            <ChangeRequestBanner
+              comment={changeRequest.comment}
+              fieldLabels={changeRequest.fieldLabels}
+            />
+          )}
+
           {/* Image Carousel */}
           {scholarship.images && scholarship.images.length > 0 && (
             <ImageCarousel images={scholarship.images} title={scholarship.title} />
           )}
           
-          <ScholarshipInfo scholarship={scholarship} isAuthenticated={isAuthenticated} />
+          <ScholarshipInfo scholarship={scholarship} isAuthenticated={isAuthenticated} highlightedFields={isOwner && changeRequest ? changeRequest.fieldKeys : undefined} />
 
           {/* Comments Section */}
           {showComments && (
