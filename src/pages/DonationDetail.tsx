@@ -230,6 +230,7 @@ export const DonationDetail = () => {
           open={editOpen}
           onOpenChange={setEditOpen}
           donation={donation}
+          hasChangeRequest={!!changeRequest}
         />
       )}
     </div>
