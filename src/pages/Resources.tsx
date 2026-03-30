@@ -153,9 +153,9 @@ const VideoThumbnail = ({ videoUrl }: { videoUrl: string }) => {
           onClick={() => setPlaying(true)}
         >
           <img src={thumbnail} alt="Video thumbnail" className="w-full h-full object-cover rounded-t-lg" />
-          <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
-            <div className="h-14 w-14 rounded-full bg-primary/90 flex items-center justify-center group-hover:bg-primary transition-colors">
-              <Play className="h-7 w-7 text-primary-foreground ml-1" />
+          <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors">
+            <div className="absolute bottom-3 right-3 h-10 w-10 rounded-full bg-primary/90 flex items-center justify-center group-hover:bg-primary transition-colors">
+              <Play className="h-5 w-5 text-primary-foreground ml-0.5" />
             </div>
           </div>
         </div>
