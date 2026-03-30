@@ -12,6 +12,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
+import { RequestChangesModal } from "@/components/shared/RequestChangesModal";
 
 interface DonationModalActionButtonsProps {
   donationId: string;
