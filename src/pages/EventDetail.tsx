@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { useEvents } from "@/hooks/useEvents";
 import { useAuth } from "@/hooks/useAuth";
 import { useEventRSVPs } from "@/hooks/useEventRSVPs";
+import { useChangeRequest } from "@/hooks/useChangeRequest";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { ChevronRight, Edit } from "lucide-react";
@@ -15,6 +16,7 @@ import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ShareButton } from "@/components/ShareButton";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
+import { ChangeRequestBanner } from "@/components/shared/ChangeRequestBanner";
 
 export const EventDetail = () => {
   const { eventId } = useParams();
