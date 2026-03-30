@@ -13,6 +13,7 @@ interface RequestModalActionButtonsProps {
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
   onRequestChanges: (id: string) => void;
+  onChangeRequestSubmitted?: () => void;
   onMarkCompleted?: (id: string) => void;
   onEdit?: () => void;
   onOpenChange: (open: boolean) => void;
