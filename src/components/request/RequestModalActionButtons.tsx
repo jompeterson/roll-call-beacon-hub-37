@@ -185,6 +185,7 @@ export const RequestModalActionButtons = ({
         contentType="request"
         contentId={request.id}
         onSubmit={() => onRequestChanges(request.id)}
+        onChangeRequestSubmitted={onChangeRequestSubmitted}
       />
     </>
   );

@@ -175,6 +175,7 @@ export const EventModalActionButtons = ({
           contentType="event"
           contentId={event.id}
           onSubmit={() => onRequestChanges(event.id)}
+          onChangeRequestSubmitted={onChangeRequestSubmitted}
         />
       )}
     </div>

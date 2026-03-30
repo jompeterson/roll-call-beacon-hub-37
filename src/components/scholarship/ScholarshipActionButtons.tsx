@@ -77,6 +77,7 @@ export const ScholarshipActionButtons = ({
         contentType="scholarship"
         contentId={scholarshipId}
         onSubmit={onRequestChanges}
+        onChangeRequestSubmitted={onChangeRequestSubmitted}
       />
     </>
   );
