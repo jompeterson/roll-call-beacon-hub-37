@@ -1,6 +1,7 @@
 
 import type { Donation } from "@/hooks/useDonations";
 import { formatDate } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 interface DonationModalInformationProps {
   donation: Donation;
@@ -12,7 +13,17 @@ interface DonationModalInformationProps {
   getOrganizationBio: () => string;
   getUserBio: () => string;
   formatAmount: (amount: number) => string;
+  highlightedFields?: string[];
 }
+
+const FieldWrapper = ({ fieldKey, highlightedFields, children }: { fieldKey: string; highlightedFields?: string[]; children: React.ReactNode }) => {
+  const isHighlighted = highlightedFields?.includes(fieldKey);
+  return (
+    <div className={cn(isHighlighted && "bg-destructive/10 border border-destructive/30 rounded-md p-2 -mx-2")}>
+      {children}
+    </div>
+  );
+};
 
 export const DonationModalInformation = ({
   donation,
@@ -23,7 +34,8 @@ export const DonationModalInformation = ({
   getInformationTitle,
   getOrganizationBio,
   getUserBio,
-  formatAmount
+  formatAmount,
+  highlightedFields,
 }: DonationModalInformationProps) => {
   const d = donation as any;
   const donationType = d.donation_type || "";
@@ -39,18 +51,22 @@ export const DonationModalInformation = ({
         <h3 className="font-semibold text-lg mb-4">{getInformationTitle()}</h3>
         <div className="space-y-4">
           {isDonationView && (
-            <div>
-              <label className="font-medium text-sm text-muted-foreground">Donation Title</label>
-              <p className="text-base mt-1">{donation.title}</p>
-            </div>
+            <FieldWrapper fieldKey="title" highlightedFields={highlightedFields}>
+              <div>
+                <label className={cn("font-medium text-sm", highlightedFields?.includes("title") ? "text-destructive" : "text-muted-foreground")}>Donation Title</label>
+                <p className="text-base mt-1">{donation.title}</p>
+              </div>
+            </FieldWrapper>
           )}
           {!isOrganization && !isUser && (
-            <div>
-              <label className="font-medium text-sm text-muted-foreground">
-                {isEvent ? "Event Details" : isScholarship ? "Scholarship Details" : "Donation Details"}
-              </label>
-              <p className="text-base mt-1">{donation.description || "No description provided"}</p>
-            </div>
+            <FieldWrapper fieldKey="description" highlightedFields={highlightedFields}>
+              <div>
+                <label className={cn("font-medium text-sm", highlightedFields?.includes("description") ? "text-destructive" : "text-muted-foreground")}>
+                  {isEvent ? "Event Details" : isScholarship ? "Scholarship Details" : "Donation Details"}
+                </label>
+                <p className="text-base mt-1">{donation.description || "No description provided"}</p>
+              </div>
+            </FieldWrapper>
           )}
           {isOrganization && (
             <div>
@@ -65,22 +81,26 @@ export const DonationModalInformation = ({
             </div>
           )}
           {!isOrganization && !isUser && (
-            <div>
-              <label className="font-medium text-sm text-muted-foreground">
-                {isEvent ? "Volunteer Hours" : isScholarship ? "Scholarship Amount" : "Estimated Amount"}
-              </label>
-              <p className="text-base mt-1">
-                {formatAmount(donation.amount_needed)}
-              </p>
-            </div>
+            <FieldWrapper fieldKey="amount_needed" highlightedFields={highlightedFields}>
+              <div>
+                <label className={cn("font-medium text-sm", highlightedFields?.includes("amount_needed") ? "text-destructive" : "text-muted-foreground")}>
+                  {isEvent ? "Volunteer Hours" : isScholarship ? "Scholarship Amount" : "Estimated Amount"}
+                </label>
+                <p className="text-base mt-1">
+                  {formatAmount(donation.amount_needed)}
+                </p>
+              </div>
+            </FieldWrapper>
           )}
 
           {/* Donation Type */}
           {isDonationView && donationType && (
-            <div>
-              <label className="font-medium text-sm text-muted-foreground">Donation Type</label>
-              <p className="text-base mt-1">{donationType}</p>
-            </div>
+            <FieldWrapper fieldKey="donation_type" highlightedFields={highlightedFields}>
+              <div>
+                <label className={cn("font-medium text-sm", highlightedFields?.includes("donation_type") ? "text-destructive" : "text-muted-foreground")}>Donation Type</label>
+                <p className="text-base mt-1">{donationType}</p>
+              </div>
+            </FieldWrapper>
           )}
 
           {/* Physical goods fields */}
@@ -139,30 +159,38 @@ export const DonationModalInformation = ({
             </div>
           )}
           {isDonationView && isFacility && d.location && (
-            <div>
-              <label className="font-medium text-sm text-muted-foreground">Location</label>
-              <p className="text-base mt-1">{d.location}</p>
-            </div>
+            <FieldWrapper fieldKey="location" highlightedFields={highlightedFields}>
+              <div>
+                <label className={cn("font-medium text-sm", highlightedFields?.includes("location") ? "text-destructive" : "text-muted-foreground")}>Location</label>
+                <p className="text-base mt-1">{d.location}</p>
+              </div>
+            </FieldWrapper>
           )}
 
           {/* Contact info */}
           {donation.contact_email && (
-            <div>
-              <label className="font-medium text-sm text-muted-foreground">Contact Email</label>
-              <p className="text-base mt-1">{donation.contact_email}</p>
-            </div>
+            <FieldWrapper fieldKey="contact_email" highlightedFields={highlightedFields}>
+              <div>
+                <label className={cn("font-medium text-sm", highlightedFields?.includes("contact_email") ? "text-destructive" : "text-muted-foreground")}>Contact Email</label>
+                <p className="text-base mt-1">{donation.contact_email}</p>
+              </div>
+            </FieldWrapper>
           )}
           {donation.contact_phone && (
-            <div>
-              <label className="font-medium text-sm text-muted-foreground">Contact Phone</label>
-              <p className="text-base mt-1">{donation.contact_phone}</p>
-            </div>
+            <FieldWrapper fieldKey="contact_phone" highlightedFields={highlightedFields}>
+              <div>
+                <label className={cn("font-medium text-sm", highlightedFields?.includes("contact_phone") ? "text-destructive" : "text-muted-foreground")}>Contact Phone</label>
+                <p className="text-base mt-1">{donation.contact_phone}</p>
+              </div>
+            </FieldWrapper>
           )}
           {donation.target_date && (
-            <div>
-              <label className="font-medium text-sm text-muted-foreground">Deadline</label>
-              <p className="text-base mt-1">{formatDate(donation.target_date)}</p>
-            </div>
+            <FieldWrapper fieldKey="target_date" highlightedFields={highlightedFields}>
+              <div>
+                <label className={cn("font-medium text-sm", highlightedFields?.includes("target_date") ? "text-destructive" : "text-muted-foreground")}>Deadline</label>
+                <p className="text-base mt-1">{formatDate(donation.target_date)}</p>
+              </div>
+            </FieldWrapper>
           )}
           {isDonationView && donation.can_deliver && (
             <div>
