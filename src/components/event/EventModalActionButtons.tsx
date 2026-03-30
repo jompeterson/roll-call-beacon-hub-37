@@ -40,6 +40,7 @@ interface EventModalActionButtonsProps {
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
   onRequestChanges?: (id: string) => void;
+  onChangeRequestSubmitted?: () => void;
   onRSVPAction: () => void;
   onEdit?: () => void;
   onDelete?: (id: string) => void;
@@ -55,6 +56,7 @@ export const EventModalActionButtons = ({
   onApprove,
   onReject,
   onRequestChanges,
+  onChangeRequestSubmitted,
   onRSVPAction,
   onEdit,
   onDelete,
@@ -173,6 +175,7 @@ export const EventModalActionButtons = ({
           contentType="event"
           contentId={event.id}
           onSubmit={() => onRequestChanges(event.id)}
+          onChangeRequestSubmitted={onChangeRequestSubmitted}
         />
       )}
     </div>

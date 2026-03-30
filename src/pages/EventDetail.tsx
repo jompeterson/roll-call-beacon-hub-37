@@ -217,6 +217,7 @@ export const EventDetail = () => {
                 onApprove={handleApprove}
                 onReject={handleReject}
                 onRSVPAction={handleRSVPAction}
+                onChangeRequestSubmitted={refetchChangeRequest}
               />
             </div>
           </div>

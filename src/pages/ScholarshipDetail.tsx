@@ -224,6 +224,7 @@ export const ScholarshipDetail = () => {
                 onApprove={handleApprove}
                 onReject={handleReject}
                 onRequestChanges={handleRequestChanges}
+                onChangeRequestSubmitted={refetchChangeRequest}
                 creatorUserId={scholarship.creator_user_id}
                 isApproving={isApproving}
                 isRejecting={isRejecting}

@@ -20,6 +20,7 @@ interface DonationModalActionButtonsProps {
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
   onRequestChanges: (id: string) => void;
+  onChangeRequestSubmitted?: () => void;
   onOpenChange: (open: boolean) => void;
   onEdit?: () => void;
   isUser?: boolean;
@@ -33,6 +34,7 @@ export const DonationModalActionButtons = ({
   onApprove,
   onReject,
   onRequestChanges,
+  onChangeRequestSubmitted,
   onOpenChange,
   onEdit,
   isUser = false,
@@ -234,6 +236,7 @@ export const DonationModalActionButtons = ({
           contentType="donation"
           contentId={donationId}
           onSubmit={() => onRequestChanges(donationId)}
+          onChangeRequestSubmitted={onChangeRequestSubmitted}
         />
       </>
     );
@@ -277,6 +280,7 @@ export const DonationModalActionButtons = ({
         contentType="donation"
         contentId={donationId}
         onSubmit={() => onRequestChanges(donationId)}
+        onChangeRequestSubmitted={onChangeRequestSubmitted}
       />
     </>
   );

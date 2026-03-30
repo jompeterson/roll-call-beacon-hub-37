@@ -202,6 +202,7 @@ export const RequestDetail = () => {
                   onApprove={handleApprove}
                   onReject={handleReject}
                   onRequestChanges={handleRequestChanges}
+                  onChangeRequestSubmitted={refetchChangeRequest}
                   onOpenChange={() => navigate('/donations')}
                 />
               )}

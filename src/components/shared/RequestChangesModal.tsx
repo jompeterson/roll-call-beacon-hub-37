@@ -85,6 +85,7 @@ interface RequestChangesModalProps {
   contentType: ContentType;
   contentId: string;
   onSubmit: () => void;
+  onChangeRequestSubmitted?: () => void;
 }
 
 export const RequestChangesModal = ({
@@ -93,6 +94,7 @@ export const RequestChangesModal = ({
   contentType,
   contentId,
   onSubmit,
+  onChangeRequestSubmitted,
 }: RequestChangesModalProps) => {
   const [selectedFields, setSelectedFields] = useState<string[]>([]);
   const [comment, setComment] = useState("");
@@ -151,6 +153,7 @@ export const RequestChangesModal = ({
 
       // Call the original requestChanges handler (updates approval status)
       onSubmit();
+      onChangeRequestSubmitted?.();
 
       // Reset and close
       setSelectedFields([]);

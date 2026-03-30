@@ -10,6 +10,7 @@ interface ScholarshipActionButtonsProps {
   onApprove: () => void;
   onReject: () => void;
   onRequestChanges: () => void;
+  onChangeRequestSubmitted?: () => void;
   onEdit?: () => void;
   creatorUserId: string;
   isApproving: boolean;
@@ -22,6 +23,7 @@ export const ScholarshipActionButtons = ({
   onApprove,
   onReject,
   onRequestChanges,
+  onChangeRequestSubmitted,
   onEdit,
   creatorUserId,
   isApproving,
@@ -75,6 +77,7 @@ export const ScholarshipActionButtons = ({
         contentType="scholarship"
         contentId={scholarshipId}
         onSubmit={onRequestChanges}
+        onChangeRequestSubmitted={onChangeRequestSubmitted}
       />
     </>
   );

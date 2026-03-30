@@ -13,6 +13,7 @@ interface RequestModalActionButtonsProps {
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
   onRequestChanges: (id: string) => void;
+  onChangeRequestSubmitted?: () => void;
   onMarkCompleted?: (id: string) => void;
   onEdit?: () => void;
   onOpenChange: (open: boolean) => void;
@@ -23,6 +24,7 @@ export const RequestModalActionButtons = ({
   onApprove,
   onReject,
   onRequestChanges,
+  onChangeRequestSubmitted,
   onMarkCompleted,
   onEdit,
   onOpenChange,
@@ -183,6 +185,7 @@ export const RequestModalActionButtons = ({
         contentType="request"
         contentId={request.id}
         onSubmit={() => onRequestChanges(request.id)}
+        onChangeRequestSubmitted={onChangeRequestSubmitted}
       />
     </>
   );
