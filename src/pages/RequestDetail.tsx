@@ -215,6 +215,7 @@ export const RequestDetail = () => {
           onOpenChange={setEditOpen}
           request={request}
           hasChangeRequest={!!changeRequest}
+          onRequestUpdated={refetchChangeRequest}
         />
       )}
     </div>

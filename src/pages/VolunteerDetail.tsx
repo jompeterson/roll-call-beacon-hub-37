@@ -321,6 +321,7 @@ export const VolunteerDetail = () => {
           onOpenChange={setEditOpen}
           volunteer={volunteer}
           hasChangeRequest={!!changeRequest}
+          onVolunteerUpdated={refetchChangeRequest}
         />
       )}
     </div>

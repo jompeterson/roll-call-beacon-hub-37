@@ -239,6 +239,7 @@ export const ScholarshipDetail = () => {
           onOpenChange={setEditOpen}
           scholarship={scholarship}
           hasChangeRequest={!!changeRequest}
+          onScholarshipUpdated={refetchChangeRequest}
         />
       )}
     </div>

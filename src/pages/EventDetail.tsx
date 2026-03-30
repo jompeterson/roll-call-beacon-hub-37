@@ -228,6 +228,7 @@ export const EventDetail = () => {
           onOpenChange={setEditOpen}
           event={event}
           hasChangeRequest={!!changeRequest}
+          onEventUpdated={refetchChangeRequest}
         />
       )}
     </div>

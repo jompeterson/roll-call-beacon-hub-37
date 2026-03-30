@@ -231,6 +231,7 @@ export const DonationDetail = () => {
           onOpenChange={setEditOpen}
           donation={donation}
           hasChangeRequest={!!changeRequest}
+          onDonationUpdated={refetchChangeRequest}
         />
       )}
     </div>
