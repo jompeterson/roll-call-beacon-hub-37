@@ -9,6 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { SubmitForReviewDialog } from "@/components/shared/SubmitForReviewDialog";
 import type { Request } from "@/hooks/useRequests";
 
 interface RequestEditModalProps {
@@ -16,6 +17,7 @@ interface RequestEditModalProps {
   onOpenChange: (open: boolean) => void;
   request: Request;
   onRequestUpdated?: () => void;
+  hasChangeRequest?: boolean;
 }
 
 interface Organization {
