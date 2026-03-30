@@ -121,8 +121,12 @@ export const RequestEditModal = ({
         description: "Request post updated successfully!",
       });
 
-      onOpenChange(false);
-      onRequestUpdated?.();
+      if (hasChangeRequest) {
+        setShowReviewDialog(true);
+      } else {
+        onOpenChange(false);
+        onRequestUpdated?.();
+      }
 
     } catch (error) {
       console.error("Error updating request:", error);
