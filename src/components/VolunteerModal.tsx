@@ -56,6 +56,7 @@ export const VolunteerModal = ({
   const { signupCount, hasSignedUp, submitting, signUp, cancelSignup, userSignup } = useVolunteerSignups(volunteer?.id || "");
   const navigate = useNavigate();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [showRequestChangesModal, setShowRequestChangesModal] = useState(false);
   
   const isOwner = user?.id === volunteer?.creator_user_id;
   const canEdit = isOwner || isAdministrator;
