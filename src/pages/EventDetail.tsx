@@ -31,8 +31,8 @@ export const EventDetail = () => {
   } = useEvents();
   const { rsvpCount, hasRsvp, submitting, createRSVP, deleteRSVP } = useEventRSVPs(eventId || "");
   const [editOpen, setEditOpen] = useState(false);
-
-  const event = events.find(e => e.id === eventId);
+  const { changeRequest } = useChangeRequest("event", eventId || "");
+  const isOwner = user?.id === events.find(e => e.id === eventId)?.creator_user_id;
 
   if (loading) {
     return (

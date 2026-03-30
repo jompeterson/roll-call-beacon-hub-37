@@ -144,6 +144,14 @@ export const RequestDetail = () => {
 
         {/* Content */}
         <div className="p-6 space-y-6">
+          {/* Change Request Banner */}
+          {changeRequest && isOwner && (
+            <ChangeRequestBanner
+              comment={changeRequest.comment}
+              fieldLabels={changeRequest.fieldLabels}
+            />
+          )}
+
           <RequestModalCreatorInfo
             creatorInfo={{
               name: "User Name",
@@ -153,7 +161,10 @@ export const RequestDetail = () => {
             createdAt={request.created_at}
           />
 
-          <RequestModalInformation request={request} />
+          <RequestModalInformation
+            request={request}
+            highlightedFields={isOwner && changeRequest ? changeRequest.fieldKeys : undefined}
+          />
 
           {/* Comments Section */}
           {showComments && (
