@@ -191,7 +191,7 @@ export const RequestChangesModal = ({
             <Label className="text-sm font-medium mb-2 block">
               Fields that need changes
             </Label>
-            <ScrollArea className="max-h-48 border rounded-md p-3">
+            <ScrollArea className="h-48 border rounded-md p-3">
               <div className="space-y-2">
                 {fields.map((field) => (
                   <div key={field.key} className="flex items-center space-x-2">
