@@ -197,43 +197,45 @@ export const DonationModalActionButtons = ({
   // Show approval buttons if no decision has been made yet
   if (isUser) {
     return (
-      <div className="flex gap-3 p-6 justify-between flex-wrap">
-        <div>
-          {canEdit && onEdit && (
-            <Button variant="outline" onClick={onEdit}>
-              <Edit className="w-4 h-4 mr-2" />
-              Edit
+      <>
+        <div className="flex gap-3 p-6 justify-between flex-wrap">
+          <div>
+            {canEdit && onEdit && (
+              <Button variant="outline" onClick={onEdit}>
+                <Edit className="w-4 h-4 mr-2" />
+                Edit
+              </Button>
+            )}
+          </div>
+          <div className="flex gap-3">
+            <Button 
+              onClick={handleApprove}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              Approve User
             </Button>
-          )}
+            <Button 
+              onClick={handleReject}
+              variant="destructive"
+            >
+              Reject User
+            </Button>
+            <Button 
+              onClick={() => setShowRequestChangesModal(true)}
+              variant="outline"
+            >
+              Request Changes
+            </Button>
+          </div>
         </div>
-        <div className="flex gap-3">
-          <Button 
-            onClick={handleApprove}
-            className="bg-green-600 hover:bg-green-700 text-white"
-          >
-            Approve User
-          </Button>
-          <Button 
-            onClick={handleReject}
-            variant="destructive"
-          >
-            Reject User
-          </Button>
-          <Button 
-            onClick={() => setShowRequestChangesModal(true)}
-            variant="outline"
-          >
-            Request Changes
-          </Button>
-        </div>
-      </div>
-      <RequestChangesModal
-        open={showRequestChangesModal}
-        onOpenChange={setShowRequestChangesModal}
-        contentType="donation"
-        contentId={donationId}
-        onSubmit={() => onRequestChanges(donationId)}
-      />
+        <RequestChangesModal
+          open={showRequestChangesModal}
+          onOpenChange={setShowRequestChangesModal}
+          contentType="donation"
+          contentId={donationId}
+          onSubmit={() => onRequestChanges(donationId)}
+        />
+      </>
     );
   }
 
