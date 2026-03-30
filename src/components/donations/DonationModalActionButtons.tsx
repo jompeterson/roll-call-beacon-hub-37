@@ -46,6 +46,7 @@ export const DonationModalActionButtons = ({
   const [hasAccepted, setHasAccepted] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isAccepting, setIsAccepting] = useState(false);
+  const [showRequestChangesModal, setShowRequestChangesModal] = useState(false);
 
   // Check if user has already accepted this donation
   useEffect(() => {
