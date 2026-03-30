@@ -153,6 +153,7 @@ export const RequestChangesModal = ({
 
       // Call the original requestChanges handler (updates approval status)
       onSubmit();
+      onChangeRequestSubmitted?.();
 
       // Reset and close
       setSelectedFields([]);
