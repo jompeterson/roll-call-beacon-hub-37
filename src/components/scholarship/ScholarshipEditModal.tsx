@@ -20,9 +20,11 @@ export const ScholarshipEditModal = ({
   open, 
   onOpenChange, 
   scholarship,
-  onScholarshipUpdated 
+  onScholarshipUpdated,
+  hasChangeRequest = false,
 }: ScholarshipEditModalProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showReviewDialog, setShowReviewDialog] = useState(false);
   const [images, setImages] = useState<File[]>([]);
   const getInitialAmountType = (): AmountType => {
     const amt = Number(scholarship.amount);
