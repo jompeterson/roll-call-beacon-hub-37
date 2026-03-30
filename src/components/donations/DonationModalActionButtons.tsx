@@ -20,6 +20,7 @@ interface DonationModalActionButtonsProps {
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
   onRequestChanges: (id: string) => void;
+  onChangeRequestSubmitted?: () => void;
   onOpenChange: (open: boolean) => void;
   onEdit?: () => void;
   isUser?: boolean;
