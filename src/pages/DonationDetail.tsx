@@ -22,8 +22,10 @@ export const DonationDetail = () => {
   const { user, isAuthenticated, isAdministrator } = useAuth();
   const { data: donations = [], isLoading, deleteDonation, isDeletingDonation } = useDonations();
   const [editOpen, setEditOpen] = useState(false);
+
+  const donation = donations.find(d => d.id === donationId);
   const { changeRequest } = useChangeRequest("donation", donationId || "");
-  const isOwner = user?.id === donations.find(d => d.id === donationId)?.creator_user_id;
+  const isOwner = user?.id === donation?.creator_user_id;
 
   if (isLoading) {
     return (
