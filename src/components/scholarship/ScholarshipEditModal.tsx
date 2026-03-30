@@ -114,8 +114,12 @@ export const ScholarshipEditModal = ({
         description: "Scholarship updated successfully!",
       });
 
-      onOpenChange(false);
-      onScholarshipUpdated?.();
+      if (hasChangeRequest) {
+        setShowReviewDialog(true);
+      } else {
+        onOpenChange(false);
+        onScholarshipUpdated?.();
+      }
 
     } catch (error) {
       console.error("Error updating scholarship:", error);
