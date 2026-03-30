@@ -34,6 +34,7 @@ export const DonationModalActionButtons = ({
   onApprove,
   onReject,
   onRequestChanges,
+  onChangeRequestSubmitted,
   onOpenChange,
   onEdit,
   isUser = false,
