@@ -23,9 +23,11 @@ export const VolunteerEditModal = ({
   open, 
   onOpenChange, 
   volunteer,
-  onVolunteerUpdated 
+  onVolunteerUpdated,
+  hasChangeRequest = false,
 }: VolunteerEditModalProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showReviewDialog, setShowReviewDialog] = useState(false);
   const [images, setImages] = useState<File[]>([]);
   const [existingImages, setExistingImages] = useState<string[]>(volunteer.images || []);
   const [formData, setFormData] = useState({
