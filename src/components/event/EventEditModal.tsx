@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { ImageUpload } from "@/components/shared/ImageUpload";
+import { SubmitForReviewDialog } from "@/components/shared/SubmitForReviewDialog";
 import { X } from "lucide-react";
 import type { Event } from "@/hooks/useEvents";
 
@@ -15,15 +16,18 @@ interface EventEditModalProps {
   onOpenChange: (open: boolean) => void;
   event: Event;
   onEventUpdated?: () => void;
+  hasChangeRequest?: boolean;
 }
 
 export const EventEditModal = ({ 
   open, 
   onOpenChange, 
   event,
-  onEventUpdated 
+  onEventUpdated,
+  hasChangeRequest = false,
 }: EventEditModalProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showReviewDialog, setShowReviewDialog] = useState(false);
   const [images, setImages] = useState<File[]>([]);
   const [existingImages, setExistingImages] = useState<string[]>(event.images || []);
   const [formData, setFormData] = useState({
@@ -99,8 +103,12 @@ export const EventEditModal = ({
         description: "Event updated successfully!",
       });
 
-      onOpenChange(false);
-      onEventUpdated?.();
+      if (hasChangeRequest) {
+        setShowReviewDialog(true);
+      } else {
+        onOpenChange(false);
+        onEventUpdated?.();
+      }
 
     } catch (error) {
       console.error("Error updating event:", error);
@@ -121,6 +129,7 @@ export const EventEditModal = ({
   const totalImagesCount = existingImages.length + images.length;
 
   return (
+    <>
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
@@ -264,5 +273,17 @@ export const EventEditModal = ({
         </form>
       </DialogContent>
     </Dialog>
+    <SubmitForReviewDialog
+      open={showReviewDialog}
+      onOpenChange={setShowReviewDialog}
+      contentType="event"
+      contentId={event.id}
+      contentTitle={event.title}
+      onComplete={() => {
+        onOpenChange(false);
+        onEventUpdated?.();
+      }}
+    />
+    </>
   );
 };

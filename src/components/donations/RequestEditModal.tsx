@@ -9,6 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { SubmitForReviewDialog } from "@/components/shared/SubmitForReviewDialog";
 import type { Request } from "@/hooks/useRequests";
 
 interface RequestEditModalProps {
@@ -16,6 +17,7 @@ interface RequestEditModalProps {
   onOpenChange: (open: boolean) => void;
   request: Request;
   onRequestUpdated?: () => void;
+  hasChangeRequest?: boolean;
 }
 
 interface Organization {
@@ -27,9 +29,11 @@ export const RequestEditModal = ({
   open, 
   onOpenChange, 
   request,
-  onRequestUpdated 
+  onRequestUpdated,
+  hasChangeRequest = false,
 }: RequestEditModalProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showReviewDialog, setShowReviewDialog] = useState(false);
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [formData, setFormData] = useState({
     title: request.title,
@@ -117,8 +121,12 @@ export const RequestEditModal = ({
         description: "Request post updated successfully!",
       });
 
-      onOpenChange(false);
-      onRequestUpdated?.();
+      if (hasChangeRequest) {
+        setShowReviewDialog(true);
+      } else {
+        onOpenChange(false);
+        onRequestUpdated?.();
+      }
 
     } catch (error) {
       console.error("Error updating request:", error);
@@ -133,6 +141,7 @@ export const RequestEditModal = ({
   };
 
   return (
+    <>
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
@@ -294,5 +303,17 @@ export const RequestEditModal = ({
         </form>
       </DialogContent>
     </Dialog>
+    <SubmitForReviewDialog
+      open={showReviewDialog}
+      onOpenChange={setShowReviewDialog}
+      contentType="request"
+      contentId={request.id}
+      contentTitle={request.title}
+      onComplete={() => {
+        onOpenChange(false);
+        onRequestUpdated?.();
+      }}
+    />
+    </>
   );
 };

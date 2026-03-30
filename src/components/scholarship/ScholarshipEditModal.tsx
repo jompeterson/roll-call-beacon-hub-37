@@ -6,21 +6,25 @@ import { supabase } from "@/integrations/supabase/client";
 import { ScholarshipFormFields } from "./ScholarshipFormFields";
 import { type AmountType } from "./ScholarshipFormData";
 import { ImageUpload } from "@/components/shared/ImageUpload";
+import { SubmitForReviewDialog } from "@/components/shared/SubmitForReviewDialog";
 
 interface ScholarshipEditModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   scholarship: any;
   onScholarshipUpdated?: () => void;
+  hasChangeRequest?: boolean;
 }
 
 export const ScholarshipEditModal = ({ 
   open, 
   onOpenChange, 
   scholarship,
-  onScholarshipUpdated 
+  onScholarshipUpdated,
+  hasChangeRequest = false,
 }: ScholarshipEditModalProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showReviewDialog, setShowReviewDialog] = useState(false);
   const [images, setImages] = useState<File[]>([]);
   const getInitialAmountType = (): AmountType => {
     const amt = Number(scholarship.amount);
@@ -110,8 +114,12 @@ export const ScholarshipEditModal = ({
         description: "Scholarship updated successfully!",
       });
 
-      onOpenChange(false);
-      onScholarshipUpdated?.();
+      if (hasChangeRequest) {
+        setShowReviewDialog(true);
+      } else {
+        onOpenChange(false);
+        onScholarshipUpdated?.();
+      }
 
     } catch (error) {
       console.error("Error updating scholarship:", error);
@@ -126,6 +134,7 @@ export const ScholarshipEditModal = ({
   };
 
   return (
+    <>
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
@@ -160,5 +169,17 @@ export const ScholarshipEditModal = ({
         </form>
       </DialogContent>
     </Dialog>
+    <SubmitForReviewDialog
+      open={showReviewDialog}
+      onOpenChange={setShowReviewDialog}
+      contentType="scholarship"
+      contentId={scholarship.id}
+      contentTitle={scholarship.title}
+      onComplete={() => {
+        onOpenChange(false);
+        onScholarshipUpdated?.();
+      }}
+    />
+    </>
   );
 };

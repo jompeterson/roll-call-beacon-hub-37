@@ -238,6 +238,7 @@ export const ScholarshipDetail = () => {
           open={editOpen}
           onOpenChange={setEditOpen}
           scholarship={scholarship}
+          hasChangeRequest={!!changeRequest}
         />
       )}
     </div>

@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { ImageUpload } from "@/components/shared/ImageUpload";
+import { SubmitForReviewDialog } from "@/components/shared/SubmitForReviewDialog";
 import { X } from "lucide-react";
 import type { Volunteer } from "@/hooks/useVolunteers";
 
@@ -15,15 +16,18 @@ interface VolunteerEditModalProps {
   onOpenChange: (open: boolean) => void;
   volunteer: Volunteer;
   onVolunteerUpdated?: () => void;
+  hasChangeRequest?: boolean;
 }
 
 export const VolunteerEditModal = ({ 
   open, 
   onOpenChange, 
   volunteer,
-  onVolunteerUpdated 
+  onVolunteerUpdated,
+  hasChangeRequest = false,
 }: VolunteerEditModalProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showReviewDialog, setShowReviewDialog] = useState(false);
   const [images, setImages] = useState<File[]>([]);
   const [existingImages, setExistingImages] = useState<string[]>(volunteer.images || []);
   const [formData, setFormData] = useState({
@@ -99,8 +103,12 @@ export const VolunteerEditModal = ({
         description: "Volunteer opportunity updated successfully!",
       });
 
-      onOpenChange(false);
-      onVolunteerUpdated?.();
+      if (hasChangeRequest) {
+        setShowReviewDialog(true);
+      } else {
+        onOpenChange(false);
+        onVolunteerUpdated?.();
+      }
 
     } catch (error) {
       console.error("Error updating volunteer opportunity:", error);
@@ -121,6 +129,7 @@ export const VolunteerEditModal = ({
   const totalImagesCount = existingImages.length + images.length;
 
   return (
+    <>
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
@@ -264,5 +273,17 @@ export const VolunteerEditModal = ({
         </form>
       </DialogContent>
     </Dialog>
+    <SubmitForReviewDialog
+      open={showReviewDialog}
+      onOpenChange={setShowReviewDialog}
+      contentType="volunteer"
+      contentId={volunteer.id}
+      contentTitle={volunteer.title}
+      onComplete={() => {
+        onOpenChange(false);
+        onVolunteerUpdated?.();
+      }}
+    />
+    </>
   );
 };

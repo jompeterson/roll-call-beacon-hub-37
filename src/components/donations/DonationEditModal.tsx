@@ -12,6 +12,7 @@ import { DonationFormBasicFields } from "./DonationFormBasicFields";
 import { DonationFormOrganizationField } from "./DonationFormOrganizationField";
 import { DonationFormContactFields } from "./DonationFormContactFields";
 import { DonationImageUpload } from "./DonationImageUpload";
+import { SubmitForReviewDialog } from "@/components/shared/SubmitForReviewDialog";
 import type { Donation } from "@/hooks/useDonations";
 
 interface DonationEditModalProps {
@@ -19,6 +20,7 @@ interface DonationEditModalProps {
   onOpenChange: (open: boolean) => void;
   donation: Donation;
   onDonationUpdated?: () => void;
+  hasChangeRequest?: boolean;
 }
 
 interface Organization {
@@ -30,9 +32,11 @@ export const DonationEditModal = ({
   open, 
   onOpenChange, 
   donation,
-  onDonationUpdated 
+  onDonationUpdated,
+  hasChangeRequest = false,
 }: DonationEditModalProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showReviewDialog, setShowReviewDialog] = useState(false);
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [formData, setFormData] = useState({
     title: donation.title,
@@ -164,8 +168,12 @@ export const DonationEditModal = ({
         description: "Donation post updated successfully!",
       });
 
-      onOpenChange(false);
-      onDonationUpdated?.();
+      if (hasChangeRequest) {
+        setShowReviewDialog(true);
+      } else {
+        onOpenChange(false);
+        onDonationUpdated?.();
+      }
 
     } catch (error) {
       console.error("Error updating donation:", error);
@@ -180,6 +188,7 @@ export const DonationEditModal = ({
   };
 
   return (
+    <>
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
@@ -269,5 +278,17 @@ export const DonationEditModal = ({
         </form>
       </DialogContent>
     </Dialog>
+    <SubmitForReviewDialog
+      open={showReviewDialog}
+      onOpenChange={setShowReviewDialog}
+      contentType="donation"
+      contentId={donation.id}
+      contentTitle={donation.title}
+      onComplete={() => {
+        onOpenChange(false);
+        onDonationUpdated?.();
+      }}
+    />
+  </>
   );
 };

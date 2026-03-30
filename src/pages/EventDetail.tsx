@@ -227,6 +227,7 @@ export const EventDetail = () => {
           open={editOpen}
           onOpenChange={setEditOpen}
           event={event}
+          hasChangeRequest={!!changeRequest}
         />
       )}
     </div>

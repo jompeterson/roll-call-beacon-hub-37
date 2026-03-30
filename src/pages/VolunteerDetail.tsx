@@ -320,6 +320,7 @@ export const VolunteerDetail = () => {
           open={editOpen}
           onOpenChange={setEditOpen}
           volunteer={volunteer}
+          hasChangeRequest={!!changeRequest}
         />
       )}
     </div>
