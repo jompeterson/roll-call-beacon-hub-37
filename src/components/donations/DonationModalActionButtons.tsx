@@ -261,12 +261,19 @@ export const DonationModalActionButtons = ({
           Reject
         </Button>
         <Button 
-          onClick={() => onRequestChanges(donationId)}
+          onClick={() => setShowRequestChangesModal(true)}
           variant="outline"
         >
           Request Changes
         </Button>
       </div>
     </div>
+    <RequestChangesModal
+      open={showRequestChangesModal}
+      onOpenChange={setShowRequestChangesModal}
+      contentType="donation"
+      contentId={donationId}
+      onSubmit={() => onRequestChanges(donationId)}
+    />
   );
 };
