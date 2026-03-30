@@ -163,18 +163,27 @@ export const RequestModalActionButtons = ({
   };
 
   return (
-    <div className="flex-shrink-0 border-t p-6 flex justify-between flex-wrap">
-      <div>
-        {canEdit && onEdit && (
-          <Button variant="outline" onClick={onEdit}>
-            <Edit className="w-4 h-4 mr-2" />
-            Edit
-          </Button>
-        )}
+    <>
+      <div className="flex-shrink-0 border-t p-6 flex justify-between flex-wrap">
+        <div>
+          {canEdit && onEdit && (
+            <Button variant="outline" onClick={onEdit}>
+              <Edit className="w-4 h-4 mr-2" />
+              Edit
+            </Button>
+          )}
+        </div>
+        <div>
+          {renderActionButtons()}
+        </div>
       </div>
-      <div>
-        {renderActionButtons()}
-      </div>
-    </div>
+      <RequestChangesModal
+        open={showRequestChangesModal}
+        onOpenChange={setShowRequestChangesModal}
+        contentType="request"
+        contentId={request.id}
+        onSubmit={() => onRequestChanges(request.id)}
+      />
+    </>
   );
 };
