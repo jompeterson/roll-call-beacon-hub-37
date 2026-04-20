@@ -180,6 +180,8 @@ export const Settings = () => {
           </div>
         </CardContent>
       </Card>
+
+      <NotificationRulesManager />
     </div>
   );
 };
