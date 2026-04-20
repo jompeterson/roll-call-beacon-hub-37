@@ -137,6 +137,7 @@ export const Organizations = () => {
     const success = await approveOrganization(id);
     if (success) {
       setOrganizationModalOpen(false);
+      refetch();
     }
   };
 
@@ -147,6 +148,7 @@ export const Organizations = () => {
     const success = await rejectOrganization(id);
     if (success) {
       setOrganizationModalOpen(false);
+      refetch();
     }
   };
 
