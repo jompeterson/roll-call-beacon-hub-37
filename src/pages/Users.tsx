@@ -115,6 +115,7 @@ export const Users = () => {
         description: "User has been successfully approved.",
       });
       setUserModalOpen(false);
+      refetch();
     } catch (error) {
       console.error('Error approving user:', error);
       toast({
