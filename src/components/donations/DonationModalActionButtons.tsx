@@ -212,7 +212,8 @@ export const DonationModalActionButtons = ({
           <div className="flex gap-3">
             <Button 
               onClick={handleApprove}
-              className="bg-green-600 hover:bg-green-700 text-white"
+              style={{ backgroundColor: "#3d7471" }}
+              className="text-white hover:opacity-90"
             >
               Approve User
             </Button>
@@ -256,7 +257,8 @@ export const DonationModalActionButtons = ({
         <div className="flex gap-3">
           <Button 
             onClick={handleApprove}
-            className="bg-green-600 hover:bg-green-700 text-white"
+            style={{ backgroundColor: "#3d7471" }}
+            className="text-white hover:opacity-90"
           >
             Approve
           </Button>
