@@ -42,8 +42,10 @@ interface UserModalProps {
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
   onDelete?: (id: string) => void;
+  onRoleChange?: (id: string, roleId: string) => void;
   isAdministrator?: boolean;
   isDeleting?: boolean;
+  isUpdatingRole?: boolean;
 }
 
 export const UserModal = ({
@@ -53,9 +55,12 @@ export const UserModal = ({
   onApprove,
   onReject,
   onDelete,
+  onRoleChange,
   isAdministrator = false,
   isDeleting = false,
+  isUpdatingRole = false,
 }: UserModalProps) => {
+  const { userRoles } = useUserRoles();
   if (!user) return null;
 
   const getStatusIcon = (isApproved: boolean, decisionMade: boolean) => {
