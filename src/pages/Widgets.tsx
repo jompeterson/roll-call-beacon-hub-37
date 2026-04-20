@@ -189,7 +189,7 @@ export const Widgets = () => {
             Create and manage custom widgets for the Overview page
           </p>
         </div>
-        <Button onClick={() => setShowCreateModal(true)}>
+        <Button onClick={() => setShowCreateModal(true)} style={{ backgroundColor: "#3d7471" }} className="text-white hover:opacity-90">
           <Plus className="h-4 w-4 mr-2" />
           Create Widget
         </Button>

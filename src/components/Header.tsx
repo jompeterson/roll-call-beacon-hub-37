@@ -186,8 +186,10 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
         <Link to="/">
           <Button 
             variant="ghost" 
-            className={isDashboardPage ? "text-white" : "text-foreground hover:text-primary"}
+            className={isDashboardPage ? "text-white hover:text-white" : "text-foreground hover:text-white"}
             style={isDashboardPage ? { backgroundColor: "#3d7471" } : {}}
+            onMouseEnter={(e) => { if (!isDashboardPage) e.currentTarget.style.backgroundColor = "#3d7471"; }}
+            onMouseLeave={(e) => { if (!isDashboardPage) e.currentTarget.style.backgroundColor = ""; }}
           >
             Dashboard
           </Button>
@@ -195,8 +197,10 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
         <Link to="/valued-partners">
           <Button 
             variant="ghost" 
-            className={location.pathname === "/valued-partners" ? "text-white" : "text-foreground hover:text-primary"}
+            className={location.pathname === "/valued-partners" ? "text-white hover:text-white" : "text-foreground hover:text-white"}
             style={location.pathname === "/valued-partners" ? { backgroundColor: "#3d7471" } : {}}
+            onMouseEnter={(e) => { if (location.pathname !== "/valued-partners") e.currentTarget.style.backgroundColor = "#3d7471"; }}
+            onMouseLeave={(e) => { if (location.pathname !== "/valued-partners") e.currentTarget.style.backgroundColor = ""; }}
           >
             Valued Partners
           </Button>
@@ -204,8 +208,10 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
         <Link to="/resources">
           <Button 
             variant="ghost" 
-            className={location.pathname === "/resources" ? "text-white" : "text-foreground hover:text-primary"}
+            className={location.pathname === "/resources" ? "text-white hover:text-white" : "text-foreground hover:text-white"}
             style={location.pathname === "/resources" ? { backgroundColor: "#3d7471" } : {}}
+            onMouseEnter={(e) => { if (location.pathname !== "/resources") e.currentTarget.style.backgroundColor = "#3d7471"; }}
+            onMouseLeave={(e) => { if (location.pathname !== "/resources") e.currentTarget.style.backgroundColor = ""; }}
           >
             Resources
           </Button>

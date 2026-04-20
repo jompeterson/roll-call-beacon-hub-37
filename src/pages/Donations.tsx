@@ -143,7 +143,7 @@ export const Donations = () => {
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-semibold">In-Kind Donation Posts</h2>
             {isAuthenticated && (
-              <Button onClick={() => setDonationModalOpen(true)} size="sm">
+              <Button onClick={() => setDonationModalOpen(true)} size="sm" style={{ backgroundColor: "#3d7471" }} className="text-white hover:opacity-90">
                 <Plus className="h-4 w-4 mr-2" />
                 Add Donation
               </Button>
@@ -164,7 +164,7 @@ export const Donations = () => {
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-semibold">Request Posts</h2>
             {isAuthenticated && (
-              <Button onClick={() => setRequestModalOpen(true)} size="sm">
+              <Button onClick={() => setRequestModalOpen(true)} size="sm" style={{ backgroundColor: "#3d7471" }} className="text-white hover:opacity-90">
                 <Plus className="h-4 w-4 mr-2" />
                 Add Request
               </Button>
