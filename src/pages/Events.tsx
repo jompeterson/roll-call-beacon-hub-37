@@ -230,7 +230,8 @@ export const Events = () => {
           Create and manage events
         </p>
       </div>
-...
+
+      <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center">
         <div className="flex-1">
           <Input
             placeholder="Search for events..."
