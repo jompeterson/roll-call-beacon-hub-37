@@ -167,7 +167,8 @@ export const DonationModalActionButtons = ({
               <Button 
                 onClick={handleAcceptDonation}
                 disabled={hasAccepted || isAccepting}
-                className={hasAccepted ? "bg-muted text-muted-foreground cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 text-white"}
+                style={hasAccepted ? {} : { backgroundColor: "#3d7471" }}
+                className={hasAccepted ? "bg-muted text-muted-foreground cursor-not-allowed" : "text-white hover:opacity-90"}
               >
                 {hasAccepted ? "Already Accepted" : isAccepting ? "Accepting..." : "Accept Donation"}
               </Button>

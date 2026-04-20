@@ -258,7 +258,7 @@ export const Scholarships = () => {
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold">Scholarship Posts</h2>
           {isAuthenticated && (
-            <Button onClick={() => setCreateModalOpen(true)} size="sm">
+            <Button onClick={() => setCreateModalOpen(true)} size="sm" style={{ backgroundColor: "#3d7471" }} className="text-white hover:opacity-90">
               <Plus className="h-4 w-4 mr-2" />
               Add Scholarship
             </Button>
