@@ -20,12 +20,8 @@ interface NewOrganizationStepProps {
 const organizationTypes = [
   "Non-Profit",
   "School",
-  "Community Group",
-  "Religious Organization",
-  "Sports Club",
   "Professional Association",
-  "Industry Partner",
-  "Other"
+  "Industry Partner"
 ];
 
 export const NewOrganizationStep = ({ data, onNext, onBack, onUpdate, isSubmitting = false }: NewOrganizationStepProps) => {
