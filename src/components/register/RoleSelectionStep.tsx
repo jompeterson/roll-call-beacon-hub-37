@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ArrowLeft, User, Users, Crown, Loader2 } from "lucide-react";
+import { ArrowLeft, User, Users, GraduationCap, HeartHandshake, Loader2 } from "lucide-react";
 import { RegistrationData } from "@/pages/Register";
 import { getUserRoles } from "@/lib/auth";
 
@@ -23,9 +23,10 @@ interface Role {
 }
 
 const roleIcons: { [key: string]: any } = {
-  supporter: User,
+  staff: User,
   shop_teacher: Users,
-  administrator: Crown,
+  volunteer: HeartHandshake,
+  student: GraduationCap,
 };
 
 export const RoleSelectionStep = ({ data, onNext, onBack, onUpdate }: RoleSelectionStepProps) => {
@@ -41,7 +42,8 @@ export const RoleSelectionStep = ({ data, onNext, onBack, onUpdate }: RoleSelect
           setError('Failed to load roles');
           console.error('Error fetching roles:', error);
         } else {
-          setRoles(rolesData || []);
+          // Exclude administrator role from public registration
+          setRoles((rolesData || []).filter((r: Role) => r.name !== 'administrator'));
         }
       } catch (err) {
         setError('Failed to load roles');
