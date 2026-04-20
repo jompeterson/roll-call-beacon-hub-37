@@ -173,6 +173,54 @@ export const Users = () => {
   };
 
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isUpdatingRole, setIsUpdatingRole] = useState(false);
+
+  const handleRoleChange = async (id: string, roleId: string) => {
+    if (!isAdministrator) {
+      toast({
+        title: "Access Denied",
+        description: "Only administrators can change user roles.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsUpdatingRole(true);
+    try {
+      const { error } = await supabase
+        .from('user_profiles')
+        .update({ role_id: roleId })
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error updating role:', error);
+        toast({
+          title: "Error",
+          description: "Failed to update user role.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "Role Updated",
+        description: "User role has been successfully updated.",
+      });
+      refetch();
+      if (selectedUser && selectedUser.id === id) {
+        setSelectedUser({ ...selectedUser, role_id: roleId });
+      }
+    } catch (error) {
+      console.error('Error updating role:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update user role.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUpdatingRole(false);
+    }
+  };
 
   const handleUserDelete = async (id: string) => {
     if (!isAdministrator) {
@@ -276,8 +324,10 @@ export const Users = () => {
         onApprove={handleUserApprove}
         onReject={handleUserReject}
         onDelete={handleUserDelete}
+        onRoleChange={handleRoleChange}
         isAdministrator={isAdministrator}
         isDeleting={isDeleting}
+        isUpdatingRole={isUpdatingRole}
       />
     </div>
   );

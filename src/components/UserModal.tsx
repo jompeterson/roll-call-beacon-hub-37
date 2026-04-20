@@ -3,9 +3,11 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CheckCircle, XCircle, Clock, Mail, Phone, MapPin, Building, Calendar, User } from "lucide-react";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { formatDate } from "@/lib/utils";
+import { useUserRoles } from "@/hooks/useUserRoles";
 
 interface UserProfile {
   id: string;
@@ -40,8 +42,10 @@ interface UserModalProps {
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
   onDelete?: (id: string) => void;
+  onRoleChange?: (id: string, roleId: string) => void;
   isAdministrator?: boolean;
   isDeleting?: boolean;
+  isUpdatingRole?: boolean;
 }
 
 export const UserModal = ({
@@ -51,9 +55,12 @@ export const UserModal = ({
   onApprove,
   onReject,
   onDelete,
+  onRoleChange,
   isAdministrator = false,
   isDeleting = false,
+  isUpdatingRole = false,
 }: UserModalProps) => {
+  const { userRoles } = useUserRoles();
   if (!user) return null;
 
   const getStatusIcon = (isApproved: boolean, decisionMade: boolean) => {
@@ -134,11 +141,30 @@ export const UserModal = ({
           {/* Role Information */}
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">Role</h3>
-            <div className="flex items-center gap-2">
-              <Badge variant="outline">
-                {user.user_roles?.display_name || "Unknown Role"}
-              </Badge>
-            </div>
+            {isAdministrator && onRoleChange ? (
+              <Select
+                value={user.role_id}
+                onValueChange={(value) => onRoleChange(user.id, value)}
+                disabled={isUpdatingRole}
+              >
+                <SelectTrigger className="w-full md:w-[280px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {userRoles.map((role) => (
+                    <SelectItem key={role.id} value={role.id}>
+                      {role.display_name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Badge variant="outline">
+                  {user.user_roles?.display_name || "Unknown Role"}
+                </Badge>
+              </div>
+            )}
             {user.user_roles?.description && (
               <p className="text-sm text-muted-foreground">
                 {user.user_roles.description}
