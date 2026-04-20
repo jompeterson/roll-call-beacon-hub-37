@@ -33,7 +33,7 @@ interface Organization {
 }
 
 export const Organizations = () => {
-  const { organizations, loading, updateOrganizationContact, approveOrganization, rejectOrganization } = useOrganizationsRealtime();
+  const { organizations, loading, updateOrganizationContact, approveOrganization, rejectOrganization, refetch } = useOrganizationsRealtime();
   const { isAuthenticated, isAdministrator } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   
