@@ -42,7 +42,8 @@ export const RoleSelectionStep = ({ data, onNext, onBack, onUpdate }: RoleSelect
           setError('Failed to load roles');
           console.error('Error fetching roles:', error);
         } else {
-          setRoles(rolesData || []);
+          // Exclude administrator role from public registration
+          setRoles((rolesData || []).filter((r: Role) => r.name !== 'administrator'));
         }
       } catch (err) {
         setError('Failed to load roles');
