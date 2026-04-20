@@ -115,6 +115,7 @@ export const Users = () => {
         description: "User has been successfully approved.",
       });
       setUserModalOpen(false);
+      refetch();
     } catch (error) {
       console.error('Error approving user:', error);
       toast({
@@ -160,6 +161,7 @@ export const Users = () => {
         variant: "destructive",
       });
       setUserModalOpen(false);
+      refetch();
     } catch (error) {
       console.error('Error rejecting user:', error);
       toast({

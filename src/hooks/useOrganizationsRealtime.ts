@@ -199,6 +199,7 @@ export const useOrganizationsRealtime = () => {
   return {
     organizations,
     loading,
+    refetch: fetchOrganizations,
     updateOrganizationContact,
     approveOrganization,
     rejectOrganization

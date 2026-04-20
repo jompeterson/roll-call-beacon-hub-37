@@ -33,7 +33,7 @@ interface Organization {
 }
 
 export const Organizations = () => {
-  const { organizations, loading, updateOrganizationContact, approveOrganization, rejectOrganization } = useOrganizationsRealtime();
+  const { organizations, loading, updateOrganizationContact, approveOrganization, rejectOrganization, refetch } = useOrganizationsRealtime();
   const { isAuthenticated, isAdministrator } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   
@@ -137,6 +137,7 @@ export const Organizations = () => {
     const success = await approveOrganization(id);
     if (success) {
       setOrganizationModalOpen(false);
+      refetch();
     }
   };
 
@@ -147,6 +148,7 @@ export const Organizations = () => {
     const success = await rejectOrganization(id);
     if (success) {
       setOrganizationModalOpen(false);
+      refetch();
     }
   };
 
