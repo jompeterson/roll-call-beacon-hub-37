@@ -882,14 +882,9 @@ export type Database = {
     Enums: {
       organization_type:
         | "Non-Profit"
-        | "Educational Institution"
-        | "Community Group"
-        | "Religious Organization"
-        | "Sports Club"
-        | "Professional Association"
-        | "Other"
-        | "Industry Partner"
         | "School"
+        | "Industry Partner"
+        | "Professional Association"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1019,14 +1014,9 @@ export const Constants = {
     Enums: {
       organization_type: [
         "Non-Profit",
-        "Educational Institution",
-        "Community Group",
-        "Religious Organization",
-        "Sports Club",
-        "Professional Association",
-        "Other",
-        "Industry Partner",
         "School",
+        "Industry Partner",
+        "Professional Association",
       ],
     },
   },
