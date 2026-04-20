@@ -357,6 +357,69 @@ export type Database = {
           },
         ]
       }
+      notification_preferences: {
+        Row: {
+          created_at: string
+          enabled: boolean
+          id: string
+          notification_type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          notification_type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          notification_type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      notification_rules: {
+        Row: {
+          created_at: string
+          created_by: string
+          enabled: boolean
+          id: string
+          is_mandatory: boolean
+          notification_type: string
+          target_type: string
+          target_value: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          enabled?: boolean
+          id?: string
+          is_mandatory?: boolean
+          notification_type: string
+          target_type: string
+          target_value?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          enabled?: boolean
+          id?: string
+          is_mandatory?: boolean
+          notification_type?: string
+          target_type?: string
+          target_value?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string
@@ -873,6 +936,10 @@ export type Database = {
       hash_password: {
         Args: { password: string; salt: string }
         Returns: string
+      }
+      should_send_notification: {
+        Args: { _notification_type: string; _user_id: string }
+        Returns: boolean
       }
       verify_password: {
         Args: { hash: string; password: string }

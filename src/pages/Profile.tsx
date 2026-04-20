@@ -2,6 +2,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PersonalInformationTab } from "@/components/profile/PersonalInformationTab";
 import { OrganizationTab } from "@/components/profile/OrganizationTab";
+import { NotificationPreferencesTab } from "@/components/profile/NotificationPreferencesTab";
 import { useProfileData } from "@/hooks/useProfileData";
 import { formatDate } from "@/lib/utils";
 
@@ -57,9 +58,10 @@ export const Profile = () => {
       </div>
 
       <Tabs defaultValue="personal" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="personal">Personal Information</TabsTrigger>
           <TabsTrigger value="organization">Organization</TabsTrigger>
+          <TabsTrigger value="notifications">Notifications</TabsTrigger>
         </TabsList>
 
         <TabsContent value="personal">
@@ -78,6 +80,10 @@ export const Profile = () => {
             organizationData={organizationData} 
             userOrganizationId={userProfile.organization_id}
           />
+        </TabsContent>
+
+        <TabsContent value="notifications">
+          <NotificationPreferencesTab />
         </TabsContent>
       </Tabs>
     </div>
