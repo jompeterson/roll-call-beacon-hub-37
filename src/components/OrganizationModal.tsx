@@ -3,12 +3,18 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Building, Phone, MapPin, User, Mail, CheckCircle, XCircle, Clock } from "lucide-react";
-import { useState } from "react";
+import { Building, Phone, MapPin, User, Mail, CheckCircle, XCircle, Clock, Pencil, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useUserProfiles } from "@/hooks/useUserProfiles";
 import { useAuth } from "@/hooks/useAuth";
 import { OrganizationImageUpload } from "@/components/organizations/OrganizationImageUpload";
+import { organizationTypes, OrganizationType } from "@/components/organizations/types";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface Organization {
   id: string;
@@ -50,8 +56,34 @@ export const OrganizationModal = ({
 }: OrganizationModalProps) => {
   const { userProfiles } = useUserProfiles();
   const { isAuthenticated } = useAuth();
+  const { toast } = useToast();
   const [selectedContactId, setSelectedContactId] = useState<string | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
+
+  // Edit mode state
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [editForm, setEditForm] = useState({
+    name: "",
+    type: "" as OrganizationType | "",
+    description: "",
+    phone: "",
+    address: "",
+  });
+
+  // Reset edit state whenever the modal opens or the organization changes
+  useEffect(() => {
+    if (organization) {
+      setEditForm({
+        name: organization.name,
+        type: organization.type as OrganizationType,
+        description: organization.description ?? "",
+        phone: organization.phone,
+        address: organization.address,
+      });
+    }
+    setIsEditing(false);
+  }, [organization?.id, open]);
 
   if (!organization) return null;
 
@@ -65,6 +97,48 @@ export const OrganizationModal = ({
       onOpenChange(false);
     }
     setIsUpdating(false);
+  };
+
+  const handleSaveEdits = async () => {
+    if (!organization) return;
+    if (!editForm.name.trim() || !editForm.type || !editForm.phone.trim() || !editForm.address.trim()) {
+      toast({
+        title: "Missing information",
+        description: "Name, type, phone, and address are required.",
+        variant: "destructive",
+      });
+      return;
+    }
+    setIsSaving(true);
+    try {
+      const { error } = await supabase
+        .from("organizations")
+        .update({
+          name: editForm.name.trim(),
+          type: editForm.type as OrganizationType,
+          description: editForm.description.trim() || null,
+          phone: editForm.phone.trim(),
+          address: editForm.address.trim(),
+        })
+        .eq("id", organization.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Organization updated",
+        description: "Changes have been saved successfully.",
+      });
+      setIsEditing(false);
+    } catch (error: any) {
+      console.error("Error updating organization:", error);
+      toast({
+        title: "Error",
+        description: error?.message || "Failed to update organization.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const getStatusIcon = (isApproved: boolean, decisionMade: boolean) => {
@@ -115,11 +189,34 @@ export const OrganizationModal = ({
           {/* Status - Only show for authenticated users */}
           {isAuthenticated && (
             <>
-              <div className="flex items-center gap-2">
-                {getStatusIcon(organization.is_approved, organization.approval_decision_made)}
-                <Badge variant={getStatusVariant(organization.is_approved, organization.approval_decision_made)}>
-                  {getStatusText(organization.is_approved, organization.approval_decision_made)}
-                </Badge>
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  {getStatusIcon(organization.is_approved, organization.approval_decision_made)}
+                  <Badge variant={getStatusVariant(organization.is_approved, organization.approval_decision_made)}>
+                    {getStatusText(organization.is_approved, organization.approval_decision_made)}
+                  </Badge>
+                </div>
+                {isAdministrator && !isEditing && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsEditing(true)}
+                  >
+                    <Pencil className="h-4 w-4 mr-1" />
+                    Edit
+                  </Button>
+                )}
+                {isAdministrator && isEditing && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setIsEditing(false)}
+                    disabled={isSaving}
+                  >
+                    <X className="h-4 w-4 mr-1" />
+                    Cancel
+                  </Button>
+                )}
               </div>
               <Separator />
             </>
@@ -142,22 +239,97 @@ export const OrganizationModal = ({
           {/* Organization Information */}
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">Organization Information</h3>
-            <div className="space-y-3">
-              <div>
-                <Badge variant="outline">{organization.type}</Badge>
+            {isEditing && isAdministrator ? (
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="org-name">Name</Label>
+                  <Input
+                    id="org-name"
+                    value={editForm.name}
+                    onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                    disabled={isSaving}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="org-type">Type</Label>
+                  <Select
+                    value={editForm.type || undefined}
+                    onValueChange={(value: OrganizationType) =>
+                      setEditForm({ ...editForm, type: value })
+                    }
+                    disabled={isSaving}
+                  >
+                    <SelectTrigger id="org-type">
+                      <SelectValue placeholder="Select type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {organizationTypes.map((t) => (
+                        <SelectItem key={t} value={t}>
+                          {t}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="org-description">Description</Label>
+                  <Textarea
+                    id="org-description"
+                    value={editForm.description}
+                    onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+                    className="min-h-[80px]"
+                    disabled={isSaving}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="org-phone">Phone</Label>
+                  <Input
+                    id="org-phone"
+                    value={editForm.phone}
+                    onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                    disabled={isSaving}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="org-address">Address</Label>
+                  <Input
+                    id="org-address"
+                    value={editForm.address}
+                    onChange={(e) => setEditForm({ ...editForm, address: e.target.value })}
+                    disabled={isSaving}
+                  />
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsEditing(false)}
+                    disabled={isSaving}
+                  >
+                    Cancel
+                  </Button>
+                  <Button onClick={handleSaveEdits} disabled={isSaving}>
+                    {isSaving ? "Saving..." : "Save Changes"}
+                  </Button>
+                </div>
               </div>
-              {organization.description && (
-                <p className="text-sm text-muted-foreground">{organization.description}</p>
-              )}
-              <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm">{organization.phone}</span>
+            ) : (
+              <div className="space-y-3">
+                <div>
+                  <Badge variant="outline">{organization.type}</Badge>
+                </div>
+                {organization.description && (
+                  <p className="text-sm text-muted-foreground">{organization.description}</p>
+                )}
+                <div className="flex items-center gap-2">
+                  <Phone className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm">{organization.phone}</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
+                  <span className="text-sm">{organization.address}</span>
+                </div>
               </div>
-              <div className="flex items-start gap-2">
-                <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
-                <span className="text-sm">{organization.address}</span>
-              </div>
-            </div>
+            )}
           </div>
 
           <Separator />
