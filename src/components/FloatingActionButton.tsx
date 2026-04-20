@@ -112,7 +112,7 @@ export const FloatingActionButton = () => {
       <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3">
         {/* Bloomerang Donation Button */}
         <a
-          href="https://buildhopepdx.bloomerang.co/give"
+          href="https://secure.qgiv.com/for/homebuildingfoundation/"
           target="_blank"
           rel="noopener noreferrer"
         >
