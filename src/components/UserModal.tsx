@@ -3,9 +3,11 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CheckCircle, XCircle, Clock, Mail, Phone, MapPin, Building, Calendar, User } from "lucide-react";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { formatDate } from "@/lib/utils";
+import { useUserRoles } from "@/hooks/useUserRoles";
 
 interface UserProfile {
   id: string;
