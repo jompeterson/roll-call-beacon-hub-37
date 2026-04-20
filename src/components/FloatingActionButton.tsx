@@ -109,7 +109,23 @@ export const FloatingActionButton = () => {
 
   return (
     <>
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3">
+        {/* Bloomerang Donation Button */}
+        <a
+          href="https://buildhopepdx.bloomerang.co/give"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Button
+            size="lg"
+            className="h-14 rounded-full shadow-lg text-white px-6 font-semibold bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]/90"
+          >
+            <Heart className="h-5 w-5 mr-2" />
+            Donate
+          </Button>
+        </a>
+
+        <div className="relative">
         {/* Action Buttons */}
         {isExpanded && (
           <div className="absolute bottom-20 right-0 flex flex-col space-y-3">
