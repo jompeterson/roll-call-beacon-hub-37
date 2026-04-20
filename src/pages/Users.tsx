@@ -324,8 +324,10 @@ export const Users = () => {
         onApprove={handleUserApprove}
         onReject={handleUserReject}
         onDelete={handleUserDelete}
+        onRoleChange={handleRoleChange}
         isAdministrator={isAdministrator}
         isDeleting={isDeleting}
+        isUpdatingRole={isUpdatingRole}
       />
     </div>
   );
