@@ -1,0 +1,1 @@
+UPDATE public.user_roles SET display_name = 'CTE Teacher', description = 'Career and Technical Education teachers with specialized knowledge in technical skills' WHERE name = 'shop_teacher';
