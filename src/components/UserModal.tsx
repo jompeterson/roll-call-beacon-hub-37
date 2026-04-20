@@ -3,11 +3,17 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CheckCircle, XCircle, Clock, Mail, Phone, MapPin, Building, Calendar, User } from "lucide-react";
+import { CheckCircle, XCircle, Clock, Mail, Phone, MapPin, Building, Calendar, User, Pencil, X } from "lucide-react";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { formatDate } from "@/lib/utils";
 import { useUserRoles } from "@/hooks/useUserRoles";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { useOrganizationsRealtime } from "@/hooks/useOrganizationsRealtime";
 
 interface UserProfile {
   id: string;
@@ -61,7 +67,77 @@ export const UserModal = ({
   isUpdatingRole = false,
 }: UserModalProps) => {
   const { userRoles } = useUserRoles();
+  const { organizations } = useOrganizationsRealtime();
+  const { toast } = useToast();
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [editForm, setEditForm] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone: "",
+    address: "",
+    organization_id: "none" as string,
+  });
+
+  useEffect(() => {
+    if (user) {
+      setEditForm({
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        phone: user.phone,
+        address: user.address,
+        organization_id: user.organization_id ?? "none",
+      });
+    }
+    setIsEditing(false);
+  }, [user?.id, open]);
+
   if (!user) return null;
+
+  const handleSaveEdits = async () => {
+    if (!editForm.first_name.trim() || !editForm.last_name.trim() || !editForm.email.trim()) {
+      toast({
+        title: "Missing information",
+        description: "First name, last name, and email are required.",
+        variant: "destructive",
+      });
+      return;
+    }
+    setIsSaving(true);
+    try {
+      const { error } = await supabase
+        .from("user_profiles")
+        .update({
+          first_name: editForm.first_name.trim(),
+          last_name: editForm.last_name.trim(),
+          email: editForm.email.trim(),
+          phone: editForm.phone.trim(),
+          address: editForm.address.trim(),
+          organization_id: editForm.organization_id === "none" ? null : editForm.organization_id,
+        })
+        .eq("id", user.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "User updated",
+        description: "Changes have been saved successfully.",
+      });
+      setIsEditing(false);
+    } catch (error: any) {
+      console.error("Error updating user:", error);
+      toast({
+        title: "Error",
+        description: error?.message || "Failed to update user.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const getStatusIcon = (isApproved: boolean, decisionMade: boolean) => {
     if (!decisionMade) {
@@ -88,8 +164,6 @@ export const UserModal = ({
     return isApproved ? "default" : "destructive";
   };
 
-  // formatDate imported from utils
-
   const showApprovalButtons = !user.approval_decision_made && isAdministrator;
   const showRevokeButton = user.approval_decision_made && user.is_approved && isAdministrator;
 
@@ -107,12 +181,35 @@ export const UserModal = ({
         </DialogHeader>
 
         <div className="space-y-6">
-          {/* Status */}
-          <div className="flex items-center gap-2">
-            {getStatusIcon(user.is_approved, user.approval_decision_made)}
-            <Badge variant={getStatusVariant(user.is_approved, user.approval_decision_made)}>
-              {getStatusText(user.is_approved, user.approval_decision_made)}
-            </Badge>
+          {/* Status + Edit toggle */}
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              {getStatusIcon(user.is_approved, user.approval_decision_made)}
+              <Badge variant={getStatusVariant(user.is_approved, user.approval_decision_made)}>
+                {getStatusText(user.is_approved, user.approval_decision_made)}
+              </Badge>
+            </div>
+            {isAdministrator && !isEditing && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsEditing(true)}
+              >
+                <Pencil className="h-4 w-4 mr-1" />
+                Edit
+              </Button>
+            )}
+            {isAdministrator && isEditing && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsEditing(false)}
+                disabled={isSaving}
+              >
+                <X className="h-4 w-4 mr-1" />
+                Cancel
+              </Button>
+            )}
           </div>
 
           <Separator />
@@ -120,20 +217,71 @@ export const UserModal = ({
           {/* Personal Information */}
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">Personal Information</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm">{user.email}</span>
+            {isEditing && isAdministrator ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="user-first-name">First Name</Label>
+                  <Input
+                    id="user-first-name"
+                    value={editForm.first_name}
+                    onChange={(e) => setEditForm({ ...editForm, first_name: e.target.value })}
+                    disabled={isSaving}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="user-last-name">Last Name</Label>
+                  <Input
+                    id="user-last-name"
+                    value={editForm.last_name}
+                    onChange={(e) => setEditForm({ ...editForm, last_name: e.target.value })}
+                    disabled={isSaving}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="user-email">Email</Label>
+                  <Input
+                    id="user-email"
+                    type="email"
+                    value={editForm.email}
+                    onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                    disabled={isSaving}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="user-phone">Phone</Label>
+                  <Input
+                    id="user-phone"
+                    value={editForm.phone}
+                    onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                    disabled={isSaving}
+                  />
+                </div>
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="user-address">Address</Label>
+                  <Input
+                    id="user-address"
+                    value={editForm.address}
+                    onChange={(e) => setEditForm({ ...editForm, address: e.target.value })}
+                    disabled={isSaving}
+                  />
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm">{user.phone}</span>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex items-center gap-2">
+                  <Mail className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm">{user.email}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Phone className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm">{user.phone}</span>
+                </div>
+                <div className="flex items-start gap-2 md:col-span-2">
+                  <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
+                  <span className="text-sm">{user.address}</span>
+                </div>
               </div>
-              <div className="flex items-start gap-2 md:col-span-2">
-                <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
-                <span className="text-sm">{user.address}</span>
-              </div>
-            </div>
+            )}
           </div>
 
           <Separator />
@@ -177,7 +325,25 @@ export const UserModal = ({
           {/* Organization Information */}
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">Organization</h3>
-            {user.organizations ? (
+            {isEditing && isAdministrator ? (
+              <Select
+                value={editForm.organization_id}
+                onValueChange={(value) => setEditForm({ ...editForm, organization_id: value })}
+                disabled={isSaving}
+              >
+                <SelectTrigger className="w-full md:w-[320px]">
+                  <SelectValue placeholder="Select an organization" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">No organization</SelectItem>
+                  {organizations.map((org) => (
+                    <SelectItem key={org.id} value={org.id}>
+                      {org.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            ) : user.organizations ? (
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <Building className="h-4 w-4 text-muted-foreground" />
@@ -209,6 +375,21 @@ export const UserModal = ({
               </span>
             </div>
           </div>
+
+          {isEditing && isAdministrator && (
+            <div className="flex justify-end gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setIsEditing(false)}
+                disabled={isSaving}
+              >
+                Cancel
+              </Button>
+              <Button onClick={handleSaveEdits} disabled={isSaving}>
+                {isSaving ? "Saving..." : "Save Changes"}
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="flex justify-between items-center gap-2 pt-4">
