@@ -127,7 +127,8 @@ export const RequestModalActionButtons = ({
             {shouldShowMarkCompleted && isOwner && (
               <Button 
                 onClick={() => handleMarkCompleted(request.id)}
-                className="bg-green-600 hover:bg-green-700 text-white"
+                style={{ backgroundColor: "#3d7471" }}
+                className="text-white hover:opacity-90"
               >
                 Mark Completed
               </Button>
@@ -144,7 +145,8 @@ export const RequestModalActionButtons = ({
       <div className="flex gap-3 flex-wrap">
         <Button 
           onClick={() => handleApprove(request.id)}
-          className="bg-green-600 hover:bg-green-700 text-white"
+          style={{ backgroundColor: "#3d7471" }}
+          className="text-white hover:opacity-90"
         >
           Approve
         </Button>
