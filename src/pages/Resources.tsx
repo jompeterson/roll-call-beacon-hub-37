@@ -39,7 +39,7 @@ const videos: { title: string; description: string; icon: typeof BookOpen; categ
     title: "Posting Events",
     description: "How to create and publish events for your community.",
     icon: Calendar,
-    category: "Networking Events",
+    category: "Events",
     videoUrl: "https://rollcall.pacificcrest.us/lovable-uploads/Roll-Call-Posting-Events-Tutorial.mp4",
   },
   {
@@ -76,12 +76,12 @@ const faqs: { question: string; answer: string }[] = [
     answer: "Open any approved donation from the In-Kind Donations page. If you'd like to contribute, click the 'Fulfill' button on the donation detail page. This lets the posting organization know you're interested in helping with their request.",
   },
   {
-    question: "How do I create a networking event?",
-    answer: "Navigate to the Networking Events page and click the '+ Add Event' button, or use the circle '+' button in the bottom right corner while on any page. Enter the event title, description, date, time, location, and optionally set a maximum number of participants. After submission, the event will go through an approval process before being published.",
+    question: "How do I create an event?",
+    answer: "Navigate to the Events page and click the '+ Add Event' button, or use the circle '+' button in the bottom right corner while on any page. Enter the event title, description, date, time, location, and optionally set a maximum number of participants. After submission, the event will go through an approval process before being published.",
   },
   {
-    question: "How do I RSVP to a networking event?",
-    answer: "Open an approved event from the Networking Events page and click the 'RSVP' button. You can cancel your RSVP at any time by clicking the button again. Guest RSVPs are also supported for non-registered attendees.",
+    question: "How do I RSVP to an event?",
+    answer: "Open an approved event from the Events page and click the 'RSVP' button. You can cancel your RSVP at any time by clicking the button again. Guest RSVPs are also supported for non-registered attendees.",
   },
   {
     question: "How do I post a scholarship?",
@@ -97,7 +97,7 @@ const faqs: { question: string; answer: string }[] = [
   },
   {
     question: "What happens after I submit content for approval?",
-    answer: "All in-kind donations, networking events, scholarships, volunteer opportunities, and requests go through an approval process. An administrator will review your submission and either approve or decline it. You'll receive a notification once a decision has been made.",
+    answer: "All in-kind donations, events, scholarships, volunteer opportunities, and requests go through an approval process. An administrator will review your submission and either approve or decline it. You'll receive a notification once a decision has been made.",
   },
   {
     question: "How do I switch my organization?",
@@ -105,7 +105,7 @@ const faqs: { question: string; answer: string }[] = [
   },
   {
     question: "How do I contact the creator of a donation or event?",
-    answer: "Open the donation, networking event, or other listing you're interested in. The creator's contact information, including email and phone number, is displayed in the detail view if they've provided it.",
+    answer: "Open the donation, event, or other listing you're interested in. The creator's contact information, including email and phone number, is displayed in the detail view if they've provided it.",
   },
   {
     question: "How do I submit a Request for donations?",

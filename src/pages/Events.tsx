@@ -215,8 +215,8 @@ export const Events = () => {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Networking Events</h1>
-          <p className="text-muted-foreground">Loading networking events...</p>
+          <h1 className="text-3xl font-bold tracking-tight">Events</h1>
+          <p className="text-muted-foreground">Loading events...</p>
         </div>
       </div>
     );
@@ -225,17 +225,16 @@ export const Events = () => {
   return (
     <div className="space-y-6 flex flex-col h-full">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Networking Events</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Events</h1>
         <p className="text-muted-foreground">
-          Create and manage networking events
+          Create and manage events
         </p>
       </div>
 
-      {/* Search and Filters */}
-      <div className="flex gap-4 items-center">
+      <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center">
         <div className="flex-1">
           <Input
-            placeholder="Search for networking events..."
+            placeholder="Search for events..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full"
@@ -271,7 +270,7 @@ export const Events = () => {
       {/* Events Section */}
       <div className="space-y-4 flex-1 flex flex-col min-h-0">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold">Networking Events</h2>
+          <h2 className="text-2xl font-semibold">Events</h2>
           {isAuthenticated && (
             <Button onClick={() => setCreateModalOpen(true)} size="sm">
               <Plus className="h-4 w-4 mr-2" />
@@ -331,7 +330,7 @@ export const Events = () => {
                   {sortedEvents.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={isAuthenticated ? 4 : 3} className="text-center py-8 text-muted-foreground">
-                        No networking events found
+                        No events found
                       </TableCell>
                     </TableRow>
                   ) : (

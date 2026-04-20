@@ -43,7 +43,7 @@ export const EventDetail = () => {
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link to="/events">Networking Events</Link>
+                <Link to="/events">Events</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
@@ -68,7 +68,7 @@ export const EventDetail = () => {
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link to="/events">Networking Events</Link>
+                <Link to="/events">Events</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
@@ -86,7 +86,7 @@ export const EventDetail = () => {
               onClick={() => navigate('/events')}
               className="text-primary hover:underline"
             >
-              Back to Networking Events
+              Back to Events
             </button>
           </div>
         </div>
@@ -128,7 +128,7 @@ export const EventDetail = () => {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link to="/events">Networking Events</Link>
+              <Link to="/events">Events</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator>
@@ -146,7 +146,7 @@ export const EventDetail = () => {
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-2xl font-semibold">{event.title}</h1>
-              <p className="text-sm text-muted-foreground mt-1">Networking Events</p>
+              <p className="text-sm text-muted-foreground mt-1">Events</p>
             </div>
             <ShareButton />
           </div>

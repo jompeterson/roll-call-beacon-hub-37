@@ -168,7 +168,7 @@ export const Overview = () => {
             navigateTo="/donations"
           />
           <MetricCard
-            title="Networking Events"
+            title="Events"
             value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newEvents || 0)}
             change={eventChange.change}
             changeType={eventChange.changeType}
@@ -226,7 +226,7 @@ export const Overview = () => {
             navigateTo="/donations"
           />
           <MetricCard
-            title="Networking Events"
+            title="Events"
             value={yearlyLoading ? "..." : formatNumber(yearlyMetrics?.events || 0)}
             change={yearlyEventChange.change}
             changeType={yearlyEventChange.changeType}
