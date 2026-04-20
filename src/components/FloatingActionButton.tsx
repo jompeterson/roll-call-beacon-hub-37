@@ -118,7 +118,7 @@ export const FloatingActionButton = () => {
         >
           <Button
             size="lg"
-            className="h-14 rounded-full shadow-lg text-white px-6 font-semibold bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]/90"
+            className="h-14 rounded-full shadow-lg text-white px-6 font-semibold uppercase tracking-wide bg-black hover:bg-black/90"
           >
             <Heart className="h-5 w-5 mr-2" />
             Donate
