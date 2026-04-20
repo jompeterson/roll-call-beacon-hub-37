@@ -168,6 +168,7 @@ export const FloatingActionButton = () => {
         >
           <Plus className="h-6 w-6 transition-transform duration-300 ease-in-out" />
         </Button>
+        </div>
       </div>
 
       {/* Event Creation Modal */}
