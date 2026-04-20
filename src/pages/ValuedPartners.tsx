@@ -1,3 +1,4 @@
+import pacificCrestLogo from "@/assets/pacific-crest-cabinetry.png";
 
 export const ValuedPartners = () => {
   return (
@@ -8,8 +9,19 @@ export const ValuedPartners = () => {
           Our trusted partners and collaborators
         </p>
       </div>
-      <div className="bg-muted/50 rounded-lg p-8 text-center">
-        <p className="text-lg text-muted-foreground">Valued Partners page coming soon...</p>
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <a
+          href="https://www.pacificcrestcabinetry.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex items-center justify-center rounded-lg border bg-card p-8 shadow-sm transition-all hover:shadow-md hover:border-primary/40"
+        >
+          <img
+            src={pacificCrestLogo}
+            alt="Platform Powered by Pacific Crest Custom Cabinetry"
+            className="max-h-32 w-full object-contain"
+          />
+        </a>
       </div>
     </div>
   );
