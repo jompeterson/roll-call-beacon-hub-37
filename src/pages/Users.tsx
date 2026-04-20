@@ -161,6 +161,7 @@ export const Users = () => {
         variant: "destructive",
       });
       setUserModalOpen(false);
+      refetch();
     } catch (error) {
       console.error('Error rejecting user:', error);
       toast({
