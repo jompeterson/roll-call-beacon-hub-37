@@ -1,15 +1,11 @@
 
-export type OrganizationType = "Non-Profit" | "School" | "Community Group" | "Religious Organization" | "Sports Club" | "Professional Association" | "Industry Partner" | "Other";
+export type OrganizationType = "Non-Profit" | "School" | "Professional Association" | "Industry Partner";
 
 export const organizationTypes: OrganizationType[] = [
   "Non-Profit",
   "School",
-  "Community Group",
-  "Religious Organization",
-  "Sports Club",
   "Professional Association",
-  "Industry Partner",
-  "Other"
+  "Industry Partner"
 ];
 
 export interface OrganizationFormData {
