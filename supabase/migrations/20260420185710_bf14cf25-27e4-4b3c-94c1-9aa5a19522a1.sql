@@ -1,0 +1,1 @@
+UPDATE public.organizations SET type = 'Industry Partner'::public.organization_type WHERE name = 'LendSure';
