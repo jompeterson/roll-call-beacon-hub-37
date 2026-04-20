@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { NotificationRulesManager } from "@/components/settings/NotificationRulesManager";
 
 export const Settings = () => {
   const { toast } = useToast();
@@ -123,8 +124,8 @@ export const Settings = () => {
   }
 
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-8">Settings</h1>
+    <div className="container mx-auto py-8 space-y-6">
+      <h1 className="text-3xl font-bold mb-2">Settings</h1>
       
       <Card>
         <CardHeader>
