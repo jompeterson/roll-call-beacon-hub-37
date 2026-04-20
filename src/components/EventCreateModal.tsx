@@ -150,10 +150,10 @@ export const EventCreateModal = ({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Calendar className="h-5 w-5" />
-            Create New Networking Event
+            Create New Event
           </DialogTitle>
           <DialogDescription>
-            Create a new networking event. Your event will be submitted for approval.
+            Create a new event. Your event will be submitted for approval.
           </DialogDescription>
         </DialogHeader>
 

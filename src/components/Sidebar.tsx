@@ -47,7 +47,7 @@ const baseNavigation = [
   { name: "Overview", href: "/", icon: BarChart3 },
   { name: "In-Kind Donations", href: "/donations", icon: Hammer },
   { name: "Volunteer Opportunities", href: "/volunteers", icon: HandHeart },
-  { name: "Networking Events", href: "/events", icon: Calendar },
+  { name: "Events", href: "/events", icon: Calendar },
   { name: "Scholarships", href: "/scholarships", icon: GraduationCap },
   { name: "Organizations", href: "/organizations", icon: Building2 },
 ];
