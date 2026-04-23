@@ -220,12 +220,13 @@ export const RequestEditModal = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
+              <Label htmlFor="location">Location *</Label>
               <Input
                 id="location"
                 value={formData.location}
                 onChange={(e) => handleInputChange("location", e.target.value)}
-                placeholder="Enter location"
+                placeholder="Address, City, State, ZIP"
+                required
               />
             </div>
 
@@ -313,7 +314,7 @@ export const RequestEditModal = ({
           <div className="flex gap-3 pt-4">
             <Button
               type="submit"
-              disabled={isSubmitting || !formData.title || !formData.request_type}
+              disabled={isSubmitting || !formData.title || !formData.request_type || !formData.location}
               className="flex-1"
             >
               {isSubmitting ? "Updating..." : "Update Request Post"}
