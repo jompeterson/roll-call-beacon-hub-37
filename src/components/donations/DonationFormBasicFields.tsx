@@ -2,7 +2,27 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MultiSelect } from "@/components/ui/multi-select";
 import { DimensionsInput } from "@/components/shared/DimensionsInput";
+
+const MATERIAL_TYPE_OPTIONS = [
+  "Wood",
+  "Metal",
+  "Plastic",
+  "Glass",
+  "Fabric",
+  "Paper",
+  "Electronics",
+  "Food",
+  "Clothing",
+  "Books",
+  "Furniture",
+  "Sports Equipment",
+  "Toys",
+  "Medical Supplies",
+  "Office Supplies",
+  "Assorted Goods",
+];
 
 interface DonationFormBasicFieldsProps {
   formData: {
@@ -92,29 +112,12 @@ export const DonationFormBasicFields = ({ formData, onInputChange }: DonationFor
         <>
           <div className="space-y-2">
             <Label htmlFor="material_type">Material Type</Label>
-            <Select value={formData.material_type} onValueChange={(value) => onInputChange("material_type", value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select material type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Wood">Wood</SelectItem>
-                <SelectItem value="Metal">Metal</SelectItem>
-                <SelectItem value="Plastic">Plastic</SelectItem>
-                <SelectItem value="Glass">Glass</SelectItem>
-                <SelectItem value="Fabric">Fabric</SelectItem>
-                <SelectItem value="Paper">Paper</SelectItem>
-                <SelectItem value="Electronics">Electronics</SelectItem>
-                <SelectItem value="Food">Food</SelectItem>
-                <SelectItem value="Clothing">Clothing</SelectItem>
-                <SelectItem value="Books">Books</SelectItem>
-                <SelectItem value="Furniture">Furniture</SelectItem>
-                <SelectItem value="Sports Equipment">Sports Equipment</SelectItem>
-                <SelectItem value="Toys">Toys</SelectItem>
-                <SelectItem value="Medical Supplies">Medical Supplies</SelectItem>
-                <SelectItem value="Office Supplies">Office Supplies</SelectItem>
-                <SelectItem value="Assorted Goods">Assorted Goods</SelectItem>
-              </SelectContent>
-            </Select>
+            <MultiSelect
+              options={MATERIAL_TYPE_OPTIONS}
+              value={formData.material_type ? formData.material_type.split(",").map(s => s.trim()).filter(Boolean) : []}
+              onChange={(values) => onInputChange("material_type", values.join(", "))}
+              placeholder="Select material types"
+            />
           </div>
 
           <div className="space-y-2">
