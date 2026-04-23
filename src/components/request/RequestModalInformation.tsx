@@ -90,6 +90,12 @@ export const RequestModalInformation = ({ request, highlightedFields }: RequestM
               </div>
             </FieldWrapper>
           )}
+          {Number((request as any).quantity) > 0 && (
+            <div>
+              <label className="font-medium text-sm text-muted-foreground">Quantity</label>
+              <p className="text-base mt-1">{(request as any).quantity}</p>
+            </div>
+          )}
           {Number((request as any).dimensions) > 0 && (
             <div>
               <label className="font-medium text-sm text-muted-foreground">Dimensions</label>
