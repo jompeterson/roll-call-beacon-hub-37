@@ -165,6 +165,8 @@ export type Database = {
           creator_user_id: string
           delivery_miles: number | null
           description: string | null
+          dimension_unit: string | null
+          dimensions: number | null
           donation_link: string | null
           donation_type: string | null
           equipment_type: string | null
@@ -196,6 +198,8 @@ export type Database = {
           creator_user_id: string
           delivery_miles?: number | null
           description?: string | null
+          dimension_unit?: string | null
+          dimensions?: number | null
           donation_link?: string | null
           donation_type?: string | null
           equipment_type?: string | null
@@ -227,6 +231,8 @@ export type Database = {
           creator_user_id?: string
           delivery_miles?: number | null
           description?: string | null
+          dimension_unit?: string | null
+          dimensions?: number | null
           donation_link?: string | null
           donation_type?: string | null
           equipment_type?: string | null
@@ -553,6 +559,8 @@ export type Database = {
           creator_user_id: string
           deadline: string | null
           description: string | null
+          dimension_unit: string | null
+          dimensions: number | null
           id: string
           is_approved: boolean
           is_completed: boolean
@@ -573,6 +581,8 @@ export type Database = {
           creator_user_id: string
           deadline?: string | null
           description?: string | null
+          dimension_unit?: string | null
+          dimensions?: number | null
           id?: string
           is_approved?: boolean
           is_completed?: boolean
@@ -593,6 +603,8 @@ export type Database = {
           creator_user_id?: string
           deadline?: string | null
           description?: string | null
+          dimension_unit?: string | null
+          dimensions?: number | null
           id?: string
           is_approved?: boolean
           is_completed?: boolean
