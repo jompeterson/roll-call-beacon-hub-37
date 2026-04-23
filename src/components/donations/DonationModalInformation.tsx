@@ -116,6 +116,12 @@ export const DonationModalInformation = ({
               <p className="text-base mt-1">{donation.weight} lbs</p>
             </div>
           )}
+          {isDonationView && isPhysical && Number(d.quantity) > 0 && (
+            <div>
+              <label className="font-medium text-sm text-muted-foreground">Quantity</label>
+              <p className="text-base mt-1">{d.quantity}</p>
+            </div>
+          )}
           {isDonationView && isPhysical && Number(d.dimensions) > 0 && (
             <div>
               <label className="font-medium text-sm text-muted-foreground">Dimensions</label>

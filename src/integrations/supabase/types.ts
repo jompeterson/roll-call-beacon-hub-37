@@ -180,6 +180,7 @@ export type Database = {
           mileage: number | null
           organization_id: string | null
           organization_name: string | null
+          quantity: number | null
           service_type: string | null
           target_date: string | null
           title: string
@@ -213,6 +214,7 @@ export type Database = {
           mileage?: number | null
           organization_id?: string | null
           organization_name?: string | null
+          quantity?: number | null
           service_type?: string | null
           target_date?: string | null
           title: string
@@ -246,6 +248,7 @@ export type Database = {
           mileage?: number | null
           organization_id?: string | null
           organization_name?: string | null
+          quantity?: number | null
           service_type?: string | null
           target_date?: string | null
           title?: string
@@ -568,6 +571,7 @@ export type Database = {
           needs_pickup: boolean
           organization_id: string | null
           organization_name: string | null
+          quantity: number | null
           request_type: string
           title: string
           updated_at: string
@@ -590,6 +594,7 @@ export type Database = {
           needs_pickup?: boolean
           organization_id?: string | null
           organization_name?: string | null
+          quantity?: number | null
           request_type: string
           title: string
           updated_at?: string
@@ -612,6 +617,7 @@ export type Database = {
           needs_pickup?: boolean
           organization_id?: string | null
           organization_name?: string | null
+          quantity?: number | null
           request_type?: string
           title?: string
           updated_at?: string

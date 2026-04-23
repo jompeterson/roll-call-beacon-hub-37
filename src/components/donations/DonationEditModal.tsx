@@ -62,6 +62,7 @@ export const DonationEditModal = ({
     location: (donation as any).location || "",
     dimensions: (donation as any).dimensions?.toString() || "",
     dimension_unit: (donation as any).dimension_unit || "",
+    quantity: (donation as any).quantity?.toString() || "",
     images: [] as File[]
   });
 
@@ -152,6 +153,7 @@ export const DonationEditModal = ({
       updateData.material_type = isPhysical ? (formData.material_type || null) : null;
       updateData.dimensions = isPhysical && formData.dimensions ? parseFloat(formData.dimensions) : null;
       updateData.dimension_unit = isPhysical ? (formData.dimension_unit || null) : null;
+      updateData.quantity = isPhysical && formData.quantity ? parseInt(formData.quantity) : null;
       updateData.service_type = formData.donation_type === "Professional Services / Labor" ? (formData.service_type || null) : null;
       updateData.hours_available = formData.donation_type === "Professional Services / Labor" && formData.hours_available ? parseFloat(formData.hours_available) : null;
       updateData.equipment_type = formData.donation_type === "Transportation / Equipment Use" ? (formData.equipment_type || null) : null;

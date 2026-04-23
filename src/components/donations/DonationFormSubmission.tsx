@@ -29,6 +29,7 @@ interface DonationFormData {
   location: string;
   dimensions: string;
   dimension_unit: string;
+  quantity: string;
 }
 
 interface DonationFormSubmissionProps {
@@ -125,6 +126,7 @@ export const useDonationFormSubmission = () => {
         donationData.material_type = formData.material_type || null;
         donationData.dimensions = formData.dimensions ? parseFloat(formData.dimensions) : null;
         donationData.dimension_unit = formData.dimension_unit || null;
+        donationData.quantity = formData.quantity ? parseInt(formData.quantity) : null;
       }
       if (formData.donation_type === "Professional Services / Labor") {
         donationData.service_type = formData.service_type || null;
