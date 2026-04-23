@@ -21,6 +21,7 @@ interface DonationFormBasicFieldsProps {
     location?: string;
     dimensions?: string;
     dimension_unit?: string;
+    quantity?: string;
   };
   onInputChange: (field: string, value: string) => void;
 }
@@ -127,6 +128,19 @@ export const DonationFormBasicFields = ({ formData, onInputChange }: DonationFor
               value={formData.weight}
               onChange={(e) => onInputChange("weight", e.target.value)}
               placeholder="0.00"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="quantity">Quantity (optional)</Label>
+            <Input
+              id="quantity"
+              type="number"
+              min="0"
+              step="1"
+              value={formData.quantity || ""}
+              onChange={(e) => onInputChange("quantity", e.target.value)}
+              placeholder="0"
             />
           </div>
 
