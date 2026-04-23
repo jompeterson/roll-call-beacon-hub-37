@@ -160,7 +160,7 @@ export const DonationEditModal = ({
       updateData.mileage = formData.donation_type === "Transportation / Equipment Use" && formData.mileage ? parseFloat(formData.mileage) : null;
       updateData.facility_type = formData.donation_type === "Facility Use" ? (formData.facility_type || null) : null;
       updateData.capacity = formData.donation_type === "Facility Use" && formData.capacity ? parseInt(formData.capacity) : null;
-      updateData.location = formData.donation_type === "Facility Use" ? (formData.location || null) : null;
+      updateData.location = formData.location || null;
 
       const { error } = await supabase
         .from("donations")
@@ -206,6 +206,17 @@ export const DonationEditModal = ({
             formData={formData}
             onInputChange={handleInputChange}
           />
+
+          <div className="space-y-2">
+            <Label htmlFor="location">Location *</Label>
+            <Input
+              id="location"
+              value={formData.location}
+              onChange={(e) => handleInputChange("location", e.target.value)}
+              placeholder="Address, City, State, ZIP"
+              required
+            />
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <DonationFormOrganizationField
@@ -267,7 +278,7 @@ export const DonationEditModal = ({
           <div className="flex gap-3 pt-4">
             <Button
               type="submit"
-              disabled={isSubmitting || !formData.title || !formData.estimated_value || !formData.donation_type}
+              disabled={isSubmitting || !formData.title || !formData.estimated_value || !formData.donation_type || !formData.location}
               className="flex-1"
             >
               {isSubmitting ? "Updating..." : "Update Donation Post"}

@@ -116,7 +116,8 @@ export const useDonationFormSubmission = () => {
         donation_type: formData.donation_type || null,
         images: imageUrls,
         can_deliver: formData.can_deliver,
-        delivery_miles: formData.delivery_miles ? parseFloat(formData.delivery_miles) : null
+        delivery_miles: formData.delivery_miles ? parseFloat(formData.delivery_miles) : null,
+        location: formData.location || null
       };
 
       // Type-specific fields
@@ -139,7 +140,6 @@ export const useDonationFormSubmission = () => {
       if (formData.donation_type === "Facility Use") {
         donationData.facility_type = formData.facility_type || null;
         donationData.capacity = formData.capacity ? parseInt(formData.capacity) : null;
-        donationData.location = formData.location || null;
       }
 
       const { error } = await supabase
