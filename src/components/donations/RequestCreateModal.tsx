@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfileData } from "@/hooks/useProfileData";
+import { DimensionsInput } from "@/components/shared/DimensionsInput";
 
 interface RequestCreateModalProps {
   open: boolean;

@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { SubmitForReviewDialog } from "@/components/shared/SubmitForReviewDialog";
 import type { Request } from "@/hooks/useRequests";
+import { DimensionsInput } from "@/components/shared/DimensionsInput";
 
 interface RequestEditModalProps {
   open: boolean;
