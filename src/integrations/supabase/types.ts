@@ -175,12 +175,14 @@ export type Database = {
           id: string
           images: string[] | null
           is_approved: boolean
+          is_taken: boolean
           location: string | null
           material_type: string | null
           mileage: number | null
           organization_id: string | null
           organization_name: string | null
           quantity: number | null
+          selected_recipient_user_id: string | null
           service_type: string | null
           target_date: string | null
           title: string
@@ -209,12 +211,14 @@ export type Database = {
           id?: string
           images?: string[] | null
           is_approved?: boolean
+          is_taken?: boolean
           location?: string | null
           material_type?: string | null
           mileage?: number | null
           organization_id?: string | null
           organization_name?: string | null
           quantity?: number | null
+          selected_recipient_user_id?: string | null
           service_type?: string | null
           target_date?: string | null
           title: string
@@ -243,12 +247,14 @@ export type Database = {
           id?: string
           images?: string[] | null
           is_approved?: boolean
+          is_taken?: boolean
           location?: string | null
           material_type?: string | null
           mileage?: number | null
           organization_id?: string | null
           organization_name?: string | null
           quantity?: number | null
+          selected_recipient_user_id?: string | null
           service_type?: string | null
           target_date?: string | null
           title?: string
