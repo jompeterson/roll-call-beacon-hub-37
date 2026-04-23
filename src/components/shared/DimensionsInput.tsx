@@ -34,7 +34,7 @@ export const DimensionsInput = ({
           className="rounded-r-none border-r-0 focus-visible:ring-0 focus-visible:ring-offset-0"
         />
         <Select value={unit} onValueChange={onUnitChange}>
-          <SelectTrigger className="w-[160px] rounded-l-none border-l-0 shrink-0">
+          <SelectTrigger className="w-1/2 rounded-l-none border-l-0 shrink-0">
             <SelectValue placeholder="Unit" />
           </SelectTrigger>
           <SelectContent>
