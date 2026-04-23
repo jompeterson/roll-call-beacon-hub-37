@@ -32,6 +32,8 @@ interface DonationFormData {
   facility_type: string;
   capacity: string;
   location: string;
+  dimensions: string;
+  dimension_unit: string;
 }
 
 export const useDonationForm = (open: boolean) => {
@@ -59,7 +61,9 @@ export const useDonationForm = (open: boolean) => {
     mileage: "",
     facility_type: "",
     capacity: "",
-    location: ""
+    location: "",
+    dimensions: "",
+    dimension_unit: ""
   });
 
   const { isAdministrator } = useAuth();
@@ -136,7 +140,9 @@ export const useDonationForm = (open: boolean) => {
       mileage: "",
       facility_type: "",
       capacity: "",
-      location: ""
+      location: "",
+      dimensions: "",
+      dimension_unit: ""
     });
   };
 
