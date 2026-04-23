@@ -190,6 +190,15 @@ export const DonationDetail = () => {
             />
           </div>
 
+          {/* Requesters Section - Only visible to donation poster or administrators when approved */}
+          {donation.is_approved && (isOwner || isAdministrator) && (
+            <DonationRequestersSection
+              donationId={donation.id}
+              isTaken={(donation as any).is_taken ?? false}
+              selectedRecipientUserId={(donation as any).selected_recipient_user_id ?? null}
+            />
+          )}
+
           {/* Comments Section */}
           {showComments && (
             <CommentsSection
