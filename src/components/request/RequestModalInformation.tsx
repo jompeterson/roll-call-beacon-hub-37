@@ -90,6 +90,19 @@ export const RequestModalInformation = ({ request, highlightedFields }: RequestM
               </div>
             </FieldWrapper>
           )}
+          {Number((request as any).dimensions) > 0 && (
+            <div>
+              <label className="font-medium text-sm text-muted-foreground">Dimensions</label>
+              <p className="text-base mt-1">
+                {(request as any).dimensions}{" "}
+                {(request as any).dimension_unit === "square_feet"
+                  ? "sq ft"
+                  : (request as any).dimension_unit === "linear_feet"
+                  ? "linear ft"
+                  : ""}
+              </p>
+            </div>
+          )}
           <div>
             <label className="font-medium text-sm text-muted-foreground">Needs Dropoff</label>
             <p className="text-base mt-1">{request.needs_pickup ? "Yes" : "No"}</p>

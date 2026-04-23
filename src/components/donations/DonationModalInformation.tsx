@@ -116,6 +116,14 @@ export const DonationModalInformation = ({
               <p className="text-base mt-1">{donation.weight} lbs</p>
             </div>
           )}
+          {isDonationView && isPhysical && Number(d.dimensions) > 0 && (
+            <div>
+              <label className="font-medium text-sm text-muted-foreground">Dimensions</label>
+              <p className="text-base mt-1">
+                {d.dimensions} {d.dimension_unit === "square_feet" ? "sq ft" : d.dimension_unit === "linear_feet" ? "linear ft" : ""}
+              </p>
+            </div>
+          )}
 
           {/* Professional Services fields */}
           {isDonationView && isServices && d.service_type && (

@@ -18,6 +18,8 @@ interface DonationFormBasicFieldsProps {
     facility_type?: string;
     capacity?: string;
     location?: string;
+    dimensions?: string;
+    dimension_unit?: string;
   };
   onInputChange: (field: string, value: string) => void;
 }
@@ -125,6 +127,35 @@ export const DonationFormBasicFields = ({ formData, onInputChange }: DonationFor
               onChange={(e) => onInputChange("weight", e.target.value)}
               placeholder="0.00"
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="dimensions">Dimensions (optional)</Label>
+            <Input
+              id="dimensions"
+              type="number"
+              step="0.01"
+              min="0"
+              value={formData.dimensions || ""}
+              onChange={(e) => onInputChange("dimensions", e.target.value)}
+              placeholder="0.00"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="dimension_unit">Dimension Unit</Label>
+            <Select
+              value={formData.dimension_unit || ""}
+              onValueChange={(value) => onInputChange("dimension_unit", value)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select unit" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="linear_feet">Linear Feet</SelectItem>
+                <SelectItem value="square_feet">Square Feet</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </>
       )}

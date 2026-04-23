@@ -46,7 +46,9 @@ export const RequestEditModal = ({
     contact_phone: request.contact_phone || "",
     organization_name: request.organization_name || "",
     organization_id: request.organization_id || "",
-    needs_pickup: request.needs_pickup || false
+    needs_pickup: request.needs_pickup || false,
+    dimensions: (request as any).dimensions?.toString() || "",
+    dimension_unit: (request as any).dimension_unit || ""
   });
 
   const { toast } = useToast();
@@ -106,6 +108,8 @@ export const RequestEditModal = ({
         organization_name: formData.organization_name || null,
         organization_id: formData.organization_id || null,
         needs_pickup: formData.needs_pickup,
+        dimensions: formData.dimensions ? parseFloat(formData.dimensions) : null,
+        dimension_unit: formData.dimension_unit || null,
         updated_at: new Date().toISOString()
       };
 
@@ -258,6 +262,32 @@ export const RequestEditModal = ({
                 onChange={(e) => handleInputChange("contact_phone", e.target.value)}
                 placeholder="(555) 123-4567"
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="dimensions">Dimensions (optional)</Label>
+              <Input
+                id="dimensions"
+                type="number"
+                step="0.01"
+                min="0"
+                value={formData.dimensions}
+                onChange={(e) => handleInputChange("dimensions", e.target.value)}
+                placeholder="0.00"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="dimension_unit">Dimension Unit</Label>
+              <Select value={formData.dimension_unit} onValueChange={(value) => handleInputChange("dimension_unit", value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select unit" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="linear_feet">Linear Feet</SelectItem>
+                  <SelectItem value="square_feet">Square Feet</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 

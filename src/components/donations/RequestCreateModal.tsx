@@ -40,7 +40,9 @@ export const RequestCreateModal = ({
     contact_phone: "",
     organization_name: "",
     organization_id: "",
-    needs_pickup: false
+    needs_pickup: false,
+    dimensions: "",
+    dimension_unit: ""
   });
 
   const { toast } = useToast();
@@ -139,7 +141,9 @@ export const RequestCreateModal = ({
         organization_id: formData.organization_id || null,
         needs_pickup: formData.needs_pickup,
         is_approved: false,
-        approval_decision_made: false
+        approval_decision_made: false,
+        dimensions: formData.dimensions ? parseFloat(formData.dimensions) : null,
+        dimension_unit: formData.dimension_unit || null
       };
 
       console.log("Creating request with data:", requestData);
@@ -169,7 +173,9 @@ export const RequestCreateModal = ({
         contact_phone: contactInfo?.phone || "",
         organization_name: currentOrganization?.name || "",
         organization_id: currentOrganization?.id || "",
-        needs_pickup: false
+        needs_pickup: false,
+        dimensions: "",
+        dimension_unit: ""
       });
 
       onOpenChange(false);
@@ -304,6 +310,32 @@ export const RequestCreateModal = ({
                 onChange={(e) => handleInputChange("contact_phone", e.target.value)}
                 placeholder="(555) 123-4567"
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="dimensions">Dimensions (optional)</Label>
+              <Input
+                id="dimensions"
+                type="number"
+                step="0.01"
+                min="0"
+                value={formData.dimensions}
+                onChange={(e) => handleInputChange("dimensions", e.target.value)}
+                placeholder="0.00"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="dimension_unit">Dimension Unit</Label>
+              <Select value={formData.dimension_unit} onValueChange={(value) => handleInputChange("dimension_unit", value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select unit" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="linear_feet">Linear Feet</SelectItem>
+                  <SelectItem value="square_feet">Square Feet</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
