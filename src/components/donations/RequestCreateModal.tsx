@@ -40,7 +40,9 @@ export const RequestCreateModal = ({
     contact_phone: "",
     organization_name: "",
     organization_id: "",
-    needs_pickup: false
+    needs_pickup: false,
+    dimensions: "",
+    dimension_unit: ""
   });
 
   const { toast } = useToast();
@@ -139,7 +141,9 @@ export const RequestCreateModal = ({
         organization_id: formData.organization_id || null,
         needs_pickup: formData.needs_pickup,
         is_approved: false,
-        approval_decision_made: false
+        approval_decision_made: false,
+        dimensions: formData.dimensions ? parseFloat(formData.dimensions) : null,
+        dimension_unit: formData.dimension_unit || null
       };
 
       console.log("Creating request with data:", requestData);
@@ -169,7 +173,9 @@ export const RequestCreateModal = ({
         contact_phone: contactInfo?.phone || "",
         organization_name: currentOrganization?.name || "",
         organization_id: currentOrganization?.id || "",
-        needs_pickup: false
+        needs_pickup: false,
+        dimensions: "",
+        dimension_unit: ""
       });
 
       onOpenChange(false);
