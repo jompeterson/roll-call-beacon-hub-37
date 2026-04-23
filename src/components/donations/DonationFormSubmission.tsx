@@ -121,7 +121,7 @@ export const useDonationFormSubmission = () => {
       };
 
       // Type-specific fields
-      const isPhysical = ["Tools", "Materials", "Other"].includes(formData.donation_type);
+      const isPhysical = ["Tools", "Materials"].includes(formData.donation_type);
       if (isPhysical) {
         donationData.weight = formData.weight ? parseFloat(formData.weight) : 0;
         donationData.material_type = formData.material_type || null;

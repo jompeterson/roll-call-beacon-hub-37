@@ -29,7 +29,7 @@ interface DonationFormBasicFieldsProps {
 export const DonationFormBasicFields = ({ formData, onInputChange }: DonationFormBasicFieldsProps) => {
   const donationType = formData.donation_type;
 
-  const isPhysicalGoods = donationType === "Tools" || donationType === "Materials" || donationType === "Other";
+  const isPhysicalGoods = donationType === "Tools" || donationType === "Materials";
   const isServices = donationType === "Professional Services / Labor";
   const isTransportation = donationType === "Transportation / Equipment Use";
   const isFacility = donationType === "Facility Use";
@@ -73,7 +73,6 @@ export const DonationFormBasicFields = ({ formData, onInputChange }: DonationFor
             <SelectItem value="Professional Services / Labor">Professional Services / Labor</SelectItem>
             <SelectItem value="Transportation / Equipment Use">Transportation / Equipment Use</SelectItem>
             <SelectItem value="Facility Use">Facility Use</SelectItem>
-            <SelectItem value="Other">Other</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -113,7 +112,6 @@ export const DonationFormBasicFields = ({ formData, onInputChange }: DonationFor
                 <SelectItem value="Toys">Toys</SelectItem>
                 <SelectItem value="Medical Supplies">Medical Supplies</SelectItem>
                 <SelectItem value="Office Supplies">Office Supplies</SelectItem>
-                <SelectItem value="Other">Other</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -176,7 +174,6 @@ export const DonationFormBasicFields = ({ formData, onInputChange }: DonationFor
                 <SelectItem value="Medical / Health">Medical / Health</SelectItem>
                 <SelectItem value="Design / Creative">Design / Creative</SelectItem>
                 <SelectItem value="General Labor">General Labor</SelectItem>
-                <SelectItem value="Other">Other</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -215,7 +212,6 @@ export const DonationFormBasicFields = ({ formData, onInputChange }: DonationFor
                 <SelectItem value="Generator">Generator</SelectItem>
                 <SelectItem value="Power Tools">Power Tools</SelectItem>
                 <SelectItem value="Construction Equipment">Construction Equipment</SelectItem>
-                <SelectItem value="Other">Other</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -254,7 +250,6 @@ export const DonationFormBasicFields = ({ formData, onInputChange }: DonationFor
                 <SelectItem value="Outdoor Space">Outdoor Space</SelectItem>
                 <SelectItem value="Gymnasium">Gymnasium</SelectItem>
                 <SelectItem value="Parking Lot">Parking Lot</SelectItem>
-                <SelectItem value="Other">Other</SelectItem>
               </SelectContent>
             </Select>
           </div>
