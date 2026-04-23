@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { SubmitForReviewDialog } from "@/components/shared/SubmitForReviewDialog";
 import type { Request } from "@/hooks/useRequests";
+import { DimensionsInput } from "@/components/shared/DimensionsInput";
 
 interface RequestEditModalProps {
   open: boolean;
@@ -264,31 +265,12 @@ export const RequestEditModal = ({
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="dimensions">Dimensions (optional)</Label>
-              <Input
-                id="dimensions"
-                type="number"
-                step="0.01"
-                min="0"
-                value={formData.dimensions}
-                onChange={(e) => handleInputChange("dimensions", e.target.value)}
-                placeholder="0.00"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="dimension_unit">Dimension Unit</Label>
-              <Select value={formData.dimension_unit} onValueChange={(value) => handleInputChange("dimension_unit", value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select unit" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="linear_feet">Linear Feet</SelectItem>
-                  <SelectItem value="square_feet">Square Feet</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <DimensionsInput
+              value={formData.dimensions}
+              unit={formData.dimension_unit}
+              onValueChange={(v) => handleInputChange("dimensions", v)}
+              onUnitChange={(v) => handleInputChange("dimension_unit", v)}
+            />
           </div>
 
           <div className="space-y-2">
