@@ -271,15 +271,6 @@ export const DonationFormBasicFields = ({ formData, onInputChange }: DonationFor
             />
           </div>
 
-          <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="location">Location / Address</Label>
-            <Input
-              id="location"
-              value={formData.location || ""}
-              onChange={(e) => onInputChange("location", e.target.value)}
-              placeholder="Facility address or location"
-            />
-          </div>
         </>
       )}
     </div>
