@@ -180,7 +180,7 @@ export const DonationModalActionButtons = ({
               <AlertDialogHeader>
                 <AlertDialogTitle>Thank You!</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Your interest has been noted. The donation poster will reach out to you soon to coordinate the donation.
+                  Thank you for your interest in this donation. The admin has been notified and will be in contact with you soon.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
