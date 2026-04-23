@@ -62,6 +62,17 @@ export const DonationCreateModal = ({
             onInputChange={handleInputChange}
           />
 
+          <div className="space-y-2">
+            <Label htmlFor="location">Location *</Label>
+            <Input
+              id="location"
+              value={formData.location}
+              onChange={(e) => handleInputChange("location", e.target.value)}
+              placeholder="Address, City, State, ZIP"
+              required
+            />
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <DonationFormOrganizationField
               formData={formData}
@@ -122,7 +133,7 @@ export const DonationCreateModal = ({
           <div className="flex gap-3 pt-4">
             <Button
               type="submit"
-              disabled={isSubmitting || !formData.title || !formData.estimated_value || !formData.donation_type}
+              disabled={isSubmitting || !formData.title || !formData.estimated_value || !formData.donation_type || !formData.location}
               className="flex-1"
             >
               {isSubmitting ? "Creating..." : "Create Donation Post"}
