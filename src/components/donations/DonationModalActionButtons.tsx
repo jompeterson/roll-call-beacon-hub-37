@@ -170,7 +170,7 @@ export const DonationModalActionButtons = ({
                 style={hasAccepted ? {} : { backgroundColor: "#3d7471" }}
                 className={hasAccepted ? "bg-muted text-muted-foreground cursor-not-allowed" : "text-white hover:opacity-90"}
               >
-                {hasAccepted ? "Already Accepted" : isAccepting ? "Accepting..." : "Accept Donation"}
+                {hasAccepted ? "Already Asked" : isAccepting ? "Asking..." : "Ask for this Donation"}
               </Button>
             </div>
           </div>
