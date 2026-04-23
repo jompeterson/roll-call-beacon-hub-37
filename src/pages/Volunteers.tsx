@@ -84,7 +84,7 @@ const SortableTableHead = ({
 export const Volunteers = () => {
   const { volunteerId } = useParams();
   const { volunteers, loading, approveVolunteer, rejectVolunteer } = useVolunteers();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isAdministrator } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   
@@ -255,7 +255,7 @@ export const Volunteers = () => {
       <div className="space-y-4 flex-1 flex flex-col min-h-0">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold">Volunteer Opportunities</h2>
-          {isAuthenticated && (
+          {isAuthenticated && isAdministrator && (
             <Button onClick={() => setCreateModalOpen(true)} size="sm" style={{ backgroundColor: "#3d7471" }} className="text-white hover:opacity-90">
               <Plus className="h-4 w-4 mr-2" />
               Add Opportunity
