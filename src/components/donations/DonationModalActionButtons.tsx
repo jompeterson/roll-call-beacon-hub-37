@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Edit } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -45,6 +46,7 @@ export const DonationModalActionButtons = ({
   const isOwner = user?.id === creatorUserId;
   const canEdit = isOwner || isAdministrator;
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [hasAccepted, setHasAccepted] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isAccepting, setIsAccepting] = useState(false);
@@ -137,6 +139,7 @@ export const DonationModalActionButtons = ({
 
       setHasAccepted(true);
       setShowConfirmDialog(true);
+      queryClient.invalidateQueries({ queryKey: ["donation-requesters", donationId] });
     } catch (error) {
       console.error("Error accepting donation:", error);
       toast({

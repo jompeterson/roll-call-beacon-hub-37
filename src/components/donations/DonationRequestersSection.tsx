@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckCircle2, Users } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import {
@@ -18,16 +18,18 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
+interface RequesterProfile {
+  first_name: string;
+  last_name: string;
+  email: string;
+  profile_image_url: string | null;
+}
+
 interface Requester {
   id: string;
   user_id: string;
   created_at: string;
-  profile?: {
-    first_name: string;
-    last_name: string;
-    email: string;
-    profile_image_url: string | null;
-  } | null;
+  profile: RequesterProfile | null;
 }
 
 interface DonationRequestersSectionProps {
@@ -43,14 +45,12 @@ export const DonationRequestersSection = ({
 }: DonationRequestersSectionProps) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [requesters, setRequesters] = useState<Requester[]>([]);
-  const [loading, setLoading] = useState(true);
   const [pendingUserId, setPendingUserId] = useState<string | null>(null);
   const [confirmUser, setConfirmUser] = useState<Requester | null>(null);
 
-  useEffect(() => {
-    const fetchRequesters = async () => {
-      setLoading(true);
+  const { data: requesters = [], isLoading } = useQuery({
+    queryKey: ["donation-requesters", donationId],
+    queryFn: async (): Promise<Requester[]> => {
       const { data: acceptances, error } = await supabase
         .from("donation_acceptances")
         .select("id, user_id, created_at")
@@ -59,12 +59,11 @@ export const DonationRequestersSection = ({
 
       if (error) {
         console.error("Error loading requesters:", error);
-        setLoading(false);
-        return;
+        return [];
       }
 
       const userIds = (acceptances || []).map((a) => a.user_id);
-      let profilesMap: Record<string, Requester["profile"]> = {};
+      const profilesMap: Record<string, RequesterProfile> = {};
       if (userIds.length > 0) {
         const { data: profiles } = await supabase
           .from("user_profiles")
@@ -80,30 +79,12 @@ export const DonationRequestersSection = ({
         });
       }
 
-      setRequesters(
-        (acceptances || []).map((a) => ({
-          ...a,
-          profile: profilesMap[a.user_id] || null,
-        }))
-      );
-      setLoading(false);
-    };
-
-    fetchRequesters();
-
-    const channel = supabase
-      .channel(`donation-acceptances-${donationId}`)
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "donation_acceptances", filter: `donation_id=eq.${donationId}` },
-        () => fetchRequesters()
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [donationId]);
+      return (acceptances || []).map((a) => ({
+        ...a,
+        profile: profilesMap[a.user_id] || null,
+      }));
+    },
+  });
 
   const handleSelectRecipient = async (userId: string) => {
     setPendingUserId(userId);
@@ -161,7 +142,7 @@ export const DonationRequestersSection = ({
         )}
       </div>
 
-      {loading ? (
+      {isLoading ? (
         <p className="text-sm text-muted-foreground">Loading requesters...</p>
       ) : requesters.length === 0 ? (
         <p className="text-sm text-muted-foreground">
