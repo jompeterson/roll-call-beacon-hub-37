@@ -340,6 +340,9 @@ export const RequestCreateModal = ({
 
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
+            <p className="text-sm text-muted-foreground">
+              Please provide as much detail about your request as possible.
+            </p>
             <Textarea
               id="description"
               value={formData.description}
