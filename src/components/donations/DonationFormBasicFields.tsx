@@ -112,6 +112,7 @@ export const DonationFormBasicFields = ({ formData, onInputChange }: DonationFor
                 <SelectItem value="Toys">Toys</SelectItem>
                 <SelectItem value="Medical Supplies">Medical Supplies</SelectItem>
                 <SelectItem value="Office Supplies">Office Supplies</SelectItem>
+                <SelectItem value="Assorted Goods">Assorted Goods</SelectItem>
               </SelectContent>
             </Select>
           </div>
