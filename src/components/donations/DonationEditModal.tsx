@@ -148,7 +148,7 @@ export const DonationEditModal = ({
         target_date: formData.target_date ? new Date(formData.target_date).toISOString() : null,
       };
 
-      const isPhysical = ["Tools", "Materials", "Other"].includes(formData.donation_type);
+      const isPhysical = ["Tools", "Materials"].includes(formData.donation_type);
       updateData.weight = isPhysical && formData.weight ? parseFloat(formData.weight) : null;
       updateData.material_type = isPhysical ? (formData.material_type || null) : null;
       updateData.dimensions = isPhysical && formData.dimensions ? parseFloat(formData.dimensions) : null;

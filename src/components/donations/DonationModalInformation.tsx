@@ -39,7 +39,7 @@ export const DonationModalInformation = ({
 }: DonationModalInformationProps) => {
   const d = donation as any;
   const donationType = d.donation_type || "";
-  const isPhysical = ["Tools", "Materials", "Other"].includes(donationType);
+  const isPhysical = ["Tools", "Materials"].includes(donationType);
   const isServices = donationType === "Professional Services / Labor";
   const isTransportation = donationType === "Transportation / Equipment Use";
   const isFacility = donationType === "Facility Use";

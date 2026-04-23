@@ -53,8 +53,7 @@ export const RequestCreateModal = ({
 
   const requestTypes = [
     "Tools",
-    "Materials",
-    "Other"
+    "Materials"
   ];
 
   const urgencyLevels = [
