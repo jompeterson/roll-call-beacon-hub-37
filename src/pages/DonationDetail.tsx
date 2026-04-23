@@ -11,10 +11,12 @@ import { DonationModalInformation } from "@/components/donations/DonationModalIn
 import { DonationModalImageSection } from "@/components/donations/DonationModalImageSection";
 import { DonationModalActionButtons } from "@/components/donations/DonationModalActionButtons";
 import { DonationEditModal } from "@/components/donations/DonationEditModal";
+import { DonationRequestersSection } from "@/components/donations/DonationRequestersSection";
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ShareButton } from "@/components/ShareButton";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { ChangeRequestBanner } from "@/components/shared/ChangeRequestBanner";
+import { Badge } from "@/components/ui/badge";
 
 export const DonationDetail = () => {
   const { donationId } = useParams();
@@ -140,7 +142,14 @@ export const DonationDetail = () => {
         <div className="p-6 border-b">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-3xl font-bold">{donation.title}</h1>
+              <div className="flex items-center gap-3 flex-wrap">
+                <h1 className="text-3xl font-bold">{donation.title}</h1>
+                {(donation as any).is_taken && (
+                  <Badge className="bg-green-600 text-white hover:bg-green-600">
+                    Taken
+                  </Badge>
+                )}
+              </div>
               <p className="text-sm text-muted-foreground mt-1">Give an In-Kind Donation</p>
             </div>
             <ShareButton />
