@@ -49,7 +49,8 @@ export const RequestEditModal = ({
     organization_id: request.organization_id || "",
     needs_pickup: request.needs_pickup || false,
     dimensions: (request as any).dimensions?.toString() || "",
-    dimension_unit: (request as any).dimension_unit || ""
+    dimension_unit: (request as any).dimension_unit || "",
+    quantity: (request as any).quantity?.toString() || ""
   });
 
   const { toast } = useToast();
@@ -111,6 +112,7 @@ export const RequestEditModal = ({
         needs_pickup: formData.needs_pickup,
         dimensions: formData.dimensions ? parseFloat(formData.dimensions) : null,
         dimension_unit: formData.dimension_unit || null,
+        quantity: formData.quantity ? parseInt(formData.quantity) : null,
         updated_at: new Date().toISOString()
       };
 
@@ -262,6 +264,19 @@ export const RequestEditModal = ({
                 value={formData.contact_phone}
                 onChange={(e) => handleInputChange("contact_phone", e.target.value)}
                 placeholder="(555) 123-4567"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="quantity">Quantity (optional)</Label>
+              <Input
+                id="quantity"
+                type="number"
+                min="0"
+                step="1"
+                value={formData.quantity}
+                onChange={(e) => handleInputChange("quantity", e.target.value)}
+                placeholder="0"
               />
             </div>
 

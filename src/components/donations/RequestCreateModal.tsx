@@ -43,7 +43,8 @@ export const RequestCreateModal = ({
     organization_id: "",
     needs_pickup: false,
     dimensions: "",
-    dimension_unit: ""
+    dimension_unit: "",
+    quantity: ""
   });
 
   const { toast } = useToast();
@@ -144,7 +145,8 @@ export const RequestCreateModal = ({
         is_approved: false,
         approval_decision_made: false,
         dimensions: formData.dimensions ? parseFloat(formData.dimensions) : null,
-        dimension_unit: formData.dimension_unit || null
+        dimension_unit: formData.dimension_unit || null,
+        quantity: formData.quantity ? parseInt(formData.quantity) : null
       };
 
       console.log("Creating request with data:", requestData);
@@ -176,7 +178,8 @@ export const RequestCreateModal = ({
         organization_id: currentOrganization?.id || "",
         needs_pickup: false,
         dimensions: "",
-        dimension_unit: ""
+        dimension_unit: "",
+        quantity: ""
       });
 
       onOpenChange(false);
@@ -310,6 +313,19 @@ export const RequestCreateModal = ({
                 value={formData.contact_phone}
                 onChange={(e) => handleInputChange("contact_phone", e.target.value)}
                 placeholder="(555) 123-4567"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="quantity">Quantity (optional)</Label>
+              <Input
+                id="quantity"
+                type="number"
+                min="0"
+                step="1"
+                value={formData.quantity}
+                onChange={(e) => handleInputChange("quantity", e.target.value)}
+                placeholder="0"
               />
             </div>
 
