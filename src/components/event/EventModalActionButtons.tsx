@@ -94,6 +94,12 @@ export const EventModalActionButtons = ({
         </div>
       )}
 
+      {showApprovalButtons && (
+        <div className="flex justify-end mb-3">
+          <PrivateApprovalToggle isPrivate={approveAsPrivate} onChange={setApproveAsPrivate} />
+        </div>
+      )}
+
       <div className="flex justify-between items-center gap-2">
         <div className="flex gap-2">
           {canEdit && onEdit && (
@@ -143,8 +149,8 @@ export const EventModalActionButtons = ({
 
           {showApprovalButtons && (
             <>
-              <Button onClick={() => onApprove(event.id)} className="flex-1">
-                Approve Event
+              <Button onClick={handleApproveClick} className="flex-1">
+                {approveAsPrivate ? "Approve as Private" : "Approve Event"}
               </Button>
               <Button variant="destructive" onClick={() => onReject(event.id)} className="flex-1">
                 Reject Event
