@@ -7,6 +7,7 @@ import { PersonalInfoStep } from "@/components/register/PersonalInfoStep";
 import { OrganizationChoiceStep } from "@/components/register/OrganizationChoiceStep";
 import { NewOrganizationStep } from "@/components/register/NewOrganizationStep";
 import { ExistingOrganizationStep } from "@/components/register/ExistingOrganizationStep";
+import { NotificationPreferencesStep } from "@/components/register/NotificationPreferencesStep";
 import { VerificationPendingStep } from "@/components/register/VerificationPendingStep";
 import { signUp } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
@@ -28,6 +29,7 @@ export interface RegistrationData {
     address: string;
     phone: string;
   };
+  notificationPreferences?: Record<string, boolean>;
 }
 
 export const Register = () => {
@@ -86,7 +88,7 @@ export const Register = () => {
   };
 
   const getTotalSteps = () => {
-    return registrationData.organizationChoice === 'new' ? 6 : 6;
+    return 7;
   };
 
   const renderStep = () => {
@@ -132,23 +134,33 @@ export const Register = () => {
           return (
             <NewOrganizationStep
               data={registrationData}
-              onNext={handleFinalSubmit}
+              onNext={nextStep}
               onBack={prevStep}
               onUpdate={updateRegistrationData}
-              isSubmitting={isSubmitting}
+              isSubmitting={false}
             />
           );
         } else {
           return (
             <ExistingOrganizationStep
               data={registrationData}
-              onNext={handleFinalSubmit}
+              onNext={nextStep}
               onBack={prevStep}
               onUpdate={updateRegistrationData}
             />
           );
         }
       case 6:
+        return (
+          <NotificationPreferencesStep
+            data={registrationData}
+            onNext={handleFinalSubmit}
+            onBack={prevStep}
+            onUpdate={updateRegistrationData}
+            isSubmitting={isSubmitting}
+          />
+        );
+      case 7:
         return (
           <VerificationPendingStep
             data={registrationData}
