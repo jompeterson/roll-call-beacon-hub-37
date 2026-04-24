@@ -448,6 +448,9 @@ export type Database = {
         Row: {
           created_at: string
           creator_user_id: string | null
+          email_attempts: number
+          email_last_attempt_at: string | null
+          email_sent: boolean
           id: string
           is_read: boolean
           message: string
@@ -461,6 +464,9 @@ export type Database = {
         Insert: {
           created_at?: string
           creator_user_id?: string | null
+          email_attempts?: number
+          email_last_attempt_at?: string | null
+          email_sent?: boolean
           id?: string
           is_read?: boolean
           message: string
@@ -474,6 +480,9 @@ export type Database = {
         Update: {
           created_at?: string
           creator_user_id?: string | null
+          email_attempts?: number
+          email_last_attempt_at?: string | null
+          email_sent?: boolean
           id?: string
           is_read?: boolean
           message?: string
