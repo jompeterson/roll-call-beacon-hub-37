@@ -29,8 +29,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 const ORG_TYPES = ["Non-Profit", "School", "Industry Partner"];
 const ROLES = [
   { value: "administrator", label: "Administrator" },
-  { value: "member", label: "Member" },
-  { value: "guest", label: "Guest" },
+  { value: "shop_teacher", label: "CTE Teacher" },
+  { value: "staff", label: "Staff" },
+  { value: "student", label: "Student" },
+  { value: "volunteer", label: "Volunteer" },
 ];
 
 export const NotificationRulesManager = () => {
