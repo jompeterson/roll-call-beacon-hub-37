@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { RequestChangesModal } from "@/components/shared/RequestChangesModal";
+import { PrivateApprovalToggle } from "@/components/shared/PrivateApprovalToggle";
 
 interface DonationModalActionButtonsProps {
   donationId: string;
@@ -51,6 +52,7 @@ export const DonationModalActionButtons = ({
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isAccepting, setIsAccepting] = useState(false);
   const [showRequestChangesModal, setShowRequestChangesModal] = useState(false);
+  const [approveAsPrivate, setApproveAsPrivate] = useState(false);
 
   // Check if user has already accepted this donation
   useEffect(() => {
@@ -75,7 +77,8 @@ export const DonationModalActionButtons = ({
         .from("donations")
         .update({
           is_approved: true,
-          approval_decision_made: true
+          approval_decision_made: true,
+          is_private: approveAsPrivate,
         })
         .eq("id", donationId);
 
@@ -249,35 +252,40 @@ export const DonationModalActionButtons = ({
 
   return (
     <>
-      <div className="flex gap-3 p-6 justify-between flex-wrap">
-        <div>
-          {canEdit && onEdit && (
-            <Button variant="outline" onClick={onEdit}>
-              <Edit className="w-4 h-4 mr-2" />
-              Edit
-            </Button>
-          )}
+      <div className="flex flex-col gap-3 p-6">
+        <div className="flex justify-end">
+          <PrivateApprovalToggle isPrivate={approveAsPrivate} onChange={setApproveAsPrivate} />
         </div>
-        <div className="flex gap-3">
-          <Button 
-            onClick={handleApprove}
-            style={{ backgroundColor: "#3d7471" }}
-            className="text-white hover:opacity-90"
-          >
-            Approve
-          </Button>
-          <Button 
-            onClick={handleReject}
-            variant="destructive"
-          >
-            Reject
-          </Button>
-          <Button 
-            onClick={() => setShowRequestChangesModal(true)}
-            variant="outline"
-          >
-            Request Changes
-          </Button>
+        <div className="flex gap-3 justify-between flex-wrap">
+          <div>
+            {canEdit && onEdit && (
+              <Button variant="outline" onClick={onEdit}>
+                <Edit className="w-4 h-4 mr-2" />
+                Edit
+              </Button>
+            )}
+          </div>
+          <div className="flex gap-3">
+            <Button 
+              onClick={handleApprove}
+              style={{ backgroundColor: "#3d7471" }}
+              className="text-white hover:opacity-90"
+            >
+              {approveAsPrivate ? "Approve as Private" : "Approve"}
+            </Button>
+            <Button 
+              onClick={handleReject}
+              variant="destructive"
+            >
+              Reject
+            </Button>
+            <Button 
+              onClick={() => setShowRequestChangesModal(true)}
+              variant="outline"
+            >
+              Request Changes
+            </Button>
+          </div>
         </div>
       </div>
       <RequestChangesModal

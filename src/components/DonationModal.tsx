@@ -128,7 +128,14 @@ export const DonationModal = ({
           <DialogHeader>
             <div className="flex justify-between items-start">
               <div>
-                <DialogTitle className="text-2xl font-bold">{getModalTitle()}</DialogTitle>
+                <div className="flex items-center gap-2">
+                  <DialogTitle className="text-2xl font-bold">{getModalTitle()}</DialogTitle>
+                  {donation.is_private && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 text-amber-800 border border-amber-300 px-2 py-0.5 text-xs font-medium">
+                      🔒 Private
+                    </span>
+                  )}
+                </div>
                 <p className="text-sm text-muted-foreground">{getModalType()}</p>
               </div>
               <ShareButton />

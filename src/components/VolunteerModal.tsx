@@ -13,6 +13,8 @@ import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
 import { VolunteerEditModal } from "@/components/volunteer/VolunteerEditModal";
 import { RequestChangesModal } from "@/components/shared/RequestChangesModal";
+import { PrivateApprovalToggle } from "@/components/shared/PrivateApprovalToggle";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Volunteer {
   id: string;
@@ -25,6 +27,7 @@ interface Volunteer {
   max_participants: number | null;
   creator_user_id: string;
   is_approved: boolean;
+  is_private?: boolean;
   approval_decision_made: boolean;
   created_at: string;
   updated_at: string;
@@ -57,9 +60,19 @@ export const VolunteerModal = ({
   const navigate = useNavigate();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [showRequestChangesModal, setShowRequestChangesModal] = useState(false);
+  const [approveAsPrivate, setApproveAsPrivate] = useState(false);
   
   const isOwner = user?.id === volunteer?.creator_user_id;
   const canEdit = isOwner || isAdministrator;
+
+  const handleApproveClick = async () => {
+    if (!volunteer) return;
+    await supabase
+      .from("volunteers")
+      .update({ is_private: approveAsPrivate })
+      .eq("id", volunteer.id);
+    onApprove(volunteer.id);
+  };
 
   // Update URL when modal opens - only if navigation is enabled
   useEffect(() => {
@@ -100,7 +113,14 @@ export const VolunteerModal = ({
       return <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-300">Pending Approval</Badge>;
     }
     if (volunteer.is_approved) {
-      return <Badge variant="outline" className="bg-green-100 text-green-800 border-green-300">Approved</Badge>;
+      return (
+        <div className="flex gap-2">
+          <Badge variant="outline" className="bg-green-100 text-green-800 border-green-300">Approved</Badge>
+          {volunteer.is_private && (
+            <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-300">🔒 Private</Badge>
+          )}
+        </div>
+      );
     }
     return <Badge variant="outline" className="bg-red-100 text-red-800 border-red-300">Rejected</Badge>;
   };
@@ -202,6 +222,11 @@ export const VolunteerModal = ({
         {/* Fixed Footer - Show action buttons if handlers are provided OR if user can edit */}
         {(onApprove || onReject || onRequestChanges || canEdit) && (
           <div className="px-6 py-4 border-t bg-card">
+            {isAdministrator && !volunteer.approval_decision_made && (
+              <div className="flex justify-end mb-3">
+                <PrivateApprovalToggle isPrivate={approveAsPrivate} onChange={setApproveAsPrivate} />
+              </div>
+            )}
             <div className="flex justify-between items-center gap-2">
               <div>
                 {canEdit && (
@@ -216,12 +241,12 @@ export const VolunteerModal = ({
                 {isAdministrator && !volunteer.approval_decision_made && (
                   <>
                     <Button
-                      onClick={() => onApprove(volunteer.id)}
+                      onClick={handleApproveClick}
                       className="flex-1"
                       variant="default"
                     >
                       <CheckCircle className="h-4 w-4 mr-2" />
-                      Approve
+                      {approveAsPrivate ? "Approve as Private" : "Approve"}
                     </Button>
                     <Button
                       onClick={() => onReject(volunteer.id)}
