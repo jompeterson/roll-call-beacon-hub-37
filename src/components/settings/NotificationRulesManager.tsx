@@ -59,6 +59,19 @@ export const NotificationRulesManager = () => {
     return m;
   }, []);
 
+  const groupedTypes = useMemo(() => {
+    const map: Record<string, typeof NOTIFICATION_TYPES> = {};
+    NOTIFICATION_TYPES.forEach((t) => {
+      if (!map[t.category]) map[t.category] = [];
+      map[t.category].push(t);
+    });
+    return map;
+  }, []);
+
+  const selectedTypeDescription = useMemo(() => {
+    return NOTIFICATION_TYPES.find((t) => t.key === form.notification_type)?.description;
+  }, [form.notification_type]);
+
   const orgMap = useMemo(() => {
     const m: Record<string, string> = {};
     organizations.forEach((o) => (m[o.id] = o.name));
