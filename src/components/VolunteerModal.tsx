@@ -112,7 +112,14 @@ export const VolunteerModal = ({
       return <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-300">Pending Approval</Badge>;
     }
     if (volunteer.is_approved) {
-      return <Badge variant="outline" className="bg-green-100 text-green-800 border-green-300">Approved</Badge>;
+      return (
+        <div className="flex gap-2">
+          <Badge variant="outline" className="bg-green-100 text-green-800 border-green-300">Approved</Badge>
+          {volunteer.is_private && (
+            <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-300">🔒 Private</Badge>
+          )}
+        </div>
+      );
     }
     return <Badge variant="outline" className="bg-red-100 text-red-800 border-red-300">Rejected</Badge>;
   };
