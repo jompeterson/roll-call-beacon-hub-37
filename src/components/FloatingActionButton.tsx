@@ -23,9 +23,25 @@ export const FloatingActionButton = () => {
   const [volunteerModalOpen, setVolunteerModalOpen] = useState(false);
   const { isAuthenticated, isAdministrator } = useAuth();
 
-  // Don't render the FAB if user is not authenticated
+  // Render only the Donate button if user is not authenticated
   if (!isAuthenticated) {
-    return null;
+    return (
+      <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3">
+        <a
+          href="https://secure.qgiv.com/for/homebuildingfoundation/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Button
+            size="lg"
+            className="h-14 rounded-full shadow-lg text-white px-6 font-semibold uppercase tracking-wide bg-black hover:bg-black/90"
+          >
+            <Heart className="h-5 w-5 mr-2" />
+            Donate
+          </Button>
+        </a>
+      </div>
+    );
   }
 
   const allActions = [
