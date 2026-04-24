@@ -189,7 +189,11 @@ export const Sidebar = ({ open, onOpenChange, collapsed, onCollapsedChange }: Si
               ? location.pathname === "/valued-partners"
               : item.href === "/resources"
                 ? location.pathname === "/resources"
-                : isDashboardPage;
+                : item.href === "/discover-talent"
+                  ? location.pathname.startsWith("/discover-talent")
+                  : item.href === "/work-experience"
+                    ? location.pathname === "/work-experience"
+                    : isDashboardPage;
             return (
               <Link
                 key={item.name}
