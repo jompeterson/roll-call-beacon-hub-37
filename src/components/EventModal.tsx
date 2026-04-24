@@ -103,13 +103,15 @@ export const EventModal = ({
         {/* Scrollable Content */}
         <ScrollArea className="flex-1 px-6">
           <div className="space-y-6 py-4">
-            {/* Image Carousel */}
-            {event.images && event.images.length > 0 && (
-              <ImageCarousel images={event.images} title={event.title} />
+            {/* Images + Event Information side-by-side */}
+            {event.images && event.images.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                <ImageCarousel images={event.images} title={event.title} />
+                <EventModalInformation event={event} rsvpCount={rsvpCount} />
+              </div>
+            ) : (
+              <EventModalInformation event={event} rsvpCount={rsvpCount} />
             )}
-            
-            {/* Event Information */}
-            <EventModalInformation event={event} rsvpCount={rsvpCount} />
 
             {/* RSVP Status for authenticated users */}
             <EventModalRSVPStatus 

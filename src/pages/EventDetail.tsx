@@ -162,13 +162,15 @@ export const EventDetail = () => {
             />
           )}
 
-          {/* Image Carousel */}
-          {event.images && event.images.length > 0 && (
-            <ImageCarousel images={event.images} title={event.title} />
+          {/* Images + Event Information side-by-side */}
+          {event.images && event.images.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+              <ImageCarousel images={event.images} title={event.title} />
+              <EventModalInformation event={event} rsvpCount={rsvpCount} highlightedFields={isOwner && changeRequest ? changeRequest.fieldKeys : undefined} />
+            </div>
+          ) : (
+            <EventModalInformation event={event} rsvpCount={rsvpCount} highlightedFields={isOwner && changeRequest ? changeRequest.fieldKeys : undefined} />
           )}
-          
-          {/* Event Information */}
-          <EventModalInformation event={event} rsvpCount={rsvpCount} highlightedFields={isOwner && changeRequest ? changeRequest.fieldKeys : undefined} />
 
           {/* RSVP Status for authenticated users */}
           <EventModalRSVPStatus 
