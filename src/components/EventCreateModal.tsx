@@ -12,6 +12,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
 import { ImageUpload } from "@/components/shared/ImageUpload";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { EVENT_TYPES } from "@/lib/eventTypes";
 
 interface EventCreateModalProps {
   open: boolean;
@@ -26,6 +28,7 @@ interface EventFormData {
   end_date: string;
   location: string;
   event_link: string;
+  event_type: string;
   max_participants: number | null;
 }
 
@@ -48,6 +51,7 @@ export const EventCreateModal = ({
       end_date: "",
       location: "",
       event_link: "",
+      event_type: "",
       max_participants: null,
     },
   });
@@ -99,6 +103,7 @@ export const EventCreateModal = ({
           end_date: data.end_date ? new Date(data.end_date).toISOString() : null,
           location: data.location || null,
           event_link: data.event_link || null,
+          event_type: data.event_type || null,
           max_participants: data.max_participants,
           creator_user_id: user.id,
           images: imageUrls,
