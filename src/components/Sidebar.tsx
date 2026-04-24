@@ -63,7 +63,7 @@ const adminNavigation = [
   { name: "Settings", href: "/settings", icon: Settings },
 ];
 
-const topNavigationItems = [
+const baseTopNavigationItems = [
   { name: "Dashboard", href: "/" },
   { name: "Valued Partners", href: "/valued-partners" },
   { name: "Resources", href: "/resources" },
