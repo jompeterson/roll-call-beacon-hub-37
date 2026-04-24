@@ -212,13 +212,21 @@ export const NotificationRulesManager = () => {
                   <SelectValue placeholder="Select a notification type" />
                 </SelectTrigger>
                 <SelectContent>
-                  {NOTIFICATION_TYPES.map((t) => (
-                    <SelectItem key={t.key} value={t.key}>
-                      {t.label}
-                    </SelectItem>
+                  {Object.entries(groupedTypes).map(([category, items]) => (
+                    <SelectGroup key={category}>
+                      <SelectLabel>{category}</SelectLabel>
+                      {items.map((t) => (
+                        <SelectItem key={t.key} value={t.key}>
+                          {t.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
                   ))}
                 </SelectContent>
               </Select>
+              {selectedTypeDescription && (
+                <p className="text-xs text-muted-foreground">{selectedTypeDescription}</p>
+              )}
             </div>
 
             <div className="space-y-2">
