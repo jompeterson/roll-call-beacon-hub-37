@@ -43,7 +43,7 @@ export const DonationFormContactFields = ({ formData, onInputChange }: DonationF
           type="url"
           value={formData.donation_link}
           onChange={(e) => onInputChange("donation_link", e.target.value)}
-          placeholder="https://example.com/donate"
+          placeholder="https://example.com/product"
         />
       </div>
     </>
