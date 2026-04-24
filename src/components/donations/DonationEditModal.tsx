@@ -281,7 +281,7 @@ export const DonationEditModal = ({
           <div className="flex gap-3 pt-4">
             <Button
               type="submit"
-              disabled={isSubmitting || !formData.title || !formData.estimated_value || !formData.donation_type || !formData.location}
+              disabled={isSubmitting}
               className="flex-1"
             >
               {isSubmitting ? "Updating..." : "Update Donation Post"}
