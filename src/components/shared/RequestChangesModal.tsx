@@ -34,7 +34,7 @@ const FIELDS_BY_TYPE: Record<ContentType, FieldOption[]> = {
     { key: "contact_email", label: "Contact Email" },
     { key: "contact_phone", label: "Contact Phone" },
     { key: "images", label: "Images" },
-    { key: "donation_link", label: "Donation Link" },
+    { key: "donation_link", label: "Link to product info" },
   ],
   request: [
     { key: "title", label: "Title" },

@@ -37,13 +37,13 @@ export const DonationFormContactFields = ({ formData, onInputChange }: DonationF
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="donation_link">Donation Link</Label>
+        <Label htmlFor="donation_link">Link to product info (optional)</Label>
         <Input
           id="donation_link"
           type="url"
           value={formData.donation_link}
           onChange={(e) => onInputChange("donation_link", e.target.value)}
-          placeholder="https://example.com/donate"
+          placeholder="https://example.com/product"
         />
       </div>
     </>

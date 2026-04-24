@@ -19,7 +19,7 @@ const FIELD_LABEL_TO_KEY: Record<string, string> = {
   "Contact Email": "contact_email",
   "Contact Phone": "contact_phone",
   "Images": "images",
-  "Donation Link": "donation_link",
+  "Link to product info": "donation_link",
   "Request Type": "request_type",
   "Urgency Level": "urgency_level",
   "Deadline": "deadline",
