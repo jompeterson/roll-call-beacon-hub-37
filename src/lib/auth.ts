@@ -77,6 +77,28 @@ export const signUp = async (registrationData: RegistrationData) => {
       organization_id: organizationId,
     });
 
+    // Persist notification preferences (only the ones explicitly set; defaults remain "on")
+    if (registrationData.notificationPreferences) {
+      const prefRows = Object.entries(registrationData.notificationPreferences).map(
+        ([notification_type, enabled]) => ({
+          user_id: user.id,
+          notification_type,
+          enabled,
+        })
+      );
+
+      if (prefRows.length > 0) {
+        const { error: prefError } = await supabase
+          .from('notification_preferences')
+          .upsert(prefRows, { onConflict: 'user_id,notification_type' });
+
+        if (prefError) {
+          console.error('Notification preferences save error:', prefError);
+          // Non-fatal — user can update later in profile settings
+        }
+      }
+    }
+
     return { data: { user }, error: null };
   } catch (error: any) {
     console.error('Registration error:', error);
