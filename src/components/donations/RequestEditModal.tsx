@@ -298,7 +298,7 @@ export const RequestEditModal = ({
               id="description"
               value={formData.description}
               onChange={(e) => handleInputChange("description", e.target.value)}
-              placeholder="Describe what you need..."
+              placeholder="Describe your donation needs..."
               rows={4}
             />
           </div>
