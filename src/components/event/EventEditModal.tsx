@@ -8,6 +8,8 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { ImageUpload } from "@/components/shared/ImageUpload";
 import { SubmitForReviewDialog } from "@/components/shared/SubmitForReviewDialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { EVENT_TYPES } from "@/lib/eventTypes";
 import { X } from "lucide-react";
 import type { Event } from "@/hooks/useEvents";
 
@@ -37,6 +39,7 @@ export const EventEditModal = ({
     end_date: event.end_date ? new Date(event.end_date).toISOString().slice(0, 16) : "",
     location: event.location || "",
     event_link: event.event_link || "",
+    event_type: event.event_type || "",
     max_participants: event.max_participants?.toString() || ""
   });
 
@@ -86,6 +89,7 @@ export const EventEditModal = ({
         end_date: formData.end_date ? new Date(formData.end_date).toISOString() : null,
         location: formData.location || null,
         event_link: formData.event_link || null,
+        event_type: formData.event_type || null,
         max_participants: formData.max_participants ? parseInt(formData.max_participants) : null,
         images: imageUrls,
         updated_at: new Date().toISOString()
@@ -189,6 +193,20 @@ export const EventEditModal = ({
                 onChange={(e) => handleInputChange("event_link", e.target.value)}
                 placeholder="https://example.com/event"
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="event_type">Event Type</Label>
+              <Select value={formData.event_type} onValueChange={(value) => handleInputChange("event_type", value)}>
+                <SelectTrigger id="event_type">
+                  <SelectValue placeholder="Select event type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {EVENT_TYPES.map((type) => (
+                    <SelectItem key={type} value={type}>{type}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="space-y-2">

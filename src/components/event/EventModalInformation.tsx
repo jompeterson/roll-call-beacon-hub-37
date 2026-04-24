@@ -1,5 +1,6 @@
 
-import { Calendar, MapPin, Users, UserCheck } from "lucide-react";
+import { Calendar, MapPin, Users, UserCheck, Tag } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { formatDate, cn } from "@/lib/utils";
 
 interface Event {
@@ -10,6 +11,7 @@ interface Event {
   end_date?: string | null;
   location: string | null;
   event_link?: string | null;
+  event_type?: string | null;
   max_participants: number | null;
   creator_user_id: string;
   is_approved: boolean;
@@ -36,7 +38,15 @@ const FieldWrapper = ({ fieldKey, highlightedFields, children }: { fieldKey: str
 export const EventModalInformation = ({ event, rsvpCount, highlightedFields }: EventModalInformationProps) => {
   return (
     <div className="space-y-4">
-      <h3 className="font-semibold text-lg">Event Information</h3>
+      <div className="flex items-center justify-between gap-2 flex-wrap">
+        <h3 className="font-semibold text-lg">Event Information</h3>
+        {event.event_type && (
+          <Badge variant="secondary" className="gap-1">
+            <Tag className="h-3 w-3" />
+            {event.event_type}
+          </Badge>
+        )}
+      </div>
       
       {event.description && (
         <FieldWrapper fieldKey="description" highlightedFields={highlightedFields}>
