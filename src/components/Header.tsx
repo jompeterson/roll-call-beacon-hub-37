@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { NotificationDropdown } from "@/components/NotificationDropdown";
 import { supabase } from "@/integrations/supabase/client";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useAuth } from "@/hooks/useAuth";
 
 interface HeaderProps {
   sidebarOpen: boolean;
@@ -26,6 +27,10 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
   const location = useLocation();
   const { toast } = useToast();
   const isMobile = useIsMobile();
+  const { userRole, isAuthenticated } = useAuth();
+  const isStudent = userRole?.name === "student";
+  const showDiscoverTalent = isAuthenticated && !isStudent;
+  const showWorkExperience = isAuthenticated && isStudent;
   const [user, setUser] = useState<CustomUser | null>(null);
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [logoLoading, setLogoLoading] = useState(true);
@@ -216,6 +221,32 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
             Resources
           </Button>
         </Link>
+        {showDiscoverTalent && (
+          <Link to="/discover-talent">
+            <Button 
+              variant="ghost" 
+              className={location.pathname.startsWith("/discover-talent") ? "text-white hover:text-white" : "text-foreground hover:text-white"}
+              style={location.pathname.startsWith("/discover-talent") ? { backgroundColor: "#3d7471" } : {}}
+              onMouseEnter={(e) => { if (!location.pathname.startsWith("/discover-talent")) e.currentTarget.style.backgroundColor = "#3d7471"; }}
+              onMouseLeave={(e) => { if (!location.pathname.startsWith("/discover-talent")) e.currentTarget.style.backgroundColor = ""; }}
+            >
+              Discover Talent
+            </Button>
+          </Link>
+        )}
+        {showWorkExperience && (
+          <Link to="/work-experience">
+            <Button 
+              variant="ghost" 
+              className={location.pathname === "/work-experience" ? "text-white hover:text-white" : "text-foreground hover:text-white"}
+              style={location.pathname === "/work-experience" ? { backgroundColor: "#3d7471" } : {}}
+              onMouseEnter={(e) => { if (location.pathname !== "/work-experience") e.currentTarget.style.backgroundColor = "#3d7471"; }}
+              onMouseLeave={(e) => { if (location.pathname !== "/work-experience") e.currentTarget.style.backgroundColor = ""; }}
+            >
+              Work Experience
+            </Button>
+          </Link>
+        )}
       </div>
 
       {/* Center Navigation - Dropdown on tablet (md to lg) */}
@@ -237,6 +268,16 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
             <DropdownMenuItem onClick={() => navigate("/resources")}>
               Resources
             </DropdownMenuItem>
+            {showDiscoverTalent && (
+              <DropdownMenuItem onClick={() => navigate("/discover-talent")}>
+                Discover Talent
+              </DropdownMenuItem>
+            )}
+            {showWorkExperience && (
+              <DropdownMenuItem onClick={() => navigate("/work-experience")}>
+                Work Experience
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

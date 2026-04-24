@@ -63,7 +63,7 @@ const adminNavigation = [
   { name: "Settings", href: "/settings", icon: Settings },
 ];
 
-const topNavigationItems = [
+const baseTopNavigationItems = [
   { name: "Dashboard", href: "/" },
   { name: "Valued Partners", href: "/valued-partners" },
   { name: "Resources", href: "/resources" },
@@ -75,7 +75,13 @@ export const Sidebar = ({ open, onOpenChange, collapsed, onCollapsedChange }: Si
   const { toast } = useToast();
   const isMobile = useIsMobile();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const { isAdministrator } = useAuth();
+  const { isAdministrator, userRole } = useAuth();
+  const isStudent = userRole?.name === "student";
+  const topNavigationItems = [
+    ...baseTopNavigationItems,
+    ...(isAuthenticated && !isStudent ? [{ name: "Discover Talent", href: "/discover-talent" }] : []),
+    ...(isAuthenticated && isStudent ? [{ name: "Work Experience", href: "/work-experience" }] : []),
+  ];
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -183,7 +189,11 @@ export const Sidebar = ({ open, onOpenChange, collapsed, onCollapsedChange }: Si
               ? location.pathname === "/valued-partners"
               : item.href === "/resources"
                 ? location.pathname === "/resources"
-                : isDashboardPage;
+                : item.href === "/discover-talent"
+                  ? location.pathname.startsWith("/discover-talent")
+                  : item.href === "/work-experience"
+                    ? location.pathname === "/work-experience"
+                    : isDashboardPage;
             return (
               <Link
                 key={item.name}

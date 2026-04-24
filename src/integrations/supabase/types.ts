@@ -748,6 +748,123 @@ export type Database = {
           },
         ]
       }
+      student_education: {
+        Row: {
+          created_at: string
+          currently_studying: boolean
+          degree: string | null
+          description: string | null
+          end_date: string | null
+          field_of_study: string | null
+          id: string
+          school: string
+          start_date: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          currently_studying?: boolean
+          degree?: string | null
+          description?: string | null
+          end_date?: string | null
+          field_of_study?: string | null
+          id?: string
+          school: string
+          start_date?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          currently_studying?: boolean
+          degree?: string | null
+          description?: string | null
+          end_date?: string | null
+          field_of_study?: string | null
+          id?: string
+          school?: string
+          start_date?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      student_profiles: {
+        Row: {
+          bio: string | null
+          created_at: string
+          id: string
+          resume_filename: string | null
+          resume_url: string | null
+          skills: string[]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string
+          id?: string
+          resume_filename?: string | null
+          resume_url?: string | null
+          skills?: string[]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string
+          id?: string
+          resume_filename?: string | null
+          resume_url?: string | null
+          skills?: string[]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      student_work_experience: {
+        Row: {
+          company: string
+          created_at: string
+          currently_working: boolean
+          description: string | null
+          end_date: string | null
+          id: string
+          job_title: string
+          location: string | null
+          start_date: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          company: string
+          created_at?: string
+          currently_working?: boolean
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          job_title: string
+          location?: string | null
+          start_date?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          company?: string
+          created_at?: string
+          currently_working?: boolean
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          job_title?: string
+          location?: string | null
+          start_date?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_profiles: {
         Row: {
           address: string
@@ -988,6 +1105,8 @@ export type Database = {
         Args: { password: string; salt: string }
         Returns: string
       }
+      is_non_student: { Args: { _user_id: string }; Returns: boolean }
+      is_student: { Args: { _user_id: string }; Returns: boolean }
       should_send_notification: {
         Args: { _notification_type: string; _user_id: string }
         Returns: boolean

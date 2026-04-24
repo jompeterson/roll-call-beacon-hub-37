@@ -19,6 +19,9 @@ import { Organizations } from "./pages/Organizations";
 import { Users } from "./pages/Users";
 import { ValuedPartners } from "./pages/ValuedPartners";
 import { Resources } from "./pages/Resources";
+import { DiscoverTalent } from "./pages/DiscoverTalent";
+import { StudentDetail } from "./pages/StudentDetail";
+import { WorkExperience } from "./pages/WorkExperience";
 import { Profile } from "./pages/Profile";
 import { Settings } from "./pages/Settings";
 import { Widgets } from "./pages/Widgets";
@@ -54,6 +57,9 @@ const AppContent = () => {
           <Route path="users" element={<Users />} />
           <Route path="valued-partners" element={<ValuedPartners />} />
           <Route path="resources" element={<Resources />} />
+          <Route path="discover-talent" element={<DiscoverTalent />} />
+          <Route path="discover-talent/:studentId" element={<StudentDetail />} />
+          <Route path="work-experience" element={<WorkExperience />} />
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
           <Route path="widgets" element={<Widgets />} />
