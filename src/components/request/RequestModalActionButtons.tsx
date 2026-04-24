@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useRequestFulfillments } from "@/hooks/useRequestFulfillments";
 import type { Request } from "@/hooks/useRequests";
 import { RequestChangesModal } from "@/components/shared/RequestChangesModal";
+import { PrivateApprovalToggle } from "@/components/shared/PrivateApprovalToggle";
 
 interface RequestModalActionButtonsProps {
   request: Request;
@@ -34,13 +35,15 @@ export const RequestModalActionButtons = ({
   const isOwner = user?.id === request.creator_user_id;
   const canEdit = isOwner || isAdministrator;
   const [showRequestChangesModal, setShowRequestChangesModal] = useState(false);
+  const [approveAsPrivate, setApproveAsPrivate] = useState(false);
   const handleApprove = async (id: string) => {
     try {
       const { error } = await supabase
         .from("requests")
         .update({
           is_approved: true,
-          approval_decision_made: true
+          approval_decision_made: true,
+          is_private: approveAsPrivate,
         })
         .eq("id", id);
 
@@ -142,26 +145,29 @@ export const RequestModalActionButtons = ({
 
     // Show approval buttons if no decision has been made yet
     return (
-      <div className="flex gap-3 flex-wrap">
-        <Button 
-          onClick={() => handleApprove(request.id)}
-          style={{ backgroundColor: "#3d7471" }}
-          className="text-white hover:opacity-90"
-        >
-          Approve
-        </Button>
-        <Button 
-          onClick={() => handleReject(request.id)}
-          variant="destructive"
-        >
-          Reject
-        </Button>
-        <Button 
-          onClick={() => setShowRequestChangesModal(true)}
-          variant="outline"
-        >
-          Request Changes
-        </Button>
+      <div className="flex flex-col gap-3 items-end">
+        <PrivateApprovalToggle isPrivate={approveAsPrivate} onChange={setApproveAsPrivate} />
+        <div className="flex gap-3 flex-wrap">
+          <Button 
+            onClick={() => handleApprove(request.id)}
+            style={{ backgroundColor: "#3d7471" }}
+            className="text-white hover:opacity-90"
+          >
+            {approveAsPrivate ? "Approve as Private" : "Approve"}
+          </Button>
+          <Button 
+            onClick={() => handleReject(request.id)}
+            variant="destructive"
+          >
+            Reject
+          </Button>
+          <Button 
+            onClick={() => setShowRequestChangesModal(true)}
+            variant="outline"
+          >
+            Request Changes
+          </Button>
+        </div>
       </div>
     );
   };
