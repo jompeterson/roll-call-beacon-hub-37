@@ -13,6 +13,8 @@ import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
 import { VolunteerEditModal } from "@/components/volunteer/VolunteerEditModal";
 import { RequestChangesModal } from "@/components/shared/RequestChangesModal";
+import { PrivateApprovalToggle } from "@/components/shared/PrivateApprovalToggle";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Volunteer {
   id: string;
@@ -57,9 +59,19 @@ export const VolunteerModal = ({
   const navigate = useNavigate();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [showRequestChangesModal, setShowRequestChangesModal] = useState(false);
+  const [approveAsPrivate, setApproveAsPrivate] = useState(false);
   
   const isOwner = user?.id === volunteer?.creator_user_id;
   const canEdit = isOwner || isAdministrator;
+
+  const handleApproveClick = async () => {
+    if (!volunteer) return;
+    await supabase
+      .from("volunteers")
+      .update({ is_private: approveAsPrivate })
+      .eq("id", volunteer.id);
+    onApprove(volunteer.id);
+  };
 
   // Update URL when modal opens - only if navigation is enabled
   useEffect(() => {
@@ -202,6 +214,11 @@ export const VolunteerModal = ({
         {/* Fixed Footer - Show action buttons if handlers are provided OR if user can edit */}
         {(onApprove || onReject || onRequestChanges || canEdit) && (
           <div className="px-6 py-4 border-t bg-card">
+            {isAdministrator && !volunteer.approval_decision_made && (
+              <div className="flex justify-end mb-3">
+                <PrivateApprovalToggle isPrivate={approveAsPrivate} onChange={setApproveAsPrivate} />
+              </div>
+            )}
             <div className="flex justify-between items-center gap-2">
               <div>
                 {canEdit && (
@@ -216,12 +233,12 @@ export const VolunteerModal = ({
                 {isAdministrator && !volunteer.approval_decision_made && (
                   <>
                     <Button
-                      onClick={() => onApprove(volunteer.id)}
+                      onClick={handleApproveClick}
                       className="flex-1"
                       variant="default"
                     >
                       <CheckCircle className="h-4 w-4 mr-2" />
-                      Approve
+                      {approveAsPrivate ? "Approve as Private" : "Approve"}
                     </Button>
                     <Button
                       onClick={() => onReject(volunteer.id)}
