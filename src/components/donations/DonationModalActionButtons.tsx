@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { RequestChangesModal } from "@/components/shared/RequestChangesModal";
+import { PrivateApprovalToggle } from "@/components/shared/PrivateApprovalToggle";
 
 interface DonationModalActionButtonsProps {
   donationId: string;
@@ -51,6 +52,7 @@ export const DonationModalActionButtons = ({
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isAccepting, setIsAccepting] = useState(false);
   const [showRequestChangesModal, setShowRequestChangesModal] = useState(false);
+  const [approveAsPrivate, setApproveAsPrivate] = useState(false);
 
   // Check if user has already accepted this donation
   useEffect(() => {
@@ -75,7 +77,8 @@ export const DonationModalActionButtons = ({
         .from("donations")
         .update({
           is_approved: true,
-          approval_decision_made: true
+          approval_decision_made: true,
+          is_private: approveAsPrivate,
         })
         .eq("id", donationId);
 
