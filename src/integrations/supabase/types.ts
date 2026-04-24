@@ -175,6 +175,7 @@ export type Database = {
           id: string
           images: string[] | null
           is_approved: boolean
+          is_private: boolean
           is_taken: boolean
           location: string | null
           material_type: string | null
@@ -211,6 +212,7 @@ export type Database = {
           id?: string
           images?: string[] | null
           is_approved?: boolean
+          is_private?: boolean
           is_taken?: boolean
           location?: string | null
           material_type?: string | null
@@ -247,6 +249,7 @@ export type Database = {
           id?: string
           images?: string[] | null
           is_approved?: boolean
+          is_private?: boolean
           is_taken?: boolean
           location?: string | null
           material_type?: string | null
@@ -325,6 +328,7 @@ export type Database = {
           id: string
           images: string[] | null
           is_approved: boolean
+          is_private: boolean
           location: string | null
           max_participants: number | null
           start_date: string
@@ -342,6 +346,7 @@ export type Database = {
           id?: string
           images?: string[] | null
           is_approved?: boolean
+          is_private?: boolean
           location?: string | null
           max_participants?: number | null
           start_date: string
@@ -359,6 +364,7 @@ export type Database = {
           id?: string
           images?: string[] | null
           is_approved?: boolean
+          is_private?: boolean
           location?: string | null
           max_participants?: number | null
           start_date?: string
@@ -576,6 +582,7 @@ export type Database = {
           id: string
           is_approved: boolean
           is_completed: boolean
+          is_private: boolean
           location: string | null
           needs_pickup: boolean
           organization_id: string | null
@@ -599,6 +606,7 @@ export type Database = {
           id?: string
           is_approved?: boolean
           is_completed?: boolean
+          is_private?: boolean
           location?: string | null
           needs_pickup?: boolean
           organization_id?: string | null
@@ -622,6 +630,7 @@ export type Database = {
           id?: string
           is_approved?: boolean
           is_completed?: boolean
+          is_private?: boolean
           location?: string | null
           needs_pickup?: boolean
           organization_id?: string | null
@@ -664,6 +673,7 @@ export type Database = {
           id: string
           images: string[] | null
           is_approved: boolean
+          is_private: boolean
           organization_id: string | null
           organization_name: string | null
           scholarship_link: string | null
@@ -684,6 +694,7 @@ export type Database = {
           id?: string
           images?: string[] | null
           is_approved?: boolean
+          is_private?: boolean
           organization_id?: string | null
           organization_name?: string | null
           scholarship_link?: string | null
@@ -704,6 +715,7 @@ export type Database = {
           id?: string
           images?: string[] | null
           is_approved?: boolean
+          is_private?: boolean
           organization_id?: string | null
           organization_name?: string | null
           scholarship_link?: string | null
@@ -912,6 +924,7 @@ export type Database = {
           id: string
           images: string[] | null
           is_approved: boolean
+          is_private: boolean
           location: string | null
           max_participants: number | null
           start_date: string
@@ -928,6 +941,7 @@ export type Database = {
           id?: string
           images?: string[] | null
           is_approved?: boolean
+          is_private?: boolean
           location?: string | null
           max_participants?: number | null
           start_date: string
@@ -944,6 +958,7 @@ export type Database = {
           id?: string
           images?: string[] | null
           is_approved?: boolean
+          is_private?: boolean
           location?: string | null
           max_participants?: number | null
           start_date?: string
@@ -968,6 +983,11 @@ export type Database = {
         Args: { _notification_type: string; _user_id: string }
         Returns: boolean
       }
+      user_in_creator_org: {
+        Args: { _creator_id: string; _viewer_id: string }
+        Returns: boolean
+      }
+      user_is_admin: { Args: { _user_id: string }; Returns: boolean }
       verify_password: {
         Args: { hash: string; password: string }
         Returns: boolean
