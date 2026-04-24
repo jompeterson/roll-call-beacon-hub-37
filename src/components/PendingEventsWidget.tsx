@@ -14,6 +14,7 @@ interface Event {
   start_date: string;
   end_date?: string | null;
   location: string | null;
+  event_type?: string | null;
   max_participants: number | null;
   creator_user_id: string;
   is_approved: boolean;
