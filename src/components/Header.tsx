@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { NotificationDropdown } from "@/components/NotificationDropdown";
 import { supabase } from "@/integrations/supabase/client";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useAuth } from "@/hooks/useAuth";
 
 interface HeaderProps {
   sidebarOpen: boolean;
@@ -26,6 +27,10 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
   const location = useLocation();
   const { toast } = useToast();
   const isMobile = useIsMobile();
+  const { userRole, isAuthenticated } = useAuth();
+  const isStudent = userRole?.name === "student";
+  const showDiscoverTalent = isAuthenticated && !isStudent;
+  const showWorkExperience = isAuthenticated && isStudent;
   const [user, setUser] = useState<CustomUser | null>(null);
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [logoLoading, setLogoLoading] = useState(true);
