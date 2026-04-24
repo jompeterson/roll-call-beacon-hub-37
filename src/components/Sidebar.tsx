@@ -75,7 +75,13 @@ export const Sidebar = ({ open, onOpenChange, collapsed, onCollapsedChange }: Si
   const { toast } = useToast();
   const isMobile = useIsMobile();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const { isAdministrator } = useAuth();
+  const { isAdministrator, userRole } = useAuth();
+  const isStudent = userRole?.name === "student";
+  const topNavigationItems = [
+    ...baseTopNavigationItems,
+    ...(isAuthenticated && !isStudent ? [{ name: "Discover Talent", href: "/discover-talent" }] : []),
+    ...(isAuthenticated && isStudent ? [{ name: "Work Experience", href: "/work-experience" }] : []),
+  ];
   const [user, setUser] = useState(null);
 
   useEffect(() => {
