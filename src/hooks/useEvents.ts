@@ -11,6 +11,7 @@ export interface Event {
   end_date?: string | null;
   location: string | null;
   event_link?: string | null;
+  event_type?: string | null;
   max_participants: number | null;
   creator_user_id: string;
   is_approved: boolean;
