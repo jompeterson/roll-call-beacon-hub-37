@@ -252,35 +252,40 @@ export const DonationModalActionButtons = ({
 
   return (
     <>
-      <div className="flex gap-3 p-6 justify-between flex-wrap">
-        <div>
-          {canEdit && onEdit && (
-            <Button variant="outline" onClick={onEdit}>
-              <Edit className="w-4 h-4 mr-2" />
-              Edit
-            </Button>
-          )}
+      <div className="flex flex-col gap-3 p-6">
+        <div className="flex justify-end">
+          <PrivateApprovalToggle isPrivate={approveAsPrivate} onChange={setApproveAsPrivate} />
         </div>
-        <div className="flex gap-3">
-          <Button 
-            onClick={handleApprove}
-            style={{ backgroundColor: "#3d7471" }}
-            className="text-white hover:opacity-90"
-          >
-            Approve
-          </Button>
-          <Button 
-            onClick={handleReject}
-            variant="destructive"
-          >
-            Reject
-          </Button>
-          <Button 
-            onClick={() => setShowRequestChangesModal(true)}
-            variant="outline"
-          >
-            Request Changes
-          </Button>
+        <div className="flex gap-3 justify-between flex-wrap">
+          <div>
+            {canEdit && onEdit && (
+              <Button variant="outline" onClick={onEdit}>
+                <Edit className="w-4 h-4 mr-2" />
+                Edit
+              </Button>
+            )}
+          </div>
+          <div className="flex gap-3">
+            <Button 
+              onClick={handleApprove}
+              style={{ backgroundColor: "#3d7471" }}
+              className="text-white hover:opacity-90"
+            >
+              {approveAsPrivate ? "Approve as Private" : "Approve"}
+            </Button>
+            <Button 
+              onClick={handleReject}
+              variant="destructive"
+            >
+              Reject
+            </Button>
+            <Button 
+              onClick={() => setShowRequestChangesModal(true)}
+              variant="outline"
+            >
+              Request Changes
+            </Button>
+          </div>
         </div>
       </div>
       <RequestChangesModal
