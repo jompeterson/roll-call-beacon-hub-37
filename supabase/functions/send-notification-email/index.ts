@@ -84,26 +84,58 @@ Deno.serve(async (req) => {
 
     const text = `${greeting}\n\n${notification.title}\n\n${notification.message}`;
 
-    const resp = await fetch(`${GATEWAY_URL}/emails`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "X-Connection-Api-Key": RESEND_API_KEY,
-      },
-      body: JSON.stringify({
-        from: "Notifications <onboarding@resend.dev>",
-        to: [profile.email],
-        subject: notification.title,
-        html,
-        text,
-      }),
+    // Add a small jitter (0-1500ms) before sending to spread bursts across the
+    // Resend 5 req/sec rate limit when many notification rows are inserted at once.
+    await new Promise((r) => setTimeout(r, Math.floor(Math.random() * 1500)));
+
+    const payload = JSON.stringify({
+      from: "Notifications <onboarding@resend.dev>",
+      to: [profile.email],
+      subject: notification.title,
+      html,
+      text,
     });
 
-    const data = await resp.json();
-    if (!resp.ok) {
-      console.error("Resend send failed", resp.status, data);
-      return new Response(JSON.stringify({ error: "send failed", details: data }), {
+    // Retry on 429 (rate limit) and 5xx with exponential backoff + jitter.
+    const MAX_ATTEMPTS = 6;
+    let resp: Response | null = null;
+    let data: any = null;
+    let lastError: any = null;
+
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+      resp = await fetch(`${GATEWAY_URL}/emails`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "X-Connection-Api-Key": RESEND_API_KEY,
+        },
+        body: payload,
+      });
+
+      data = await resp.json().catch(() => ({}));
+
+      if (resp.ok) break;
+
+      const retryable = resp.status === 429 || resp.status >= 500;
+      lastError = { status: resp.status, data };
+
+      if (!retryable || attempt === MAX_ATTEMPTS) {
+        console.error("Resend send failed", resp.status, data);
+        return new Response(JSON.stringify({ error: "send failed", details: data }), {
+          status: 502,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      // Backoff: 1s, 2s, 4s, 8s, 16s (+ up to 1s jitter), capped at 16s.
+      const backoffMs = Math.min(1000 * Math.pow(2, attempt - 1), 16000) + Math.floor(Math.random() * 1000);
+      console.warn(`Resend ${resp.status}, retrying in ${backoffMs}ms (attempt ${attempt}/${MAX_ATTEMPTS})`);
+      await new Promise((r) => setTimeout(r, backoffMs));
+    }
+
+    if (!resp || !resp.ok) {
+      return new Response(JSON.stringify({ error: "send failed after retries", details: lastError }), {
         status: 502,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
