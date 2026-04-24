@@ -153,7 +153,6 @@ Deno.serve(async (req) => {
       if (!retryable || attempt === RETRY_ATTEMPTS) {
         console.error("Resend batch failed", resp.status, respData);
         // Bump attempt counter so we don't infinitely retry broken notifications
-        await supabase.rpc("update_email_attempts" as any, {}).then(() => {}).catch(() => {});
         await Promise.all(
           includedIds.map((id) =>
             supabase
