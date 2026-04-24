@@ -26,7 +26,9 @@ import { useOrganizationsRealtime } from "@/hooks/useOrganizationsRealtime";
 import { useUserProfilesRealtime } from "@/hooks/useUserProfilesRealtime";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const ORG_TYPES = ["Non-Profit", "School", "Industry Partner"];
+import { organizationTypes } from "@/components/organizations/types";
+
+const ORG_TYPES = organizationTypes;
 const ROLES = [
   { value: "administrator", label: "Administrator" },
   { value: "shop_teacher", label: "CTE Teacher" },
