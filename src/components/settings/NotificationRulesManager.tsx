@@ -7,7 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -56,6 +58,19 @@ export const NotificationRulesManager = () => {
     NOTIFICATION_TYPES.forEach((t) => (m[t.key] = t.label));
     return m;
   }, []);
+
+  const groupedTypes = useMemo(() => {
+    const map: Record<string, typeof NOTIFICATION_TYPES> = {};
+    NOTIFICATION_TYPES.forEach((t) => {
+      if (!map[t.category]) map[t.category] = [];
+      map[t.category].push(t);
+    });
+    return map;
+  }, []);
+
+  const selectedTypeDescription = useMemo(() => {
+    return NOTIFICATION_TYPES.find((t) => t.key === form.notification_type)?.description;
+  }, [form.notification_type]);
 
   const orgMap = useMemo(() => {
     const m: Record<string, string> = {};
@@ -197,13 +212,21 @@ export const NotificationRulesManager = () => {
                   <SelectValue placeholder="Select a notification type" />
                 </SelectTrigger>
                 <SelectContent>
-                  {NOTIFICATION_TYPES.map((t) => (
-                    <SelectItem key={t.key} value={t.key}>
-                      {t.label}
-                    </SelectItem>
+                  {Object.entries(groupedTypes).map(([category, items]) => (
+                    <SelectGroup key={category}>
+                      <SelectLabel>{category}</SelectLabel>
+                      {items.map((t) => (
+                        <SelectItem key={t.key} value={t.key}>
+                          {t.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
                   ))}
                 </SelectContent>
               </Select>
+              {selectedTypeDescription && (
+                <p className="text-xs text-muted-foreground">{selectedTypeDescription}</p>
+              )}
             </div>
 
             <div className="space-y-2">
