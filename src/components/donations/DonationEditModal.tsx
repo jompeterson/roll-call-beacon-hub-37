@@ -240,7 +240,7 @@ export const DonationEditModal = ({
               id="description"
               value={formData.description}
               onChange={(e) => handleInputChange("description", e.target.value)}
-              placeholder="Describe your donation needs..."
+              placeholder="Describe your donation..."
               rows={4}
             />
           </div>
