@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Edit, Trash2, UserCheck } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { RequestChangesModal } from "@/components/shared/RequestChangesModal";
+import { PrivateApprovalToggle } from "@/components/shared/PrivateApprovalToggle";
+import { supabase } from "@/integrations/supabase/client";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -66,6 +68,15 @@ export const EventModalActionButtons = ({
   const canEdit = isOwner || isAdministrator;
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showRequestChangesModal, setShowRequestChangesModal] = useState(false);
+  const [approveAsPrivate, setApproveAsPrivate] = useState(false);
+
+  const handleApproveClick = async () => {
+    await supabase
+      .from("events")
+      .update({ is_private: approveAsPrivate })
+      .eq("id", event.id);
+    onApprove(event.id);
+  };
 
   const showApprovalButtons = !event.approval_decision_made && isAdministrator;
   const showRSVPButton = event.is_approved;
