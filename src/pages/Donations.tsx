@@ -138,7 +138,7 @@ export const Donations = () => {
       />
 
       <Tabs defaultValue="donations" className="w-full flex-1 flex flex-col min-h-0">
-        <TabsList>
+        <TabsList className="w-auto self-start">
           <TabsTrigger value="donations" className="gap-2">
             <HandHeart className="h-4 w-4" />
             In-Kind Donation Posts
