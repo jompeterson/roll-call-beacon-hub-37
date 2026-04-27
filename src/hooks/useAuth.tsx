@@ -11,7 +11,7 @@ export const useAuth = () => {
   const isAuthenticated = !!user && isInitialized;
   
   // Always call useProfileData, but it will handle auth check internally
-  const { userRole } = useProfileData();
+  const { userRole, currentOrganization } = useProfileData();
 
   useEffect(() => {
     // Set initial loading state
@@ -67,12 +67,16 @@ export const useAuth = () => {
   }, []);
 
   const isAdministrator = userRole?.name === 'administrator';
+  const restrictedRequestOrgTypes = ['Industry Partner', 'Professional Association'];
+  const canRequestDonation = !currentOrganization || !restrictedRequestOrgTypes.includes(currentOrganization.type);
 
   return {
     user,
     isAuthenticated,
     isAdministrator,
     userRole,
+    currentOrganization,
+    canRequestDonation,
     isInitialized,
     isApproved
   };

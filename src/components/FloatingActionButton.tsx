@@ -21,7 +21,7 @@ export const FloatingActionButton = () => {
   const [userModalOpen, setUserModalOpen] = useState(false);
   const [organizationModalOpen, setOrganizationModalOpen] = useState(false);
   const [volunteerModalOpen, setVolunteerModalOpen] = useState(false);
-  const { isAuthenticated, isAdministrator } = useAuth();
+  const { isAuthenticated, isAdministrator, canRequestDonation } = useAuth();
 
   // Render only the Donate button if user is not authenticated
   if (!isAuthenticated) {
@@ -54,9 +54,11 @@ export const FloatingActionButton = () => {
     { name: "New Volunteer Opportunity", icon: HandHeart, color: "bg-teal-500 hover:bg-teal-600", adminOnly: true },
   ];
 
-  // Filter actions based on user role only
+  // Filter actions based on user role and org type
   const actions = allActions.filter(action => {
-    return !action.adminOnly || isAdministrator;
+    if (action.adminOnly && !isAdministrator) return false;
+    if (action.name === "New Request" && !canRequestDonation) return false;
+    return true;
   });
 
   const handleActionClick = (actionName: string) => {
