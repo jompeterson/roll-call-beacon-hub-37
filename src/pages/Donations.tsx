@@ -138,7 +138,7 @@ export const Donations = () => {
       />
 
       <Tabs defaultValue="donations" className="w-full flex-1 flex flex-col min-h-0">
-        <TabsList>
+        <TabsList className="w-auto self-start">
           <TabsTrigger value="donations" className="gap-2">
             <HandHeart className="h-4 w-4" />
             In-Kind Donation Posts
@@ -170,7 +170,7 @@ export const Donations = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="requests" className="mt-6 flex-1 flex flex-col min-h-0">
+        <TabsContent value="requests" className="mt-0 flex-1 flex flex-col min-h-0">
           <div className="space-y-4 flex flex-col flex-1 min-h-0">
             <div className="flex items-center justify-end">
               {isAuthenticated && (
