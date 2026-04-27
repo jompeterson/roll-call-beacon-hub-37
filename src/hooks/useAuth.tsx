@@ -67,12 +67,16 @@ export const useAuth = () => {
   }, []);
 
   const isAdministrator = userRole?.name === 'administrator';
+  const restrictedRequestOrgTypes = ['Industry Partner', 'Professional Association'];
+  const canRequestDonation = !currentOrganization || !restrictedRequestOrgTypes.includes(currentOrganization.type);
 
   return {
     user,
     isAuthenticated,
     isAdministrator,
     userRole,
+    currentOrganization,
+    canRequestDonation,
     isInitialized,
     isApproved
   };
