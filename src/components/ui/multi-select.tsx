@@ -8,7 +8,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
 interface MultiSelectProps {
@@ -81,7 +80,7 @@ export const MultiSelect = ({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
-        <ScrollArea className="max-h-64">
+        <div className="max-h-64 overflow-y-auto overscroll-contain">
           <div className="p-1">
             {options.map((option) => {
               const checked = value.includes(option);
@@ -98,7 +97,7 @@ export const MultiSelect = ({
               );
             })}
           </div>
-        </ScrollArea>
+        </div>
       </PopoverContent>
     </Popover>
   );
