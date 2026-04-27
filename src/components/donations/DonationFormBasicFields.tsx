@@ -6,6 +6,7 @@ import { MultiSelect } from "@/components/ui/multi-select";
 import { DimensionsInput } from "@/components/shared/DimensionsInput";
 
 const MATERIAL_TYPE_OPTIONS = [
+  "Assorted Goods",
   "Wood",
   "Metal",
   "Plastic",
@@ -21,7 +22,6 @@ const MATERIAL_TYPE_OPTIONS = [
   "Toys",
   "Medical Supplies",
   "Office Supplies",
-  "Assorted Goods",
 ];
 
 interface DonationFormBasicFieldsProps {
@@ -88,9 +88,9 @@ export const DonationFormBasicFields = ({ formData, onInputChange }: DonationFor
             <SelectValue placeholder="Select donation type" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="Assorted Goods">Assorted Goods</SelectItem>
             <SelectItem value="Tools">Tools</SelectItem>
             <SelectItem value="Materials">Materials</SelectItem>
-            <SelectItem value="Assorted Goods">Assorted Goods</SelectItem>
             <SelectItem value="Professional Services / Labor">Professional Services / Labor</SelectItem>
             <SelectItem value="Transportation / Equipment Use">Transportation / Equipment Use</SelectItem>
             <SelectItem value="Facility Use">Facility Use</SelectItem>
