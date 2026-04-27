@@ -22,7 +22,7 @@ type RequestSortField = "organization_name" | "request_type" | "title" | "descri
 
 export const Donations = () => {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, canRequestDonation } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   
