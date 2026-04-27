@@ -1,8 +1,9 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus } from "lucide-react";
+import { Plus, HandHeart, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DonationFilters } from "@/components/donations/DonationFilters";
 import { DonationTable } from "@/components/donations/DonationTable";
 import { RequestTable } from "@/components/donations/RequestTable";
@@ -136,50 +137,60 @@ export const Donations = () => {
         onStatusFilterChange={setStatusFilter}
       />
 
-      {/* Two Sections Side by Side */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1 min-h-0">
-        {/* Donation Posts Section */}
-        <div className="space-y-4 flex flex-col min-h-0">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-semibold">In-Kind Donation Posts</h2>
-            {isAuthenticated && (
-              <Button onClick={() => setDonationModalOpen(true)} size="sm" style={{ backgroundColor: "#3d7471" }} className="text-white hover:opacity-90">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Donation
-              </Button>
-            )}
-          </div>
-          <DonationTable
-            donations={sortedDonationPosts}
-            sortField={donationSort}
-            sortDirection={donationDirection}
-            onSort={handleDonationSort}
-            onRowClick={handleDonationRowClick}
-            showStatus={isAuthenticated}
-          />
-        </div>
+      <Tabs defaultValue="donations" className="w-full flex-1 flex flex-col min-h-0">
+        <TabsList>
+          <TabsTrigger value="donations" className="gap-2">
+            <HandHeart className="h-4 w-4" />
+            In-Kind Donation Posts
+          </TabsTrigger>
+          <TabsTrigger value="requests" className="gap-2">
+            <FileText className="h-4 w-4" />
+            Request Posts
+          </TabsTrigger>
+        </TabsList>
 
-        {/* Request Posts Section */}
-        <div className="space-y-4 flex flex-col min-h-0">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-semibold">Request Posts</h2>
-            {isAuthenticated && (
-              <Button onClick={() => setRequestModalOpen(true)} size="sm" style={{ backgroundColor: "#3d7471" }} className="text-white hover:opacity-90">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Request
-              </Button>
-            )}
+        <TabsContent value="donations" className="mt-6 flex-1 flex flex-col min-h-0">
+          <div className="space-y-4 flex flex-col flex-1 min-h-0">
+            <div className="flex items-center justify-end">
+              {isAuthenticated && (
+                <Button onClick={() => setDonationModalOpen(true)} size="sm" style={{ backgroundColor: "#3d7471" }} className="text-white hover:opacity-90">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Donation
+                </Button>
+              )}
+            </div>
+            <DonationTable
+              donations={sortedDonationPosts}
+              sortField={donationSort}
+              sortDirection={donationDirection}
+              onSort={handleDonationSort}
+              onRowClick={handleDonationRowClick}
+              showStatus={isAuthenticated}
+            />
           </div>
-          <RequestTable
-            requests={sortedRequestPosts}
-            sortField={requestSort}
-            sortDirection={requestDirection}
-            onSort={handleRequestSort}
-            onRowClick={handleRequestRowClick}
-            showStatus={isAuthenticated}
-          />
-        </div>
-      </div>
+        </TabsContent>
+
+        <TabsContent value="requests" className="mt-6 flex-1 flex flex-col min-h-0">
+          <div className="space-y-4 flex flex-col flex-1 min-h-0">
+            <div className="flex items-center justify-end">
+              {isAuthenticated && (
+                <Button onClick={() => setRequestModalOpen(true)} size="sm" style={{ backgroundColor: "#3d7471" }} className="text-white hover:opacity-90">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Request
+                </Button>
+              )}
+            </div>
+            <RequestTable
+              requests={sortedRequestPosts}
+              sortField={requestSort}
+              sortDirection={requestDirection}
+              onSort={handleRequestSort}
+              onRowClick={handleRequestRowClick}
+              showStatus={isAuthenticated}
+            />
+          </div>
+        </TabsContent>
+      </Tabs>
 
       {/* Modals */}
       <DonationCreateModal
