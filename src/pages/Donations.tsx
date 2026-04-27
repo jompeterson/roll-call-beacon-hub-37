@@ -173,7 +173,7 @@ export const Donations = () => {
         <TabsContent value="requests" className="mt-0 flex-1 data-[state=active]:flex flex-col min-h-0">
           <div className="space-y-4 flex flex-col flex-1 min-h-0">
             <div className="flex items-center justify-end">
-              {isAuthenticated && (
+              {isAuthenticated && canRequestDonation && (
                 <Button onClick={() => setRequestModalOpen(true)} size="sm" style={{ backgroundColor: "#3d7471" }} className="text-white hover:opacity-90">
                   <Plus className="h-4 w-4 mr-2" />
                   Add Request
