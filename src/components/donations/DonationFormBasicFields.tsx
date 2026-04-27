@@ -90,6 +90,7 @@ export const DonationFormBasicFields = ({ formData, onInputChange }: DonationFor
           <SelectContent>
             <SelectItem value="Tools">Tools</SelectItem>
             <SelectItem value="Materials">Materials</SelectItem>
+            <SelectItem value="Assorted Goods">Assorted Goods</SelectItem>
             <SelectItem value="Professional Services / Labor">Professional Services / Labor</SelectItem>
             <SelectItem value="Transportation / Equipment Use">Transportation / Equipment Use</SelectItem>
             <SelectItem value="Facility Use">Facility Use</SelectItem>
