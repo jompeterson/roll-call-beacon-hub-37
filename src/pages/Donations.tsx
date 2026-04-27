@@ -1,8 +1,9 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus } from "lucide-react";
+import { Plus, HandHeart, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DonationFilters } from "@/components/donations/DonationFilters";
 import { DonationTable } from "@/components/donations/DonationTable";
 import { RequestTable } from "@/components/donations/RequestTable";
