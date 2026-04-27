@@ -28,6 +28,8 @@ import { Widgets } from "./pages/Widgets";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { VerificationPending } from "./pages/VerificationPending";
+import { ForgotPassword } from "./pages/ForgotPassword";
+import { ResetPassword } from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import { useRealtimeUpdates } from "./hooks/useRealtimeUpdates";
 
@@ -42,6 +44,8 @@ const AppContent = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verification-pending" element={<VerificationPending />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/" element={<Layout />}>
           <Route index element={<Overview />} />
           <Route path="donations" element={<Donations />} />
