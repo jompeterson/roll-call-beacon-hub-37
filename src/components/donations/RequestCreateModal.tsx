@@ -52,9 +52,9 @@ export const RequestCreateModal = ({
   const { currentOrganization, contactInfo } = useProfileData();
 
   const requestTypes = [
+    "Assorted Goods",
     "Tools",
-    "Materials",
-    "Assorted Goods"
+    "Materials"
   ];
 
   const urgencyLevels = [
