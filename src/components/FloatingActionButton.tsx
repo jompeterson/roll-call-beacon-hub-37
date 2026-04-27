@@ -21,7 +21,7 @@ export const FloatingActionButton = () => {
   const [userModalOpen, setUserModalOpen] = useState(false);
   const [organizationModalOpen, setOrganizationModalOpen] = useState(false);
   const [volunteerModalOpen, setVolunteerModalOpen] = useState(false);
-  const { isAuthenticated, isAdministrator } = useAuth();
+  const { isAuthenticated, isAdministrator, canRequestDonation } = useAuth();
 
   // Render only the Donate button if user is not authenticated
   if (!isAuthenticated) {
