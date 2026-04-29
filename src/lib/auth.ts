@@ -5,6 +5,11 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const signUp = async (registrationData: RegistrationData) => {
   try {
+    // Always normalize email to lowercase for consistency
+    registrationData = {
+      ...registrationData,
+      email: (registrationData.email || '').trim().toLowerCase(),
+    };
     // Create organization first if it's a new organization
     let organizationId = registrationData.existingOrganizationId;
     
