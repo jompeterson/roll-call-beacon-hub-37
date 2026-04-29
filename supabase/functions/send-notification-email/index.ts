@@ -105,7 +105,7 @@ Deno.serve(async (req) => {
       const text = `${greeting}\n\n${n.title}\n\n${n.message}`;
 
       emails.push({
-        from: "Pacific Crest <hello@notify.pacificcrest.us>",
+        from: "HBF Roll Call <hello@notify.pacificcrest.us>",
         to: [profile.email],
         subject: n.title,
         html,
