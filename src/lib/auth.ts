@@ -143,11 +143,12 @@ export const signOut = async () => {
 
 export const checkVerificationStatus = async (email: string) => {
   try {
+    const normalizedEmail = (email || '').trim().toLowerCase();
     const { data, error } = await supabase
       .from('user_profiles')
       .select('is_approved')
-      .eq('email', email)
-      .single();
+      .ilike('email', normalizedEmail)
+      .maybeSingle();
 
     if (error) {
       console.error('Verification status check error:', error);
