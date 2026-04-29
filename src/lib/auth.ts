@@ -148,19 +148,38 @@ export const signOut = async () => {
 
 export const checkVerificationStatus = async (email: string) => {
   try {
+    const currentUser = customAuth.getUser();
+
+    // Prefer lookup by user id (stable, unique) over email (which can collide).
+    if (currentUser?.id) {
+      const { data, error } = await supabase
+        .from('user_profiles')
+        .select('is_approved')
+        .eq('id', currentUser.id)
+        .maybeSingle();
+
+      if (error) {
+        console.error('Verification status check error:', error);
+        return { isApproved: false, error: error.message };
+      }
+
+      return { isApproved: data?.is_approved || false, error: null };
+    }
+
+    // Fallback: look up by email, tolerate duplicates by taking the first row.
     const normalizedEmail = (email || '').trim().toLowerCase();
     const { data, error } = await supabase
       .from('user_profiles')
       .select('is_approved')
       .ilike('email', normalizedEmail)
-      .maybeSingle();
+      .limit(1);
 
     if (error) {
       console.error('Verification status check error:', error);
       return { isApproved: false, error: error.message };
     }
 
-    return { isApproved: data?.is_approved || false, error: null };
+    return { isApproved: data?.[0]?.is_approved || false, error: null };
   } catch (error: any) {
     console.error('Verification status check error:', error);
     return { isApproved: false, error: 'Failed to check verification status' };
