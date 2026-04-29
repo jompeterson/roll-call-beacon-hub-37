@@ -113,6 +113,10 @@ class CustomAuthService {
   async signUp(email: string, password: string, userData: any): Promise<AuthResponse> {
     try {
       console.log('Starting user signup process...');
+      email = (email || '').trim().toLowerCase();
+      if (userData && typeof userData.email === 'string') {
+        userData.email = userData.email.trim().toLowerCase();
+      }
       
       // Generate salt and hash password
       const { data: saltData, error: saltError } = await supabase.rpc('generate_salt');
