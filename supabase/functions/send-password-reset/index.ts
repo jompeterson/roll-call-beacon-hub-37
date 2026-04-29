@@ -117,7 +117,7 @@ Deno.serve(async (req) => {
           "X-Connection-Api-Key": RESEND_API_KEY,
         },
         body: JSON.stringify({
-          from: "Pacific Crest <hello@notify.pacificcrest.us>",
+          from: "HBF Roll Call <hello@notify.pacificcrest.us>",
           to: [user.email],
           subject: "Reset your password",
           html,
