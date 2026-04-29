@@ -205,11 +205,12 @@ class CustomAuthService {
 
   async signIn(email: string, password: string): Promise<AuthResponse> {
     try {
-      // Get user by email
+      email = (email || '').trim().toLowerCase();
+      // Get user by email (case-insensitive)
       const { data: user, error: userError } = await supabase
         .from('users')
         .select('*')
-        .eq('email', email)
+        .ilike('email', email)
         .maybeSingle();
 
       if (userError || !user) {
