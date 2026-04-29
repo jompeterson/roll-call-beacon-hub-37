@@ -107,7 +107,8 @@ export const signUp = async (registrationData: RegistrationData) => {
 };
 
 export const signIn = async (email: string, password: string) => {
-  const { user, error } = await customAuth.signIn(email, password);
+  const normalizedEmail = (email || '').trim().toLowerCase();
+  const { user, error } = await customAuth.signIn(normalizedEmail, password);
   
   if (error) {
     return { data: null, error: new Error(error) };
