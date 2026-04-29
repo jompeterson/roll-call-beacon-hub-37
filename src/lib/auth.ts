@@ -5,6 +5,11 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const signUp = async (registrationData: RegistrationData) => {
   try {
+    // Always normalize email to lowercase for consistency
+    registrationData = {
+      ...registrationData,
+      email: (registrationData.email || '').trim().toLowerCase(),
+    };
     // Create organization first if it's a new organization
     let organizationId = registrationData.existingOrganizationId;
     
@@ -107,7 +112,8 @@ export const signUp = async (registrationData: RegistrationData) => {
 };
 
 export const signIn = async (email: string, password: string) => {
-  const { user, error } = await customAuth.signIn(email, password);
+  const normalizedEmail = (email || '').trim().toLowerCase();
+  const { user, error } = await customAuth.signIn(normalizedEmail, password);
   
   if (error) {
     return { data: null, error: new Error(error) };
@@ -118,8 +124,8 @@ export const signIn = async (email: string, password: string) => {
     const { data: profileData, error: profileError } = await supabase
       .from('user_profiles')
       .select('is_approved')
-      .eq('email', email)
-      .single();
+      .ilike('email', normalizedEmail)
+      .maybeSingle();
     
     if (profileError) {
       console.error('Profile check error:', profileError);
@@ -142,11 +148,12 @@ export const signOut = async () => {
 
 export const checkVerificationStatus = async (email: string) => {
   try {
+    const normalizedEmail = (email || '').trim().toLowerCase();
     const { data, error } = await supabase
       .from('user_profiles')
       .select('is_approved')
-      .eq('email', email)
-      .single();
+      .ilike('email', normalizedEmail)
+      .maybeSingle();
 
     if (error) {
       console.error('Verification status check error:', error);

@@ -113,6 +113,10 @@ class CustomAuthService {
   async signUp(email: string, password: string, userData: any): Promise<AuthResponse> {
     try {
       console.log('Starting user signup process...');
+      email = (email || '').trim().toLowerCase();
+      if (userData && typeof userData.email === 'string') {
+        userData.email = userData.email.trim().toLowerCase();
+      }
       
       // Generate salt and hash password
       const { data: saltData, error: saltError } = await supabase.rpc('generate_salt');
@@ -201,11 +205,12 @@ class CustomAuthService {
 
   async signIn(email: string, password: string): Promise<AuthResponse> {
     try {
-      // Get user by email
+      email = (email || '').trim().toLowerCase();
+      // Get user by email (case-insensitive)
       const { data: user, error: userError } = await supabase
         .from('users')
         .select('*')
-        .eq('email', email)
+        .ilike('email', email)
         .maybeSingle();
 
       if (userError || !user) {
