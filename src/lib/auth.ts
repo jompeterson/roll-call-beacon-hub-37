@@ -119,8 +119,8 @@ export const signIn = async (email: string, password: string) => {
     const { data: profileData, error: profileError } = await supabase
       .from('user_profiles')
       .select('is_approved')
-      .eq('email', email)
-      .single();
+      .ilike('email', normalizedEmail)
+      .maybeSingle();
     
     if (profileError) {
       console.error('Profile check error:', profileError);
