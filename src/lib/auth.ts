@@ -71,6 +71,18 @@ export const signUp = async (registrationData: RegistrationData) => {
     }
 
     console.log('User created successfully:', user.id);
+
+    // If a new organization was created, assign this user as its contact
+    if (registrationData.organizationChoice === 'new' && organizationId) {
+      const { error: contactErr } = await supabase
+        .from('organizations')
+        .update({ contact_user_id: user.id })
+        .eq('id', organizationId);
+      if (contactErr) {
+        console.error('Failed to assign organization contact:', contactErr);
+      }
+    }
+
     console.log('Profile data to insert:', {
       id: user.id,
       email: registrationData.email,
