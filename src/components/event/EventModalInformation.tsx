@@ -79,7 +79,7 @@ export const EventModalInformation = ({ event, rsvpCount, highlightedFields }: E
           <FieldWrapper fieldKey="event_link" highlightedFields={highlightedFields}>
             <Button
               asChild
-              size="sm"
+              size="lg"
               variant="default"
             >
               <a
