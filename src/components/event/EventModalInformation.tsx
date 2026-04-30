@@ -1,6 +1,7 @@
 
 import { Calendar, MapPin, Users, UserCheck, Tag } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { formatDate, cn } from "@/lib/utils";
 
 interface Event {
