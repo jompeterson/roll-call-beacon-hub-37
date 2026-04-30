@@ -278,9 +278,9 @@ export const VolunteerModal = ({
                     {submitting ? (
                       "Processing..."
                     ) : hasSignedUp ? (
-                      "Cancel Signup"
+                      "Remove Interest"
                     ) : (
-                      "Sign Up"
+                      "Show Interest"
                     )}
                   </Button>
                 )}
