@@ -37,7 +37,7 @@ export const useEventRSVPs = (eventId: string) => {
         console.error('Error fetching RSVPs:', error);
         toast({
           title: "Error",
-          description: "Failed to load RSVPs.",
+          description: "Failed to load interest list.",
           variant: "destructive",
         });
         return;
@@ -56,7 +56,7 @@ export const useEventRSVPs = (eventId: string) => {
       console.error('Error fetching RSVPs:', error);
       toast({
         title: "Error",
-        description: "Failed to load RSVPs.",
+        description: "Failed to load interest list.",
         variant: "destructive",
       });
     } finally {
@@ -86,7 +86,7 @@ export const useEventRSVPs = (eventId: string) => {
         console.error('Error creating RSVP:', error);
         toast({
           title: "Error",
-          description: "Failed to RSVP to event.",
+          description: "Failed to show interest in event.",
           variant: "destructive",
         });
         return;
@@ -95,13 +95,13 @@ export const useEventRSVPs = (eventId: string) => {
       setUserRsvp(data);
       toast({
         title: "Success",
-        description: "Successfully RSVP'd to event!",
+        description: "Successfully showed interest in event!",
       });
     } catch (error) {
       console.error('Error creating RSVP:', error);
       toast({
         title: "Error",
-        description: "Failed to RSVP to event.",
+        description: "Failed to show interest in event.",
         variant: "destructive",
       });
     } finally {
@@ -126,7 +126,7 @@ export const useEventRSVPs = (eventId: string) => {
         console.error('Error deleting RSVP:', error);
         toast({
           title: "Error",
-          description: "Failed to cancel RSVP.",
+          description: "Failed to remove interest.",
           variant: "destructive",
         });
         return;
@@ -135,13 +135,13 @@ export const useEventRSVPs = (eventId: string) => {
       setUserRsvp(null);
       toast({
         title: "Success",
-        description: "RSVP cancelled successfully.",
+        description: "Interest removed successfully.",
       });
     } catch (error) {
       console.error('Error deleting RSVP:', error);
       toast({
         title: "Error",
-        description: "Failed to cancel RSVP.",
+        description: "Failed to remove interest.",
         variant: "destructive",
       });
     } finally {
