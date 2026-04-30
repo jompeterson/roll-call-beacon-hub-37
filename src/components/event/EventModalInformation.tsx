@@ -106,7 +106,7 @@ export const EventModalInformation = ({ event, rsvpCount, highlightedFields }: E
           <div className="flex items-center gap-2">
             <UserCheck className="h-4 w-4 text-muted-foreground" />
             <span className="text-sm">
-              {rsvpCount} {rsvpCount === 1 ? 'person' : 'people'} attending
+              {rsvpCount} {rsvpCount === 1 ? 'person' : 'people'} interested
             </span>
           </div>
         )}
