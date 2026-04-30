@@ -89,7 +89,7 @@ export const EventModalActionButtons = ({
       {showGuestInfo && (
         <div className="bg-blue-50 border border-blue-200 rounded-md p-3 mb-4">
           <p className="text-sm text-blue-800">
-            Please log in to RSVP directly, or continue as a guest.
+            Please log in to show interest directly, or continue as a guest.
           </p>
         </div>
       )}
@@ -130,18 +130,18 @@ export const EventModalActionButtons = ({
                 hasRsvp ? (
                   <>
                     <UserCheck className="h-4 w-4 mr-2" />
-                    Cancel RSVP
+                    Remove Interest
                   </>
                 ) : (
                   <>
                     <UserCheck className="h-4 w-4 mr-2" />
-                    RSVP to Event
+                    Show Interest
                   </>
                 )
               ) : (
                 <>
                   <UserCheck className="h-4 w-4 mr-2" />
-                  RSVP to Event
+                  Show Interest
                 </>
               )}
             </Button>

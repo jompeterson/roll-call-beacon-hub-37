@@ -40,7 +40,7 @@ export const EventModalRSVPStatus = ({
     <>
       <Separator />
       <div className="space-y-4">
-        <h3 className="font-semibold text-lg">RSVP Status</h3>
+        <h3 className="font-semibold text-lg">Interest Status</h3>
         
         {isEventFull && !hasRsvp && (
           <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3">
@@ -55,7 +55,7 @@ export const EventModalRSVPStatus = ({
             <div className="flex items-center gap-2">
               <UserCheck className="h-4 w-4 text-green-600" />
               <p className="text-sm text-green-800">
-                You have RSVP'd to this event.
+                You have shown interest in this event.
               </p>
             </div>
           </div>
