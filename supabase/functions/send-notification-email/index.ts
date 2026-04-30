@@ -31,10 +31,12 @@ Deno.serve(async (req) => {
 
     const supabase = createClient(SUPABASE_URL, SERVICE_ROLE);
 
+    const APP_BASE_URL = Deno.env.get("APP_BASE_URL") || "https://roll-call-beacon-hub-37.lovable.app";
+
     // Pull a batch of unsent notifications, oldest first
     const { data: notifications, error: fetchErr } = await supabase
       .from("notifications")
-      .select("id, user_id, title, message, email_attempts")
+      .select("id, user_id, title, message, email_attempts, related_content_type, related_content_id")
       .eq("email_sent", false)
       .lt("email_attempts", MAX_ATTEMPTS)
       .order("created_at", { ascending: true })
@@ -92,17 +94,23 @@ Deno.serve(async (req) => {
         continue;
       }
       const greeting = profile.first_name ? `Hi ${profile.first_name},` : "Hello,";
+      const postUrl = buildPostUrl(APP_BASE_URL, n.related_content_type, n.related_content_id);
+      const buttonHtml = postUrl
+        ? `<p style="margin: 0 0 24px;"><a href="${postUrl}" style="display: inline-block; background-color: #111; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-size: 15px; font-weight: 500;">View Post</a></p>`
+        : "";
+      const buttonText = postUrl ? `\n\nView post: ${postUrl}` : "";
       const html = `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; max-width: 560px; margin: 0 auto; padding: 24px; color: #1a1a1a;">
           <p style="font-size: 16px; margin: 0 0 16px;">${greeting}</p>
           <h2 style="font-size: 20px; margin: 0 0 12px; color: #111;">${escapeHtml(n.title)}</h2>
           <p style="font-size: 15px; line-height: 1.5; margin: 0 0 24px; color: #333;">${escapeHtml(n.message)}</p>
+          ${buttonHtml}
           <p style="font-size: 13px; color: #666; margin: 24px 0 0;">
             You received this email because you have notifications enabled on your account.
           </p>
         </div>
       `;
-      const text = `${greeting}\n\n${n.title}\n\n${n.message}`;
+      const text = `${greeting}\n\n${n.title}\n\n${n.message}${buttonText}`;
 
       emails.push({
         from: "HBF Roll Call <hello@notify.pacificcrest.us>",
@@ -214,4 +222,23 @@ function escapeHtml(str: string): string {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+}
+
+function buildPostUrl(baseUrl: string, contentType: string | null, contentId: string | null): string | null {
+  if (!contentType || !contentId) return null;
+  const base = baseUrl.replace(/\/+$/, "");
+  switch (contentType) {
+    case "donation":
+      return `${base}/donations/${contentId}`;
+    case "request":
+      return `${base}/donations/requests/${contentId}`;
+    case "scholarship":
+      return `${base}/scholarships/${contentId}`;
+    case "event":
+      return `${base}/events/${contentId}`;
+    case "volunteer":
+      return `${base}/volunteers/${contentId}`;
+    default:
+      return null;
+  }
 }
