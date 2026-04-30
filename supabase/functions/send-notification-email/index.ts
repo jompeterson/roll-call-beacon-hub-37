@@ -223,3 +223,22 @@ function escapeHtml(str: string): string {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
 }
+
+function buildPostUrl(baseUrl: string, contentType: string | null, contentId: string | null): string | null {
+  if (!contentType || !contentId) return null;
+  const base = baseUrl.replace(/\/+$/, "");
+  switch (contentType) {
+    case "donation":
+      return `${base}/donations/${contentId}`;
+    case "request":
+      return `${base}/donations/requests/${contentId}`;
+    case "scholarship":
+      return `${base}/scholarships/${contentId}`;
+    case "event":
+      return `${base}/events/${contentId}`;
+    case "volunteer":
+      return `${base}/volunteers/${contentId}`;
+    default:
+      return null;
+  }
+}
