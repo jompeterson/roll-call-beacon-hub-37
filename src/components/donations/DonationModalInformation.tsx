@@ -201,7 +201,7 @@ export const DonationModalInformation = ({
           {donation.target_date && (
             <FieldWrapper fieldKey="target_date" highlightedFields={highlightedFields}>
               <div>
-                <label className={cn("font-medium text-sm", highlightedFields?.includes("target_date") ? "text-destructive" : "text-muted-foreground")}>Deadline</label>
+                <label className={cn("font-medium text-sm", highlightedFields?.includes("target_date") ? "text-destructive" : "text-muted-foreground")}>Target Date</label>
                 <p className="text-base mt-1">{formatDate(donation.target_date)}</p>
               </div>
             </FieldWrapper>
