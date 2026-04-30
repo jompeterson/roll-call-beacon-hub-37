@@ -31,10 +31,12 @@ Deno.serve(async (req) => {
 
     const supabase = createClient(SUPABASE_URL, SERVICE_ROLE);
 
+    const APP_BASE_URL = Deno.env.get("APP_BASE_URL") || "https://roll-call-beacon-hub-37.lovable.app";
+
     // Pull a batch of unsent notifications, oldest first
     const { data: notifications, error: fetchErr } = await supabase
       .from("notifications")
-      .select("id, user_id, title, message, email_attempts")
+      .select("id, user_id, title, message, email_attempts, related_content_type, related_content_id")
       .eq("email_sent", false)
       .lt("email_attempts", MAX_ATTEMPTS)
       .order("created_at", { ascending: true })
