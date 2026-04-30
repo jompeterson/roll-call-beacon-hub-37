@@ -94,17 +94,23 @@ Deno.serve(async (req) => {
         continue;
       }
       const greeting = profile.first_name ? `Hi ${profile.first_name},` : "Hello,";
+      const postUrl = buildPostUrl(APP_BASE_URL, n.related_content_type, n.related_content_id);
+      const buttonHtml = postUrl
+        ? `<p style="margin: 0 0 24px;"><a href="${postUrl}" style="display: inline-block; background-color: #111; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-size: 15px; font-weight: 500;">View Post</a></p>`
+        : "";
+      const buttonText = postUrl ? `\n\nView post: ${postUrl}` : "";
       const html = `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; max-width: 560px; margin: 0 auto; padding: 24px; color: #1a1a1a;">
           <p style="font-size: 16px; margin: 0 0 16px;">${greeting}</p>
           <h2 style="font-size: 20px; margin: 0 0 12px; color: #111;">${escapeHtml(n.title)}</h2>
           <p style="font-size: 15px; line-height: 1.5; margin: 0 0 24px; color: #333;">${escapeHtml(n.message)}</p>
+          ${buttonHtml}
           <p style="font-size: 13px; color: #666; margin: 24px 0 0;">
             You received this email because you have notifications enabled on your account.
           </p>
         </div>
       `;
-      const text = `${greeting}\n\n${n.title}\n\n${n.message}`;
+      const text = `${greeting}\n\n${n.title}\n\n${n.message}${buttonText}`;
 
       emails.push({
         from: "HBF Roll Call <hello@notify.pacificcrest.us>",
