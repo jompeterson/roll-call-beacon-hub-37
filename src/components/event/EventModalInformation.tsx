@@ -1,6 +1,7 @@
 
 import { Calendar, MapPin, Users, UserCheck, Tag } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { formatDate, cn } from "@/lib/utils";
 
 interface Event {
@@ -76,18 +77,19 @@ export const EventModalInformation = ({ event, rsvpCount, highlightedFields }: E
         
         {event.event_link && (
           <FieldWrapper fieldKey="event_link" highlightedFields={highlightedFields}>
-            <div className="flex items-start gap-2">
-              <span className="text-sm">
-                <a 
-                  href={event.event_link} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-primary hover:underline"
-                >
-                  Event Link
-                </a>
-              </span>
-            </div>
+            <Button
+              asChild
+              size="sm"
+              variant="default"
+            >
+              <a
+                href={event.event_link}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Go to Event
+              </a>
+            </Button>
           </FieldWrapper>
         )}
         
