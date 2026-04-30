@@ -99,7 +99,7 @@ export const DonationFormBasicFields = ({ formData, onInputChange }: DonationFor
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="target_date">Deadline</Label>
+        <Label htmlFor="target_date">Target Date</Label>
         <Input
           id="target_date"
           type="date"
