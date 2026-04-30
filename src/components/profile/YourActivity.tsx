@@ -88,13 +88,13 @@ const ActivityItem = ({ activity }: { activity: ActivityPost }) => {
                     {activity.rsvps && activity.rsvps.length > 0 && (
                       <div className="flex items-center gap-1">
                         <Users className="h-3 w-3" />
-                        <span>{activity.rsvps.length} {activity.rsvps.length === 1 ? 'RSVP' : 'RSVPs'}</span>
+                        <span>{activity.rsvps.length} {activity.rsvps.length === 1 ? 'interested' : 'interested'}</span>
                       </div>
                     )}
                     {activity.signups && activity.signups.length > 0 && (
                       <div className="flex items-center gap-1">
                         <Users className="h-3 w-3" />
-                        <span>{activity.signups.length} {activity.signups.length === 1 ? 'signup' : 'signups'}</span>
+                        <span>{activity.signups.length} {activity.signups.length === 1 ? 'interested' : 'interested'}</span>
                       </div>
                     )}
                     {activity.comments && activity.comments.length > 0 && (
@@ -171,7 +171,7 @@ const ActivityItem = ({ activity }: { activity: ActivityPost }) => {
               {activity.rsvps && activity.rsvps.length > 0 && (
                 <div>
                   <h5 className="text-xs font-semibold text-muted-foreground mb-2 flex items-center gap-1">
-                    <Users className="h-3 w-3" /> RSVPs
+                    <Users className="h-3 w-3" /> Interested
                   </h5>
                   <ul className="space-y-1 ml-4">
                     {activity.rsvps.map((rsvp, idx) => {
@@ -199,7 +199,7 @@ const ActivityItem = ({ activity }: { activity: ActivityPost }) => {
               {activity.signups && activity.signups.length > 0 && (
                 <div>
                   <h5 className="text-xs font-semibold text-muted-foreground mb-2 flex items-center gap-1">
-                    <Users className="h-3 w-3" /> Signups
+                    <Users className="h-3 w-3" /> Interested
                   </h5>
                   <ul className="space-y-1 ml-4">
                     {activity.signups.map((signup, idx) => {

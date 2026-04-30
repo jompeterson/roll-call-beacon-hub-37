@@ -239,7 +239,7 @@ export const VolunteerDetail = () => {
                   <div>
                     <p className="font-medium">Participants</p>
                     <p className="text-sm text-muted-foreground">
-                      {signupCount} / {volunteer.max_participants} signed up
+                      {signupCount} / {volunteer.max_participants} interested
                     </p>
                   </div>
                 </div>
@@ -305,9 +305,9 @@ export const VolunteerDetail = () => {
                   {submitting ? (
                     "Processing..."
                   ) : hasSignedUp ? (
-                    "Cancel Signup"
+                    "Remove Interest"
                   ) : (
-                    "Sign Up"
+                    "Show Interest"
                   )}
                 </Button>
               )}

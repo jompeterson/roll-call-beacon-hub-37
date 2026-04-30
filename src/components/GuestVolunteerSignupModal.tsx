@@ -78,7 +78,7 @@ export const GuestVolunteerSignupModal = ({ volunteer, open, onOpenChange }: Gue
         console.error('Error creating guest signup:', error);
         toast({
           title: "Error",
-          description: "Failed to sign up for volunteer opportunity. Please try again.",
+          description: "Failed to show interest in volunteer opportunity. Please try again.",
           variant: "destructive",
         });
         return;
@@ -86,7 +86,7 @@ export const GuestVolunteerSignupModal = ({ volunteer, open, onOpenChange }: Gue
 
       toast({
         title: "Success",
-        description: "Successfully signed up for volunteer opportunity!",
+        description: "Successfully showed interest in volunteer opportunity!",
       });
       
       form.reset();
@@ -95,7 +95,7 @@ export const GuestVolunteerSignupModal = ({ volunteer, open, onOpenChange }: Gue
       console.error('Error creating guest signup:', error);
       toast({
         title: "Error",
-        description: "Failed to sign up for volunteer opportunity. Please try again.",
+        description: "Failed to show interest in volunteer opportunity. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -113,7 +113,7 @@ export const GuestVolunteerSignupModal = ({ volunteer, open, onOpenChange }: Gue
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <UserCheck className="h-5 w-5" />
-            Sign Up: {volunteer.title}
+            Show Interest: {volunteer.title}
           </DialogTitle>
           <DialogDescription>
             <div>Start: {formatDate(volunteer.start_date, { includeTime: true })}</div>
@@ -230,7 +230,7 @@ export const GuestVolunteerSignupModal = ({ volunteer, open, onOpenChange }: Gue
                 ) : (
                   <>
                     <UserCheck className="h-4 w-4 mr-2" />
-                    Sign Up
+                    Show Interest
                   </>
                 )}
               </Button>

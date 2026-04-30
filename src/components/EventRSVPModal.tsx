@@ -66,7 +66,7 @@ export const EventRSVPModal = ({
             {event.title}
           </DialogTitle>
           <DialogDescription>
-            RSVP to this event
+            Show interest in this event
           </DialogDescription>
         </DialogHeader>
 
@@ -98,13 +98,13 @@ export const EventRSVPModal = ({
 
           {/* RSVP Information */}
           <div className="space-y-4">
-            <h3 className="font-semibold text-lg">RSVP Information</h3>
+            <h3 className="font-semibold text-lg">Interest Information</h3>
             
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <Users className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm">
-                  {rsvpCount} {rsvpCount === 1 ? 'person' : 'people'} attending
+                  {rsvpCount} {rsvpCount === 1 ? 'person' : 'people'} interested
                 </span>
               </div>
               
@@ -128,7 +128,7 @@ export const EventRSVPModal = ({
                 <div className="flex items-center gap-2">
                   <UserCheck className="h-4 w-4 text-green-600" />
                   <p className="text-sm text-green-800">
-                    You have RSVP'd to this event.
+                    You have shown interest in this event.
                   </p>
                 </div>
               </div>
@@ -149,12 +149,12 @@ export const EventRSVPModal = ({
               ) : hasRsvp ? (
                 <>
                   <UserX className="h-4 w-4 mr-2" />
-                  Cancel RSVP
+                  Remove Interest
                 </>
               ) : (
                 <>
                   <UserCheck className="h-4 w-4 mr-2" />
-                  RSVP to Event
+                  Show Interest
                 </>
               )}
             </Button>
@@ -164,7 +164,7 @@ export const EventRSVPModal = ({
         {!isAuthenticated && (
           <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
             <p className="text-sm text-blue-800">
-              Please log in to RSVP to this event.
+              Please log in to show interest in this event.
             </p>
           </div>
         )}

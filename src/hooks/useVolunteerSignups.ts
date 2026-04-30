@@ -73,14 +73,14 @@ export const useVolunteerSignups = (volunteerId: string) => {
       queryClient.invalidateQueries({ queryKey: ["user-volunteer-signup", volunteerId, user?.id] });
       toast({
         title: "Success",
-        description: "You have signed up for this volunteer opportunity!",
+        description: "You have shown interest in this volunteer opportunity!",
       });
     },
     onError: (error) => {
       console.error("Error signing up:", error);
       toast({
         title: "Error",
-        description: "Failed to sign up. Please try again.",
+        description: "Failed to show interest. Please try again.",
         variant: "destructive",
       });
     },
@@ -102,14 +102,14 @@ export const useVolunteerSignups = (volunteerId: string) => {
       queryClient.invalidateQueries({ queryKey: ["user-volunteer-signup", volunteerId, user?.id] });
       toast({
         title: "Success",
-        description: "Your signup has been cancelled.",
+        description: "Your interest has been removed.",
       });
     },
     onError: (error) => {
       console.error("Error cancelling signup:", error);
       toast({
         title: "Error",
-        description: "Failed to cancel signup. Please try again.",
+        description: "Failed to remove interest. Please try again.",
         variant: "destructive",
       });
     },

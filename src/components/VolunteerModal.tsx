@@ -186,7 +186,7 @@ export const VolunteerModal = ({
               {volunteer.is_approved && (
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Users className="h-4 w-4" />
-                  <span>{signupCount} {signupCount === 1 ? 'volunteer signed up' : 'volunteers signed up'}</span>
+                  <span>{signupCount} {signupCount === 1 ? 'person interested' : 'people interested'}</span>
                 </div>
               )}
 
@@ -203,7 +203,7 @@ export const VolunteerModal = ({
               <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                 <div className="flex items-center gap-2 text-green-800">
                   <CheckCircle className="h-5 w-5" />
-                  <span className="font-medium">You have signed up for this volunteer opportunity</span>
+                  <span className="font-medium">You have shown interest in this volunteer opportunity</span>
                 </div>
               </div>
             )}
@@ -278,9 +278,9 @@ export const VolunteerModal = ({
                     {submitting ? (
                       "Processing..."
                     ) : hasSignedUp ? (
-                      "Cancel Signup"
+                      "Remove Interest"
                     ) : (
-                      "Sign Up"
+                      "Show Interest"
                     )}
                   </Button>
                 )}

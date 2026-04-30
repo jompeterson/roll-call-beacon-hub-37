@@ -78,7 +78,7 @@ export const GuestRSVPModal = ({ event, open, onOpenChange }: GuestRSVPModalProp
         console.error('Error creating guest RSVP:', error);
         toast({
           title: "Error",
-          description: "Failed to RSVP to event. Please try again.",
+          description: "Failed to show interest in event. Please try again.",
           variant: "destructive",
         });
         return;
@@ -86,7 +86,7 @@ export const GuestRSVPModal = ({ event, open, onOpenChange }: GuestRSVPModalProp
 
       toast({
         title: "Success",
-        description: "Successfully RSVP'd to event!",
+        description: "Successfully showed interest in event!",
       });
       
       form.reset();
@@ -95,7 +95,7 @@ export const GuestRSVPModal = ({ event, open, onOpenChange }: GuestRSVPModalProp
       console.error('Error creating guest RSVP:', error);
       toast({
         title: "Error",
-        description: "Failed to RSVP to event. Please try again.",
+        description: "Failed to show interest in event. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -113,7 +113,7 @@ export const GuestRSVPModal = ({ event, open, onOpenChange }: GuestRSVPModalProp
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <UserCheck className="h-5 w-5" />
-            RSVP to {event.title}
+            Show Interest in {event.title}
           </DialogTitle>
           <DialogDescription>
             {formatDate(event.event_date, { includeTime: true })}
@@ -229,7 +229,7 @@ export const GuestRSVPModal = ({ event, open, onOpenChange }: GuestRSVPModalProp
                 ) : (
                   <>
                     <UserCheck className="h-4 w-4 mr-2" />
-                    RSVP
+                    Show Interest
                   </>
                 )}
               </Button>
