@@ -56,7 +56,7 @@ export const RequestEditModal = ({
   const { toast } = useToast();
   const { isAdministrator } = useAuth();
 
-  const requestTypes = ["Assorted Goods", "Tools", "Materials"];
+  const requestTypes = ["Assorted Goods", "Tools", "Materials", "Appliance"];
   const urgencyLevels = ["low", "medium", "high", "urgent"];
 
   useEffect(() => {
