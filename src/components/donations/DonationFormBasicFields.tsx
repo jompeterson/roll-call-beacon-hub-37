@@ -49,7 +49,7 @@ interface DonationFormBasicFieldsProps {
 export const DonationFormBasicFields = ({ formData, onInputChange }: DonationFormBasicFieldsProps) => {
   const donationType = formData.donation_type;
 
-  const isPhysicalGoods = donationType === "Tools" || donationType === "Materials" || donationType === "Assorted Goods";
+  const isPhysicalGoods = donationType === "Tools" || donationType === "Materials" || donationType === "Assorted Goods" || donationType === "Appliance";
   const isServices = donationType === "Professional Services / Labor";
   const isTransportation = donationType === "Transportation / Equipment Use";
   const isFacility = donationType === "Facility Use";
@@ -91,6 +91,7 @@ export const DonationFormBasicFields = ({ formData, onInputChange }: DonationFor
             <SelectItem value="Assorted Goods">Assorted Goods</SelectItem>
             <SelectItem value="Tools">Tools</SelectItem>
             <SelectItem value="Materials">Materials</SelectItem>
+            <SelectItem value="Appliance">Appliance</SelectItem>
             <SelectItem value="Professional Services / Labor">Professional Services / Labor</SelectItem>
             <SelectItem value="Transportation / Equipment Use">Transportation / Equipment Use</SelectItem>
             <SelectItem value="Facility Use">Facility Use</SelectItem>
