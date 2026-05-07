@@ -89,6 +89,14 @@ export const DonationRequestersSection = ({
   const handleSelectRecipient = async (userId: string) => {
     setPendingUserId(userId);
     try {
+      const { data: donationData, error: donationFetchError } = await supabase
+        .from("donations")
+        .select("title, creator_user_id")
+        .eq("id", donationId)
+        .single();
+
+      if (donationFetchError) throw donationFetchError;
+
       const { error } = await supabase
         .from("donations")
         .update({
@@ -99,9 +107,36 @@ export const DonationRequestersSection = ({
 
       if (error) throw error;
 
+      // Notify selected recipient and non-selected requesters
+      const donationTitle = donationData?.title || "a donation";
+      const creatorId = donationData?.creator_user_id || null;
+      const notifications = requesters.map((r) => {
+        const isSelected = r.user_id === userId;
+        return {
+          user_id: r.user_id,
+          type: "new_post",
+          title: isSelected
+            ? "You Were Selected to Receive a Donation"
+            : "Donation Recipient Selected",
+          message: isSelected
+            ? `You have been selected to receive the donation "${donationTitle}". The donor will be in touch with you soon.`
+            : `Another recipient was selected for the donation "${donationTitle}". Thank you for your interest.`,
+          related_content_type: "donation",
+          related_content_id: donationId,
+          creator_user_id: creatorId,
+        };
+      });
+
+      if (notifications.length > 0) {
+        const { error: notifError } = await supabase
+          .from("notifications")
+          .insert(notifications);
+        if (notifError) console.error("Error sending notifications:", notifError);
+      }
+
       toast({
         title: "Recipient selected",
-        description: "The donation has been marked as taken.",
+        description: "The donation has been marked as taken and requesters have been notified.",
       });
       queryClient.invalidateQueries({ queryKey: ["donations"] });
     } catch (err) {
