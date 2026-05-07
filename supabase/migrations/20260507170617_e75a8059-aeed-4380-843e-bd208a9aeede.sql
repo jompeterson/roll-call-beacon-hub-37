@@ -1,0 +1,1 @@
+DELETE FROM donation_acceptances WHERE user_id = (SELECT id FROM user_profiles WHERE email='jpeterson@pacificcrest.us');
