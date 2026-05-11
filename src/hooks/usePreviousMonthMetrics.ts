@@ -39,7 +39,7 @@ export const usePreviousMonthMetrics = () => {
       // Get donations from previous month
       const { data: previousDonations, error: donationError } = await supabase
         .from("donations")
-        .select("amount_raised")
+        .select("amount_raised, is_taken")
         .eq("is_approved", true)
         .gte("created_at", startOfPreviousMonth.toISOString())
         .lte("created_at", endOfPreviousMonth.toISOString());
