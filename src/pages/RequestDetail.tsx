@@ -95,7 +95,7 @@ export const RequestDetail = () => {
   };
 
   const showComments = request.is_approved;
-  const canDelete = user && (user.id === request.creator_user_id || isAdministrator);
+  const canDelete = user && (isAdministrator || (user.id === request.creator_user_id && !request.is_approved));
   const canEdit = user && ((user.id === request.creator_user_id && !request.is_approved) || isAdministrator);
 
   const handleDelete = () => {
