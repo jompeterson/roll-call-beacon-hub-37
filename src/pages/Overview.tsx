@@ -176,6 +176,14 @@ export const Overview = () => {
             navigateTo="/donations"
           />
           <MetricCard
+            title="Pending In-Kind Donations"
+            value={monthlyLoading ? "..." : formatCurrency(monthlyMetrics?.pendingDonations || 0)}
+            change={monthlyPendingDonationChange.change}
+            changeType={monthlyPendingDonationChange.changeType}
+            icon={Hammer}
+            navigateTo="/donations"
+          />
+          <MetricCard
             title="Events"
             value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newEvents || 0)}
             change={eventChange.change}
