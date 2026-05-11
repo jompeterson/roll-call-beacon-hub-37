@@ -39,7 +39,7 @@ export const usePreviousMonthMetrics = () => {
       // Get donations from previous month
       const { data: previousDonations, error: donationError } = await supabase
         .from("donations")
-        .select("amount_raised")
+        .select("amount_raised, is_taken")
         .eq("is_approved", true)
         .gte("created_at", startOfPreviousMonth.toISOString())
         .lte("created_at", endOfPreviousMonth.toISOString());
@@ -88,15 +88,18 @@ export const usePreviousMonthMetrics = () => {
         throw volunteerError;
       }
 
-      // Calculate total donations amount
-      const totalDonations = previousDonations?.reduce((sum, donation) => {
-        return sum + (Number(donation.amount_raised) || 0);
+      const totalDonations = previousDonations?.reduce((sum, d) => {
+        return d.is_taken ? sum + (Number(d.amount_raised) || 0) : sum;
+      }, 0) || 0;
+      const pendingDonations = previousDonations?.reduce((sum, d) => {
+        return !d.is_taken ? sum + (Number(d.amount_raised) || 0) : sum;
       }, 0) || 0;
 
       return {
         newOrganizations: previousOrganizations?.length || 0,
         newScholarships: previousScholarships?.length || 0,
         totalDonations,
+        pendingDonations,
         newEvents: previousEvents?.length || 0,
         newUsers: previousUsers?.length || 0,
         newVolunteers: previousVolunteers?.length || 0,

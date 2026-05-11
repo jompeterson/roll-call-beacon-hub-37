@@ -65,6 +65,10 @@ export const Overview = () => {
     ? calculateChange(monthlyMetrics.totalDonations, previousMonthMetrics.totalDonations)
     : { change: "...", changeType: "neutral" as const };
 
+  const monthlyPendingDonationChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
+    ? calculateChange(monthlyMetrics.pendingDonations, previousMonthMetrics.pendingDonations)
+    : { change: "...", changeType: "neutral" as const };
+
   const eventChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
     ? calculateAbsoluteChange(monthlyMetrics.newEvents, previousMonthMetrics.newEvents)
     : { change: "...", changeType: "neutral" as const };
@@ -84,6 +88,10 @@ export const Overview = () => {
 
   const yearlyDonationChange = !yearlyLoading && !previousYearLoading && yearlyMetrics && previousYearMetrics 
     ? calculateChange(yearlyMetrics.totalDonations, previousYearMetrics.totalDonations)
+    : { change: "...", changeType: "neutral" as const };
+
+  const yearlyPendingDonationChange = !yearlyLoading && !previousYearLoading && yearlyMetrics && previousYearMetrics 
+    ? calculateChange(yearlyMetrics.pendingDonations, previousYearMetrics.pendingDonations)
     : { change: "...", changeType: "neutral" as const };
 
   const yearlyEventChange = !yearlyLoading && !previousYearLoading && yearlyMetrics && previousYearMetrics 
@@ -168,6 +176,14 @@ export const Overview = () => {
             navigateTo="/donations"
           />
           <MetricCard
+            title="Pending In-Kind Donations"
+            value={monthlyLoading ? "..." : formatCurrency(monthlyMetrics?.pendingDonations || 0)}
+            change={monthlyPendingDonationChange.change}
+            changeType={monthlyPendingDonationChange.changeType}
+            icon={Hammer}
+            navigateTo="/donations"
+          />
+          <MetricCard
             title="Events"
             value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newEvents || 0)}
             change={eventChange.change}
@@ -222,6 +238,14 @@ export const Overview = () => {
             value={yearlyLoading ? "..." : formatCurrency(yearlyMetrics?.totalDonations || 0)}
             change={yearlyDonationChange.change}
             changeType={yearlyDonationChange.changeType}
+            icon={Hammer}
+            navigateTo="/donations"
+          />
+          <MetricCard
+            title="Pending In-Kind Donations"
+            value={yearlyLoading ? "..." : formatCurrency(yearlyMetrics?.pendingDonations || 0)}
+            change={yearlyPendingDonationChange.change}
+            changeType={yearlyPendingDonationChange.changeType}
             icon={Hammer}
             navigateTo="/donations"
           />

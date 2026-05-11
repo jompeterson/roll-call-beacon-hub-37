@@ -26,7 +26,7 @@ export const usePreviousYearMetrics = () => {
       // Get donations from previous year
       const { data: donations, error: donationError } = await supabase
         .from("donations")
-        .select("amount_raised")
+        .select("amount_raised, is_taken")
         .eq("is_approved", true)
         .gte("created_at", startOfPreviousYear.toISOString())
         .lte("created_at", endOfPreviousYear.toISOString());
@@ -74,9 +74,12 @@ export const usePreviousYearMetrics = () => {
         throw volunteerError;
       }
 
-      // Calculate total donations amount
-      const totalDonations = donations?.reduce((sum, donation) => {
-        return sum + (Number(donation.amount_raised) || 0);
+      // Calculate accepted vs pending donations amount
+      const totalDonations = donations?.reduce((sum, d) => {
+        return d.is_taken ? sum + (Number(d.amount_raised) || 0) : sum;
+      }, 0) || 0;
+      const pendingDonations = donations?.reduce((sum, d) => {
+        return !d.is_taken ? sum + (Number(d.amount_raised) || 0) : sum;
       }, 0) || 0;
 
       // Calculate estimated hours donated
@@ -85,6 +88,7 @@ export const usePreviousYearMetrics = () => {
       return {
         organizations: organizations?.length || 0,
         totalDonations,
+        pendingDonations,
         events: events?.length || 0,
         hoursDonated: estimatedHours,
         posts: comments?.length || 0,
