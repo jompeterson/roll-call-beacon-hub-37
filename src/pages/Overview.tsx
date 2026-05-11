@@ -242,6 +242,14 @@ export const Overview = () => {
             navigateTo="/donations"
           />
           <MetricCard
+            title="Pending In-Kind Donations"
+            value={yearlyLoading ? "..." : formatCurrency(yearlyMetrics?.pendingDonations || 0)}
+            change={yearlyPendingDonationChange.change}
+            changeType={yearlyPendingDonationChange.changeType}
+            icon={Hammer}
+            navigateTo="/donations"
+          />
+          <MetricCard
             title="Events"
             value={yearlyLoading ? "..." : formatNumber(yearlyMetrics?.events || 0)}
             change={yearlyEventChange.change}
