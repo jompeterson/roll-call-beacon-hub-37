@@ -26,7 +26,7 @@ export const useYearlyMetrics = () => {
       // Get donations this year and sum the amounts
       const { data: donations, error: donationError } = await supabase
         .from("donations")
-        .select("amount_raised")
+        .select("amount_raised, is_taken")
         .eq("is_approved", true)
         .gte("created_at", startOfYear.toISOString())
         .lte("created_at", endOfYear.toISOString());
