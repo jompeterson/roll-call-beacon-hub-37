@@ -54,7 +54,7 @@ export const DonationDetail = () => {
     );
   }
 
-  if (!donation) {
+  if (!donation || (!isAuthenticated && donation.is_taken)) {
     return (
       <div className="space-y-6">
       <Breadcrumb>
