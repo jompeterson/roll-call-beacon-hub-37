@@ -107,25 +107,37 @@ export const DonationRequestersSection = ({
 
       if (error) throw error;
 
-      // Notify selected recipient and non-selected requesters
+      // Notify selected recipient and confirm to the poster
       const donationTitle = donationData?.title || "a donation";
       const creatorId = donationData?.creator_user_id || null;
-      const notifications = requesters.map((r) => {
-        const isSelected = r.user_id === userId;
-        return {
-          user_id: r.user_id,
+      const selectedRequester = requesters.find((r) => r.user_id === userId);
+      const recipientName = selectedRequester?.profile
+        ? `${selectedRequester.profile.first_name} ${selectedRequester.profile.last_name}`
+        : "the selected recipient";
+
+      const notifications: any[] = [
+        {
+          user_id: userId,
           type: "new_post",
-          title: isSelected
-            ? "You Were Selected to Receive a Donation"
-            : "Donation Recipient Selected",
-          message: isSelected
-            ? `You have been selected to receive the donation "${donationTitle}". The donor will be in touch with you soon.`
-            : `Another recipient was selected for the donation "${donationTitle}". Thank you for your interest.`,
+          title: "You Were Selected to Receive a Donation",
+          message: `You have been selected to receive the donation "${donationTitle}". The donor will be in touch with you soon.`,
           related_content_type: "donation",
           related_content_id: donationId,
           creator_user_id: creatorId,
-        };
-      });
+        },
+      ];
+
+      if (creatorId) {
+        notifications.push({
+          user_id: creatorId,
+          type: "new_post",
+          title: "Recipient Confirmed",
+          message: `You selected ${recipientName} to receive your donation "${donationTitle}".`,
+          related_content_type: "donation",
+          related_content_id: donationId,
+          creator_user_id: creatorId,
+        });
+      }
 
       if (notifications.length > 0) {
         const { error: notifError } = await supabase
