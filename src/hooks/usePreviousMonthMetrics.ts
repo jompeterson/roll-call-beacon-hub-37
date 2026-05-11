@@ -98,10 +98,10 @@ export const usePreviousMonthMetrics = () => {
       }
 
       const totalDonations = previousDonations?.reduce((sum, d) => {
-        return sum + (Number(d.amount_needed) || 0);
+        return acceptedSet.has(d.id) ? sum + (Number(d.amount_needed) || 0) : sum;
       }, 0) || 0;
       const pendingDonations = previousDonations?.reduce((sum, d) => {
-        return !d.is_taken ? sum + (Number(d.amount_needed) || 0) : sum;
+        return !acceptedSet.has(d.id) ? sum + (Number(d.amount_needed) || 0) : sum;
       }, 0) || 0;
 
       return {
