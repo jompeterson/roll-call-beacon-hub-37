@@ -51,7 +51,7 @@ export const useYearlyMetrics = () => {
 
       // Calculate accepted vs pending donations amount
       const totalDonations = donations?.reduce((sum, d) => {
-        return d.is_taken ? sum + (Number(d.amount_needed) || 0) : sum;
+        return sum + (Number(d.amount_needed) || 0);
       }, 0) || 0;
       const pendingDonations = donations?.reduce((sum, d) => {
         return !d.is_taken ? sum + (Number(d.amount_needed) || 0) : sum;
