@@ -73,7 +73,8 @@ export const Donations = () => {
     }
   };
 
-  const filteredDonationPosts = filterDonations(donations, searchTerm, statusFilter);
+  const visibleDonations = isAuthenticated ? donations : donations.filter(d => !d.is_taken);
+  const filteredDonationPosts = filterDonations(visibleDonations, searchTerm, statusFilter);
   const sortedDonationPosts = sortDonations(filteredDonationPosts, donationSort, donationDirection);
   
   const filteredRequestPosts = filterRequests(requests, searchTerm, statusFilter);
