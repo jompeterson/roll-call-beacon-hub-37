@@ -65,6 +65,10 @@ export const Overview = () => {
     ? calculateChange(monthlyMetrics.totalDonations, previousMonthMetrics.totalDonations)
     : { change: "...", changeType: "neutral" as const };
 
+  const monthlyPendingDonationChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
+    ? calculateChange(monthlyMetrics.pendingDonations, previousMonthMetrics.pendingDonations)
+    : { change: "...", changeType: "neutral" as const };
+
   const eventChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
     ? calculateAbsoluteChange(monthlyMetrics.newEvents, previousMonthMetrics.newEvents)
     : { change: "...", changeType: "neutral" as const };
