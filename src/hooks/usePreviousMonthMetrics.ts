@@ -39,7 +39,7 @@ export const usePreviousMonthMetrics = () => {
       // Get donations from previous month
       const { data: previousDonations, error: donationError } = await supabase
         .from("donations")
-        .select("amount_needed, is_taken")
+        .select("id, amount_needed")
         .eq("is_approved", true)
         .gte("created_at", startOfPreviousMonth.toISOString())
         .lte("created_at", endOfPreviousMonth.toISOString());
@@ -48,6 +48,15 @@ export const usePreviousMonthMetrics = () => {
         console.error("Error fetching previous month donations:", donationError);
         throw donationError;
       }
+
+      const donationIds = previousDonations?.map((d) => d.id) || [];
+      const { data: acceptances } = donationIds.length
+        ? await supabase
+            .from("donation_acceptances")
+            .select("donation_id")
+            .in("donation_id", donationIds)
+        : { data: [] as { donation_id: string }[] };
+      const acceptedSet = new Set((acceptances || []).map((a) => a.donation_id));
 
       // Get events from previous month
       const { data: previousEvents, error: eventError } = await supabase
@@ -89,10 +98,10 @@ export const usePreviousMonthMetrics = () => {
       }
 
       const totalDonations = previousDonations?.reduce((sum, d) => {
-        return sum + (Number(d.amount_needed) || 0);
+        return acceptedSet.has(d.id) ? sum + (Number(d.amount_needed) || 0) : sum;
       }, 0) || 0;
       const pendingDonations = previousDonations?.reduce((sum, d) => {
-        return !d.is_taken ? sum + (Number(d.amount_needed) || 0) : sum;
+        return !acceptedSet.has(d.id) ? sum + (Number(d.amount_needed) || 0) : sum;
       }, 0) || 0;
 
       return {
