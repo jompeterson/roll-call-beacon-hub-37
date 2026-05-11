@@ -90,6 +90,10 @@ export const Overview = () => {
     ? calculateChange(yearlyMetrics.totalDonations, previousYearMetrics.totalDonations)
     : { change: "...", changeType: "neutral" as const };
 
+  const yearlyPendingDonationChange = !yearlyLoading && !previousYearLoading && yearlyMetrics && previousYearMetrics 
+    ? calculateChange(yearlyMetrics.pendingDonations, previousYearMetrics.pendingDonations)
+    : { change: "...", changeType: "neutral" as const };
+
   const yearlyEventChange = !yearlyLoading && !previousYearLoading && yearlyMetrics && previousYearMetrics 
     ? calculateChange(yearlyMetrics.events, previousYearMetrics.events)
     : { change: "...", changeType: "neutral" as const };
