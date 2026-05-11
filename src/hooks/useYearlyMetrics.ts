@@ -26,7 +26,7 @@ export const useYearlyMetrics = () => {
       // Get donations this year and sum the amounts
       const { data: donations, error: donationError } = await supabase
         .from("donations")
-        .select("amount_needed, is_taken")
+        .select("id, amount_needed")
         .eq("is_approved", true)
         .gte("created_at", startOfYear.toISOString())
         .lte("created_at", endOfYear.toISOString());
@@ -35,6 +35,15 @@ export const useYearlyMetrics = () => {
         console.error("Error fetching donations:", donationError);
         throw donationError;
       }
+
+      const donationIds = donations?.map((d) => d.id) || [];
+      const { data: acceptances } = donationIds.length
+        ? await supabase
+            .from("donation_acceptances")
+            .select("donation_id")
+            .in("donation_id", donationIds)
+        : { data: [] as { donation_id: string }[] };
+      const acceptedSet = new Set((acceptances || []).map((a) => a.donation_id));
 
       // Get events this year
       const { data: events, error: eventError } = await supabase
@@ -51,10 +60,10 @@ export const useYearlyMetrics = () => {
 
       // Calculate accepted vs pending donations amount
       const totalDonations = donations?.reduce((sum, d) => {
-        return sum + (Number(d.amount_needed) || 0);
+        return acceptedSet.has(d.id) ? sum + (Number(d.amount_needed) || 0) : sum;
       }, 0) || 0;
       const pendingDonations = donations?.reduce((sum, d) => {
-        return !d.is_taken ? sum + (Number(d.amount_needed) || 0) : sum;
+        return !acceptedSet.has(d.id) ? sum + (Number(d.amount_needed) || 0) : sum;
       }, 0) || 0;
 
       // Calculate estimated hours donated (assuming 1 hour per $10 donated as an example)
