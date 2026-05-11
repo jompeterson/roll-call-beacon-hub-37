@@ -26,7 +26,7 @@ export const usePreviousYearMetrics = () => {
       // Get donations from previous year
       const { data: donations, error: donationError } = await supabase
         .from("donations")
-        .select("amount_raised")
+        .select("amount_raised, is_taken")
         .eq("is_approved", true)
         .gte("created_at", startOfPreviousYear.toISOString())
         .lte("created_at", endOfPreviousYear.toISOString());
