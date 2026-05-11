@@ -90,7 +90,7 @@ export const useMonthlyMetrics = () => {
 
       // Calculate accepted vs pending donations amount
       const totalDonations = newDonations?.reduce((sum, d) => {
-        return d.is_taken ? sum + (Number(d.amount_needed) || 0) : sum;
+        return sum + (Number(d.amount_needed) || 0);
       }, 0) || 0;
       const pendingDonations = newDonations?.reduce((sum, d) => {
         return !d.is_taken ? sum + (Number(d.amount_needed) || 0) : sum;
