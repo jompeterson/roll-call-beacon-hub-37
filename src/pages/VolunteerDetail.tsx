@@ -122,7 +122,7 @@ export const VolunteerDetail = () => {
 
   const showComments = volunteer.is_approved;
   const isVolunteerFull = volunteer.max_participants && signupCount >= volunteer.max_participants;
-  const canDelete = user && (user.id === volunteer.creator_user_id || isAdministrator);
+  const canDelete = user && (isAdministrator || (user.id === volunteer.creator_user_id && !volunteer.is_approved));
   const canEdit = user && ((user.id === volunteer.creator_user_id && !volunteer.is_approved) || isAdministrator);
 
   const handleDelete = () => {

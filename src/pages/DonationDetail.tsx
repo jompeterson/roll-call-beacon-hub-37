@@ -109,7 +109,7 @@ export const DonationDetail = () => {
   };
 
   const showComments = donation.is_approved;
-  const canDelete = user && (user.id === donation.creator_user_id || isAdministrator);
+  const canDelete = user && (isAdministrator || (user.id === donation.creator_user_id && !donation.is_approved));
   const canEdit = user && ((user.id === donation.creator_user_id && !donation.is_approved) || isAdministrator);
 
   const handleDelete = () => {

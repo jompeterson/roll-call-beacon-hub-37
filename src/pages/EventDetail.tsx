@@ -113,7 +113,7 @@ export const EventDetail = () => {
   };
 
   const showComments = event.is_approved;
-  const canDelete = user && (user.id === event.creator_user_id || isAdministrator);
+  const canDelete = user && (isAdministrator || (user.id === event.creator_user_id && !event.is_approved));
   const canEdit = user && ((user.id === event.creator_user_id && !event.is_approved) || isAdministrator);
 
   const handleDelete = () => {
