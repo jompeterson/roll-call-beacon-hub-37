@@ -7,6 +7,9 @@ const getDonationStatus = (donation: Donation): "Approved" | "Pending" | "Reject
   if (!donation.approval_decision_made) {
     return "Pending";
   }
+  if (donation.is_approved && donation.is_taken) {
+    return "Archived";
+  }
   return donation.is_approved ? "Approved" : "Rejected";
 };
 
