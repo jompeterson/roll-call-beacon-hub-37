@@ -39,7 +39,7 @@ export const useMonthlyMetrics = () => {
       // Get new donations this month and sum the amounts
       const { data: newDonations, error: donationError } = await supabase
         .from("donations")
-        .select("amount_raised, is_taken")
+        .select("amount_needed, is_taken")
         .eq("is_approved", true)
         .gte("created_at", startOfMonth.toISOString())
         .lte("created_at", endOfMonth.toISOString());
@@ -90,10 +90,10 @@ export const useMonthlyMetrics = () => {
 
       // Calculate accepted vs pending donations amount
       const totalDonations = newDonations?.reduce((sum, d) => {
-        return d.is_taken ? sum + (Number(d.amount_raised) || 0) : sum;
+        return d.is_taken ? sum + (Number(d.amount_needed) || 0) : sum;
       }, 0) || 0;
       const pendingDonations = newDonations?.reduce((sum, d) => {
-        return !d.is_taken ? sum + (Number(d.amount_raised) || 0) : sum;
+        return !d.is_taken ? sum + (Number(d.amount_needed) || 0) : sum;
       }, 0) || 0;
 
       return {
