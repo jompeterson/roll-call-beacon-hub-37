@@ -39,7 +39,7 @@ export const useMonthlyMetrics = () => {
       // Get new donations this month and sum the amounts
       const { data: newDonations, error: donationError } = await supabase
         .from("donations")
-        .select("amount_raised")
+        .select("amount_raised, is_taken")
         .eq("is_approved", true)
         .gte("created_at", startOfMonth.toISOString())
         .lte("created_at", endOfMonth.toISOString());
