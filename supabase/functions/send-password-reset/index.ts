@@ -86,7 +86,7 @@ Deno.serve(async (req) => {
         throw new Error("Failed to create reset token");
       }
 
-      const baseUrl = appUrl || "https://roll-call-beacon-hub-37.lovable.app";
+      const baseUrl = appUrl || "https://rollcall.buildhopepdx.org";
       const resetUrl = `${baseUrl.replace(/\/+$/, "")}/reset-password?token=${rawToken}`;
       const greeting = profile?.first_name ? `Hi ${profile.first_name},` : "Hello,";
 
