@@ -147,80 +147,6 @@ export const Overview = () => {
         </div>
       )}
 
-      {/* This Month's Metrics Section */}
-      <div className="space-y-4">
-        <h2 className="text-2xl font-semibold">This Month's Metrics</h2>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-6">
-          <MetricCard
-            title="New Organizations"
-            value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newOrganizations || 0)}
-            change={orgChange.change}
-            changeType={orgChange.changeType}
-            icon={Building2}
-            navigateTo="/organizations"
-          />
-          <MetricCard
-            title="Scholarships"
-            value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newScholarships || 0)}
-            change={scholarshipChange.change}
-            changeType={scholarshipChange.changeType}
-            icon={GraduationCap}
-            navigateTo="/scholarships"
-          />
-          <MetricCard
-            title="In-Kind Donations"
-            value={monthlyLoading ? "..." : formatCurrency(monthlyMetrics?.totalDonations || 0)}
-            change={monthlyDonationChange.change}
-            changeType={monthlyDonationChange.changeType}
-            icon={Hammer}
-            navigateTo="/donations"
-          />
-          <MetricCard
-            title="Pending In-Kind Donations"
-            value={monthlyLoading ? "..." : formatCurrency(monthlyMetrics?.pendingDonations || 0)}
-            change={monthlyPendingDonationChange.change}
-            changeType={monthlyPendingDonationChange.changeType}
-            icon={Hammer}
-            navigateTo="/donations"
-          />
-          <MetricCard
-            title="Events"
-            value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newEvents || 0)}
-            change={eventChange.change}
-            changeType={eventChange.changeType}
-            icon={Calendar}
-            navigateTo="/events"
-          />
-          <MetricCard
-            title="New Users"
-            value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newUsers || 0)}
-            change={userChange.change}
-            changeType={userChange.changeType}
-            icon={Users}
-            navigateTo="/users"
-          />
-          <MetricCard
-            title="Volunteer Opportunities"
-            value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newVolunteers || 0)}
-            change={volunteerChange.change}
-            changeType={volunteerChange.changeType}
-            icon={HandHeart}
-            navigateTo="/volunteers"
-          />
-          {/* Add custom widgets for monthly metrics */}
-          {monthlyMetricsWidgets?.map((widget) => (
-            <CustomWidget
-              key={widget.id}
-              title={widget.title}
-              description={widget.description}
-              metrics={widget.metrics}
-              displayConfig={widget.display_config}
-              section="monthly_metrics"
-            />
-          ))}
-        </div>
-      </div>
-
       {/* Year Metrics Section */}
       <div className="space-y-4">
         <h2 className="text-2xl font-semibold">Year Metrics</h2>
@@ -295,6 +221,80 @@ export const Overview = () => {
               metrics={widget.metrics}
               displayConfig={widget.display_config}
               section="yearly_metrics"
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* This Month's Metrics Section */}
+      <div className="space-y-4">
+        <h2 className="text-2xl font-semibold">This Month's Metrics</h2>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-6">
+          <MetricCard
+            title="New Organizations"
+            value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newOrganizations || 0)}
+            change={orgChange.change}
+            changeType={orgChange.changeType}
+            icon={Building2}
+            navigateTo="/organizations"
+          />
+          <MetricCard
+            title="Scholarships"
+            value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newScholarships || 0)}
+            change={scholarshipChange.change}
+            changeType={scholarshipChange.changeType}
+            icon={GraduationCap}
+            navigateTo="/scholarships"
+          />
+          <MetricCard
+            title="In-Kind Donations"
+            value={monthlyLoading ? "..." : formatCurrency(monthlyMetrics?.totalDonations || 0)}
+            change={monthlyDonationChange.change}
+            changeType={monthlyDonationChange.changeType}
+            icon={Hammer}
+            navigateTo="/donations"
+          />
+          <MetricCard
+            title="Pending In-Kind Donations"
+            value={monthlyLoading ? "..." : formatCurrency(monthlyMetrics?.pendingDonations || 0)}
+            change={monthlyPendingDonationChange.change}
+            changeType={monthlyPendingDonationChange.changeType}
+            icon={Hammer}
+            navigateTo="/donations"
+          />
+          <MetricCard
+            title="Events"
+            value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newEvents || 0)}
+            change={eventChange.change}
+            changeType={eventChange.changeType}
+            icon={Calendar}
+            navigateTo="/events"
+          />
+          <MetricCard
+            title="New Users"
+            value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newUsers || 0)}
+            change={userChange.change}
+            changeType={userChange.changeType}
+            icon={Users}
+            navigateTo="/users"
+          />
+          <MetricCard
+            title="Volunteer Opportunities"
+            value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newVolunteers || 0)}
+            change={volunteerChange.change}
+            changeType={volunteerChange.changeType}
+            icon={HandHeart}
+            navigateTo="/volunteers"
+          />
+          {/* Add custom widgets for monthly metrics */}
+          {monthlyMetricsWidgets?.map((widget) => (
+            <CustomWidget
+              key={widget.id}
+              title={widget.title}
+              description={widget.description}
+              metrics={widget.metrics}
+              displayConfig={widget.display_config}
+              section="monthly_metrics"
             />
           ))}
         </div>
