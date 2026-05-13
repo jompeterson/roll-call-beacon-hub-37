@@ -31,7 +31,7 @@ Deno.serve(async (req) => {
 
     const supabase = createClient(SUPABASE_URL, SERVICE_ROLE);
 
-    const APP_BASE_URL = Deno.env.get("APP_BASE_URL") || "https://roll-call-beacon-hub-37.lovable.app";
+    const APP_BASE_URL = Deno.env.get("APP_BASE_URL") || "https://rollcall.buildhopepdx.org";
 
     // Pull a batch of unsent notifications, oldest first
     const { data: notifications, error: fetchErr } = await supabase
