@@ -1,6 +1,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { calculateDonatedHours } from "@/lib/hoursValue";
 
 export const usePreviousYearMetrics = () => {
   return useQuery({
@@ -91,8 +92,12 @@ export const usePreviousYearMetrics = () => {
         return !acceptedSet.has(d.id) ? sum + (Number(d.amount_needed) || 0) : sum;
       }, 0) || 0;
 
-      // Calculate estimated hours donated
-      const estimatedHours = Math.round(totalDonations / 10);
+      // Calculate real hours donated + dollar value
+      const { hours: estimatedHours, value: hoursDonatedValue } =
+        await calculateDonatedHours(
+          startOfPreviousYear.toISOString(),
+          endOfPreviousYear.toISOString()
+        );
 
       return {
         organizations: organizations?.length || 0,
@@ -100,6 +105,7 @@ export const usePreviousYearMetrics = () => {
         pendingDonations,
         events: events?.length || 0,
         hoursDonated: estimatedHours,
+        hoursDonatedValue,
         posts: comments?.length || 0,
         financialTotals: totalDonations,
         volunteers: volunteers?.length || 0,

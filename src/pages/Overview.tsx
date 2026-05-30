@@ -22,6 +22,7 @@ import {
   MessageSquare,
   Calculator,
   HandHeart,
+  DollarSign,
 } from "lucide-react";
 
 export const Overview = () => {
@@ -100,6 +101,10 @@ export const Overview = () => {
 
   const hoursChange = !yearlyLoading && !previousYearLoading && yearlyMetrics && previousYearMetrics 
     ? calculateChange(yearlyMetrics.hoursDonated, previousYearMetrics.hoursDonated)
+    : { change: "...", changeType: "neutral" as const };
+
+  const hoursValueChange = !yearlyLoading && !previousYearLoading && yearlyMetrics && previousYearMetrics 
+    ? calculateChange(yearlyMetrics.hoursDonatedValue, previousYearMetrics.hoursDonatedValue)
     : { change: "...", changeType: "neutral" as const };
 
   const postsChange = !yearlyLoading && !previousYearLoading && yearlyMetrics && previousYearMetrics 
@@ -189,6 +194,13 @@ export const Overview = () => {
             change={hoursChange.change}
             changeType={hoursChange.changeType}
             icon={Clock}
+          />
+          <MetricCard
+            title="Value of Hours Donated"
+            value={yearlyLoading ? "..." : formatCurrency(yearlyMetrics?.hoursDonatedValue || 0)}
+            change={hoursValueChange.change}
+            changeType={hoursValueChange.changeType}
+            icon={DollarSign}
           />
           <MetricCard
             title="Posts"
