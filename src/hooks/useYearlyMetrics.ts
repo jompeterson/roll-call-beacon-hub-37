@@ -67,8 +67,9 @@ export const useYearlyMetrics = () => {
         return !acceptedSet.has(d.id) ? sum + (Number(d.amount_needed) || 0) : sum;
       }, 0) || 0;
 
-      // Calculate estimated hours donated (assuming 1 hour per $10 donated as an example)
-      const estimatedHours = Math.round(totalDonations / 10);
+      // Calculate real hours donated + dollar value
+      const { hours: estimatedHours, value: hoursDonatedValue } =
+        await calculateDonatedHours(startOfYear.toISOString(), endOfYear.toISOString());
 
       // Get total comments as a proxy for "posts"
       const { data: comments, error: commentError } = await supabase
