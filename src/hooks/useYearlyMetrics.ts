@@ -102,6 +102,7 @@ export const useYearlyMetrics = () => {
         pendingDonations,
         events: events?.length || 0,
         hoursDonated: estimatedHours,
+        hoursDonatedValue,
         posts: comments?.length || 0,
         financialTotals: totalDonations, // Same as donations for now
         volunteers: volunteers?.length || 0,
