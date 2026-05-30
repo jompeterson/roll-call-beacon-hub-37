@@ -22,6 +22,7 @@ import {
   MessageSquare,
   Calculator,
   HandHeart,
+  DollarSign,
 } from "lucide-react";
 
 export const Overview = () => {
