@@ -306,6 +306,20 @@ export const Overview = () => {
             icon={HandHeart}
             navigateTo="/volunteers"
           />
+          <MetricCard
+            title="Hours Donated"
+            value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.hoursDonated || 0)}
+            change={monthlyHoursChange.change}
+            changeType={monthlyHoursChange.changeType}
+            icon={Clock}
+          />
+          <MetricCard
+            title="Value of Hours Donated"
+            value={monthlyLoading ? "..." : formatCurrency(monthlyMetrics?.hoursDonatedValue || 0)}
+            change={monthlyHoursValueChange.change}
+            changeType={monthlyHoursValueChange.changeType}
+            icon={DollarSign}
+          />
           {/* Add custom widgets for monthly metrics */}
           {monthlyMetricsWidgets?.map((widget) => (
             <CustomWidget
