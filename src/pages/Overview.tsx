@@ -196,6 +196,13 @@ export const Overview = () => {
             icon={Clock}
           />
           <MetricCard
+            title="Value of Hours Donated"
+            value={yearlyLoading ? "..." : formatCurrency(yearlyMetrics?.hoursDonatedValue || 0)}
+            change={hoursValueChange.change}
+            changeType={hoursValueChange.changeType}
+            icon={DollarSign}
+          />
+          <MetricCard
             title="Posts"
             value={yearlyLoading ? "..." : formatNumber(yearlyMetrics?.posts || 0)}
             change={postsChange.change}
