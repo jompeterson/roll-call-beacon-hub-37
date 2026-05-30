@@ -82,6 +82,14 @@ export const Overview = () => {
     ? calculateAbsoluteChange(monthlyMetrics.newVolunteers, previousMonthMetrics.newVolunteers)
     : { change: "...", changeType: "neutral" as const };
 
+  const monthlyHoursChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
+    ? calculateChange(monthlyMetrics.hoursDonated, previousMonthMetrics.hoursDonated)
+    : { change: "...", changeType: "neutral" as const };
+
+  const monthlyHoursValueChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
+    ? calculateChange(monthlyMetrics.hoursDonatedValue, previousMonthMetrics.hoursDonatedValue)
+    : { change: "...", changeType: "neutral" as const };
+
   // Calculate yearly changes
   const yearlyOrgChange = !yearlyLoading && !previousYearLoading && yearlyMetrics && previousYearMetrics 
     ? calculateChange(yearlyMetrics.organizations, previousYearMetrics.organizations)
