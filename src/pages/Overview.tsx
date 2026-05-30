@@ -82,6 +82,14 @@ export const Overview = () => {
     ? calculateAbsoluteChange(monthlyMetrics.newVolunteers, previousMonthMetrics.newVolunteers)
     : { change: "...", changeType: "neutral" as const };
 
+  const monthlyHoursChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
+    ? calculateChange(monthlyMetrics.hoursDonated, previousMonthMetrics.hoursDonated)
+    : { change: "...", changeType: "neutral" as const };
+
+  const monthlyHoursValueChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
+    ? calculateChange(monthlyMetrics.hoursDonatedValue, previousMonthMetrics.hoursDonatedValue)
+    : { change: "...", changeType: "neutral" as const };
+
   // Calculate yearly changes
   const yearlyOrgChange = !yearlyLoading && !previousYearLoading && yearlyMetrics && previousYearMetrics 
     ? calculateChange(yearlyMetrics.organizations, previousYearMetrics.organizations)
@@ -297,6 +305,20 @@ export const Overview = () => {
             changeType={volunteerChange.changeType}
             icon={HandHeart}
             navigateTo="/volunteers"
+          />
+          <MetricCard
+            title="Hours Donated"
+            value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.hoursDonated || 0)}
+            change={monthlyHoursChange.change}
+            changeType={monthlyHoursChange.changeType}
+            icon={Clock}
+          />
+          <MetricCard
+            title="Value of Hours Donated"
+            value={monthlyLoading ? "..." : formatCurrency(monthlyMetrics?.hoursDonatedValue || 0)}
+            change={monthlyHoursValueChange.change}
+            changeType={monthlyHoursValueChange.changeType}
+            icon={DollarSign}
           />
           {/* Add custom widgets for monthly metrics */}
           {monthlyMetricsWidgets?.map((widget) => (
