@@ -105,6 +105,13 @@ export const usePreviousMonthMetrics = () => {
         return !acceptedSet.has(d.id) ? sum + (Number(d.amount_needed) || 0) : sum;
       }, 0) || 0;
 
+      // Calculate real hours donated + dollar value
+      const { hours: hoursDonated, value: hoursDonatedValue } =
+        await calculateDonatedHours(
+          startOfPreviousMonth.toISOString(),
+          endOfPreviousMonth.toISOString()
+        );
+
       return {
         newOrganizations: previousOrganizations?.length || 0,
         newScholarships: previousScholarships?.length || 0,
@@ -113,6 +120,8 @@ export const usePreviousMonthMetrics = () => {
         newEvents: previousEvents?.length || 0,
         newUsers: previousUsers?.length || 0,
         newVolunteers: previousVolunteers?.length || 0,
+        hoursDonated,
+        hoursDonatedValue,
       };
     },
     refetchInterval: 30000, // Refetch every 30 seconds
