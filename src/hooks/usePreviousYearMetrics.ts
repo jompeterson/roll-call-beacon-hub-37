@@ -1,6 +1,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { calculateDonatedHours } from "@/lib/hoursValue";
 
 export const usePreviousYearMetrics = () => {
   return useQuery({
