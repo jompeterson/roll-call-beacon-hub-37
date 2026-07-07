@@ -1,0 +1,1 @@
+ALTER TABLE public.student_profiles ADD CONSTRAINT student_profiles_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.user_profiles(id) ON DELETE CASCADE;
