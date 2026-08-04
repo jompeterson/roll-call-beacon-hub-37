@@ -11,7 +11,7 @@ import { formatDate } from "@/lib/utils";
 
 interface WaiverStepProps {
   data: RegistrationData;
-  onNext: () => void;
+  onNext: (overrides?: Partial<RegistrationData>) => void;
   onBack: () => void;
   onUpdate: (data: Partial<RegistrationData>) => void;
   isSubmitting?: boolean;
@@ -28,8 +28,9 @@ export const WaiverStep = ({ data, onNext, onBack, onUpdate, isSubmitting }: Wai
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!canContinue) return;
-    onUpdate({ waiverAgreed: true, waiverSignatureName: signature.trim() });
-    onNext();
+    const values = { waiverAgreed: true, waiverSignatureName: signature.trim() };
+    onUpdate(values);
+    onNext(values);
   };
 
   return (
