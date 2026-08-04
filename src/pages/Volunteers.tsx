@@ -335,8 +335,13 @@ export const Volunteers = () => {
                         className="cursor-pointer hover:bg-muted/50"
                         onClick={() => handleVolunteerRowClick(volunteer)}
                       >
-                        <TableCell className="w-1/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
-                          {volunteer.organization_name || "—"}
+                        <TableCell className="w-1/5 max-w-0">
+                          <div className="truncate">{volunteer.organization_name || "—"}</div>
+                          {volunteer.interested_organizations && volunteer.interested_organizations.length > 0 && (
+                            <div className="truncate text-xs text-muted-foreground">
+                              Interested: {volunteer.interested_organizations.join(", ")}
+                            </div>
+                          )}
                         </TableCell>
                         <TableCell className="w-1/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
                           {volunteer.location || "TBD"}
