@@ -16,7 +16,8 @@ import { useVolunteerSignups } from "@/hooks/useVolunteerSignups";
 import { formatDate } from "@/lib/utils";
 
 type SortDirection = "asc" | "desc" | null;
-type SortField = "title" | "start_date" | "location" | "status" | null;
+type SortField = "organization_name" | "title" | "start_date" | "location" | "status" | null;
+
 
 const StatusIcon = ({ status }: { status: string }) => {
   switch (status) {
