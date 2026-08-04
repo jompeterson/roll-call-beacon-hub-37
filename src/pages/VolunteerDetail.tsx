@@ -306,16 +306,16 @@ export const VolunteerDetail = () => {
                   Edit
                 </Button>
               )}
-              {canMessageParticipants && (
-                <Button
-                  variant="outline"
-                  onClick={() => setMessageOpen(true)}
-                  disabled={signupCount === 0}
-                  title={signupCount === 0 ? "No participants showed interest" : undefined}
-                >
-                  <Mail className="w-4 h-4 mr-2" />
-                  Message Participants
+              {canEndOpportunity && (
+                <Button variant="outline" onClick={() => setEndOpen(true)}>
+                  <Flag className="w-4 h-4 mr-2" />
+                  End Opportunity
                 </Button>
+              )}
+              {volunteer.is_ended && (isOwner || isAdministrator) && (
+                <Badge variant="outline" className="self-center bg-gray-100 text-gray-800 border-gray-300">
+                  Ended
+                </Badge>
               )}
             </div>
             
