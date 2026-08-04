@@ -20,6 +20,9 @@ export interface Volunteer {
   images?: string[];
   organization_name?: string | null;
   interested_organizations?: string[];
+  is_ended?: boolean;
+  ended_at?: string | null;
+  accomplishments?: string | null;
 }
 
 export const useVolunteers = () => {

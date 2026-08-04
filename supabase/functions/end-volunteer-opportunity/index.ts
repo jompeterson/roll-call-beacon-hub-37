@@ -1,5 +1,5 @@
-// Sends a formatted message from the poster of a volunteer opportunity to
-// everyone who showed interest (registered users + guest signups).
+// Officially ends a volunteer opportunity: records accomplishments and emails
+// all participants (registered users + guest signups) a thank-you summary.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
@@ -16,36 +16,6 @@ function escapeHtml(str: string) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
-}
-
-// Allow only simple formatting tags; strip everything else and all attributes.
-const ALLOWED = ["b", "strong", "i", "em", "u", "p", "br", "ul", "ol", "li", "h1", "h2", "h3", "blockquote"];
-
-function sanitizeHtml(input: string) {
-  let out = input.replace(/<\s*(script|style)[\s\S]*?<\s*\/\s*\1\s*>/gi, "");
-  out = out.replace(/<\s*\/?\s*([a-zA-Z0-9]+)((?:[^>"']|"[^"]*"|'[^']*')*)>/g, (_m, tag: string, attrs: string) => {
-    const name = tag.toLowerCase();
-    if (!ALLOWED.includes(name)) return "";
-    const closing = /^<\s*\//.test(_m);
-    if (closing) return `</${name}>`;
-    // keep href on nothing (links not allowed) -> drop all attributes
-    void attrs;
-    return `<${name}>`;
-  });
-  return out;
-}
-
-function htmlToText(html: string) {
-  return html
-    .replace(/<\s*br\s*\/?>/gi, "\n")
-    .replace(/<\s*\/\s*(p|div|li|h1|h2|h3|blockquote)\s*>/gi, "\n")
-    .replace(/<[^>]*>/g, "")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
 }
 
 Deno.serve(async (req) => {
@@ -65,25 +35,22 @@ Deno.serve(async (req) => {
     const body = await req.json().catch(() => null);
     const sessionToken = typeof body?.sessionToken === "string" ? body.sessionToken : "";
     const volunteerId = typeof body?.volunteerId === "string" ? body.volunteerId : "";
-    const subjectRaw = typeof body?.subject === "string" ? body.subject.trim() : "";
-    const messageHtmlRaw = typeof body?.messageHtml === "string" ? body.messageHtml : "";
+    const rawList = Array.isArray(body?.accomplishments) ? body.accomplishments : [];
+    const accomplishments = rawList
+      .filter((a: unknown) => typeof a === "string")
+      .map((a: string) => a.trim())
+      .filter((a: string) => a.length > 0 && a.length <= 500)
+      .slice(0, 50);
 
-    if (!sessionToken || !volunteerId || !subjectRaw || !messageHtmlRaw) {
-      return new Response(JSON.stringify({ error: "sessionToken, volunteerId, subject and messageHtml are required" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-    if (subjectRaw.length > 200 || messageHtmlRaw.length > 20000) {
-      return new Response(JSON.stringify({ error: "Subject or message is too long" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+    if (!sessionToken || !volunteerId || accomplishments.length === 0) {
+      return new Response(
+        JSON.stringify({ error: "sessionToken, volunteerId and at least one accomplishment are required" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
     }
 
     const supabase = createClient(SUPABASE_URL, SERVICE_ROLE);
 
-    // Validate the custom session token
     const { data: sessionUser } = await supabase
       .from("users")
       .select("id, session_expires_at")
@@ -99,7 +66,7 @@ Deno.serve(async (req) => {
 
     const { data: volunteer } = await supabase
       .from("volunteers")
-      .select("id, title, creator_user_id, start_date, end_date")
+      .select("id, title, creator_user_id, is_ended")
       .eq("id", volunteerId)
       .maybeSingle();
 
@@ -118,13 +85,23 @@ Deno.serve(async (req) => {
       });
     }
 
-    const endsAt = new Date(volunteer.end_date || volunteer.start_date);
-    if (endsAt > new Date()) {
-      return new Response(JSON.stringify({ error: "This opportunity has not happened yet" }), {
+    if (volunteer.is_ended) {
+      return new Response(JSON.stringify({ error: "This opportunity has already been ended" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    const { error: updateError } = await supabase
+      .from("volunteers")
+      .update({
+        is_ended: true,
+        ended_at: new Date().toISOString(),
+        accomplishments: accomplishments.join("\n"),
+      })
+      .eq("id", volunteerId);
+
+    if (updateError) throw new Error(updateError.message);
 
     // Collect recipients
     const { data: signups } = await supabase
@@ -133,7 +110,7 @@ Deno.serve(async (req) => {
       .eq("volunteer_id", volunteerId);
 
     const userIds = [...new Set((signups || []).map((s: any) => s.user_id).filter(Boolean))];
-    const recipients = new Map<string, string | null>(); // email -> first name
+    const recipients = new Map<string, string | null>();
 
     if (userIds.length > 0) {
       const { data: profiles } = await supabase
@@ -153,23 +130,26 @@ Deno.serve(async (req) => {
     });
 
     if (recipients.size === 0) {
-      return new Response(JSON.stringify({ error: "No one has shown interest in this opportunity yet" }), {
-        status: 400,
+      return new Response(JSON.stringify({ success: true, ended: true, sent: 0 }), {
+        status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const safeMessage = sanitizeHtml(messageHtmlRaw);
-    const plain = htmlToText(safeMessage);
-    const subject = escapeHtml(subjectRaw);
+    const listHtml = accomplishments.map((a: string) => `<li>${escapeHtml(a)}</li>`).join("");
+    const listText = accomplishments.map((a: string) => `- ${a}`).join("\n");
+    const subject = `Thank you for volunteering: ${volunteer.title}`;
 
     const emails = [...recipients.entries()].map(([email, firstName]) => {
       const greeting = firstName ? `Hi ${escapeHtml(firstName)},` : "Hello,";
       const html = `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; max-width: 560px; margin: 0 auto; padding: 24px; color: #1a1a1a;">
           <p style="font-size: 16px; margin: 0 0 16px;">${greeting}</p>
-          <h2 style="font-size: 20px; margin: 0 0 4px; color: #111;">${escapeHtml(volunteer.title)}</h2>
-          <div style="font-size: 15px; line-height: 1.6; color: #333;">${safeMessage}</div>
+          <p style="font-size: 15px; line-height: 1.6; color: #333; margin: 0 0 16px;">
+            Thank you for giving your time to <strong>${escapeHtml(volunteer.title)}</strong>. Because of you, here is what we accomplished together:
+          </p>
+          <ul style="font-size: 15px; line-height: 1.7; color: #333; padding-left: 20px; margin: 0 0 20px;">${listHtml}</ul>
+          <p style="font-size: 15px; line-height: 1.6; color: #333; margin: 0;">We truly appreciate your support.</p>
           <p style="font-size: 13px; color: #666; margin: 24px 0 0;">
             You received this email because you showed interest in this volunteer opportunity.
           </p>
@@ -178,12 +158,11 @@ Deno.serve(async (req) => {
       return {
         from: FROM,
         to: [email],
-        subject: subjectRaw,
+        subject,
         html,
-        text: `${firstName ? `Hi ${firstName},` : "Hello,"}\n\n${volunteer.title}\n\n${plain}`,
+        text: `${firstName ? `Hi ${firstName},` : "Hello,"}\n\nThank you for giving your time to ${volunteer.title}. Here is what we accomplished together:\n\n${listText}\n\nWe truly appreciate your support.`,
       };
     });
-    void subject;
 
     const resp = await fetch(`${GATEWAY_URL}/emails/batch`, {
       method: "POST",
@@ -198,18 +177,18 @@ Deno.serve(async (req) => {
     if (!resp.ok) {
       const errorBody = await resp.text();
       console.error(`Resend batch failed [${resp.status}]: ${errorBody}`);
-      return new Response(JSON.stringify({ error: "Failed to send emails", status: resp.status, details: errorBody }), {
-        status: resp.status,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({ error: "Opportunity ended but emails failed to send", status: resp.status, details: errorBody }),
+        { status: resp.status, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
     }
 
-    return new Response(JSON.stringify({ success: true, sent: emails.length }), {
+    return new Response(JSON.stringify({ success: true, ended: true, sent: emails.length }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {
-    console.error("send-volunteer-message error:", err);
+    console.error("end-volunteer-opportunity error:", err);
     return new Response(JSON.stringify({ error: (err as Error).message }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },

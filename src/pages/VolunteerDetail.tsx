@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useVolunteers } from "@/hooks/useVolunteers";
 import { useAuth } from "@/hooks/useAuth";
@@ -7,13 +8,13 @@ import { useChangeRequest } from "@/hooks/useChangeRequest";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { ChevronRight, Calendar, MapPin, Users, CheckCircle, XCircle, Edit, Mail } from "lucide-react";
+import { ChevronRight, Calendar, MapPin, Users, CheckCircle, XCircle, Edit, Flag } from "lucide-react";
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ShareButton } from "@/components/ShareButton";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { VolunteerEditModal } from "@/components/volunteer/VolunteerEditModal";
-import { VolunteerMessageModal } from "@/components/volunteer/VolunteerMessageModal";
+import { EndOpportunityModal } from "@/components/volunteer/EndOpportunityModal";
 import { ChangeRequestBanner } from "@/components/shared/ChangeRequestBanner";
 import { formatDate, cn } from "@/lib/utils";
 
@@ -30,7 +31,8 @@ export const VolunteerDetail = () => {
   } = useVolunteers();
   const { signupCount, hasSignedUp, submitting, signUp, cancelSignup, userSignup } = useVolunteerSignups(volunteerId || "");
   const [editOpen, setEditOpen] = useState(false);
-  const [messageOpen, setMessageOpen] = useState(false);
+  const [endOpen, setEndOpen] = useState(false);
+  const queryClient = useQueryClient();
   const { changeRequest, refetch: refetchChangeRequest } = useChangeRequest("volunteer", volunteerId || "");
 
   const volunteer = volunteers.find(v => v.id === volunteerId);
@@ -127,7 +129,7 @@ export const VolunteerDetail = () => {
   const canDelete = user && (isAdministrator || (user.id === volunteer.creator_user_id && !volunteer.is_approved));
   const canEdit = user && ((user.id === volunteer.creator_user_id && !volunteer.is_approved) || isAdministrator);
   const hasPassed = new Date(volunteer.end_date || volunteer.start_date) < new Date();
-  const canMessageParticipants = !!user && volunteer.is_approved && hasPassed && (isOwner || isAdministrator);
+  const canEndOpportunity = !!user && volunteer.is_approved && hasPassed && !volunteer.is_ended && (isOwner || isAdministrator);
 
   const handleDelete = () => {
     deleteVolunteer(volunteer.id);
@@ -275,6 +277,17 @@ export const VolunteerDetail = () => {
                 </div>
               )}
             </div>
+
+            {volunteer.is_ended && volunteer.accomplishments && (
+              <div className="rounded-md border bg-muted/40 p-4">
+                <h3 className="font-semibold mb-2">Accomplishments</h3>
+                <ul className="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
+                  {volunteer.accomplishments.split("\n").filter(Boolean).map((item, i) => (
+                    <li key={i}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
 
           {/* Comments Section */}
@@ -304,16 +317,16 @@ export const VolunteerDetail = () => {
                   Edit
                 </Button>
               )}
-              {canMessageParticipants && (
-                <Button
-                  variant="outline"
-                  onClick={() => setMessageOpen(true)}
-                  disabled={signupCount === 0}
-                  title={signupCount === 0 ? "No participants showed interest" : undefined}
-                >
-                  <Mail className="w-4 h-4 mr-2" />
-                  Message Participants
+              {canEndOpportunity && (
+                <Button variant="outline" onClick={() => setEndOpen(true)}>
+                  <Flag className="w-4 h-4 mr-2" />
+                  End Opportunity
                 </Button>
+              )}
+              {volunteer.is_ended && (isOwner || isAdministrator) && (
+                <Badge variant="outline" className="self-center bg-gray-100 text-gray-800 border-gray-300">
+                  Ended
+                </Badge>
               )}
             </div>
             
@@ -356,12 +369,13 @@ export const VolunteerDetail = () => {
           </div>
         </div>
       </div>
-      {canMessageParticipants && (
-        <VolunteerMessageModal
-          open={messageOpen}
-          onOpenChange={setMessageOpen}
+      {canEndOpportunity && (
+        <EndOpportunityModal
+          open={endOpen}
+          onOpenChange={setEndOpen}
           volunteerId={volunteer.id}
           volunteerTitle={volunteer.title}
+          onEnded={() => queryClient.invalidateQueries({ queryKey: ["volunteers"] })}
         />
       )}
       {canEdit && (
