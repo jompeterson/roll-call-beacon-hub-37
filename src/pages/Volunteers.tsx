@@ -264,36 +264,46 @@ export const Volunteers = () => {
           )}
         </div>
         <div className="border rounded-lg flex-1 min-h-0">
-          <div className="h-full flex flex-col">
+          <div className="h-full flex flex-col overflow-x-auto">
+            <div className="min-w-[900px] h-full flex flex-col">
             <Table>
               <TableHeader>
                 <TableRow>
                   <SortableTableHead
-                    field="title"
+                    field="organization_name"
                     currentSort={volunteerSort}
                     currentDirection={volunteerDirection}
                     onSort={handleVolunteerSort}
-                    className={isAuthenticated ? "w-1/3" : "w-1/2"}
+                    className="w-1/5"
                   >
-                    Opportunity Title
-                  </SortableTableHead>
-                  <SortableTableHead
-                    field="start_date"
-                    currentSort={volunteerSort}
-                    currentDirection={volunteerDirection}
-                    onSort={handleVolunteerSort}
-                    className={isAuthenticated ? "w-1/4" : "w-1/4"}
-                  >
-                    Start Date
+                    Organization
                   </SortableTableHead>
                   <SortableTableHead
                     field="location"
                     currentSort={volunteerSort}
                     currentDirection={volunteerDirection}
                     onSort={handleVolunteerSort}
-                    className={isAuthenticated ? "w-1/4" : "w-1/4"}
+                    className="w-1/5"
                   >
                     Location
+                  </SortableTableHead>
+                  <SortableTableHead
+                    field="title"
+                    currentSort={volunteerSort}
+                    currentDirection={volunteerDirection}
+                    onSort={handleVolunteerSort}
+                    className={isAuthenticated ? "w-1/4" : "w-2/5"}
+                  >
+                    Project
+                  </SortableTableHead>
+                  <SortableTableHead
+                    field="start_date"
+                    currentSort={volunteerSort}
+                    currentDirection={volunteerDirection}
+                    onSort={handleVolunteerSort}
+                    className="w-1/5"
+                  >
+                    Start Date
                   </SortableTableHead>
                   {isAuthenticated && (
                     <SortableTableHead
@@ -314,7 +324,7 @@ export const Volunteers = () => {
                 <TableBody>
                   {sortedVolunteers.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={isAuthenticated ? 4 : 3} className="text-center py-8 text-muted-foreground">
+                      <TableCell colSpan={isAuthenticated ? 5 : 4} className="text-center py-8 text-muted-foreground">
                         No volunteer opportunities found
                       </TableCell>
                     </TableRow>
@@ -325,17 +335,20 @@ export const Volunteers = () => {
                         className="cursor-pointer hover:bg-muted/50"
                         onClick={() => handleVolunteerRowClick(volunteer)}
                       >
-                        <TableCell className={`font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-0 ${isAuthenticated ? "w-1/3" : "w-1/2"}`}>
+                        <TableCell className="w-1/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                          {volunteer.organization_name || "—"}
+                        </TableCell>
+                        <TableCell className="w-1/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                          {volunteer.location || "TBD"}
+                        </TableCell>
+                        <TableCell className={`font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-0 ${isAuthenticated ? "w-1/4" : "w-2/5"}`}>
                           <div className="flex items-center gap-2">
                             <span>{volunteer.title}</span>
                             <SignupCount volunteerId={volunteer.id} isApproved={volunteer.is_approved} />
                           </div>
                         </TableCell>
-                        <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                        <TableCell className="w-1/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
                           {formatDate(volunteer.start_date)}
-                        </TableCell>
-                        <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
-                          {volunteer.location || "TBD"}
                         </TableCell>
                         {isAuthenticated && (
                           <TableCell className="w-1/6">
@@ -351,8 +364,10 @@ export const Volunteers = () => {
                 </TableBody>
               </Table>
             </ScrollArea>
+            </div>
           </div>
         </div>
+
       </div>
 
       {/* Modals */}
