@@ -23,6 +23,7 @@ export interface Volunteer {
   is_ended?: boolean;
   ended_at?: string | null;
   accomplishments?: string | null;
+  completion_images?: string[];
 }
 
 export const useVolunteers = () => {
