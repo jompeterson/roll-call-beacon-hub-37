@@ -356,12 +356,13 @@ export const VolunteerDetail = () => {
           </div>
         </div>
       </div>
-      {canMessageParticipants && (
-        <VolunteerMessageModal
-          open={messageOpen}
-          onOpenChange={setMessageOpen}
+      {canEndOpportunity && (
+        <EndOpportunityModal
+          open={endOpen}
+          onOpenChange={setEndOpen}
           volunteerId={volunteer.id}
           volunteerTitle={volunteer.title}
+          onEnded={() => queryClient.invalidateQueries({ queryKey: ["volunteers"] })}
         />
       )}
       {canEdit && (
