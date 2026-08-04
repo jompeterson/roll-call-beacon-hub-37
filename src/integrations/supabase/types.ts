@@ -923,6 +923,9 @@ export type Database = {
           profile_image_url: string | null
           role_id: string
           updated_at: string
+          waiver_agreed: boolean
+          waiver_agreed_at: string | null
+          waiver_signature_name: string | null
         }
         Insert: {
           address: string
@@ -938,6 +941,9 @@ export type Database = {
           profile_image_url?: string | null
           role_id: string
           updated_at?: string
+          waiver_agreed?: boolean
+          waiver_agreed_at?: string | null
+          waiver_signature_name?: string | null
         }
         Update: {
           address?: string
@@ -953,6 +959,9 @@ export type Database = {
           profile_image_url?: string | null
           role_id?: string
           updated_at?: string
+          waiver_agreed?: boolean
+          waiver_agreed_at?: string | null
+          waiver_signature_name?: string | null
         }
         Relationships: [
           {

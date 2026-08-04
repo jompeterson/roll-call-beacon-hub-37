@@ -116,6 +116,22 @@ export const signUp = async (registrationData: RegistrationData) => {
       }
     }
 
+    // Persist waiver agreement
+    if (registrationData.waiverAgreed) {
+      const { error: waiverError } = await supabase
+        .from('user_profiles')
+        .update({
+          waiver_agreed: true,
+          waiver_agreed_at: new Date().toISOString(),
+          waiver_signature_name: registrationData.waiverSignatureName ?? null,
+        })
+        .eq('id', user.id);
+
+      if (waiverError) {
+        console.error('Waiver save error:', waiverError);
+      }
+    }
+
     return { data: { user }, error: null };
   } catch (error: any) {
     console.error('Registration error:', error);
