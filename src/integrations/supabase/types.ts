@@ -1094,14 +1094,17 @@ export type Database = {
       }
       volunteers: {
         Row: {
+          accomplishments: string | null
           approval_decision_made: boolean
           created_at: string
           creator_user_id: string
           description: string | null
           end_date: string | null
+          ended_at: string | null
           id: string
           images: string[] | null
           is_approved: boolean
+          is_ended: boolean
           is_private: boolean
           location: string | null
           max_participants: number | null
@@ -1111,14 +1114,17 @@ export type Database = {
           volunteer_link: string | null
         }
         Insert: {
+          accomplishments?: string | null
           approval_decision_made?: boolean
           created_at?: string
           creator_user_id: string
           description?: string | null
           end_date?: string | null
+          ended_at?: string | null
           id?: string
           images?: string[] | null
           is_approved?: boolean
+          is_ended?: boolean
           is_private?: boolean
           location?: string | null
           max_participants?: number | null
@@ -1128,14 +1134,17 @@ export type Database = {
           volunteer_link?: string | null
         }
         Update: {
+          accomplishments?: string | null
           approval_decision_made?: boolean
           created_at?: string
           creator_user_id?: string
           description?: string | null
           end_date?: string | null
+          ended_at?: string | null
           id?: string
           images?: string[] | null
           is_approved?: boolean
+          is_ended?: boolean
           is_private?: boolean
           location?: string | null
           max_participants?: number | null
