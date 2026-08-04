@@ -127,7 +127,7 @@ export const VolunteerDetail = () => {
   const canDelete = user && (isAdministrator || (user.id === volunteer.creator_user_id && !volunteer.is_approved));
   const canEdit = user && ((user.id === volunteer.creator_user_id && !volunteer.is_approved) || isAdministrator);
   const hasPassed = new Date(volunteer.end_date || volunteer.start_date) < new Date();
-  const canMessageParticipants = !!user && volunteer.is_approved && hasPassed && (isOwner || isAdministrator) && signupCount > 0;
+  const canMessageParticipants = !!user && volunteer.is_approved && hasPassed && (isOwner || isAdministrator);
 
   const handleDelete = () => {
     deleteVolunteer(volunteer.id);
@@ -305,7 +305,12 @@ export const VolunteerDetail = () => {
                 </Button>
               )}
               {canMessageParticipants && (
-                <Button variant="outline" onClick={() => setMessageOpen(true)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setMessageOpen(true)}
+                  disabled={signupCount === 0}
+                  title={signupCount === 0 ? "No participants showed interest" : undefined}
+                >
                   <Mail className="w-4 h-4 mr-2" />
                   Message Participants
                 </Button>
