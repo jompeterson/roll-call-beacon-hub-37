@@ -305,7 +305,12 @@ export const VolunteerDetail = () => {
                 </Button>
               )}
               {canMessageParticipants && (
-                <Button variant="outline" onClick={() => setMessageOpen(true)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setMessageOpen(true)}
+                  disabled={signupCount === 0}
+                  title={signupCount === 0 ? "No participants showed interest" : undefined}
+                >
                   <Mail className="w-4 h-4 mr-2" />
                   Message Participants
                 </Button>
