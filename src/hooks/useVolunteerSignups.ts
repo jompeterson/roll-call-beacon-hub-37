@@ -71,6 +71,7 @@ export const useVolunteerSignups = (volunteerId: string) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["volunteer-signups", volunteerId] });
       queryClient.invalidateQueries({ queryKey: ["user-volunteer-signup", volunteerId, user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["volunteers"] });
       toast({
         title: "Success",
         description: "You have shown interest in this volunteer opportunity!",
@@ -100,6 +101,7 @@ export const useVolunteerSignups = (volunteerId: string) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["volunteer-signups", volunteerId] });
       queryClient.invalidateQueries({ queryKey: ["user-volunteer-signup", volunteerId, user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["volunteers"] });
       toast({
         title: "Success",
         description: "Your interest has been removed.",
