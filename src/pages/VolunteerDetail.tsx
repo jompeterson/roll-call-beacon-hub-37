@@ -8,7 +8,7 @@ import { useChangeRequest } from "@/hooks/useChangeRequest";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { ChevronRight, Calendar, MapPin, Users, CheckCircle, XCircle, Edit, Mail } from "lucide-react";
+import { ChevronRight, Calendar, MapPin, Users, CheckCircle, XCircle, Edit, Flag } from "lucide-react";
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ShareButton } from "@/components/ShareButton";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
