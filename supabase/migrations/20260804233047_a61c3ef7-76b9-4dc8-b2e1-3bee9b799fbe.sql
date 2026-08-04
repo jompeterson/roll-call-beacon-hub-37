@@ -1,0 +1,1 @@
+ALTER TABLE public.volunteers ADD COLUMN IF NOT EXISTS completion_images text[] NOT NULL DEFAULT '{}'::text[];

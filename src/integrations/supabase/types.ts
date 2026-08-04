@@ -1096,6 +1096,7 @@ export type Database = {
         Row: {
           accomplishments: string | null
           approval_decision_made: boolean
+          completion_images: string[]
           created_at: string
           creator_user_id: string
           description: string | null
@@ -1116,6 +1117,7 @@ export type Database = {
         Insert: {
           accomplishments?: string | null
           approval_decision_made?: boolean
+          completion_images?: string[]
           created_at?: string
           creator_user_id: string
           description?: string | null
@@ -1136,6 +1138,7 @@ export type Database = {
         Update: {
           accomplishments?: string | null
           approval_decision_made?: boolean
+          completion_images?: string[]
           created_at?: string
           creator_user_id?: string
           description?: string | null
