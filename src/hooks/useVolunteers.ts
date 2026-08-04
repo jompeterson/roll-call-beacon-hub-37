@@ -19,6 +19,7 @@ export interface Volunteer {
   updated_at: string;
   images?: string[];
   organization_name?: string | null;
+  interested_organizations?: string[];
 }
 
 export const useVolunteers = () => {
@@ -39,24 +40,60 @@ export const useVolunteers = () => {
       }
 
       const rows = (data || []) as Volunteer[];
-      const creatorIds = [...new Set(rows.map((v) => v.creator_user_id).filter(Boolean))];
+      const volunteerIds = rows.map((v) => v.id);
+
+      // Users who have shown interest, per volunteer opportunity
+      let signupsByVolunteer: Record<string, string[]> = {};
+      if (volunteerIds.length > 0) {
+        const { data: signups } = await supabase
+          .from("volunteer_signups")
+          .select("volunteer_id, user_id")
+          .in("volunteer_id", volunteerIds);
+
+        (signups || []).forEach((s: any) => {
+          if (!s.user_id) return;
+          signupsByVolunteer[s.volunteer_id] = [
+            ...(signupsByVolunteer[s.volunteer_id] || []),
+            s.user_id,
+          ];
+        });
+      }
+
+      const interestedIds = Object.values(signupsByVolunteer).flat();
+      const userIds = [
+        ...new Set([
+          ...rows.map((v) => v.creator_user_id).filter(Boolean),
+          ...interestedIds,
+        ]),
+      ];
 
       let orgByUser: Record<string, string | null> = {};
-      if (creatorIds.length > 0) {
+      if (userIds.length > 0) {
         const { data: profiles } = await supabase
           .from("user_profiles")
           .select("id, organizations!user_profiles_organization_id_fkey (name)")
-          .in("id", creatorIds);
+          .in("id", userIds);
 
         (profiles || []).forEach((p: any) => {
           orgByUser[p.id] = p.organizations?.name ?? null;
         });
       }
 
-      return rows.map((v) => ({
-        ...v,
-        organization_name: orgByUser[v.creator_user_id] ?? null,
-      })) as Volunteer[];
+      return rows.map((v) => {
+        const posterOrg = orgByUser[v.creator_user_id] ?? null;
+        const interested = [
+          ...new Set(
+            (signupsByVolunteer[v.id] || [])
+              .map((uid) => orgByUser[uid])
+              .filter((name): name is string => !!name && name !== posterOrg)
+          ),
+        ];
+        return {
+          ...v,
+          organization_name: posterOrg,
+          interested_organizations: interested,
+        };
+      }) as Volunteer[];
     },
   });
 
