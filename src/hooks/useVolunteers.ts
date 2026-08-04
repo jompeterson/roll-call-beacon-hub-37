@@ -18,6 +18,7 @@ export interface Volunteer {
   created_at: string;
   updated_at: string;
   images?: string[];
+  organization_name?: string | null;
 }
 
 export const useVolunteers = () => {
@@ -37,9 +38,28 @@ export const useVolunteers = () => {
         throw new Error(error.message);
       }
 
-      return data as Volunteer[];
+      const rows = (data || []) as Volunteer[];
+      const creatorIds = [...new Set(rows.map((v) => v.creator_user_id).filter(Boolean))];
+
+      let orgByUser: Record<string, string | null> = {};
+      if (creatorIds.length > 0) {
+        const { data: profiles } = await supabase
+          .from("user_profiles")
+          .select("id, organizations!user_profiles_organization_id_fkey (name)")
+          .in("id", creatorIds);
+
+        (profiles || []).forEach((p: any) => {
+          orgByUser[p.id] = p.organizations?.name ?? null;
+        });
+      }
+
+      return rows.map((v) => ({
+        ...v,
+        organization_name: orgByUser[v.creator_user_id] ?? null,
+      })) as Volunteer[];
     },
   });
+
 
   const approveVolunteerMutation = useMutation({
     mutationFn: async (volunteerId: string) => {
