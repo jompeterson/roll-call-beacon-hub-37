@@ -278,14 +278,30 @@ export const VolunteerDetail = () => {
               )}
             </div>
 
-            {volunteer.is_ended && volunteer.accomplishments && (
+            {volunteer.is_ended && (volunteer.accomplishments || (volunteer.completion_images?.length ?? 0) > 0) && (
               <div className="rounded-md border bg-muted/40 p-4">
                 <h3 className="font-semibold mb-2">Accomplishments</h3>
-                <ul className="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
-                  {volunteer.accomplishments.split("\n").filter(Boolean).map((item, i) => (
-                    <li key={i}>{item}</li>
-                  ))}
-                </ul>
+                {volunteer.accomplishments && (
+                  <ul className="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
+                    {volunteer.accomplishments.split("\n").filter(Boolean).map((item, i) => (
+                      <li key={i}>{item}</li>
+                    ))}
+                  </ul>
+                )}
+                {(volunteer.completion_images?.length ?? 0) > 0 && (
+                  <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                    {volunteer.completion_images!.map((url, i) => (
+                      <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="block">
+                        <img
+                          src={url}
+                          alt={`Photo ${i + 1} from ${volunteer.title}`}
+                          loading="lazy"
+                          className="aspect-square w-full rounded-md border object-cover"
+                        />
+                      </a>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>
