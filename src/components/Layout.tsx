@@ -5,6 +5,7 @@ import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
 import { FloatingActionButton } from "./FloatingActionButton";
 import { AuthProtection } from "./AuthProtection";
+import { WaiverGate } from "./waiver/WaiverGate";
 
 const useIsTablet = () => {
   const [isTablet, setIsTablet] = useState(
