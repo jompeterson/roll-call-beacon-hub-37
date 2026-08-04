@@ -1,0 +1,127 @@
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Plus, X } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+
+interface EndOpportunityModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  volunteerId: string;
+  volunteerTitle: string;
+  onEnded?: () => void;
+}
+
+export const EndOpportunityModal = ({
+  open,
+  onOpenChange,
+  volunteerId,
+  volunteerTitle,
+  onEnded,
+}: EndOpportunityModalProps) => {
+  const { toast } = useToast();
+  const [items, setItems] = useState<string[]>([""]);
+  const [submitting, setSubmitting] = useState(false);
+
+  const updateItem = (index: number, value: string) => {
+    setItems((prev) => prev.map((item, i) => (i === index ? value : item)));
+  };
+
+  const addItem = () => setItems((prev) => [...prev, ""]);
+  const removeItem = (index: number) =>
+    setItems((prev) => (prev.length === 1 ? [""] : prev.filter((_, i) => i !== index)));
+
+  const handleSubmit = async () => {
+    const accomplishments = items.map((i) => i.trim()).filter(Boolean);
+    if (accomplishments.length === 0) {
+      toast({
+        title: "Accomplishments required",
+        description: "Add at least one thing that was accomplished.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const sessionToken = localStorage.getItem("session_token");
+      const { data, error } = await supabase.functions.invoke("end-volunteer-opportunity", {
+        body: { sessionToken, volunteerId, accomplishments },
+      });
+
+      if (error) throw error;
+      if ((data as any)?.error) throw new Error((data as any).error);
+
+      toast({
+        title: "Opportunity ended",
+        description: `Thank-you emails were sent to ${(data as any)?.sent ?? 0} participant(s).`,
+      });
+      onOpenChange(false);
+      setItems([""]);
+      onEnded?.();
+    } catch (err: any) {
+      console.error("Failed to end opportunity:", err);
+      toast({
+        title: "Failed to end opportunity",
+        description: err?.message || "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-xl">
+        <DialogHeader>
+          <DialogTitle>End Opportunity</DialogTitle>
+          <DialogDescription>
+            List what was accomplished during "{volunteerTitle}". Once submitted, the opportunity is officially
+            ended and every participant receives a thank-you email with these accomplishments.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-3">
+          <Label>Accomplishments</Label>
+          <div className="space-y-2 max-h-[320px] overflow-y-auto pr-1">
+            {items.map((item, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <Input
+                  value={item}
+                  maxLength={500}
+                  placeholder={`Accomplishment ${index + 1}`}
+                  onChange={(e) => updateItem(index, e.target.value)}
+                />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label="Remove accomplishment"
+                  onClick={() => removeItem(index)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+          </div>
+          <Button variant="outline" size="sm" onClick={addItem} disabled={items.length >= 50}>
+            <Plus className="h-4 w-4 mr-2" />
+            Add accomplishment
+          </Button>
+        </div>
+
+        <DialogFooter>
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={submitting}>
+            Cancel
+          </Button>
+          <Button onClick={handleSubmit} disabled={submitting}>
+            {submitting ? "Ending..." : "End Opportunity & Send Emails"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
