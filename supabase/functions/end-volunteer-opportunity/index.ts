@@ -41,6 +41,12 @@ Deno.serve(async (req) => {
       .map((a: string) => a.trim())
       .filter((a: string) => a.length > 0 && a.length <= 500)
       .slice(0, 50);
+    const rawImages = Array.isArray(body?.completionImages) ? body.completionImages : [];
+    const completionImages = rawImages
+      .filter((u: unknown) => typeof u === "string")
+      .map((u: string) => u.trim())
+      .filter((u: string) => /^https?:\/\//.test(u) && u.length <= 2000)
+      .slice(0, 10);
 
     if (!sessionToken || !volunteerId || accomplishments.length === 0) {
       return new Response(
@@ -98,6 +104,7 @@ Deno.serve(async (req) => {
         is_ended: true,
         ended_at: new Date().toISOString(),
         accomplishments: accomplishments.join("\n"),
+        completion_images: completionImages,
       })
       .eq("id", volunteerId);
 
@@ -138,6 +145,14 @@ Deno.serve(async (req) => {
 
     const listHtml = accomplishments.map((a: string) => `<li>${escapeHtml(a)}</li>`).join("");
     const listText = accomplishments.map((a: string) => `- ${a}`).join("\n");
+    const photosHtml = completionImages.length > 0
+      ? `<div style="margin: 0 0 20px;">${completionImages
+          .map(
+            (url: string) =>
+              `<img src="${escapeHtml(url)}" alt="Photo from the volunteer opportunity" width="240" style="width: 240px; max-width: 100%; border-radius: 6px; margin: 0 8px 8px 0;" />`,
+          )
+          .join("")}</div>`
+      : "";
     const subject = `Thank you for volunteering: ${volunteer.title}`;
 
     const emails = [...recipients.entries()].map(([email, firstName]) => {
@@ -149,6 +164,7 @@ Deno.serve(async (req) => {
             Thank you for giving your time to <strong>${escapeHtml(volunteer.title)}</strong>. Because of you, here is what we accomplished together:
           </p>
           <ul style="font-size: 15px; line-height: 1.7; color: #333; padding-left: 20px; margin: 0 0 20px;">${listHtml}</ul>
+          ${photosHtml}
           <p style="font-size: 15px; line-height: 1.6; color: #333; margin: 0;">We truly appreciate your support.</p>
           <p style="font-size: 13px; color: #666; margin: 24px 0 0;">
             You received this email because you showed interest in this volunteer opportunity.
