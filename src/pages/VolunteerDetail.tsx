@@ -13,7 +13,7 @@ import { ShareButton } from "@/components/ShareButton";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { VolunteerEditModal } from "@/components/volunteer/VolunteerEditModal";
-import { VolunteerMessageModal } from "@/components/volunteer/VolunteerMessageModal";
+import { EndOpportunityModal } from "@/components/volunteer/EndOpportunityModal";
 import { ChangeRequestBanner } from "@/components/shared/ChangeRequestBanner";
 import { formatDate, cn } from "@/lib/utils";
 
