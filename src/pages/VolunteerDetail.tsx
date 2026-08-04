@@ -7,12 +7,13 @@ import { useChangeRequest } from "@/hooks/useChangeRequest";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { ChevronRight, Calendar, MapPin, Users, CheckCircle, XCircle, Edit } from "lucide-react";
+import { ChevronRight, Calendar, MapPin, Users, CheckCircle, XCircle, Edit, Mail } from "lucide-react";
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ShareButton } from "@/components/ShareButton";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { VolunteerEditModal } from "@/components/volunteer/VolunteerEditModal";
+import { VolunteerMessageModal } from "@/components/volunteer/VolunteerMessageModal";
 import { ChangeRequestBanner } from "@/components/shared/ChangeRequestBanner";
 import { formatDate, cn } from "@/lib/utils";
 
@@ -29,6 +30,7 @@ export const VolunteerDetail = () => {
   } = useVolunteers();
   const { signupCount, hasSignedUp, submitting, signUp, cancelSignup, userSignup } = useVolunteerSignups(volunteerId || "");
   const [editOpen, setEditOpen] = useState(false);
+  const [messageOpen, setMessageOpen] = useState(false);
   const { changeRequest, refetch: refetchChangeRequest } = useChangeRequest("volunteer", volunteerId || "");
 
   const volunteer = volunteers.find(v => v.id === volunteerId);
@@ -124,6 +126,8 @@ export const VolunteerDetail = () => {
   const isVolunteerFull = volunteer.max_participants && signupCount >= volunteer.max_participants;
   const canDelete = user && (isAdministrator || (user.id === volunteer.creator_user_id && !volunteer.is_approved));
   const canEdit = user && ((user.id === volunteer.creator_user_id && !volunteer.is_approved) || isAdministrator);
+  const hasPassed = new Date(volunteer.end_date || volunteer.start_date) < new Date();
+  const canMessageParticipants = !!user && volunteer.is_approved && hasPassed && (isOwner || isAdministrator) && signupCount > 0;
 
   const handleDelete = () => {
     deleteVolunteer(volunteer.id);
@@ -300,6 +304,12 @@ export const VolunteerDetail = () => {
                   Edit
                 </Button>
               )}
+              {canMessageParticipants && (
+                <Button variant="outline" onClick={() => setMessageOpen(true)}>
+                  <Mail className="w-4 h-4 mr-2" />
+                  Message Participants
+                </Button>
+              )}
             </div>
             
             <div className="flex gap-2">
@@ -341,6 +351,14 @@ export const VolunteerDetail = () => {
           </div>
         </div>
       </div>
+      {canMessageParticipants && (
+        <VolunteerMessageModal
+          open={messageOpen}
+          onOpenChange={setMessageOpen}
+          volunteerId={volunteer.id}
+          volunteerTitle={volunteer.title}
+        />
+      )}
       {canEdit && (
         <VolunteerEditModal
           open={editOpen}
