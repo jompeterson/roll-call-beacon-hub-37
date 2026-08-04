@@ -245,23 +245,28 @@ export const VolunteerDetail = () => {
                 </div>
               )}
 
-              {(volunteer.organization_name || (volunteer.interested_organizations?.length ?? 0) > 0) && (
+              {volunteer.organization_name && (
                 <div className="flex items-start gap-2">
                   <Users className="h-5 w-5 mt-0.5 text-muted-foreground" />
                   <div>
-                    <p className="font-medium">Organizations</p>
-                    {volunteer.organization_name && (
-                      <p className="text-sm text-muted-foreground">
-                        Posted by: {volunteer.organization_name}
-                      </p>
-                    )}
-                    {(volunteer.interested_organizations?.length ?? 0) > 0 && (
-                      <div className="mt-2 flex flex-wrap gap-1">
-                        {volunteer.interested_organizations!.map((org) => (
-                          <Badge key={org} variant="secondary">{org}</Badge>
-                        ))}
-                      </div>
-                    )}
+                    <p className="font-medium">Organization</p>
+                    <p className="text-sm text-muted-foreground">
+                      Posted by: {volunteer.organization_name}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {(volunteer.interested_organizations?.length ?? 0) > 0 && (
+                <div className="flex items-start gap-2">
+                  <Users className="h-5 w-5 mt-0.5 text-muted-foreground" />
+                  <div>
+                    <p className="font-medium">Interested Organizations</p>
+                    <div className="mt-2 flex flex-wrap gap-1">
+                      {volunteer.interested_organizations!.map((org) => (
+                        <Badge key={org} variant="secondary">{org}</Badge>
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}
