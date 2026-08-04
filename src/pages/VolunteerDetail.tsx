@@ -277,6 +277,17 @@ export const VolunteerDetail = () => {
                 </div>
               )}
             </div>
+
+            {volunteer.is_ended && volunteer.accomplishments && (
+              <div className="rounded-md border bg-muted/40 p-4">
+                <h3 className="font-semibold mb-2">Accomplishments</h3>
+                <ul className="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
+                  {volunteer.accomplishments.split("\n").filter(Boolean).map((item, i) => (
+                    <li key={i}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
 
           {/* Comments Section */}
