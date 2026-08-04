@@ -30,7 +30,8 @@ export const VolunteerDetail = () => {
   } = useVolunteers();
   const { signupCount, hasSignedUp, submitting, signUp, cancelSignup, userSignup } = useVolunteerSignups(volunteerId || "");
   const [editOpen, setEditOpen] = useState(false);
-  const [messageOpen, setMessageOpen] = useState(false);
+  const [endOpen, setEndOpen] = useState(false);
+  const queryClient = useQueryClient();
   const { changeRequest, refetch: refetchChangeRequest } = useChangeRequest("volunteer", volunteerId || "");
 
   const volunteer = volunteers.find(v => v.id === volunteerId);
