@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useVolunteers } from "@/hooks/useVolunteers";
 import { useAuth } from "@/hooks/useAuth";
