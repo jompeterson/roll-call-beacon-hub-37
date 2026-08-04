@@ -58,10 +58,10 @@ export const Register = () => {
   const nextStep = () => setCurrentStep(prev => prev + 1);
   const prevStep = () => setCurrentStep(prev => prev - 1);
 
-  const handleFinalSubmit = async () => {
+  const handleFinalSubmit = async (overrides?: Partial<RegistrationData>) => {
     setIsSubmitting(true);
     try {
-      const { data, error } = await signUp(registrationData);
+      const { data, error } = await signUp({ ...registrationData, ...overrides });
       
       if (error) {
         toast({
