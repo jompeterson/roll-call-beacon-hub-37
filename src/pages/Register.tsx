@@ -8,6 +8,7 @@ import { OrganizationChoiceStep } from "@/components/register/OrganizationChoice
 import { NewOrganizationStep } from "@/components/register/NewOrganizationStep";
 import { ExistingOrganizationStep } from "@/components/register/ExistingOrganizationStep";
 import { NotificationPreferencesStep } from "@/components/register/NotificationPreferencesStep";
+import { WaiverStep } from "@/components/register/WaiverStep";
 import { VerificationPendingStep } from "@/components/register/VerificationPendingStep";
 import { signUp } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
