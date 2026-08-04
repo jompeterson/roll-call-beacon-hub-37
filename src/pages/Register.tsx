@@ -30,6 +30,8 @@ export interface RegistrationData {
     phone: string;
   };
   notificationPreferences?: Record<string, boolean>;
+  waiverAgreed?: boolean;
+  waiverSignatureName?: string;
 }
 
 export const Register = () => {
