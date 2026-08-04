@@ -156,13 +156,23 @@ export const Register = () => {
         return (
           <NotificationPreferencesStep
             data={registrationData}
+            onNext={nextStep}
+            onBack={prevStep}
+            onUpdate={updateRegistrationData}
+            isSubmitting={false}
+          />
+        );
+      case 7:
+        return (
+          <WaiverStep
+            data={registrationData}
             onNext={handleFinalSubmit}
             onBack={prevStep}
             onUpdate={updateRegistrationData}
             isSubmitting={isSubmitting}
           />
         );
-      case 7:
+      case 8:
         return (
           <VerificationPendingStep
             data={registrationData}
