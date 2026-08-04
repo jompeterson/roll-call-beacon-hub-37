@@ -90,7 +90,7 @@ export const Register = () => {
   };
 
   const getTotalSteps = () => {
-    return 7;
+    return 8;
   };
 
   const renderStep = () => {
