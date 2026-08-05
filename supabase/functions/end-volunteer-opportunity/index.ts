@@ -185,7 +185,7 @@ Deno.serve(async (req) => {
         to: [email],
         subject,
         html,
-        text: `${firstName ? `Hi ${firstName},` : "Hello,"}\n\nThank you for giving your time to ${volunteer.title}. Here is what we accomplished together:\n\n${listText}\n\nWe truly appreciate your support.`,
+        text: `${firstName ? `Hi ${firstName},` : "Hello,"}\n\nThank you for giving your time to ${volunteer.title}. Here is what we accomplished together:\n\n${listText}${hoursText}\n\nWe truly appreciate your support.`,
       };
     });
 
