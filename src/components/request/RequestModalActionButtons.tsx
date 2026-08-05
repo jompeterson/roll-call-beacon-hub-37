@@ -35,6 +35,8 @@ export const RequestModalActionButtons = ({
   const { user, isAdministrator } = useAuth();
   const { hasFulfilled, fulfillRequest, submitting } = useRequestFulfillments(request.id);
   const isOwner = user?.id === request.creator_user_id;
+  const queryClient = useQueryClient();
+
   const canEdit = isOwner || isAdministrator;
   const [showRequestChangesModal, setShowRequestChangesModal] = useState(false);
   const [approveAsPrivate, setApproveAsPrivate] = useState(false);
