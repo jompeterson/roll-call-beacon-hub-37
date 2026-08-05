@@ -6,7 +6,9 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CheckCircle, XCircle, Clock, Mail, Phone, MapPin, Building, Calendar, User, Pencil, X, FileSignature } from "lucide-react";
+import { CheckCircle, XCircle, Clock, Mail, Phone, MapPin, Building, Calendar, User, Pencil, X, FileSignature, Download } from "lucide-react";
+import { downloadWaiverPdf } from "@/lib/waiverPdf";
+
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { formatDate } from "@/lib/utils";
 import { useUserRoles } from "@/hooks/useUserRoles";
