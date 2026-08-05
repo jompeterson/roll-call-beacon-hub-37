@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import b2sLogo from "@/assets/building-to-scale-logo.png.asset.json";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent } from "@/components/ui/card";
