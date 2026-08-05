@@ -59,6 +59,7 @@ interface B2SClass {
   year: number;
   session: string;
   description: string | null;
+  sort_order: number;
 }
 
 interface StudentOption {
