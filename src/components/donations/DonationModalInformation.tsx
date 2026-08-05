@@ -2,6 +2,7 @@
 import type { Donation } from "@/hooks/useDonations";
 import { formatDate } from "@/lib/utils";
 import { cn } from "@/lib/utils";
+import { RichText } from "@/components/ui/rich-text";
 
 interface DonationModalInformationProps {
   donation: Donation;
@@ -64,7 +65,11 @@ export const DonationModalInformation = ({
                 <label className={cn("font-medium text-sm", highlightedFields?.includes("description") ? "text-destructive" : "text-muted-foreground")}>
                   {isEvent ? "Event Details" : isScholarship ? "Scholarship Details" : "Donation Details"}
                 </label>
-                <p className="text-base mt-1">{donation.description || "No description provided"}</p>
+                {donation.description ? (
+                  <RichText value={donation.description} className="text-base mt-1" />
+                ) : (
+                  <p className="text-base mt-1">No description provided</p>
+                )}
               </div>
             </FieldWrapper>
           )}

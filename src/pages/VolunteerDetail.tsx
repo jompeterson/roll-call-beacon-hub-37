@@ -18,6 +18,7 @@ import { EndOpportunityModal } from "@/components/volunteer/EndOpportunityModal"
 import { ChangeRequestBanner } from "@/components/shared/ChangeRequestBanner";
 import { formatDate, cn } from "@/lib/utils";
 import { canViewPost } from "@/lib/postVisibility";
+import { RichText } from "@/components/ui/rich-text";
 
 export const VolunteerDetail = () => {
   const { volunteerId } = useParams();
@@ -204,7 +205,7 @@ export const VolunteerDetail = () => {
             {volunteer.description && (
               <div className={cn(isOwner && changeRequest?.fieldKeys.includes("description") && "bg-destructive/10 border border-destructive/30 rounded-md p-2")}>
                 <h3 className={cn("font-semibold mb-2", isOwner && changeRequest?.fieldKeys.includes("description") && "text-destructive")}>Description</h3>
-                <p className="text-muted-foreground">{volunteer.description}</p>
+                <RichText value={volunteer.description} className="text-muted-foreground" />
               </div>
             )}
 

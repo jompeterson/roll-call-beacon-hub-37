@@ -6,6 +6,7 @@ import { Calendar, Users, UserCheck, UserX } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { formatDate } from "@/lib/utils";
 import { useEventRSVPs } from "@/hooks/useEventRSVPs";
+import { RichText } from "@/components/ui/rich-text";
 
 interface Event {
   id: string;
@@ -76,7 +77,7 @@ export const EventRSVPModal = ({
             <h3 className="font-semibold text-lg">Event Details</h3>
             
             {event.description && (
-              <p className="text-sm text-muted-foreground">{event.description}</p>
+              <RichText value={event.description} className="text-sm text-muted-foreground" />
             )}
             
             <div className="space-y-3">

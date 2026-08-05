@@ -12,6 +12,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useProfileData } from "@/hooks/useProfileData";
 import { DimensionsInput } from "@/components/shared/DimensionsInput";
 import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 
 interface RequestCreateModalProps {
   open: boolean;
@@ -348,12 +349,11 @@ export const RequestCreateModal = ({
             <p className="text-sm text-muted-foreground">
               Please provide as much detail about your request as possible.
             </p>
-            <Textarea
+            <RichTextEditor
               id="description"
               value={formData.description}
-              onChange={(e) => handleInputChange("description", e.target.value)}
+              onChange={(html) => handleInputChange("description", html)}
               placeholder="Describe your donation needs..."
-              rows={4}
             />
           </div>
 

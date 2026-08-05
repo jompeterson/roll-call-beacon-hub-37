@@ -13,6 +13,7 @@ import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useOrganizationOptions } from "@/hooks/useOrganizationOptions";
 import type { Volunteer } from "@/hooks/useVolunteers";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 
 interface VolunteerEditModalProps {
   open: boolean;
@@ -235,12 +236,11 @@ export const VolunteerEditModal = ({
 
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
-            <Textarea
+            <RichTextEditor
               id="description"
               value={formData.description}
-              onChange={(e) => handleInputChange("description", e.target.value)}
+              onChange={(html) => handleInputChange("description", html)}
               placeholder="Describe the volunteer opportunity..."
-              rows={4}
             />
           </div>
 

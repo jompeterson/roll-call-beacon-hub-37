@@ -2,6 +2,7 @@
 import { Separator } from "@/components/ui/separator";
 import { Tables } from "@/integrations/supabase/types";
 import { formatDate, cn } from "@/lib/utils";
+import { RichText } from "@/components/ui/rich-text";
 
 type Scholarship = Tables<"scholarships"> & {
   creator?: {
@@ -84,7 +85,7 @@ export const ScholarshipInfo = ({ scholarship, isAuthenticated, highlightedField
         <FieldWrapper fieldKey="description" highlightedFields={highlightedFields}>
           <div>
             <h4 className={labelClass("description")}>Description</h4>
-            <p className="text-sm whitespace-pre-wrap">{scholarship.description}</p>
+            <RichText value={scholarship.description} className="text-sm" />
           </div>
         </FieldWrapper>
       )}

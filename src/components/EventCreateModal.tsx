@@ -15,6 +15,7 @@ import { ImageUpload } from "@/components/shared/ImageUpload";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { EVENT_TYPES } from "@/lib/eventTypes";
 import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 
 interface EventCreateModalProps {
   open: boolean;
@@ -223,10 +224,10 @@ export const EventCreateModal = ({
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Textarea
+                    <RichTextEditor
                       placeholder="Enter event description"
-                      className="min-h-[100px]"
-                      {...field}
+                      value={field.value ?? ""}
+                      onChange={field.onChange}
                     />
                   </FormControl>
                   <FormMessage />

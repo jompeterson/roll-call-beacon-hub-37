@@ -15,6 +15,7 @@ import { ImageUpload } from "@/components/shared/ImageUpload";
 import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useOrganizationOptions } from "@/hooks/useOrganizationOptions";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 
 interface VolunteerCreateModalProps {
   open: boolean;
@@ -197,10 +198,10 @@ export const VolunteerCreateModal = ({
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Textarea
+                    <RichTextEditor
                       placeholder="Enter opportunity description"
-                      className="min-h-[100px]"
-                      {...field}
+                      value={field.value ?? ""}
+                      onChange={field.onChange}
                     />
                   </FormControl>
                   <FormMessage />

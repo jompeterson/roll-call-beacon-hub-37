@@ -15,6 +15,7 @@ import { DonationImageUpload } from "./DonationImageUpload";
 import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
 import { SubmitForReviewDialog } from "@/components/shared/SubmitForReviewDialog";
 import type { Donation } from "@/hooks/useDonations";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 
 interface DonationEditModalProps {
   open: boolean;
@@ -239,12 +240,11 @@ export const DonationEditModal = ({
             <p className="text-sm text-muted-foreground">
               Please provide as much detail about your donation as possible.
             </p>
-            <Textarea
+            <RichTextEditor
               id="description"
               value={formData.description}
-              onChange={(e) => handleInputChange("description", e.target.value)}
+              onChange={(html) => handleInputChange("description", html)}
               placeholder="Describe your donation..."
-              rows={4}
             />
           </div>
 

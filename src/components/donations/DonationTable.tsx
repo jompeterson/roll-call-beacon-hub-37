@@ -5,6 +5,7 @@ import { CheckCircle, Clock, XCircle, Archive, ExternalLink, Lock } from "lucide
 import { Button } from "@/components/ui/button";
 import { DonationSortableTableHead } from "./DonationSortableTableHead";
 import type { Donation } from "@/hooks/useDonations";
+import { richTextToPlain } from "@/components/ui/rich-text";
 
 type SortDirection = "asc" | "desc" | null;
 type DonationSortField = "organization_name" | "title" | "description" | "status" | null;
@@ -145,7 +146,7 @@ export const DonationTable = ({
                         </span>
                       </TableCell>
                       <TableCell className={`${descriptionWidth} whitespace-nowrap overflow-hidden text-ellipsis max-w-0`}>
-                        {donation.description || "No description"}
+                        {richTextToPlain(donation.description) || "No description"}
                       </TableCell>
                       {showStatus && (
                         <TableCell className="w-1/6">

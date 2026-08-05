@@ -15,6 +15,7 @@ import { VolunteerEditModal } from "@/components/volunteer/VolunteerEditModal";
 import { RequestChangesModal } from "@/components/shared/RequestChangesModal";
 import { PrivateApprovalToggle } from "@/components/shared/PrivateApprovalToggle";
 import { supabase } from "@/integrations/supabase/client";
+import { RichText } from "@/components/ui/rich-text";
 
 interface Volunteer {
   id: string;
@@ -193,7 +194,7 @@ export const VolunteerModal = ({
               {volunteer.description && (
                 <div className="mt-4">
                   <h3 className="font-semibold mb-2">Description</h3>
-                  <p className="text-muted-foreground whitespace-pre-wrap">{volunteer.description}</p>
+                  <RichText value={volunteer.description} className="text-muted-foreground" />
                 </div>
               )}
             </div>

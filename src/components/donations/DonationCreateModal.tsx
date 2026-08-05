@@ -12,6 +12,7 @@ import { DonationFormOrganizationField } from "./DonationFormOrganizationField";
 import { DonationFormContactFields } from "./DonationFormContactFields";
 import { DonationImageUpload } from "./DonationImageUpload";
 import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 
 interface DonationCreateModalProps {
   open: boolean;
@@ -92,12 +93,11 @@ export const DonationCreateModal = ({
             <p className="text-sm text-muted-foreground">
               Please provide as much detail about your donation as possible.
             </p>
-            <Textarea
+            <RichTextEditor
               id="description"
               value={formData.description}
-              onChange={(e) => handleInputChange("description", e.target.value)}
+              onChange={(html) => handleInputChange("description", html)}
               placeholder="Describe your donation..."
-              rows={4}
             />
           </div>
 
