@@ -150,14 +150,21 @@ export const DiscoverTalent = () => {
   return (
     <div className="max-w-6xl mx-auto h-full flex flex-col min-h-0">
       <div className="shrink-0 space-y-6 pb-4">
-        <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2">
-            <Briefcase className="h-7 w-7" />
-            Discover Talent
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            Find talented professionals trained by the industry, through the Home Building Foundation.
-          </p>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold flex items-center gap-2">
+              <Briefcase className="h-7 w-7" />
+              Discover Talent
+            </h1>
+            <p className="text-muted-foreground mt-1">
+              Find talented professionals trained by the industry, through the Home Building Foundation.
+            </p>
+          </div>
+          <img
+            src={b2sLogo.url}
+            alt="Building to Scale logo"
+            className="h-16 w-auto shrink-0 object-contain dark:invert"
+          />
         </div>
 
         <div className="relative">
