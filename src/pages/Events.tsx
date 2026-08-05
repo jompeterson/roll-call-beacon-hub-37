@@ -196,6 +196,108 @@ export const Events = () => {
     setEventModalOpen(true);
   };
 
+  const renderEventTable = (items: any[]) => (
+    <div className="border rounded-lg flex-1 min-h-0">
+      <div className="h-full flex flex-col">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <SortableTableHead
+                field="title"
+                currentSort={eventSort}
+                currentDirection={eventDirection}
+                onSort={handleEventSort}
+                className={isAuthenticated ? "w-1/3" : "w-1/2"}
+              >
+                Event Title
+              </SortableTableHead>
+              <SortableTableHead
+                field="start_date"
+                currentSort={eventSort}
+                currentDirection={eventDirection}
+                onSort={handleEventSort}
+                className="w-1/4"
+              >
+                Start Date
+              </SortableTableHead>
+              <SortableTableHead
+                field="location"
+                currentSort={eventSort}
+                currentDirection={eventDirection}
+                onSort={handleEventSort}
+                className="w-1/4"
+              >
+                Location
+              </SortableTableHead>
+              {isAuthenticated && (
+                <SortableTableHead
+                  field="status"
+                  currentSort={eventSort}
+                  currentDirection={eventDirection}
+                  onSort={handleEventSort}
+                  className="w-1/6"
+                >
+                  Status
+                </SortableTableHead>
+              )}
+            </TableRow>
+          </TableHeader>
+        </Table>
+        <ScrollArea className="flex-1">
+          <Table>
+            <TableBody>
+              {items.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={isAuthenticated ? 4 : 3} className="text-center py-8 text-muted-foreground">
+                    No events found
+                  </TableCell>
+                </TableRow>
+              ) : (
+                items.map((event) => {
+                  const isPast = isPastEvent(event);
+                  return (
+                    <TableRow
+                      key={event.id}
+                      className={`cursor-pointer hover:bg-muted/50 ${isPast ? "opacity-60" : ""}`}
+                      onClick={() => handleEventRowClick(event)}
+                    >
+                      <TableCell className={`font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-0 ${isAuthenticated ? "w-1/3" : "w-1/2"}`}>
+                        <div className="flex items-center gap-2">
+                          <span>{event.title}</span>
+                          {event.is_private && (
+                            <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-800 border border-amber-300 px-1.5 py-0.5 rounded">
+                              <Lock className="h-3 w-3" /> Private
+                            </span>
+                          )}
+                          {isPast && <span className="text-xs bg-muted text-muted-foreground px-1.5 py-0.5 rounded">Past</span>}
+                          <RSVPCount eventId={event.id} isApproved={event.is_approved} />
+                        </div>
+                      </TableCell>
+                      <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                        {formatDate(event.start_date)}
+                      </TableCell>
+                      <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                        {event.location || "TBD"}
+                      </TableCell>
+                      {isAuthenticated && (
+                        <TableCell className="w-1/6">
+                          <div className="flex items-center gap-2 whitespace-nowrap">
+                            <StatusIcon status={getEventStatus(event)} />
+                            <span>{getEventStatus(event)}</span>
+                          </div>
+                        </TableCell>
+                      )}
+                    </TableRow>
+                  );
+                })
+              )}
+            </TableBody>
+          </Table>
+        </ScrollArea>
+      </div>
+    </div>
+  );
+
 
   const handleEventApprove = (id: string) => {
     approveEvent(id);
