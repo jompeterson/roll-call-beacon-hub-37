@@ -148,54 +148,61 @@ export const DiscoverTalent = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold flex items-center gap-2">
-          <Briefcase className="h-7 w-7" />
-          Discover Talent
-        </h1>
-        <p className="text-muted-foreground mt-1">
-          Find talented professionals trained by the industry, through the Home Building Foundation.
-        </p>
-      </div>
-
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search by name, skill, organization..."
-          className="pl-9"
-        />
-      </div>
-
-      {loading ? (
-        <div className="text-muted-foreground">Loading students...</div>
-      ) : filtered.length === 0 ? (
-        <Card>
-          <CardContent className="py-12 text-center text-muted-foreground">
-            No students found.
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="space-y-8">
-          {groups.map((g) => (
-            <section key={g.key} className="space-y-3">
-              <div className="border-b pb-2">
-                <h2 className="text-xl font-semibold">{g.title}</h2>
-                {g.subtitle && (
-                  <p className="text-sm text-muted-foreground">{g.subtitle}</p>
-                )}
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {g.students.map((s) => (
-                  <StudentTalentCard key={s.id} student={s} />
-                ))}
-              </div>
-            </section>
-          ))}
+    <div className="max-w-6xl mx-auto h-full flex flex-col min-h-0">
+      <div className="shrink-0 space-y-6 pb-4">
+        <div>
+          <h1 className="text-3xl font-bold flex items-center gap-2">
+            <Briefcase className="h-7 w-7" />
+            Discover Talent
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            Find talented professionals trained by the industry, through the Home Building Foundation.
+          </p>
         </div>
-      )}
+
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search by name, skill, organization..."
+            className="pl-9"
+          />
+        </div>
+      </div>
+
+      <div className="flex-1 min-h-0 overflow-y-auto pr-1">
+        {loading ? (
+          <div className="text-muted-foreground">Loading students...</div>
+        ) : filtered.length === 0 ? (
+          <Card>
+            <CardContent className="py-12 text-center text-muted-foreground">
+              No students found.
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="space-y-8 pb-4">
+            {groups.map((g) => (
+              <section key={g.key} className="space-y-3">
+                <div className="border-b pb-2">
+                  <h2 className="text-xl font-semibold">{g.title}</h2>
+                  {g.subtitle && (
+                    <p className="text-sm text-muted-foreground">{g.subtitle}</p>
+                  )}
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {g.students.map((s) => (
+                    <StudentTalentCard key={s.id} student={s} />
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
     </div>
   );
 };
