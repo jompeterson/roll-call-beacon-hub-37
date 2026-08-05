@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Mail, Phone, FileText, Search, Briefcase } from "lucide-react";
+import { Mail, Phone, FileText, Search, Briefcase, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface StudentRow {
@@ -24,6 +24,7 @@ interface StudentRow {
     resume_url: string | null;
     resume_filename: string | null;
   } | null;
+  student_courses: { course_name: string; completed_on: string | null }[] | null;
 }
 
 type StudentProfileData = StudentRow["student_profiles"];
@@ -32,6 +33,8 @@ const getProfile = (s: StudentRow): NonNullable<StudentProfileData> | null =>
   (Array.isArray(s.student_profiles)
     ? s.student_profiles[0]
     : s.student_profiles) || null;
+
+const getCourses = (s: StudentRow) => s.student_courses || [];
 
 export const DiscoverTalent = () => {
   const { isAuthenticated, userRole, isInitialized } = useAuth();
