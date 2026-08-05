@@ -390,16 +390,21 @@ export type Database = {
       }
       events: {
         Row: {
+          accomplishments: string | null
           approval_decision_made: boolean
+          completion_images: string[]
           created_at: string
           creator_user_id: string
           description: string | null
           end_date: string | null
+          ended_at: string | null
           event_link: string | null
           event_type: string | null
+          funds_raised: number | null
           id: string
           images: string[] | null
           is_approved: boolean
+          is_ended: boolean
           is_private: boolean
           location: string | null
           max_participants: number | null
@@ -408,16 +413,21 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          accomplishments?: string | null
           approval_decision_made?: boolean
+          completion_images?: string[]
           created_at?: string
           creator_user_id: string
           description?: string | null
           end_date?: string | null
+          ended_at?: string | null
           event_link?: string | null
           event_type?: string | null
+          funds_raised?: number | null
           id?: string
           images?: string[] | null
           is_approved?: boolean
+          is_ended?: boolean
           is_private?: boolean
           location?: string | null
           max_participants?: number | null
@@ -426,16 +436,21 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          accomplishments?: string | null
           approval_decision_made?: boolean
+          completion_images?: string[]
           created_at?: string
           creator_user_id?: string
           description?: string | null
           end_date?: string | null
+          ended_at?: string | null
           event_link?: string | null
           event_type?: string | null
+          funds_raised?: number | null
           id?: string
           images?: string[] | null
           is_approved?: boolean
+          is_ended?: boolean
           is_private?: boolean
           location?: string | null
           max_participants?: number | null
