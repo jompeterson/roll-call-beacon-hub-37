@@ -1,7 +1,7 @@
 
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import poweredByLogo from "@/assets/powered-by-pacific-crest.png.asset.json";
+
 import {
   BarChart3,
   Hammer,
