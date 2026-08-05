@@ -41,6 +41,75 @@ export type Database = {
         }
         Relationships: []
       }
+      b2s_class_students: {
+        Row: {
+          class_id: string
+          created_at: string
+          id: string
+          student_user_id: string
+        }
+        Insert: {
+          class_id: string
+          created_at?: string
+          id?: string
+          student_user_id: string
+        }
+        Update: {
+          class_id?: string
+          created_at?: string
+          id?: string
+          student_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "b2s_class_students_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "b2s_classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "b2s_class_students_student_user_id_fkey"
+            columns: ["student_user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      b2s_classes: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          name: string
+          session: string
+          updated_at: string
+          year: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          session: string
+          updated_at?: string
+          year: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          session?: string
+          updated_at?: string
+          year?: number
+        }
+        Relationships: []
+      }
       comments: {
         Row: {
           content: string

@@ -60,6 +60,7 @@ const authenticatedNavigation = [
 const adminNavigation = [
   ...authenticatedNavigation,
   { name: "Widgets", href: "/widgets", icon: Layout },
+  { name: "B2S Manage", href: "/b2s-manage", icon: GraduationCap },
   { name: "Settings", href: "/settings", icon: Settings },
 ];
 
@@ -118,6 +119,7 @@ export const Sidebar = ({ open, onOpenChange, collapsed, onCollapsedChange }: Si
     "/organizations",
     "/users",
     "/widgets",
+    "/b2s-manage",
     "/settings",
   ];
 
