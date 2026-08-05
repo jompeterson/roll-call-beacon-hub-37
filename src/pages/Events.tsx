@@ -189,6 +189,11 @@ export const Events = () => {
   const upcomingEvents = sortedEvents.filter((e) => !isPastEvent(e));
   const pastEvents = sortedEvents.filter((e) => isPastEvent(e));
 
+  const handleEventRowClick = (event: any) => {
+    setSelectedEvent(event);
+    setEventModalOpen(true);
+  };
+
 
   const handleEventApprove = (id: string) => {
     approveEvent(id);
