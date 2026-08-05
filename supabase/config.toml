@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.recommendation-letters]
 verify_jwt = false
+
+[functions.end-event]
+verify_jwt = false
