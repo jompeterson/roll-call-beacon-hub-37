@@ -26,6 +26,13 @@ interface StudentRow {
   } | null;
 }
 
+type StudentProfileData = StudentRow["student_profiles"];
+
+const getProfile = (s: StudentRow): NonNullable<StudentProfileData> | null =>
+  (Array.isArray(s.student_profiles)
+    ? s.student_profiles[0]
+    : s.student_profiles) || null;
+
 export const DiscoverTalent = () => {
   const { isAuthenticated, userRole, isInitialized } = useAuth();
   const [students, setStudents] = useState<StudentRow[]>([]);
@@ -88,8 +95,8 @@ export const DiscoverTalent = () => {
       s.last_name,
       s.email,
       s.organizations?.name,
-      s.student_profiles?.bio,
-      ...(s.student_profiles?.skills || []),
+      getProfile(s)?.bio,
+      ...(getProfile(s)?.skills || []),
     ]
       .filter(Boolean)
       .join(" ")
@@ -132,7 +139,7 @@ export const DiscoverTalent = () => {
           {filtered.map((s) => {
             const fullName = `${s.first_name} ${s.last_name}`;
             const initials = `${s.first_name?.[0] || ""}${s.last_name?.[0] || ""}`;
-            const sp = s.student_profiles;
+            const sp = getProfile(s);
             return (
               <Card key={s.id} className="hover:shadow-md transition-shadow">
                 <CardHeader className="flex flex-row items-start gap-4 space-y-0">
