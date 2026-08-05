@@ -127,7 +127,7 @@ export const RequestModalActionButtons = ({
                 {hasFulfilled ? "Already Fulfilled" : submitting ? "Submitting..." : "Fulfill Request"}
               </Button>
             )}
-            {shouldShowMarkCompleted && isOwner && (
+            {shouldShowMarkCompleted && (isOwner || isAdministrator) && (
               <Button 
                 onClick={() => handleMarkCompleted(request.id)}
                 style={{ backgroundColor: "#3d7471" }}
