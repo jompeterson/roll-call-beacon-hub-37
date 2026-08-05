@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import b2sLogo from "@/assets/building-to-scale-logo.png.asset.json";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent } from "@/components/ui/card";
@@ -162,7 +161,7 @@ export const DiscoverTalent = () => {
             </p>
           </div>
           <img
-            src={b2sLogo.url}
+            src="https://rollcall.buildhopepdx.org/lovable-uploads/building-to-scale-logo.png"
             alt="Building to Scale logo"
             className="h-16 w-auto shrink-0 object-contain dark:invert"
           />
