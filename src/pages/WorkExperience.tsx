@@ -671,6 +671,63 @@ export const WorkExperience = () => {
         </CardContent>
       </Card>
 
+      {/* Building to Scale Courses */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0">
+          <div>
+            <CardTitle className="flex items-center gap-2">
+              <BookOpen className="h-5 w-5" /> Building to Scale (B2S) Courses
+            </CardTitle>
+            <CardDescription>List the Building to Scale courses you have taken.</CardDescription>
+          </div>
+          <Button variant="outline" size="sm" onClick={() => setCourses([emptyCourse(), ...courses])}>
+            <Plus className="h-4 w-4 mr-1" /> Add
+          </Button>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {courses.length === 0 && (
+            <p className="text-sm text-muted-foreground">No courses added yet.</p>
+          )}
+          {courses.map((c, idx) => (
+            <div key={c.id || idx} className="flex flex-col md:flex-row md:items-end gap-3 border rounded-md p-4">
+              <div className="flex-1">
+                <Label>Course Name *</Label>
+                <Input
+                  value={c.course_name}
+                  placeholder="e.g. B2S Business Fundamentals"
+                  onChange={(ev) => {
+                    const v = ev.target.value.slice(0, 150);
+                    setCourses(courses.map((x, i) => (i === idx ? { ...x, course_name: v } : x)));
+                  }}
+                />
+              </div>
+              <div className="w-full md:w-48">
+                <Label>Completed On</Label>
+                <Input
+                  type="date"
+                  value={c.completed_on}
+                  onChange={(ev) =>
+                    setCourses(courses.map((x, i) => (i === idx ? { ...x, completed_on: ev.target.value } : x)))
+                  }
+                />
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  if (c.id) setDeletedCourses([...deletedCourses, c.id]);
+                  setCourses(courses.filter((_, i) => i !== idx));
+                }}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+
+
+
       <div className="flex justify-end">
         <Button onClick={handleSave} disabled={saving} size="lg">
           {saving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
