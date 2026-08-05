@@ -35,6 +35,8 @@ export const EventDetail = () => {
   } = useEvents();
   const { rsvpCount, hasRsvp, submitting, createRSVP, deleteRSVP } = useEventRSVPs(eventId || "");
   const [editOpen, setEditOpen] = useState(false);
+  const [endOpen, setEndOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   const event = events.find(e => e.id === eventId);
   const { changeRequest, refetch: refetchChangeRequest } = useChangeRequest("event", eventId || "");
