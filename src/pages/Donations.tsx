@@ -15,6 +15,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { sortDonations } from "@/hooks/useDonationSorting";
 import { sortRequests } from "@/hooks/useRequestSorting";
 import { filterDonations, filterRequests } from "@/hooks/useDonationFiltering";
+import { filterVisiblePosts } from "@/lib/postVisibility";
 
 type SortDirection = "asc" | "desc" | null;
 type DonationSortField = "organization_name" | "title" | "description" | "status" | null;
@@ -22,7 +23,7 @@ type RequestSortField = "organization_name" | "request_type" | "title" | "descri
 
 export const Donations = () => {
   const navigate = useNavigate();
-  const { isAuthenticated, canRequestDonation } = useAuth();
+  const { isAuthenticated, canRequestDonation, user, isAdministrator } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   
@@ -74,10 +75,12 @@ export const Donations = () => {
   };
 
   const visibleDonations = isAuthenticated ? donations : donations.filter(d => !d.is_taken);
-  const filteredDonationPosts = filterDonations(visibleDonations, searchTerm, statusFilter);
+  const visibilityFilteredDonations = filterVisiblePosts(visibleDonations, user?.id, isAdministrator);
+  const filteredDonationPosts = filterDonations(visibilityFilteredDonations, searchTerm, statusFilter);
   const sortedDonationPosts = sortDonations(filteredDonationPosts, donationSort, donationDirection);
   
-  const filteredRequestPosts = filterRequests(requests, searchTerm, statusFilter);
+  const visibilityFilteredRequests = filterVisiblePosts(requests, user?.id, isAdministrator);
+  const filteredRequestPosts = filterRequests(visibilityFilteredRequests, searchTerm, statusFilter);
   const sortedRequestPosts = sortRequests(filteredRequestPosts, requestSort, requestDirection);
 
   const handleDonationRowClick = (donation: Donation) => {

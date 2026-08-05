@@ -7,6 +7,7 @@ export const useScholarshipFormState = () => {
   const { userProfile } = useProfileData();
   const [formData, setFormData] = useState<ScholarshipFormData>(createInitialFormData());
   const [images, setImages] = useState<File[]>([]);
+  const [isPrivate, setIsPrivate] = useState(false);
 
   // Pre-fill contact information when user profile is available
   useEffect(() => {
@@ -29,11 +30,14 @@ export const useScholarshipFormState = () => {
   const resetForm = () => {
     setFormData(createInitialFormData(userProfile));
     setImages([]);
+    setIsPrivate(false);
   };
 
   return {
     formData,
     images,
+    isPrivate,
+    setIsPrivate,
     handleInputChange,
     handleImagesChange,
     resetForm,

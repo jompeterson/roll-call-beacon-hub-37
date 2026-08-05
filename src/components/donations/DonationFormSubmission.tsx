@@ -30,6 +30,7 @@ interface DonationFormData {
   dimensions: string;
   dimension_unit: string;
   quantity: string;
+  is_private: boolean;
 }
 
 interface DonationFormSubmissionProps {
@@ -117,7 +118,8 @@ export const useDonationFormSubmission = () => {
         images: imageUrls,
         can_deliver: formData.can_deliver,
         delivery_miles: formData.delivery_miles ? parseFloat(formData.delivery_miles) : null,
-        location: formData.location || null
+        location: formData.location || null,
+        is_private: formData.is_private
       };
 
       // Type-specific fields

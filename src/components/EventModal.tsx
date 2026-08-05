@@ -25,6 +25,7 @@ interface Event {
   max_participants: number | null;
   creator_user_id: string;
   is_approved: boolean;
+  is_private?: boolean | null;
   approval_decision_made: boolean;
   created_at: string;
   updated_at: string;
@@ -98,7 +99,7 @@ export const EventModal = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={`max-w-4xl ${modalHeight} flex flex-col p-0`}>
         {/* Fixed Header */}
-        <EventModalHeader title={event.title} />
+        <EventModalHeader title={event.title} isPrivate={event.is_private} />
 
         {/* Scrollable Content */}
         <ScrollArea className="flex-1 px-6">

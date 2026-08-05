@@ -14,6 +14,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ImageUpload } from "@/components/shared/ImageUpload";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { EVENT_TYPES } from "@/lib/eventTypes";
+import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
 
 interface EventCreateModalProps {
   open: boolean;
@@ -42,6 +43,7 @@ export const EventCreateModal = ({
   const queryClient = useQueryClient();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [images, setImages] = useState<File[]>([]);
+  const [isPrivate, setIsPrivate] = useState(false);
 
   const form = useForm<EventFormData>({
     defaultValues: {
@@ -107,6 +109,7 @@ export const EventCreateModal = ({
           max_participants: data.max_participants,
           creator_user_id: user.id,
           images: imageUrls,
+          is_private: isPrivate,
         });
 
       if (error) {
@@ -129,6 +132,7 @@ export const EventCreateModal = ({
       });
 
       form.reset();
+      setIsPrivate(false);
       onOpenChange(false);
       onEventCreated?.();
     } catch (error) {
@@ -146,6 +150,7 @@ export const EventCreateModal = ({
   const handleClose = () => {
     form.reset();
     setImages([]);
+    setIsPrivate(false);
     onOpenChange(false);
   };
 
@@ -339,6 +344,8 @@ export const EventCreateModal = ({
               onImagesChange={setImages}
               label="Event Images"
             />
+
+            <PrivatePostToggle isPrivate={isPrivate} onChange={setIsPrivate} />
 
             <div className="flex gap-2 pt-4">
               <Button

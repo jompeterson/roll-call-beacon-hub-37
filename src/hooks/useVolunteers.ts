@@ -14,6 +14,7 @@ export interface Volunteer {
   max_participants: number | null;
   creator_user_id: string;
   is_approved: boolean;
+  is_private?: boolean | null;
   approval_decision_made: boolean;
   created_at: string;
   updated_at: string;

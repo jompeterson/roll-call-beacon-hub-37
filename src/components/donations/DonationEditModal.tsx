@@ -12,6 +12,7 @@ import { DonationFormBasicFields } from "./DonationFormBasicFields";
 import { DonationFormOrganizationField } from "./DonationFormOrganizationField";
 import { DonationFormContactFields } from "./DonationFormContactFields";
 import { DonationImageUpload } from "./DonationImageUpload";
+import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
 import { SubmitForReviewDialog } from "@/components/shared/SubmitForReviewDialog";
 import type { Donation } from "@/hooks/useDonations";
 
@@ -63,7 +64,8 @@ export const DonationEditModal = ({
     dimensions: (donation as any).dimensions?.toString() || "",
     dimension_unit: (donation as any).dimension_unit || "",
     quantity: (donation as any).quantity?.toString() || "",
-    images: [] as File[]
+    images: [] as File[],
+    is_private: (donation as any).is_private || false
   });
 
   const { toast } = useToast();
@@ -161,6 +163,7 @@ export const DonationEditModal = ({
       updateData.facility_type = formData.donation_type === "Facility Use" ? (formData.facility_type || null) : null;
       updateData.capacity = formData.donation_type === "Facility Use" && formData.capacity ? parseInt(formData.capacity) : null;
       updateData.location = formData.location || null;
+      updateData.is_private = formData.is_private;
 
       const { error } = await supabase
         .from("donations")
@@ -276,6 +279,11 @@ export const DonationEditModal = ({
           <DonationImageUpload
             images={formData.images}
             onImagesChange={(images) => handleInputChange("images", images)}
+          />
+
+          <PrivatePostToggle
+            isPrivate={formData.is_private}
+            onChange={(value) => handleInputChange("is_private", value)}
           />
 
           <div className="flex gap-3 pt-4">

@@ -12,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
 import { ImageUpload } from "@/components/shared/ImageUpload";
+import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
 
 interface VolunteerCreateModalProps {
   open: boolean;
@@ -39,6 +40,7 @@ export const VolunteerCreateModal = ({
   const queryClient = useQueryClient();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [images, setImages] = useState<File[]>([]);
+  const [isPrivate, setIsPrivate] = useState(false);
 
   const form = useForm<VolunteerFormData>({
     defaultValues: {
@@ -102,6 +104,7 @@ export const VolunteerCreateModal = ({
           max_participants: data.max_participants,
           creator_user_id: user.id,
           images: imageUrls,
+          is_private: isPrivate,
         });
 
       if (error) {
@@ -123,6 +126,7 @@ export const VolunteerCreateModal = ({
       });
 
       form.reset();
+      setIsPrivate(false);
       onOpenChange(false);
       onVolunteerCreated?.();
     } catch (error) {
@@ -140,6 +144,7 @@ export const VolunteerCreateModal = ({
   const handleClose = () => {
     form.reset();
     setImages([]);
+    setIsPrivate(false);
     onOpenChange(false);
   };
 
@@ -307,6 +312,8 @@ export const VolunteerCreateModal = ({
               onImagesChange={setImages}
               label="Volunteer Opportunity Images"
             />
+
+            <PrivatePostToggle isPrivate={isPrivate} onChange={setIsPrivate} />
 
             <div className="flex gap-2 pt-4">
               <Button

@@ -1,7 +1,7 @@
 
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { CheckCircle, Clock, XCircle, Archive, ExternalLink } from "lucide-react";
+import { CheckCircle, Clock, XCircle, Archive, ExternalLink, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DonationSortableTableHead } from "./DonationSortableTableHead";
 import type { Donation } from "@/hooks/useDonations";
@@ -135,7 +135,14 @@ export const DonationTable = ({
                         {donation.organization_name || "No Organization"}
                       </TableCell>
                       <TableCell className={`${titleWidth} whitespace-nowrap overflow-hidden text-ellipsis max-w-0`}>
-                        {donation.title}
+                        <span className="inline-flex items-center gap-1">
+                          {donation.title}
+                          {(donation as any).is_private && (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 text-amber-800 border border-amber-300 px-2 py-0.5 text-xs font-medium">
+                              <Lock className="h-3 w-3" /> Private
+                            </span>
+                          )}
+                        </span>
                       </TableCell>
                       <TableCell className={`${descriptionWidth} whitespace-nowrap overflow-hidden text-ellipsis max-w-0`}>
                         {donation.description || "No description"}

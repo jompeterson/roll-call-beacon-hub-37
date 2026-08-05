@@ -8,7 +8,7 @@ import { useChangeRequest } from "@/hooks/useChangeRequest";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { ChevronRight, Calendar, MapPin, Users, CheckCircle, XCircle, Edit, Flag } from "lucide-react";
+import { ChevronRight, Calendar, MapPin, Users, CheckCircle, XCircle, Edit, Flag, Lock } from "lucide-react";
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ShareButton } from "@/components/ShareButton";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
@@ -17,6 +17,7 @@ import { VolunteerEditModal } from "@/components/volunteer/VolunteerEditModal";
 import { EndOpportunityModal } from "@/components/volunteer/EndOpportunityModal";
 import { ChangeRequestBanner } from "@/components/shared/ChangeRequestBanner";
 import { formatDate, cn } from "@/lib/utils";
+import { canViewPost } from "@/lib/postVisibility";
 
 export const VolunteerDetail = () => {
   const { volunteerId } = useParams();
@@ -37,6 +38,7 @@ export const VolunteerDetail = () => {
 
   const volunteer = volunteers.find(v => v.id === volunteerId);
   const isOwner = user?.id === volunteer?.creator_user_id;
+  const canView = !volunteer || canViewPost(volunteer, user?.id, isAdministrator);
 
   if (loading) {
     return (
@@ -63,7 +65,7 @@ export const VolunteerDetail = () => {
     );
   }
 
-  if (!volunteer) {
+  if (!volunteer || !canView) {
     return (
       <div className="space-y-6">
         <Breadcrumb>
@@ -180,6 +182,11 @@ export const VolunteerDetail = () => {
           {/* Status Badge */}
           <div className="flex items-center gap-2">
             {getStatusBadge()}
+            {volunteer.is_private && (
+              <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-300 gap-1">
+                <Lock className="h-3 w-3" /> Private
+              </Badge>
+            )}
             {isVolunteerFull && (
               <Badge variant="outline" className="bg-gray-100 text-gray-800 border-gray-300">
                 Full

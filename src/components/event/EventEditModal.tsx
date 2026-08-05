@@ -11,6 +11,7 @@ import { SubmitForReviewDialog } from "@/components/shared/SubmitForReviewDialog
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { EVENT_TYPES } from "@/lib/eventTypes";
 import { X } from "lucide-react";
+import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
 import type { Event } from "@/hooks/useEvents";
 
 interface EventEditModalProps {
@@ -42,6 +43,7 @@ export const EventEditModal = ({
     event_type: event.event_type || "",
     max_participants: event.max_participants?.toString() || ""
   });
+  const [isPrivate, setIsPrivate] = useState(!!event.is_private);
 
   const { toast } = useToast();
 
@@ -92,6 +94,7 @@ export const EventEditModal = ({
         event_type: formData.event_type || null,
         max_participants: formData.max_participants ? parseInt(formData.max_participants) : null,
         images: imageUrls,
+        is_private: isPrivate,
         updated_at: new Date().toISOString()
       };
 
@@ -221,6 +224,8 @@ export const EventEditModal = ({
               />
             </div>
           </div>
+
+          <PrivatePostToggle isPrivate={isPrivate} onChange={setIsPrivate} />
 
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>

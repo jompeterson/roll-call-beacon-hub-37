@@ -15,6 +15,8 @@ import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ShareButton } from "@/components/ShareButton";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { ChangeRequestBanner } from "@/components/shared/ChangeRequestBanner";
+import { Lock } from "lucide-react";
+import { canViewPost } from "@/lib/postVisibility";
 
 export const RequestDetail = () => {
   const { requestId } = useParams();
@@ -52,7 +54,9 @@ export const RequestDetail = () => {
     );
   }
 
-  if (!request) {
+  const canView = request ? canViewPost(request, user?.id, isAdministrator) : true;
+
+  if (!request || !canView) {
     return (
       <div className="space-y-6">
         <Breadcrumb>
@@ -134,6 +138,11 @@ export const RequestDetail = () => {
                   <Badge variant="secondary" className="bg-green-600 text-white">
                     Completed
                   </Badge>
+                )}
+                {(request as any).is_private && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 text-amber-800 border border-amber-300 px-2 py-0.5 text-xs font-medium">
+                    <Lock className="h-3 w-3" /> Private
+                  </span>
                 )}
               </div>
               <p className="text-sm text-muted-foreground mt-1">Request a Donation</p>

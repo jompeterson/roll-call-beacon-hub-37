@@ -6,7 +6,7 @@ import { useEventRSVPs } from "@/hooks/useEventRSVPs";
 import { useChangeRequest } from "@/hooks/useChangeRequest";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { ChevronRight, Edit } from "lucide-react";
+import { ChevronRight, Edit, Lock } from "lucide-react";
 import { EventModalHeader } from "@/components/event/EventModalHeader";
 import { EventModalInformation } from "@/components/event/EventModalInformation";
 import { EventModalRSVPStatus } from "@/components/event/EventModalRSVPStatus";
@@ -17,6 +17,8 @@ import { ShareButton } from "@/components/ShareButton";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { ChangeRequestBanner } from "@/components/shared/ChangeRequestBanner";
+import { Badge } from "@/components/ui/badge";
+import { canViewPost } from "@/lib/postVisibility";
 
 export const EventDetail = () => {
   const { eventId } = useParams();
@@ -35,6 +37,7 @@ export const EventDetail = () => {
   const event = events.find(e => e.id === eventId);
   const { changeRequest, refetch: refetchChangeRequest } = useChangeRequest("event", eventId || "");
   const isOwner = user?.id === event?.creator_user_id;
+  const canView = !event || canViewPost(event, user?.id, isAdministrator);
 
   if (loading) {
     return (
@@ -61,7 +64,7 @@ export const EventDetail = () => {
     );
   }
 
-  if (!event) {
+  if (!event || !canView) {
     return (
       <div className="space-y-6">
         <Breadcrumb>
@@ -145,7 +148,14 @@ export const EventDetail = () => {
         <div className="p-6 border-b">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-2xl font-semibold">{event.title}</h1>
+              <div className="flex items-center gap-2">
+                <h1 className="text-2xl font-semibold">{event.title}</h1>
+                {event.is_private && (
+                  <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-300 gap-1">
+                    <Lock className="h-3 w-3" /> Private
+                  </Badge>
+                )}
+              </div>
               <p className="text-sm text-muted-foreground mt-1">Events</p>
             </div>
             <ShareButton />

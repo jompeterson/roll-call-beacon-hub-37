@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfileData } from "@/hooks/useProfileData";
 import { DimensionsInput } from "@/components/shared/DimensionsInput";
+import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
 
 interface RequestCreateModalProps {
   open: boolean;
@@ -44,7 +45,8 @@ export const RequestCreateModal = ({
     needs_pickup: false,
     dimensions: "",
     dimension_unit: "",
-    quantity: ""
+    quantity: "",
+    is_private: false
   });
 
   const { toast } = useToast();
@@ -147,7 +149,8 @@ export const RequestCreateModal = ({
         approval_decision_made: false,
         dimensions: formData.dimensions ? parseFloat(formData.dimensions) : null,
         dimension_unit: formData.dimension_unit || null,
-        quantity: formData.quantity ? parseInt(formData.quantity) : null
+        quantity: formData.quantity ? parseInt(formData.quantity) : null,
+        is_private: formData.is_private
       };
 
       console.log("Creating request with data:", requestData);
@@ -180,7 +183,8 @@ export const RequestCreateModal = ({
         needs_pickup: false,
         dimensions: "",
         dimension_unit: "",
-        quantity: ""
+        quantity: "",
+        is_private: false
       });
 
       onOpenChange(false);
@@ -363,6 +367,11 @@ export const RequestCreateModal = ({
               Needs Dropoff
             </Label>
           </div>
+
+          <PrivatePostToggle
+            isPrivate={formData.is_private}
+            onChange={(value) => handleInputChange("is_private", value)}
+          />
 
           <div className="flex gap-3 pt-4">
             <Button

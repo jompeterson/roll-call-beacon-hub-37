@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ChevronUp, ChevronDown, Clock, CheckCircle, XCircle } from "lucide-react";
+import { ChevronUp, ChevronDown, Clock, CheckCircle, XCircle, Lock } from "lucide-react";
 import { ScholarshipModal } from "@/components/ScholarshipModal";
 import { ScholarshipCreateModal } from "@/components/ScholarshipCreateModal";
 import { useScholarships } from "@/hooks/useScholarships";
@@ -336,7 +336,15 @@ export const Scholarships = () => {
                           {scholarship.organization_name}
                         </TableCell>
                         <TableCell className={`whitespace-nowrap overflow-hidden text-ellipsis max-w-0 ${isAuthenticated ? "w-1/4" : "w-1/3"}`}>
-                          {scholarship.title}
+                          <div className="flex items-center gap-1.5">
+                            <span className="truncate">{scholarship.title}</span>
+                            {scholarship.is_private && (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 text-amber-800 border border-amber-300 px-2 py-0.5 text-xs font-medium shrink-0">
+                                <Lock className="h-3 w-3" />
+                                Private
+                              </span>
+                            )}
+                          </div>
                         </TableCell>
                         <TableCell className="w-1/6 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
                           {Number(scholarship.amount) > 0

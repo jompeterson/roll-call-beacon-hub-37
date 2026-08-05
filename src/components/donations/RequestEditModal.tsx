@@ -12,6 +12,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { SubmitForReviewDialog } from "@/components/shared/SubmitForReviewDialog";
 import type { Request } from "@/hooks/useRequests";
 import { DimensionsInput } from "@/components/shared/DimensionsInput";
+import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
 
 interface RequestEditModalProps {
   open: boolean;
@@ -50,7 +51,8 @@ export const RequestEditModal = ({
     needs_pickup: request.needs_pickup || false,
     dimensions: (request as any).dimensions?.toString() || "",
     dimension_unit: (request as any).dimension_unit || "",
-    quantity: (request as any).quantity?.toString() || ""
+    quantity: (request as any).quantity?.toString() || "",
+    is_private: (request as any).is_private || false
   });
 
   const { toast } = useToast();
@@ -113,6 +115,7 @@ export const RequestEditModal = ({
         dimensions: formData.dimensions ? parseFloat(formData.dimensions) : null,
         dimension_unit: formData.dimension_unit || null,
         quantity: formData.quantity ? parseInt(formData.quantity) : null,
+        is_private: formData.is_private,
         updated_at: new Date().toISOString()
       };
 
@@ -313,6 +316,11 @@ export const RequestEditModal = ({
               Needs Dropoff
             </Label>
           </div>
+
+          <PrivatePostToggle
+            isPrivate={formData.is_private}
+            onChange={(value) => handleInputChange("is_private", value)}
+          />
 
           <div className="flex gap-3 pt-4">
             <Button

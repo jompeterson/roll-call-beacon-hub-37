@@ -14,6 +14,8 @@ import { useVolunteers } from "@/hooks/useVolunteers";
 import { useAuth } from "@/hooks/useAuth";
 import { useVolunteerSignups } from "@/hooks/useVolunteerSignups";
 import { formatDate } from "@/lib/utils";
+import { filterVisiblePosts } from "@/lib/postVisibility";
+import { Lock } from "lucide-react";
 
 type SortDirection = "asc" | "desc" | null;
 type SortField = "organization_name" | "title" | "start_date" | "location" | "status" | null;
@@ -85,7 +87,7 @@ const SortableTableHead = ({
 export const Volunteers = () => {
   const { volunteerId } = useParams();
   const { volunteers, loading, approveVolunteer, rejectVolunteer } = useVolunteers();
-  const { isAuthenticated, isAdministrator } = useAuth();
+  const { user, isAuthenticated, isAdministrator } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   
@@ -158,7 +160,7 @@ export const Volunteers = () => {
   };
 
   const filterData = (data: any[]) => {
-    return data.filter((item) => {
+    return filterVisiblePosts(data, user?.id, isAdministrator).filter((item) => {
       const matchesSearch = searchTerm === "" || 
         Object.values(item).some(value => 
           value && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
@@ -349,6 +351,11 @@ export const Volunteers = () => {
                         <TableCell className={`font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-0 ${isAuthenticated ? "w-1/4" : "w-2/5"}`}>
                           <div className="flex items-center gap-2">
                             <span>{volunteer.title}</span>
+                            {volunteer.is_private && (
+                              <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-800 border border-amber-300 px-1.5 py-0.5 rounded">
+                                <Lock className="h-3 w-3" /> Private
+                              </span>
+                            )}
                             <SignupCount volunteerId={volunteer.id} isApproved={volunteer.is_approved} />
                           </div>
                         </TableCell>
