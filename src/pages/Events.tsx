@@ -160,36 +160,35 @@ export const Events = () => {
   };
 
   const filterData = (data: any[]) => {
-    const now = new Date();
     return filterVisiblePosts(data, user?.id, isAdministrator).filter((item) => {
       const matchesSearch = searchTerm === "" || 
         Object.values(item).some(value => 
           value && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
         );
-      
-      const eventDate = new Date(item.start_date);
-      const matchesDate = dateFilter === "all" || 
-        (dateFilter === "upcoming" && eventDate >= now) ||
-        (dateFilter === "past" && eventDate < now);
 
       if (!isAuthenticated) {
-        return matchesSearch && item.is_approved && matchesDate;
+        return matchesSearch && item.is_approved;
       }
       
       const status = getEventStatus(item);
       const matchesStatus = statusFilter === "all" || status === statusFilter;
       
-      return matchesSearch && matchesStatus && matchesDate;
+      return matchesSearch && matchesStatus;
     });
   };
 
   const filteredEvents = filterData(events);
   const sortedEvents = sortData(filteredEvents, eventSort, eventDirection);
 
-  const handleEventRowClick = (event: any) => {
-    setSelectedEvent(event);
-    setEventModalOpen(true);
+  const isPastEvent = (event: any) => {
+    if (event.is_ended) return true;
+    const endsAt = new Date(event.end_date || event.start_date);
+    return endsAt.getTime() < Date.now();
   };
+
+  const upcomingEvents = sortedEvents.filter((e) => !isPastEvent(e));
+  const pastEvents = sortedEvents.filter((e) => isPastEvent(e));
+
 
   const handleEventApprove = (id: string) => {
     approveEvent(id);
