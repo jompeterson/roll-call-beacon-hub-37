@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Briefcase, GraduationCap, Plus, Trash2, FileText, Upload, X, Loader2, Save, BookOpen, Award } from "lucide-react";
+import { RecommendationLetters } from "@/components/talent/RecommendationLetters";
+
 
 type WorkRow = {
   id?: string;
@@ -438,6 +440,16 @@ export const WorkExperience = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Letters of Recommendation (read-only for the graduate) */}
+      {user?.id && (
+        <RecommendationLetters
+          studentId={user.id}
+          description="Uploaded by administrators. Only you and administrators can view or download these."
+        />
+      )}
+
+
 
       {/* Skills */}
       <Card>
