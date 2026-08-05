@@ -338,7 +338,7 @@ export const B2SManage = () => {
         </Card>
       ) : (
         <div className="space-y-4">
-          {visibleClasses.map((c) => {
+          {visibleClasses.map((c, index) => {
             const roster = rosterFor(c.id);
             return (
               <Card key={c.id}>
