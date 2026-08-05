@@ -15,6 +15,7 @@ import { ImageUpload } from "@/components/shared/ImageUpload";
 import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useOrganizationOptions } from "@/hooks/useOrganizationOptions";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 
 interface VolunteerCreateModalProps {
   open: boolean;

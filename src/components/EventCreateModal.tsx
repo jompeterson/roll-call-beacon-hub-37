@@ -15,6 +15,7 @@ import { ImageUpload } from "@/components/shared/ImageUpload";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { EVENT_TYPES } from "@/lib/eventTypes";
 import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 
 interface EventCreateModalProps {
   open: boolean;
