@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CheckCircle, XCircle, Clock, Mail, Phone, MapPin, Building, Calendar, User, Pencil, X } from "lucide-react";
+import { CheckCircle, XCircle, Clock, Mail, Phone, MapPin, Building, Calendar, User, Pencil, X, FileSignature } from "lucide-react";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { formatDate } from "@/lib/utils";
 import { useUserRoles } from "@/hooks/useUserRoles";
@@ -27,6 +27,9 @@ interface UserProfile {
   role_id: string;
   is_approved: boolean;
   approval_decision_made: boolean;
+  waiver_agreed?: boolean | null;
+  waiver_agreed_at?: string | null;
+  waiver_signature_name?: string | null;
   user_roles: {
     id: string;
     name: string;
@@ -373,6 +376,33 @@ export const UserModal = ({
               <span className="text-sm">
                 Joined: {formatDate(user.created_at)}
               </span>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <FileSignature className="h-4 w-4 text-muted-foreground" />
+              <span className="text-sm">Waiver:</span>
+              {user.waiver_agreed ? (
+                <>
+                  <Badge variant="default" className="gap-1">
+                    <CheckCircle className="h-3 w-3" />
+                    Signed
+                  </Badge>
+                  {user.waiver_agreed_at && (
+                    <span className="text-sm text-muted-foreground">
+                      on {formatDate(user.waiver_agreed_at)}
+                    </span>
+                  )}
+                  {user.waiver_signature_name && (
+                    <span className="text-sm text-muted-foreground">
+                      by {user.waiver_signature_name}
+                    </span>
+                  )}
+                </>
+              ) : (
+                <Badge variant="secondary" className="gap-1">
+                  <Clock className="h-3 w-3" />
+                  Not signed
+                </Badge>
+              )}
             </div>
           </div>
 
