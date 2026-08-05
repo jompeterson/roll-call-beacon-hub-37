@@ -53,6 +53,18 @@ const emptyEdu = (): EduRow => ({
   description: "",
 });
 
+type CourseRow = {
+  id?: string;
+  course_name: string;
+  completed_on: string;
+};
+
+const emptyCourse = (): CourseRow => ({
+  course_name: "",
+  completed_on: "",
+});
+
+
 export const WorkExperience = () => {
   const { user, userRole, isAuthenticated, isInitialized } = useAuth();
   const { toast } = useToast();
