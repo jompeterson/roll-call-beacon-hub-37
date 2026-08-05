@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Mail, Phone, FileText, GraduationCap, Briefcase, BookOpen } from "lucide-react";
+import { ArrowLeft, Mail, Phone, FileText, GraduationCap, Briefcase, BookOpen, Award } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
 export const StudentDetail = () => {
@@ -17,6 +17,7 @@ export const StudentDetail = () => {
   const [work, setWork] = useState<any[]>([]);
   const [education, setEducation] = useState<any[]>([]);
   const [courses, setCourses] = useState<any[]>([]);
+  const [certs, setCerts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   const isStudent = userRole?.name === "student";
@@ -29,7 +30,7 @@ export const StudentDetail = () => {
     }
     const fetchAll = async () => {
       setLoading(true);
-      const [{ data: u }, { data: p }, { data: w }, { data: e }, { data: c }] = await Promise.all([
+      const [{ data: u }, { data: p }, { data: w }, { data: e }, { data: c }, { data: cf }] = await Promise.all([
         supabase
           .from("user_profiles")
           .select("id, first_name, last_name, email, phone, profile_image_url, organizations:organization_id(name)")
@@ -53,12 +54,18 @@ export const StudentDetail = () => {
           .select("*")
           .eq("user_id", studentId)
           .order("completed_on", { ascending: false }),
+        supabase
+          .from("student_certifications")
+          .select("*")
+          .eq("user_id", studentId)
+          .order("issued_on", { ascending: false }),
       ]);
       setStudent(u);
       setProfile(p);
       setWork(w || []);
       setEducation(e || []);
       setCourses(c || []);
+      setCerts(cf || []);
       setLoading(false);
     };
     fetchAll();
@@ -174,6 +181,29 @@ export const StudentDetail = () => {
       )}
 
 
+
+      {certs.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Award className="h-5 w-5" /> Certifications
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="list-disc pl-5 space-y-1">
+              {certs.map((c) => (
+                <li key={c.id} className="text-sm">
+                  {c.name}
+                  {c.issuer && <span className="text-muted-foreground"> — {c.issuer}</span>}
+                  {c.issued_on && (
+                    <span className="text-muted-foreground"> (issued {formatDate(c.issued_on)}{c.expires_on ? `, expires ${formatDate(c.expires_on)}` : ""})</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>
