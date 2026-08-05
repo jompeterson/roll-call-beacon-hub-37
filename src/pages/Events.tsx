@@ -89,11 +89,11 @@ export const Events = () => {
   const { user, isAuthenticated, isAdministrator } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [dateFilter, setDateFilter] = useState<string>("upcoming");
   
   // Sorting states
-  const [eventSort, setEventSort] = useState<SortField>(null);
-  const [eventDirection, setEventDirection] = useState<SortDirection>(null);
+  const [eventSort, setEventSort] = useState<SortField>("start_date");
+  const [eventDirection, setEventDirection] = useState<SortDirection>("desc");
+
 
   // Modal states
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
