@@ -3,6 +3,7 @@ import { Calendar, MapPin, Users, UserCheck, Tag } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatDate, cn } from "@/lib/utils";
+import { RichText } from "@/components/ui/rich-text";
 
 interface Event {
   id: string;
@@ -51,7 +52,7 @@ export const EventModalInformation = ({ event, rsvpCount, highlightedFields }: E
       
       {event.description && (
         <FieldWrapper fieldKey="description" highlightedFields={highlightedFields}>
-          <p className={cn("text-sm", highlightedFields?.includes("description") ? "text-destructive" : "text-muted-foreground")}>{event.description}</p>
+          <RichText value={event.description} className={cn("text-sm", highlightedFields?.includes("description") ? "text-destructive" : "text-muted-foreground")} />
         </FieldWrapper>
       )}
       

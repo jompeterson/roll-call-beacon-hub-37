@@ -5,6 +5,7 @@ import { CheckCircle, Clock, XCircle, Archive, ExternalLink, Lock } from "lucide
 import { Button } from "@/components/ui/button";
 import { RequestSortableTableHead } from "./RequestSortableTableHead";
 import type { Request } from "@/hooks/useRequests";
+import { richTextToPlain } from "@/components/ui/rich-text";
 
 type SortDirection = "asc" | "desc" | null;
 type RequestSortField = "organization_name" | "request_type" | "title" | "description" | "status" | null;
@@ -153,7 +154,7 @@ export const RequestTable = ({
                         </span>
                       </TableCell>
                       <TableCell className={`${descriptionWidth} whitespace-nowrap overflow-hidden text-ellipsis max-w-0`}>
-                        {request.description || "No description"}
+                        {richTextToPlain(request.description) || "No description"}
                       </TableCell>
                       {showStatus && (
                         <TableCell className="w-1/6">

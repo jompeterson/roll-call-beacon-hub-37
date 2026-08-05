@@ -1,6 +1,7 @@
 
 import type { Request } from "@/hooks/useRequests";
 import { formatDate, cn } from "@/lib/utils";
+import { RichText } from "@/components/ui/rich-text";
 
 interface RequestModalInformationProps {
   request: Request;
@@ -48,7 +49,7 @@ export const RequestModalInformation = ({ request, highlightedFields }: RequestM
             <FieldWrapper fieldKey="description" highlightedFields={highlightedFields}>
               <div>
                 <label className={labelClass("description")}>Request Details</label>
-                <p className="text-base mt-1">{request.description}</p>
+                <RichText value={request.description} className="text-base mt-1" />
               </div>
             </FieldWrapper>
           )}
