@@ -25,6 +25,7 @@ import { WorkExperience } from "./pages/WorkExperience";
 import { Profile } from "./pages/Profile";
 import { Settings } from "./pages/Settings";
 import { Widgets } from "./pages/Widgets";
+import { B2SManage } from "./pages/B2SManage";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { VerificationPending } from "./pages/VerificationPending";
@@ -65,6 +66,7 @@ const AppContent = () => {
           <Route path="discover-talent/:studentId" element={<StudentDetail />} />
           <Route path="work-experience" element={<WorkExperience />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="b2s-manage" element={<B2SManage />} />
           <Route path="settings" element={<Settings />} />
           <Route path="widgets" element={<Widgets />} />
         </Route>
