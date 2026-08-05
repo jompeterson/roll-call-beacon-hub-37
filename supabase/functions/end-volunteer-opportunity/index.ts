@@ -50,6 +50,15 @@ Deno.serve(async (req) => {
     const parsedHours = Number(body?.totalHours);
     const totalHours =
       Number.isFinite(parsedHours) && parsedHours >= 0 && parsedHours <= 1000000 ? parsedHours : null;
+    const parsedServices = Number(body?.discountedServicesValue);
+    const discountedServicesValue =
+      body?.discountedServicesValue !== null &&
+      body?.discountedServicesValue !== undefined &&
+      Number.isFinite(parsedServices) &&
+      parsedServices >= 0 &&
+      parsedServices <= 100000000
+        ? parsedServices
+        : null;
 
     if (!sessionToken || !volunteerId || accomplishments.length === 0) {
       return new Response(
@@ -109,6 +118,7 @@ Deno.serve(async (req) => {
         accomplishments: accomplishments.join("\n"),
         completion_images: completionImages,
         total_hours: totalHours,
+        discounted_services_value: discountedServicesValue,
       })
       .eq("id", volunteerId);
 
@@ -157,10 +167,21 @@ Deno.serve(async (req) => {
           )
           .join("")}</div>`
       : "";
-    const hoursHtml = totalHours !== null
-      ? `<p style="font-size: 15px; line-height: 1.6; color: #333; margin: 0 0 20px;"><strong>Total hours volunteered:</strong> ${totalHours.toLocaleString("en-US")}</p>`
-      : "";
-    const hoursText = totalHours !== null ? `\n\nTotal hours volunteered: ${totalHours}` : "";
+    const servicesFormatted = discountedServicesValue !== null
+      ? discountedServicesValue.toLocaleString("en-US", { style: "currency", currency: "USD" })
+      : null;
+    const hoursHtml = `${
+      totalHours !== null
+        ? `<p style="font-size: 15px; line-height: 1.6; color: #333; margin: 0 0 8px;"><strong>Total hours volunteered:</strong> ${totalHours.toLocaleString("en-US")}</p>`
+        : ""
+    }${
+      servicesFormatted
+        ? `<p style="font-size: 15px; line-height: 1.6; color: #333; margin: 0 0 20px;"><strong>Discounted professional services:</strong> ${servicesFormatted}</p>`
+        : ""
+    }`;
+    const hoursText = `${totalHours !== null ? `\n\nTotal hours volunteered: ${totalHours}` : ""}${
+      servicesFormatted ? `\nDiscounted professional services: ${servicesFormatted}` : ""
+    }`;
     const subject = `Thank you for volunteering: ${volunteer.title}`;
 
     const emails = [...recipients.entries()].map(([email, firstName]) => {

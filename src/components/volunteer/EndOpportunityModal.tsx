@@ -27,6 +27,7 @@ export const EndOpportunityModal = ({
   const { toast } = useToast();
   const [items, setItems] = useState<string[]>([""]);
   const [totalHours, setTotalHours] = useState("");
+  const [discountedServices, setDiscountedServices] = useState("");
   const [photos, setPhotos] = useState<File[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
@@ -107,12 +108,30 @@ export const EndOpportunityModal = ({
       return;
     }
 
+    const servicesRaw = discountedServices.trim();
+    const servicesValue = servicesRaw ? Number(servicesRaw) : null;
+    if (servicesValue !== null && (!Number.isFinite(servicesValue) || servicesValue < 0)) {
+      toast({
+        title: "Invalid amount",
+        description: "Enter a valid dollar value for discounted professional services.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setSubmitting(true);
     try {
       const completionImages = await uploadPhotos();
       const sessionToken = localStorage.getItem("session_token");
       const { data, error } = await supabase.functions.invoke("end-volunteer-opportunity", {
-        body: { sessionToken, volunteerId, accomplishments, completionImages, totalHours: hours },
+        body: {
+          sessionToken,
+          volunteerId,
+          accomplishments,
+          completionImages,
+          totalHours: hours,
+          discountedServicesValue: servicesValue,
+        },
       });
 
       if (error) throw error;
@@ -125,6 +144,7 @@ export const EndOpportunityModal = ({
       onOpenChange(false);
       setItems([""]);
       setTotalHours("");
+      setDiscountedServices("");
       setPhotos([]);
       onEnded?.();
 
@@ -195,6 +215,24 @@ export const EndOpportunityModal = ({
           />
           <p className="text-sm text-muted-foreground">
             Combined hours contributed by all participants during this opportunity.
+          </p>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="discounted-services">Discounted professional services ($)</Label>
+          <Input
+            id="discounted-services"
+            type="number"
+            min="0"
+            step="0.01"
+            inputMode="decimal"
+            placeholder="e.g. 1500"
+            value={discountedServices}
+            onChange={(e) => setDiscountedServices(e.target.value)}
+            disabled={submitting}
+          />
+          <p className="text-sm text-muted-foreground">
+            Optional. Total dollar value of professional services provided at a discount.
           </p>
         </div>
 
