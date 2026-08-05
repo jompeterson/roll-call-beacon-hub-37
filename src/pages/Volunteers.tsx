@@ -181,6 +181,134 @@ export const Volunteers = () => {
   const filteredVolunteers = filterData(volunteers);
   const sortedVolunteers = sortData(filteredVolunteers, volunteerSort, volunteerDirection);
 
+  const isPastVolunteer = (volunteer: any) => {
+    if (volunteer.is_ended) return true;
+    const endsAt = new Date(volunteer.end_date || volunteer.start_date);
+    return endsAt.getTime() < Date.now();
+  };
+
+  const upcomingVolunteers = sortedVolunteers.filter((v) => !isPastVolunteer(v));
+  const pastVolunteers = sortedVolunteers.filter((v) => isPastVolunteer(v));
+
+  const renderVolunteerTable = (items: any[]) => (
+    <div className="border rounded-lg flex-1 min-h-0">
+      <div className="h-full flex flex-col overflow-x-auto">
+        <div className="min-w-[900px] h-full flex flex-col">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <SortableTableHead
+                  field="organization_name"
+                  currentSort={volunteerSort}
+                  currentDirection={volunteerDirection}
+                  onSort={handleVolunteerSort}
+                  className="w-1/5"
+                >
+                  Organization
+                </SortableTableHead>
+                <SortableTableHead
+                  field="location"
+                  currentSort={volunteerSort}
+                  currentDirection={volunteerDirection}
+                  onSort={handleVolunteerSort}
+                  className="w-1/5"
+                >
+                  Location
+                </SortableTableHead>
+                <SortableTableHead
+                  field="title"
+                  currentSort={volunteerSort}
+                  currentDirection={volunteerDirection}
+                  onSort={handleVolunteerSort}
+                  className={isAuthenticated ? "w-1/4" : "w-2/5"}
+                >
+                  Project
+                </SortableTableHead>
+                <SortableTableHead
+                  field="start_date"
+                  currentSort={volunteerSort}
+                  currentDirection={volunteerDirection}
+                  onSort={handleVolunteerSort}
+                  className="w-1/5"
+                >
+                  Start Date
+                </SortableTableHead>
+                {isAuthenticated && (
+                  <SortableTableHead
+                    field="status"
+                    currentSort={volunteerSort}
+                    currentDirection={volunteerDirection}
+                    onSort={handleVolunteerSort}
+                    className="w-1/6"
+                  >
+                    Status
+                  </SortableTableHead>
+                )}
+              </TableRow>
+            </TableHeader>
+          </Table>
+          <ScrollArea className="flex-1">
+            <Table>
+              <TableBody>
+                {items.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={isAuthenticated ? 5 : 4} className="text-center py-8 text-muted-foreground">
+                      No volunteer opportunities found
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  items.map((volunteer) => (
+                    <TableRow
+                      key={volunteer.id}
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() => handleVolunteerRowClick(volunteer)}
+                    >
+                      <TableCell className="w-1/5 max-w-0">
+                        <div className="truncate">{volunteer.organization_name || "—"}</div>
+                        {volunteer.interested_organizations && volunteer.interested_organizations.length > 0 && (
+                          <div className="truncate text-xs text-muted-foreground">
+                            Interested: {volunteer.interested_organizations.join(", ")}
+                          </div>
+                        )}
+                      </TableCell>
+                      <TableCell className="w-1/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                        {volunteer.location || "TBD"}
+                      </TableCell>
+                      <TableCell className={`font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-0 ${isAuthenticated ? "w-1/4" : "w-2/5"}`}>
+                        <div className="flex items-center gap-2">
+                          <span>{volunteer.title}</span>
+                          {volunteer.is_private && (
+                            <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-800 border border-amber-300 px-1.5 py-0.5 rounded">
+                              <Lock className="h-3 w-3" /> Private
+                            </span>
+                          )}
+                          <SignupCount volunteerId={volunteer.id} isApproved={volunteer.is_approved} />
+                        </div>
+                      </TableCell>
+                      <TableCell className="w-1/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                        {formatDate(volunteer.start_date)}
+                      </TableCell>
+                      {isAuthenticated && (
+                        <TableCell className="w-1/6">
+                          <div className="flex items-center gap-2 whitespace-nowrap">
+                            <StatusIcon status={getVolunteerStatus(volunteer)} />
+                            <span>{getVolunteerStatus(volunteer)}</span>
+                          </div>
+                        </TableCell>
+                      )}
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </ScrollArea>
+        </div>
+      </div>
+    </div>
+  );
+
+
+
   const handleVolunteerRowClick = (volunteer: any) => {
     setSelectedVolunteer(volunteer);
     setVolunteerModalOpen(true);
