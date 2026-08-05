@@ -1,6 +1,7 @@
 
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import poweredByLogo from "@/assets/powered-by-pacific-crest.png.asset.json";
 import {
   BarChart3,
   Hammer,
@@ -307,6 +308,17 @@ export const Sidebar = ({ open, onOpenChange, collapsed, onCollapsedChange }: Si
           )}
         </div>
       )}
+
+      {/* Powered by logo */}
+      <div className="mt-auto px-3 py-4 border-t border-border">
+        {collapsed && !isMobile ? null : (
+          <img
+            src={poweredByLogo.url}
+            alt="Platform powered by Pacific Crest Custom Cabinetry"
+            className="w-full h-auto object-contain dark:invert"
+          />
+        )}
+      </div>
     </div>
   );
 
