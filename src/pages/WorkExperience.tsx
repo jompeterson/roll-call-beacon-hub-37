@@ -259,15 +259,32 @@ export const WorkExperience = () => {
         }
       }
 
+      // Upsert Building to Scale courses
+      for (const c of courses) {
+        if (!c.course_name.trim()) continue;
+        const payload: any = {
+          user_id: user.id,
+          course_name: c.course_name.trim(),
+          completed_on: c.completed_on || null,
+        };
+        if (c.id) {
+          await supabase.from("student_courses").update(payload).eq("id", c.id);
+        } else {
+          await supabase.from("student_courses").insert(payload);
+        }
+      }
+
       toast({ title: "Saved", description: "Your profile has been updated." });
 
       // Reload to get IDs for new entries
-      const [{ data: w }, { data: e }] = await Promise.all([
+      const [{ data: w }, { data: e }, { data: c }] = await Promise.all([
         supabase.from("student_work_experience").select("*").eq("user_id", user.id).order("start_date", { ascending: false }),
         supabase.from("student_education").select("*").eq("user_id", user.id).order("start_date", { ascending: false }),
+        supabase.from("student_courses").select("*").eq("user_id", user.id).order("completed_on", { ascending: false }),
       ]);
       setWork((w || []).map((r: any) => ({ ...r, location: r.location || "", start_date: r.start_date || "", end_date: r.end_date || "", description: r.description || "" })));
       setEducation((e || []).map((r: any) => ({ ...r, degree: r.degree || "", field_of_study: r.field_of_study || "", start_date: r.start_date || "", end_date: r.end_date || "", description: r.description || "" })));
+      setCourses((c || []).map((r: any) => ({ id: r.id, course_name: r.course_name || "", completed_on: r.completed_on || "" })));
     } catch (err: any) {
       console.error(err);
       toast({ title: "Save failed", description: err.message || "Please try again.", variant: "destructive" });
