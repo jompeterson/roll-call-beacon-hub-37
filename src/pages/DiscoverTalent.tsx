@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Mail, Phone, FileText, Search, Briefcase, BookOpen } from "lucide-react";
+import { Mail, Phone, FileText, Search, Briefcase, BookOpen, Award } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface StudentRow {
@@ -25,6 +25,7 @@ interface StudentRow {
     resume_filename: string | null;
   } | null;
   student_courses: { course_name: string; completed_on: string | null }[] | null;
+  student_certifications: { name: string; issuer: string | null }[] | null;
 }
 
 type StudentProfileData = StudentRow["student_profiles"];
@@ -35,6 +36,8 @@ const getProfile = (s: StudentRow): NonNullable<StudentProfileData> | null =>
     : s.student_profiles) || null;
 
 const getCourses = (s: StudentRow) => s.student_courses || [];
+
+const getCerts = (s: StudentRow) => s.student_certifications || [];
 
 export const DiscoverTalent = () => {
   const { isAuthenticated, userRole, isInitialized } = useAuth();
@@ -59,7 +62,8 @@ export const DiscoverTalent = () => {
           organizations:organization_id ( name ),
           user_roles!inner ( name ),
           student_profiles ( bio, skills, resume_url, resume_filename ),
-          student_courses ( course_name, completed_on )
+          student_courses ( course_name, completed_on ),
+          student_certifications ( name, issuer )
         `)
         .eq("user_roles.name", "student")
         .eq("is_approved", true);
@@ -102,6 +106,8 @@ export const DiscoverTalent = () => {
       getProfile(s)?.bio,
       ...(getProfile(s)?.skills || []),
       ...getCourses(s).map((c) => c.course_name),
+      ...getCerts(s).map((c) => c.name),
+      ...getCerts(s).map((c) => c.issuer || ""),
     ]
       .filter(Boolean)
       .join(" ")
@@ -216,12 +222,29 @@ export const DiscoverTalent = () => {
                       </ul>
                     </div>
                   )}
+                  {getCerts(s).length > 0 && (
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground flex items-center gap-1 mb-1">
+                        <Award className="h-3 w-3" /> Certifications
+                      </p>
+                      <ul className="list-disc pl-5 space-y-0.5">
+                        {getCerts(s).map((c, i) => (
+                          <li key={`${c.name}-${i}`} className="text-sm text-foreground">
+                            {c.name}
+                            {c.issuer && (
+                              <span className="text-muted-foreground"> — {c.issuer}</span>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                   <div className="flex gap-2 pt-1">
                     {sp?.resume_url && (
                       <a href={sp.resume_url} target="_blank" rel="noopener noreferrer">
                         <Button variant="outline" size="sm">
                           <FileText className="h-3 w-3 mr-1" />
-                          Resume
+                          {sp.resume_filename ? "View Resume" : "Resume"}
                         </Button>
                       </a>
                     )}
