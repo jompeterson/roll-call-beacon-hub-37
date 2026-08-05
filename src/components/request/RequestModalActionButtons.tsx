@@ -106,7 +106,9 @@ export const RequestModalActionButtons = ({
       }
 
       console.log("Request marked as completed successfully");
+      queryClient.invalidateQueries({ queryKey: ["requests"] });
       onMarkCompleted && onMarkCompleted(id);
+
       onOpenChange(false); // Close the modal
     } catch (error) {
       console.error("Error marking request as completed:", error);
