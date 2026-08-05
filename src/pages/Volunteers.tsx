@@ -94,8 +94,8 @@ export const Volunteers = () => {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   
   // Sorting states
-  const [volunteerSort, setVolunteerSort] = useState<SortField>(null);
-  const [volunteerDirection, setVolunteerDirection] = useState<SortDirection>(null);
+  const [volunteerSort, setVolunteerSort] = useState<SortField>("start_date");
+  const [volunteerDirection, setVolunteerDirection] = useState<SortDirection>("desc");
 
   // Modal states
   const [selectedVolunteer, setSelectedVolunteer] = useState<any>(null);
