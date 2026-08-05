@@ -262,6 +262,17 @@ export const EventDetail = () => {
                   Edit
                 </Button>
               )}
+              {canEndEvent && (
+                <Button variant="outline" onClick={() => setEndOpen(true)}>
+                  <Flag className="w-4 h-4 mr-2" />
+                  End Event
+                </Button>
+              )}
+              {event.is_ended && (
+                <Badge variant="outline" className="self-center bg-gray-100 text-gray-800 border-gray-300">
+                  Ended
+                </Badge>
+              )}
             </div>
             <div>
               <EventModalActionButtons
