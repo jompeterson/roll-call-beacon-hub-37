@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Mail, Phone, FileText, Search, Briefcase } from "lucide-react";
+import { Mail, Phone, FileText, Search, Briefcase, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface StudentRow {
@@ -24,6 +24,7 @@ interface StudentRow {
     resume_url: string | null;
     resume_filename: string | null;
   } | null;
+  student_courses: { course_name: string; completed_on: string | null }[] | null;
 }
 
 type StudentProfileData = StudentRow["student_profiles"];
@@ -32,6 +33,8 @@ const getProfile = (s: StudentRow): NonNullable<StudentProfileData> | null =>
   (Array.isArray(s.student_profiles)
     ? s.student_profiles[0]
     : s.student_profiles) || null;
+
+const getCourses = (s: StudentRow) => s.student_courses || [];
 
 export const DiscoverTalent = () => {
   const { isAuthenticated, userRole, isInitialized } = useAuth();
@@ -55,7 +58,8 @@ export const DiscoverTalent = () => {
           id, first_name, last_name, email, phone, profile_image_url, organization_id,
           organizations:organization_id ( name ),
           user_roles!inner ( name ),
-          student_profiles ( bio, skills, resume_url, resume_filename )
+          student_profiles ( bio, skills, resume_url, resume_filename ),
+          student_courses ( course_name, completed_on )
         `)
         .eq("user_roles.name", "student")
         .eq("is_approved", true);
@@ -97,6 +101,7 @@ export const DiscoverTalent = () => {
       s.organizations?.name,
       getProfile(s)?.bio,
       ...(getProfile(s)?.skills || []),
+      ...getCourses(s).map((c) => c.course_name),
     ]
       .filter(Boolean)
       .join(" ")
@@ -195,6 +200,20 @@ export const DiscoverTalent = () => {
                       {sp.skills.length > 8 && (
                         <Badge variant="outline">+{sp.skills.length - 8}</Badge>
                       )}
+                    </div>
+                  )}
+                  {getCourses(s).length > 0 && (
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground flex items-center gap-1 mb-1">
+                        <BookOpen className="h-3 w-3" /> Building to Scale Courses
+                      </p>
+                      <ul className="list-disc pl-5 space-y-0.5">
+                        {getCourses(s).map((c, i) => (
+                          <li key={`${c.course_name}-${i}`} className="text-sm text-foreground">
+                            {c.course_name}
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   )}
                   <div className="flex gap-2 pt-1">

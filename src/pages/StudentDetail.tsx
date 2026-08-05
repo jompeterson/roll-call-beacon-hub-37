@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Mail, Phone, FileText, GraduationCap, Briefcase } from "lucide-react";
+import { ArrowLeft, Mail, Phone, FileText, GraduationCap, Briefcase, BookOpen } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
 export const StudentDetail = () => {
@@ -16,6 +16,7 @@ export const StudentDetail = () => {
   const [profile, setProfile] = useState<any>(null);
   const [work, setWork] = useState<any[]>([]);
   const [education, setEducation] = useState<any[]>([]);
+  const [courses, setCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   const isStudent = userRole?.name === "student";
@@ -28,7 +29,7 @@ export const StudentDetail = () => {
     }
     const fetchAll = async () => {
       setLoading(true);
-      const [{ data: u }, { data: p }, { data: w }, { data: e }] = await Promise.all([
+      const [{ data: u }, { data: p }, { data: w }, { data: e }, { data: c }] = await Promise.all([
         supabase
           .from("user_profiles")
           .select("id, first_name, last_name, email, phone, profile_image_url, organizations:organization_id(name)")
@@ -47,11 +48,17 @@ export const StudentDetail = () => {
           .eq("user_id", studentId)
           .order("currently_studying", { ascending: false })
           .order("start_date", { ascending: false }),
+        supabase
+          .from("student_courses")
+          .select("*")
+          .eq("user_id", studentId)
+          .order("completed_on", { ascending: false }),
       ]);
       setStudent(u);
       setProfile(p);
       setWork(w || []);
       setEducation(e || []);
+      setCourses(c || []);
       setLoading(false);
     };
     fetchAll();
@@ -143,6 +150,30 @@ export const StudentDetail = () => {
           </CardContent>
         </Card>
       )}
+
+      {courses.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <BookOpen className="h-5 w-5" /> Building to Scale Courses
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="list-disc pl-5 space-y-1">
+              {courses.map((c) => (
+                <li key={c.id} className="text-sm">
+                  {c.course_name}
+                  {c.completed_on && (
+                    <span className="text-muted-foreground"> — completed {formatDate(c.completed_on)}</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
+
+
 
       <Card>
         <CardHeader>
