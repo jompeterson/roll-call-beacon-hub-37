@@ -243,6 +243,34 @@ export const B2SManage = () => {
     setEnrollments((prev) => prev.filter((e) => e.id !== enrollmentId));
   };
 
+  const moveClass = async (index: number, direction: -1 | 1) => {
+    const swapIndex = index + direction;
+    if (swapIndex < 0 || swapIndex >= visibleClasses.length) return;
+    const a = visibleClasses[index];
+    const b = visibleClasses[swapIndex];
+    // Swap sort_order values between the two classes
+    const updates = [
+      { id: a.id, sort_order: b.sort_order },
+      { id: b.id, sort_order: a.sort_order },
+    ];
+    // Optimistic UI update
+    setClasses((prev) =>
+      prev.map((c) => {
+        if (c.id === a.id) return { ...c, sort_order: b.sort_order };
+        if (c.id === b.id) return { ...c, sort_order: a.sort_order };
+        return c;
+      })
+    );
+    const results = await Promise.all(
+      updates.map((u) => supabase.from("b2s_classes").update({ sort_order: u.sort_order }).eq("id", u.id))
+    );
+    const err = results.find((r) => r.error);
+    if (err?.error) {
+      toast({ title: "Reorder failed", description: err.error.message, variant: "destructive" });
+      loadAll();
+    }
+  };
+
   if (!isInitialized) return <div className="text-muted-foreground">Loading...</div>;
 
   if (!isAdministrator) {
