@@ -151,6 +151,30 @@ export const StudentDetail = () => {
         </Card>
       )}
 
+      {courses.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <BookOpen className="h-5 w-5" /> Building to Scale Courses
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="list-disc pl-5 space-y-1">
+              {courses.map((c) => (
+                <li key={c.id} className="text-sm">
+                  {c.course_name}
+                  {c.completed_on && (
+                    <span className="text-muted-foreground"> — completed {formatDate(c.completed_on)}</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
+
+
+
       <Card>
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
