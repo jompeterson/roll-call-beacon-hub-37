@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEvents } from "@/hooks/useEvents";
 import { useAuth } from "@/hooks/useAuth";
 import { useEventRSVPs } from "@/hooks/useEventRSVPs";
 import { useChangeRequest } from "@/hooks/useChangeRequest";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { ChevronRight, Edit, Lock } from "lucide-react";
+import { ChevronRight, Edit, Lock, Flag } from "lucide-react";
+import { EndEventModal } from "@/components/event/EndEventModal";
 import { EventModalHeader } from "@/components/event/EventModalHeader";
 import { EventModalInformation } from "@/components/event/EventModalInformation";
 import { EventModalRSVPStatus } from "@/components/event/EventModalRSVPStatus";
