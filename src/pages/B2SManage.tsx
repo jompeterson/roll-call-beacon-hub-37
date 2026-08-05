@@ -196,9 +196,14 @@ export const B2SManage = () => {
       session: session.trim(),
       description: description.trim() || null,
     };
+    let insertPayload: Record<string, unknown> = { ...payload, created_by: user?.id || null };
+    if (!editing) {
+      const maxOrder = classes.reduce((max, c) => Math.max(max, c.sort_order ?? 0), 0);
+      insertPayload.sort_order = maxOrder + 1;
+    }
     const { error } = editing
       ? await supabase.from("b2s_classes").update(payload).eq("id", editing.id)
-      : await supabase.from("b2s_classes").insert({ ...payload, created_by: user?.id || null });
+      : await supabase.from("b2s_classes").insert(insertPayload);
     setSaving(false);
     if (error) {
       toast({ title: "Save failed", description: error.message, variant: "destructive" });
