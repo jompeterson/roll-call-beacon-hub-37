@@ -118,6 +118,7 @@ Deno.serve(async (req) => {
         accomplishments: accomplishments.join("\n"),
         completion_images: completionImages,
         total_hours: totalHours,
+        discounted_services_value: discountedServicesValue,
       })
       .eq("id", volunteerId);
 
