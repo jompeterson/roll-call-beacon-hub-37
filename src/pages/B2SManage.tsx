@@ -354,6 +354,28 @@ export const B2SManage = () => {
                     </CardDescription>
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
+                    <div className="flex flex-col">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                        disabled={index === 0}
+                        onClick={() => moveClass(index, -1)}
+                        title="Move up"
+                      >
+                        <ArrowUp className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                        disabled={index === visibleClasses.length - 1}
+                        onClick={() => moveClass(index, 1)}
+                        title="Move down"
+                      >
+                        <ArrowDown className="h-4 w-4" />
+                      </Button>
+                    </div>
                     <Button
                       variant="outline"
                       size="sm"
