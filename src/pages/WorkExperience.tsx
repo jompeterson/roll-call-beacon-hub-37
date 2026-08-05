@@ -212,8 +212,12 @@ export const WorkExperience = () => {
       if (deletedEdu.length) {
         await supabase.from("student_education").delete().in("id", deletedEdu);
       }
+      if (deletedCourses.length) {
+        await supabase.from("student_courses").delete().in("id", deletedCourses);
+      }
       setDeletedWork([]);
       setDeletedEdu([]);
+      setDeletedCourses([]);
 
       // Upsert work
       for (const w of work) {
