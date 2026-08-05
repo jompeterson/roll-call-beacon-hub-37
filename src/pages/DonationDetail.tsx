@@ -252,6 +252,8 @@ export const DonationDetail = () => {
                     successMessage="Donation marked as taken"
                     undoMessage="Donation marked as available"
                     canUndo={isAdministrator}
+                    selectRecipient
+
                   />
                 )}
                 <DonationModalActionButtons
