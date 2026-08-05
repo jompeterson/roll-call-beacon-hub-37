@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Briefcase, GraduationCap, Plus, Trash2, FileText, Upload, X, Loader2, Save, BookOpen } from "lucide-react";
+import { Briefcase, GraduationCap, Plus, Trash2, FileText, Upload, X, Loader2, Save, BookOpen, Award } from "lucide-react";
 
 type WorkRow = {
   id?: string;
@@ -64,6 +64,21 @@ const emptyCourse = (): CourseRow => ({
   completed_on: "",
 });
 
+type CertRow = {
+  id?: string;
+  name: string;
+  issuer: string;
+  issued_on: string;
+  expires_on: string;
+};
+
+const emptyCert = (): CertRow => ({
+  name: "",
+  issuer: "",
+  issued_on: "",
+  expires_on: "",
+});
+
 
 export const WorkExperience = () => {
   const { user, userRole, isAuthenticated, isInitialized } = useAuth();
@@ -78,12 +93,14 @@ export const WorkExperience = () => {
   const [work, setWork] = useState<WorkRow[]>([]);
   const [education, setEducation] = useState<EduRow[]>([]);
   const [courses, setCourses] = useState<CourseRow[]>([]);
+  const [certs, setCerts] = useState<CertRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [deletedWork, setDeletedWork] = useState<string[]>([]);
   const [deletedEdu, setDeletedEdu] = useState<string[]>([]);
   const [deletedCourses, setDeletedCourses] = useState<string[]>([]);
+  const [deletedCerts, setDeletedCerts] = useState<string[]>([]);
 
   useEffect(() => {
     if (!isAuthenticated || !user || !isStudent) {
@@ -91,11 +108,12 @@ export const WorkExperience = () => {
       return;
     }
     const load = async () => {
-      const [{ data: p }, { data: w }, { data: e }, { data: c }] = await Promise.all([
+      const [{ data: p }, { data: w }, { data: e }, { data: c }, { data: cf }] = await Promise.all([
         supabase.from("student_profiles").select("*").eq("user_id", user.id).maybeSingle(),
         supabase.from("student_work_experience").select("*").eq("user_id", user.id).order("start_date", { ascending: false }),
         supabase.from("student_education").select("*").eq("user_id", user.id).order("start_date", { ascending: false }),
         supabase.from("student_courses").select("*").eq("user_id", user.id).order("completed_on", { ascending: false }),
+        supabase.from("student_certifications").select("*").eq("user_id", user.id).order("issued_on", { ascending: false }),
       ]);
       if (p) {
         setBio(p.bio || "");
@@ -132,6 +150,15 @@ export const WorkExperience = () => {
           id: r.id,
           course_name: r.course_name || "",
           completed_on: r.completed_on || "",
+        }))
+      );
+      setCerts(
+        (cf || []).map((r: any) => ({
+          id: r.id,
+          name: r.name || "",
+          issuer: r.issuer || "",
+          issued_on: r.issued_on || "",
+          expires_on: r.expires_on || "",
         }))
       );
       setLoading(false);
@@ -215,9 +242,13 @@ export const WorkExperience = () => {
       if (deletedCourses.length) {
         await supabase.from("student_courses").delete().in("id", deletedCourses);
       }
+      if (deletedCerts.length) {
+        await supabase.from("student_certifications").delete().in("id", deletedCerts);
+      }
       setDeletedWork([]);
       setDeletedEdu([]);
       setDeletedCourses([]);
+      setDeletedCerts([]);
 
       // Upsert work
       for (const w of work) {
@@ -274,17 +305,36 @@ export const WorkExperience = () => {
         }
       }
 
+      // Upsert certifications
+      for (const cert of certs) {
+        if (!cert.name.trim()) continue;
+        const payload: any = {
+          user_id: user.id,
+          name: cert.name.trim(),
+          issuer: cert.issuer.trim() || null,
+          issued_on: cert.issued_on || null,
+          expires_on: cert.expires_on || null,
+        };
+        if (cert.id) {
+          await supabase.from("student_certifications").update(payload).eq("id", cert.id);
+        } else {
+          await supabase.from("student_certifications").insert(payload);
+        }
+      }
+
       toast({ title: "Saved", description: "Your profile has been updated." });
 
       // Reload to get IDs for new entries
-      const [{ data: w }, { data: e }, { data: c }] = await Promise.all([
+      const [{ data: w }, { data: e }, { data: c }, { data: cf }] = await Promise.all([
         supabase.from("student_work_experience").select("*").eq("user_id", user.id).order("start_date", { ascending: false }),
         supabase.from("student_education").select("*").eq("user_id", user.id).order("start_date", { ascending: false }),
         supabase.from("student_courses").select("*").eq("user_id", user.id).order("completed_on", { ascending: false }),
+        supabase.from("student_certifications").select("*").eq("user_id", user.id).order("issued_on", { ascending: false }),
       ]);
       setWork((w || []).map((r: any) => ({ ...r, location: r.location || "", start_date: r.start_date || "", end_date: r.end_date || "", description: r.description || "" })));
       setEducation((e || []).map((r: any) => ({ ...r, degree: r.degree || "", field_of_study: r.field_of_study || "", start_date: r.start_date || "", end_date: r.end_date || "", description: r.description || "" })));
       setCourses((c || []).map((r: any) => ({ id: r.id, course_name: r.course_name || "", completed_on: r.completed_on || "" })));
+      setCerts((cf || []).map((r: any) => ({ id: r.id, name: r.name || "", issuer: r.issuer || "", issued_on: r.issued_on || "", expires_on: r.expires_on || "" })));
     } catch (err: any) {
       console.error(err);
       toast({ title: "Save failed", description: err.message || "Please try again.", variant: "destructive" });
@@ -725,6 +775,83 @@ export const WorkExperience = () => {
           ))}
         </CardContent>
       </Card>
+
+      {/* Certifications */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0">
+          <div>
+            <CardTitle className="flex items-center gap-2">
+              <Award className="h-5 w-5" /> Certifications
+            </CardTitle>
+            <CardDescription>List any certifications or licenses you hold.</CardDescription>
+          </div>
+          <Button variant="outline" size="sm" onClick={() => setCerts([emptyCert(), ...certs])}>
+            <Plus className="h-4 w-4 mr-1" /> Add
+          </Button>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {certs.length === 0 && (
+            <p className="text-sm text-muted-foreground">No certifications added yet.</p>
+          )}
+          {certs.map((cert, idx) => (
+            <div key={cert.id || idx} className="flex flex-col md:flex-row md:items-end gap-3 border rounded-md p-4">
+              <div className="flex-1">
+                <Label>Certification *</Label>
+                <Input
+                  value={cert.name}
+                  placeholder="e.g. OSHA 10"
+                  onChange={(ev) => {
+                    const v = ev.target.value.slice(0, 150);
+                    setCerts(certs.map((x, i) => (i === idx ? { ...x, name: v } : x)));
+                  }}
+                />
+              </div>
+              <div className="flex-1">
+                <Label>Issuing Organization</Label>
+                <Input
+                  value={cert.issuer}
+                  placeholder="e.g. OSHA"
+                  onChange={(ev) => {
+                    const v = ev.target.value.slice(0, 150);
+                    setCerts(certs.map((x, i) => (i === idx ? { ...x, issuer: v } : x)));
+                  }}
+                />
+              </div>
+              <div className="w-full md:w-40">
+                <Label>Issued On</Label>
+                <Input
+                  type="date"
+                  value={cert.issued_on}
+                  onChange={(ev) =>
+                    setCerts(certs.map((x, i) => (i === idx ? { ...x, issued_on: ev.target.value } : x)))
+                  }
+                />
+              </div>
+              <div className="w-full md:w-40">
+                <Label>Expires On</Label>
+                <Input
+                  type="date"
+                  value={cert.expires_on}
+                  onChange={(ev) =>
+                    setCerts(certs.map((x, i) => (i === idx ? { ...x, expires_on: ev.target.value } : x)))
+                  }
+                />
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  if (cert.id) setDeletedCerts([...deletedCerts, cert.id]);
+                  setCerts(certs.filter((_, i) => i !== idx));
+                }}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+
 
 
 
