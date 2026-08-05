@@ -1251,6 +1251,7 @@ export type Database = {
           discounted_services_value: number | null
           end_date: string | null
           ended_at: string | null
+          helping_organization_id: string | null
           id: string
           images: string[] | null
           is_approved: boolean
@@ -1274,6 +1275,7 @@ export type Database = {
           discounted_services_value?: number | null
           end_date?: string | null
           ended_at?: string | null
+          helping_organization_id?: string | null
           id?: string
           images?: string[] | null
           is_approved?: boolean
@@ -1297,6 +1299,7 @@ export type Database = {
           discounted_services_value?: number | null
           end_date?: string | null
           ended_at?: string | null
+          helping_organization_id?: string | null
           id?: string
           images?: string[] | null
           is_approved?: boolean
@@ -1310,7 +1313,15 @@ export type Database = {
           updated_at?: string
           volunteer_link?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "volunteers_helping_organization_id_fkey"
+            columns: ["helping_organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
