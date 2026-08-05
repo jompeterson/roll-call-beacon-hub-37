@@ -136,7 +136,7 @@ export const RequestDetail = () => {
             <div>
               <div className="flex items-center gap-3 flex-wrap">
                 <h1 className="text-3xl font-bold">{request.title}</h1>
-                {isAdministrator && request.is_completed && (
+                {request.is_completed && (
                   <Badge variant="secondary" className="bg-green-600 text-white">
                     Completed
                   </Badge>
