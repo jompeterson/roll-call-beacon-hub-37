@@ -17,6 +17,8 @@ import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { ChangeRequestBanner } from "@/components/shared/ChangeRequestBanner";
 import { Lock } from "lucide-react";
 import { canViewPost } from "@/lib/postVisibility";
+import { MarkFulfilledButton } from "@/components/shared/MarkFulfilledButton";
+
 
 export const RequestDetail = () => {
   const { requestId } = useParams();
