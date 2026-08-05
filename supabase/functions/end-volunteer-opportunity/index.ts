@@ -47,6 +47,9 @@ Deno.serve(async (req) => {
       .map((u: string) => u.trim())
       .filter((u: string) => /^https?:\/\//.test(u) && u.length <= 2000)
       .slice(0, 10);
+    const parsedHours = Number(body?.totalHours);
+    const totalHours =
+      Number.isFinite(parsedHours) && parsedHours >= 0 && parsedHours <= 1000000 ? parsedHours : null;
 
     if (!sessionToken || !volunteerId || accomplishments.length === 0) {
       return new Response(
