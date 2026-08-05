@@ -106,8 +106,7 @@ export const B2SManage = () => {
       supabase
         .from("b2s_classes")
         .select("*")
-        .order("year", { ascending: false })
-        .order("session", { ascending: true }),
+        .order("sort_order", { ascending: true }),
       supabase
         .from("user_profiles")
         .select("id, first_name, last_name, email, profile_image_url, user_roles!inner(name)")
