@@ -6,7 +6,9 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CheckCircle, XCircle, Clock, Mail, Phone, MapPin, Building, Calendar, User, Pencil, X, FileSignature } from "lucide-react";
+import { CheckCircle, XCircle, Clock, Mail, Phone, MapPin, Building, Calendar, User, Pencil, X, FileSignature, Download } from "lucide-react";
+import { downloadWaiverPdf } from "@/lib/waiverPdf";
+
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { formatDate } from "@/lib/utils";
 import { useUserRoles } from "@/hooks/useUserRoles";
@@ -404,7 +406,25 @@ export const UserModal = ({
                 </Badge>
               )}
             </div>
+            <div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2"
+                onClick={() =>
+                  downloadWaiverPdf({
+                    fullName: `${user.first_name} ${user.last_name}`.trim(),
+                    signatureName: user.waiver_signature_name,
+                    signedAt: user.waiver_agreed_at,
+                  })
+                }
+              >
+                <Download className="h-4 w-4" />
+                Download Waiver PDF
+              </Button>
+            </div>
           </div>
+
 
           {isEditing && isAdministrator && (
             <div className="flex justify-end gap-2">
