@@ -6,13 +6,15 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
-import { Calendar, MapPin, Users, FileText } from "lucide-react";
+import { Calendar, MapPin, Users, FileText, Building2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
 import { ImageUpload } from "@/components/shared/ImageUpload";
 import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useOrganizationOptions } from "@/hooks/useOrganizationOptions";
 
 interface VolunteerCreateModalProps {
   open: boolean;
@@ -28,6 +30,7 @@ interface VolunteerFormData {
   location: string;
   volunteer_link: string;
   max_participants: number | null;
+  helping_organization_id: string;
 }
 
 export const VolunteerCreateModal = ({
@@ -41,6 +44,7 @@ export const VolunteerCreateModal = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [images, setImages] = useState<File[]>([]);
   const [isPrivate, setIsPrivate] = useState(false);
+  const { organizations } = useOrganizationOptions();
 
   const form = useForm<VolunteerFormData>({
     defaultValues: {
@@ -51,6 +55,7 @@ export const VolunteerCreateModal = ({
       location: "",
       volunteer_link: "",
       max_participants: null,
+      helping_organization_id: "",
     },
   });
 
@@ -102,6 +107,7 @@ export const VolunteerCreateModal = ({
           location: data.location || null,
           volunteer_link: data.volunteer_link || null,
           max_participants: data.max_participants,
+          helping_organization_id: data.helping_organization_id || null,
           creator_user_id: user.id,
           images: imageUrls,
           is_private: isPrivate,
@@ -302,6 +308,34 @@ export const VolunteerCreateModal = ({
                       value={field.value || ""}
                     />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="helping_organization_id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-2">
+                    <Building2 className="h-4 w-4" />
+                    Organization Helping
+                  </FormLabel>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select an organization (optional)" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {organizations.map((org) => (
+                        <SelectItem key={org.id} value={org.id}>
+                          {org.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
