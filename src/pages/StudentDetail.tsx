@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Mail, Phone, FileText, GraduationCap, Briefcase } from "lucide-react";
+import { ArrowLeft, Mail, Phone, FileText, GraduationCap, Briefcase, BookOpen } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
 export const StudentDetail = () => {
