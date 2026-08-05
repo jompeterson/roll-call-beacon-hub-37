@@ -17,6 +17,8 @@ import { ShareButton } from "@/components/ShareButton";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { ChangeRequestBanner } from "@/components/shared/ChangeRequestBanner";
 import { Badge } from "@/components/ui/badge";
+import { Lock } from "lucide-react";
+import { canViewPost } from "@/lib/postVisibility";
 
 export const DonationDetail = () => {
   const { donationId } = useParams();
@@ -54,7 +56,9 @@ export const DonationDetail = () => {
     );
   }
 
-  if (!donation || (!isAuthenticated && donation.is_taken)) {
+  const canView = donation ? canViewPost(donation, user?.id, isAdministrator) : true;
+
+  if (!donation || (!isAuthenticated && donation.is_taken) || !canView) {
     return (
       <div className="space-y-6">
       <Breadcrumb>
@@ -148,6 +152,11 @@ export const DonationDetail = () => {
                   <Badge className="bg-green-600 text-white hover:bg-green-600">
                     Taken
                   </Badge>
+                )}
+                {(donation as any).is_private && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 text-amber-800 border border-amber-300 px-2 py-0.5 text-xs font-medium">
+                    <Lock className="h-3 w-3" /> Private
+                  </span>
                 )}
               </div>
               <p className="text-sm text-muted-foreground mt-1">Give an In-Kind Donation</p>

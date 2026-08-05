@@ -11,6 +11,7 @@ import { DonationFormBasicFields } from "./DonationFormBasicFields";
 import { DonationFormOrganizationField } from "./DonationFormOrganizationField";
 import { DonationFormContactFields } from "./DonationFormContactFields";
 import { DonationImageUpload } from "./DonationImageUpload";
+import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
 
 interface DonationCreateModalProps {
   open: boolean;
@@ -131,6 +132,11 @@ export const DonationCreateModal = ({
           <DonationImageUpload
             images={formData.images}
             onImagesChange={(images) => handleInputChange("images", images)}
+          />
+
+          <PrivatePostToggle
+            isPrivate={formData.is_private}
+            onChange={(value) => handleInputChange("is_private", value)}
           />
 
           <div className="flex gap-3 pt-4">

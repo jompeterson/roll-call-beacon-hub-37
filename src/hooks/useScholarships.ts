@@ -4,13 +4,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { Tables } from "@/integrations/supabase/types";
 import { useAuth } from "@/hooks/useAuth";
+import { filterVisiblePosts } from "@/lib/postVisibility";
 
 type Scholarship = Tables<"scholarships">;
 
 export const useScholarships = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user, isAdministrator } = useAuth();
 
   const {
     data: scholarships = [],
@@ -18,7 +19,7 @@ export const useScholarships = () => {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["scholarships", isAuthenticated],
+    queryKey: ["scholarships", isAuthenticated, user?.id, isAdministrator],
     queryFn: async () => {
       let query = supabase
         .from("scholarships")
@@ -43,7 +44,7 @@ export const useScholarships = () => {
         throw error;
       }
 
-      return data;
+      return filterVisiblePosts(data, user?.id, isAdministrator);
     },
     refetchInterval: 30000, // Refetch every 30 seconds
     refetchIntervalInBackground: true, // Continue refetching when tab is not active

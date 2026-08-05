@@ -35,6 +35,7 @@ interface DonationFormData {
   dimensions: string;
   dimension_unit: string;
   quantity: string;
+  is_private: boolean;
 }
 
 export const useDonationForm = (open: boolean) => {
@@ -65,7 +66,8 @@ export const useDonationForm = (open: boolean) => {
     location: "",
     dimensions: "",
     dimension_unit: "",
-    quantity: ""
+    quantity: "",
+    is_private: false
   });
 
   const { isAdministrator } = useAuth();
@@ -145,7 +147,8 @@ export const useDonationForm = (open: boolean) => {
       location: "",
       dimensions: "",
       dimension_unit: "",
-      quantity: ""
+      quantity: "",
+      is_private: false
     });
   };
 

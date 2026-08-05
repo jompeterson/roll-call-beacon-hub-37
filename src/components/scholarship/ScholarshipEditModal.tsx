@@ -7,6 +7,7 @@ import { ScholarshipFormFields } from "./ScholarshipFormFields";
 import { type AmountType } from "./ScholarshipFormData";
 import { ImageUpload } from "@/components/shared/ImageUpload";
 import { SubmitForReviewDialog } from "@/components/shared/SubmitForReviewDialog";
+import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
 
 interface ScholarshipEditModalProps {
   open: boolean;
@@ -26,6 +27,7 @@ export const ScholarshipEditModal = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showReviewDialog, setShowReviewDialog] = useState(false);
   const [images, setImages] = useState<File[]>([]);
+  const [isPrivate, setIsPrivate] = useState<boolean>(!!scholarship.is_private);
   const getInitialAmountType = (): AmountType => {
     const amt = Number(scholarship.amount);
     const amtMax = Number(scholarship.amount_max);
@@ -99,6 +101,7 @@ export const ScholarshipEditModal = ({
         contact_phone: formData.contact_phone || null,
         scholarship_link: formData.scholarship_link || null,
         images: imageUrls,
+        is_private: isPrivate,
         updated_at: new Date().toISOString()
       };
 
@@ -148,6 +151,8 @@ export const ScholarshipEditModal = ({
             onInputChange={handleInputChange}
             onImagesChange={setImages}
           />
+
+          <PrivatePostToggle isPrivate={isPrivate} onChange={setIsPrivate} />
 
           <div className="flex gap-3 pt-4">
             <Button

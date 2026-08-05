@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ImageUpload } from "@/components/shared/ImageUpload";
 import { SubmitForReviewDialog } from "@/components/shared/SubmitForReviewDialog";
 import { X } from "lucide-react";
+import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
 import type { Volunteer } from "@/hooks/useVolunteers";
 
 interface VolunteerEditModalProps {
@@ -39,6 +40,7 @@ export const VolunteerEditModal = ({
     volunteer_link: volunteer.volunteer_link || "",
     max_participants: volunteer.max_participants?.toString() || ""
   });
+  const [isPrivate, setIsPrivate] = useState(!!volunteer.is_private);
 
   const { toast } = useToast();
 
@@ -88,6 +90,7 @@ export const VolunteerEditModal = ({
         volunteer_link: formData.volunteer_link || null,
         max_participants: formData.max_participants ? parseInt(formData.max_participants) : null,
         images: imageUrls,
+        is_private: isPrivate,
         updated_at: new Date().toISOString()
       };
 
@@ -203,6 +206,8 @@ export const VolunteerEditModal = ({
               />
             </div>
           </div>
+
+          <PrivatePostToggle isPrivate={isPrivate} onChange={setIsPrivate} />
 
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>

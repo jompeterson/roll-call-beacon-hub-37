@@ -16,7 +16,7 @@ interface UseScholarshipFormProps {
 
 export const useScholarshipForm = ({ onScholarshipCreated, onClose, overrideOrganization }: UseScholarshipFormProps) => {
   const { validateForm, user, currentOrganization } = useScholarshipFormValidation();
-  const { formData, images, handleInputChange, handleImagesChange, resetForm } = useScholarshipFormState();
+  const { formData, images, isPrivate, setIsPrivate, handleInputChange, handleImagesChange, resetForm } = useScholarshipFormState();
   const { isSubmitting, submitScholarship } = useScholarshipSubmission({ onScholarshipCreated, onClose });
 
   const effectiveOrganization = overrideOrganization || currentOrganization;
@@ -38,13 +38,16 @@ export const useScholarshipForm = ({ onScholarshipCreated, onClose, overrideOrga
       effectiveOrganization.id,
       effectiveOrganization.name,
       images,
-      resetForm
+      resetForm,
+      isPrivate
     );
   };
 
   return {
     formData,
     images,
+    isPrivate,
+    setIsPrivate,
     isSubmitting,
     currentOrganization,
     handleInputChange,

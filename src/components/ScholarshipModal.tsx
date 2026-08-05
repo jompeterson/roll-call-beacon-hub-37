@@ -5,6 +5,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tables } from "@/integrations/supabase/types";
 import { useAuth } from "@/hooks/useAuth";
+import { canViewPost } from "@/lib/postVisibility";
+import { Lock } from "lucide-react";
 import { ScholarshipInfo } from "./scholarship/ScholarshipInfo";
 import { ScholarshipActionButtons } from "./scholarship/ScholarshipActionButtons";
 import { ScholarshipApplyButton } from "./scholarship/ScholarshipApplyButton";
@@ -49,7 +51,7 @@ export const ScholarshipModal = ({
   isRequestingChanges = false,
   disableNavigation = false,
 }: ScholarshipModalProps) => {
-  const { isAdministrator, isAuthenticated } = useAuth();
+  const { isAdministrator, isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -68,6 +70,25 @@ export const ScholarshipModal = ({
   }, [open, scholarship, navigate, location.pathname, disableNavigation]);
 
   if (!scholarship) return null;
+
+  const canView = canViewPost(scholarship, user?.id, isAdministrator);
+
+  if (!canView) {
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Scholarship Not Found</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <p className="text-sm text-muted-foreground">
+              This scholarship is private and you don't have access to view it.
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   const handleApprove = () => {
     onApprove(scholarship.id);
@@ -112,9 +133,17 @@ export const ScholarshipModal = ({
           <DialogHeader>
             <div className="flex justify-between items-start">
               <div>
-                <DialogTitle className="text-xl font-semibold">
-                  {scholarship.title}
-                </DialogTitle>
+                <div className="flex items-center gap-2">
+                  <DialogTitle className="text-xl font-semibold">
+                    {scholarship.title}
+                  </DialogTitle>
+                  {scholarship.is_private && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 text-amber-800 border border-amber-300 px-2 py-0.5 text-xs font-medium">
+                      <Lock className="h-3 w-3" />
+                      Private
+                    </span>
+                  )}
+                </div>
                 <p className="text-sm text-muted-foreground mt-1">Scholarships</p>
               </div>
               <ShareButton />

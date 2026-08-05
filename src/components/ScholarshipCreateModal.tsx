@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useScholarshipForm } from "@/hooks/useScholarshipForm";
 import { ScholarshipFormFields } from "@/components/scholarship/ScholarshipFormFields";
 import { useProfileData } from "@/hooks/useProfileData";
+import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Organization {
@@ -63,6 +64,8 @@ export const ScholarshipCreateModal = ({
   const {
     formData,
     images,
+    isPrivate,
+    setIsPrivate,
     isSubmitting,
     handleInputChange,
     handleImagesChange,
@@ -147,6 +150,10 @@ export const ScholarshipCreateModal = ({
             onInputChange={handleInputChange}
             onImagesChange={handleImagesChange}
           />
+
+          <div className="mt-4">
+            <PrivatePostToggle isPrivate={isPrivate} onChange={setIsPrivate} />
+          </div>
 
           <DialogFooter className="gap-2 mt-6">
             <Button

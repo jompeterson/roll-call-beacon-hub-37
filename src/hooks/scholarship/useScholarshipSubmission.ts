@@ -24,7 +24,8 @@ export const useScholarshipSubmission = ({
     organizationId: string,
     organizationName: string,
     images: File[],
-    resetForm: () => void
+    resetForm: () => void,
+    isPrivate: boolean = false
   ) => {
     setIsSubmitting(true);
 
@@ -71,7 +72,8 @@ export const useScholarshipSubmission = ({
         organization_name: organizationName,
         images: imageUrls,
         is_approved: false,
-        approval_decision_made: false
+        approval_decision_made: false,
+        is_private: isPrivate
       };
 
       const { error } = await supabase
