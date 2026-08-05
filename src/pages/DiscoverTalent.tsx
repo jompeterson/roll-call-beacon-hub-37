@@ -202,7 +202,4 @@ export const DiscoverTalent = () => {
       </div>
     </div>
   );
-
-    </div>
-  );
 };
