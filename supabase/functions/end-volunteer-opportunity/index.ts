@@ -47,6 +47,9 @@ Deno.serve(async (req) => {
       .map((u: string) => u.trim())
       .filter((u: string) => /^https?:\/\//.test(u) && u.length <= 2000)
       .slice(0, 10);
+    const parsedHours = Number(body?.totalHours);
+    const totalHours =
+      Number.isFinite(parsedHours) && parsedHours >= 0 && parsedHours <= 1000000 ? parsedHours : null;
 
     if (!sessionToken || !volunteerId || accomplishments.length === 0) {
       return new Response(
@@ -105,6 +108,7 @@ Deno.serve(async (req) => {
         ended_at: new Date().toISOString(),
         accomplishments: accomplishments.join("\n"),
         completion_images: completionImages,
+        total_hours: totalHours,
       })
       .eq("id", volunteerId);
 
@@ -153,6 +157,10 @@ Deno.serve(async (req) => {
           )
           .join("")}</div>`
       : "";
+    const hoursHtml = totalHours !== null
+      ? `<p style="font-size: 15px; line-height: 1.6; color: #333; margin: 0 0 20px;"><strong>Total hours volunteered:</strong> ${totalHours.toLocaleString("en-US")}</p>`
+      : "";
+    const hoursText = totalHours !== null ? `\n\nTotal hours volunteered: ${totalHours}` : "";
     const subject = `Thank you for volunteering: ${volunteer.title}`;
 
     const emails = [...recipients.entries()].map(([email, firstName]) => {
@@ -164,6 +172,7 @@ Deno.serve(async (req) => {
             Thank you for giving your time to <strong>${escapeHtml(volunteer.title)}</strong>. Because of you, here is what we accomplished together:
           </p>
           <ul style="font-size: 15px; line-height: 1.7; color: #333; padding-left: 20px; margin: 0 0 20px;">${listHtml}</ul>
+          ${hoursHtml}
           ${photosHtml}
           <p style="font-size: 15px; line-height: 1.6; color: #333; margin: 0;">We truly appreciate your support.</p>
           <p style="font-size: 13px; color: #666; margin: 24px 0 0;">
@@ -176,7 +185,7 @@ Deno.serve(async (req) => {
         to: [email],
         subject,
         html,
-        text: `${firstName ? `Hi ${firstName},` : "Hello,"}\n\nThank you for giving your time to ${volunteer.title}. Here is what we accomplished together:\n\n${listText}\n\nWe truly appreciate your support.`,
+        text: `${firstName ? `Hi ${firstName},` : "Hello,"}\n\nThank you for giving your time to ${volunteer.title}. Here is what we accomplished together:\n\n${listText}${hoursText}\n\nWe truly appreciate your support.`,
       };
     });
 

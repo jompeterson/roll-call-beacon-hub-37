@@ -1111,6 +1111,7 @@ export type Database = {
           max_participants: number | null
           start_date: string
           title: string
+          total_hours: number | null
           updated_at: string
           volunteer_link: string | null
         }
@@ -1132,6 +1133,7 @@ export type Database = {
           max_participants?: number | null
           start_date: string
           title: string
+          total_hours?: number | null
           updated_at?: string
           volunteer_link?: string | null
         }
@@ -1153,6 +1155,7 @@ export type Database = {
           max_participants?: number | null
           start_date?: string
           title?: string
+          total_hours?: number | null
           updated_at?: string
           volunteer_link?: string | null
         }

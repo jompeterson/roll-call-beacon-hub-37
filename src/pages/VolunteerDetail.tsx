@@ -278,9 +278,15 @@ export const VolunteerDetail = () => {
               )}
             </div>
 
-            {volunteer.is_ended && (volunteer.accomplishments || (volunteer.completion_images?.length ?? 0) > 0) && (
+            {volunteer.is_ended && (volunteer.accomplishments || volunteer.total_hours != null || (volunteer.completion_images?.length ?? 0) > 0) && (
               <div className="rounded-md border bg-muted/40 p-4">
                 <h3 className="font-semibold mb-2">Accomplishments</h3>
+                {volunteer.total_hours != null && (
+                  <p className="mb-3 text-sm">
+                    <span className="font-medium">Total hours volunteered:</span>{" "}
+                    {Number(volunteer.total_hours).toLocaleString()}
+                  </p>
+                )}
                 {volunteer.accomplishments && (
                   <ul className="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
                     {volunteer.accomplishments.split("\n").filter(Boolean).map((item, i) => (

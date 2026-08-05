@@ -26,6 +26,7 @@ export const EndOpportunityModal = ({
 }: EndOpportunityModalProps) => {
   const { toast } = useToast();
   const [items, setItems] = useState<string[]>([""]);
+  const [totalHours, setTotalHours] = useState("");
   const [photos, setPhotos] = useState<File[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
@@ -96,12 +97,22 @@ export const EndOpportunityModal = ({
       return;
     }
 
+    const hours = Number(totalHours);
+    if (!totalHours.trim() || !Number.isFinite(hours) || hours < 0) {
+      toast({
+        title: "Total hours required",
+        description: "Enter the total number of hours volunteered.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setSubmitting(true);
     try {
       const completionImages = await uploadPhotos();
       const sessionToken = localStorage.getItem("session_token");
       const { data, error } = await supabase.functions.invoke("end-volunteer-opportunity", {
-        body: { sessionToken, volunteerId, accomplishments, completionImages },
+        body: { sessionToken, volunteerId, accomplishments, completionImages, totalHours: hours },
       });
 
       if (error) throw error;
@@ -113,8 +124,10 @@ export const EndOpportunityModal = ({
       });
       onOpenChange(false);
       setItems([""]);
+      setTotalHours("");
       setPhotos([]);
       onEnded?.();
+
     } catch (err: any) {
       console.error("Failed to end opportunity:", err);
       toast({
@@ -166,6 +179,26 @@ export const EndOpportunityModal = ({
             Add accomplishment
           </Button>
         </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="total-hours">Total hours volunteered</Label>
+          <Input
+            id="total-hours"
+            type="number"
+            min="0"
+            step="0.25"
+            inputMode="decimal"
+            placeholder="e.g. 24"
+            value={totalHours}
+            onChange={(e) => setTotalHours(e.target.value)}
+            disabled={submitting}
+          />
+          <p className="text-sm text-muted-foreground">
+            Combined hours contributed by all participants during this opportunity.
+          </p>
+        </div>
+
+
 
         <div className="space-y-3">
           <Label htmlFor="completion-photos">Photos (optional, up to {MAX_PHOTOS})</Label>
