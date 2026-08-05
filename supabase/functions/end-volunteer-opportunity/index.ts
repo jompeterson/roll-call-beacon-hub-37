@@ -157,6 +157,10 @@ Deno.serve(async (req) => {
           )
           .join("")}</div>`
       : "";
+    const hoursHtml = totalHours !== null
+      ? `<p style="font-size: 15px; line-height: 1.6; color: #333; margin: 0 0 20px;"><strong>Total hours volunteered:</strong> ${totalHours.toLocaleString("en-US")}</p>`
+      : "";
+    const hoursText = totalHours !== null ? `\n\nTotal hours volunteered: ${totalHours}` : "";
     const subject = `Thank you for volunteering: ${volunteer.title}`;
 
     const emails = [...recipients.entries()].map(([email, firstName]) => {
