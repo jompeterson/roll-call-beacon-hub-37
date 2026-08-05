@@ -305,7 +305,7 @@ export const B2SManage = () => {
     : [];
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6">
+    <div className="w-full space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-2">

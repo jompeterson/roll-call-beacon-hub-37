@@ -148,7 +148,7 @@ export const DiscoverTalent = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto h-full flex flex-col min-h-0">
+    <div className="w-full h-full flex flex-col min-h-0">
       <div className="shrink-0 space-y-6 pb-4">
         <div className="flex items-start justify-between gap-4">
           <div>
