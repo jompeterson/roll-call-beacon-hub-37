@@ -127,6 +127,13 @@ export const WorkExperience = () => {
           description: r.description || "",
         }))
       );
+      setCourses(
+        (c || []).map((r: any) => ({
+          id: r.id,
+          course_name: r.course_name || "",
+          completed_on: r.completed_on || "",
+        }))
+      );
       setLoading(false);
     };
     load();
