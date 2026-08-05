@@ -404,7 +404,25 @@ export const UserModal = ({
                 </Badge>
               )}
             </div>
+            <div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2"
+                onClick={() =>
+                  downloadWaiverPdf({
+                    fullName: `${user.first_name} ${user.last_name}`.trim(),
+                    signatureName: user.waiver_signature_name,
+                    signedAt: user.waiver_agreed_at,
+                  })
+                }
+              >
+                <Download className="h-4 w-4" />
+                Download Waiver PDF
+              </Button>
+            </div>
           </div>
+
 
           {isEditing && isAdministrator && (
             <div className="flex justify-end gap-2">
