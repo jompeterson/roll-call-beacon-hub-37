@@ -16,6 +16,7 @@ export const StudentDetail = () => {
   const [profile, setProfile] = useState<any>(null);
   const [work, setWork] = useState<any[]>([]);
   const [education, setEducation] = useState<any[]>([]);
+  const [courses, setCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   const isStudent = userRole?.name === "student";
