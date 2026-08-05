@@ -439,6 +439,16 @@ export const WorkExperience = () => {
         </CardContent>
       </Card>
 
+      {/* Letters of Recommendation (read-only for the graduate) */}
+      {user?.id && (
+        <RecommendationLetters
+          studentId={user.id}
+          description="Uploaded by administrators. Only you and administrators can view or download these."
+        />
+      )}
+
+
+
       {/* Skills */}
       <Card>
         <CardHeader>
