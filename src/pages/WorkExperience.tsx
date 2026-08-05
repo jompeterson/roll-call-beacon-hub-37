@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Briefcase, GraduationCap, Plus, Trash2, FileText, Upload, X, Loader2, Save } from "lucide-react";
+import { Briefcase, GraduationCap, Plus, Trash2, FileText, Upload, X, Loader2, Save, BookOpen } from "lucide-react";
 
 type WorkRow = {
   id?: string;
