@@ -180,6 +180,26 @@ export const EndOpportunityModal = ({
           </Button>
         </div>
 
+        <div className="space-y-2">
+          <Label htmlFor="total-hours">Total hours volunteered</Label>
+          <Input
+            id="total-hours"
+            type="number"
+            min="0"
+            step="0.25"
+            inputMode="decimal"
+            placeholder="e.g. 24"
+            value={totalHours}
+            onChange={(e) => setTotalHours(e.target.value)}
+            disabled={submitting}
+          />
+          <p className="text-sm text-muted-foreground">
+            Combined hours contributed by all participants during this opportunity.
+          </p>
+        </div>
+
+
+
         <div className="space-y-3">
           <Label htmlFor="completion-photos">Photos (optional, up to {MAX_PHOTOS})</Label>
           <Input
