@@ -1,0 +1,1 @@
+ALTER TABLE public.volunteers ADD COLUMN IF NOT EXISTS total_hours numeric;
