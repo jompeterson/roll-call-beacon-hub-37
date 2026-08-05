@@ -25,6 +25,7 @@ export interface Volunteer {
   accomplishments?: string | null;
   completion_images?: string[];
   total_hours?: number | null;
+  discounted_services_value?: number | null;
 }
 
 export const useVolunteers = () => {
