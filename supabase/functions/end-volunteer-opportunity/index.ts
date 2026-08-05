@@ -172,6 +172,7 @@ Deno.serve(async (req) => {
             Thank you for giving your time to <strong>${escapeHtml(volunteer.title)}</strong>. Because of you, here is what we accomplished together:
           </p>
           <ul style="font-size: 15px; line-height: 1.7; color: #333; padding-left: 20px; margin: 0 0 20px;">${listHtml}</ul>
+          ${hoursHtml}
           ${photosHtml}
           <p style="font-size: 15px; line-height: 1.6; color: #333; margin: 0;">We truly appreciate your support.</p>
           <p style="font-size: 13px; color: #666; margin: 24px 0 0;">
