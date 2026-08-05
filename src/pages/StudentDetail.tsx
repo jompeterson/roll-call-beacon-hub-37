@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Mail, Phone, FileText, GraduationCap, Briefcase, BookOpen, Award } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import { RecommendationLetters } from "@/components/talent/RecommendationLetters";
+
 
 export const StudentDetail = () => {
   const { studentId } = useParams<{ studentId: string }>();
