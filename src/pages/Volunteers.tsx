@@ -20,7 +20,7 @@ import { filterVisiblePosts } from "@/lib/postVisibility";
 import { Lock } from "lucide-react";
 
 type SortDirection = "asc" | "desc" | null;
-type SortField = "organization_name" | "title" | "start_date" | "location" | "status" | null;
+type SortField = "helping_organization_name" | "title" | "start_date" | "location" | "status" | null;
 
 
 const StatusIcon = ({ status }: { status: string }) => {
@@ -200,7 +200,7 @@ export const Volunteers = () => {
             <TableHeader>
               <TableRow>
                 <SortableTableHead
-                  field="organization_name"
+                  field="helping_organization_name"
                   currentSort={volunteerSort}
                   currentDirection={volunteerDirection}
                   onSort={handleVolunteerSort}
@@ -266,7 +266,7 @@ export const Volunteers = () => {
                       onClick={() => handleVolunteerRowClick(volunteer)}
                     >
                       <TableCell className="w-1/5 max-w-0">
-                        <div className="truncate">{volunteer.organization_name || "—"}</div>
+                        <div className="truncate">{volunteer.helping_organization_name || "—"}</div>
                         {volunteer.interested_organizations && volunteer.interested_organizations.length > 0 && (
                           <div className="truncate text-xs text-muted-foreground">
                             Interested: {volunteer.interested_organizations.join(", ")}
