@@ -91,10 +91,11 @@ export const WorkExperience = () => {
       return;
     }
     const load = async () => {
-      const [{ data: p }, { data: w }, { data: e }] = await Promise.all([
+      const [{ data: p }, { data: w }, { data: e }, { data: c }] = await Promise.all([
         supabase.from("student_profiles").select("*").eq("user_id", user.id).maybeSingle(),
         supabase.from("student_work_experience").select("*").eq("user_id", user.id).order("start_date", { ascending: false }),
         supabase.from("student_education").select("*").eq("user_id", user.id).order("start_date", { ascending: false }),
+        supabase.from("student_courses").select("*").eq("user_id", user.id).order("completed_on", { ascending: false }),
       ]);
       if (p) {
         setBio(p.bio || "");
