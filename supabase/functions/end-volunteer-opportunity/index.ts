@@ -50,6 +50,15 @@ Deno.serve(async (req) => {
     const parsedHours = Number(body?.totalHours);
     const totalHours =
       Number.isFinite(parsedHours) && parsedHours >= 0 && parsedHours <= 1000000 ? parsedHours : null;
+    const parsedServices = Number(body?.discountedServicesValue);
+    const discountedServicesValue =
+      body?.discountedServicesValue !== null &&
+      body?.discountedServicesValue !== undefined &&
+      Number.isFinite(parsedServices) &&
+      parsedServices >= 0 &&
+      parsedServices <= 100000000
+        ? parsedServices
+        : null;
 
     if (!sessionToken || !volunteerId || accomplishments.length === 0) {
       return new Response(
