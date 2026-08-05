@@ -403,7 +403,7 @@ export const Volunteers = () => {
               Upcoming ({upcomingVolunteers.length})
             </TabsTrigger>
             <TabsTrigger value="past" className="gap-2">
-              <History className="h-4 w-4" />
+              <HistoryIcon className="h-4 w-4" />
               Past ({pastVolunteers.length})
             </TabsTrigger>
           </TabsList>
