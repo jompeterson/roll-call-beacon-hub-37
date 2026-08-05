@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Briefcase, GraduationCap, Plus, Trash2, FileText, Upload, X, Loader2, Save, BookOpen, Award } from "lucide-react";
+import { RecommendationLetters } from "@/components/talent/RecommendationLetters";
+
 
 type WorkRow = {
   id?: string;
