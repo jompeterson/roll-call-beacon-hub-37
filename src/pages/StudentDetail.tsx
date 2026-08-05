@@ -160,6 +160,12 @@ export const StudentDetail = () => {
         </Card>
       )}
 
+      {userRole?.name === "administrator" && studentId && (
+        <RecommendationLetters studentId={studentId} canUpload />
+      )}
+
+
+
       {courses.length > 0 && (
         <Card>
           <CardHeader>
