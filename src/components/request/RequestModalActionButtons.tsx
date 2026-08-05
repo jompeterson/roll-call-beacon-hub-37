@@ -1,5 +1,7 @@
 
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+
 import { Button } from "@/components/ui/button";
 import { Edit } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
@@ -33,6 +35,8 @@ export const RequestModalActionButtons = ({
   const { user, isAdministrator } = useAuth();
   const { hasFulfilled, fulfillRequest, submitting } = useRequestFulfillments(request.id);
   const isOwner = user?.id === request.creator_user_id;
+  const queryClient = useQueryClient();
+
   const canEdit = isOwner || isAdministrator;
   const [showRequestChangesModal, setShowRequestChangesModal] = useState(false);
   const [approveAsPrivate, setApproveAsPrivate] = useState(false);
@@ -102,7 +106,9 @@ export const RequestModalActionButtons = ({
       }
 
       console.log("Request marked as completed successfully");
+      queryClient.invalidateQueries({ queryKey: ["requests"] });
       onMarkCompleted && onMarkCompleted(id);
+
       onOpenChange(false); // Close the modal
     } catch (error) {
       console.error("Error marking request as completed:", error);
@@ -127,7 +133,7 @@ export const RequestModalActionButtons = ({
                 {hasFulfilled ? "Already Fulfilled" : submitting ? "Submitting..." : "Fulfill Request"}
               </Button>
             )}
-            {shouldShowMarkCompleted && isOwner && (
+            {shouldShowMarkCompleted && (isOwner || isAdministrator) && (
               <Button 
                 onClick={() => handleMarkCompleted(request.id)}
                 style={{ backgroundColor: "#3d7471" }}

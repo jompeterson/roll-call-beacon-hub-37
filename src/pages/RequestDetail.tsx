@@ -17,6 +17,8 @@ import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { ChangeRequestBanner } from "@/components/shared/ChangeRequestBanner";
 import { Lock } from "lucide-react";
 import { canViewPost } from "@/lib/postVisibility";
+import { MarkFulfilledButton } from "@/components/shared/MarkFulfilledButton";
+
 
 export const RequestDetail = () => {
   const { requestId } = useParams();
@@ -134,7 +136,7 @@ export const RequestDetail = () => {
             <div>
               <div className="flex items-center gap-3 flex-wrap">
                 <h1 className="text-3xl font-bold">{request.title}</h1>
-                {isAdministrator && request.is_completed && (
+                {request.is_completed && (
                   <Badge variant="secondary" className="bg-green-600 text-white">
                     Completed
                   </Badge>
@@ -205,7 +207,21 @@ export const RequestDetail = () => {
                   </Button>
                 )}
               </div>
-              {!request.is_completed && (
+              {request.is_completed ? (
+                isAdministrator && (
+                  <MarkFulfilledButton
+                    table="requests"
+                    column="is_completed"
+                    recordId={request.id}
+                    isFulfilled={true}
+                    markLabel="Mark Fulfilled"
+                    undoLabel="Reopen Request"
+                    successMessage="Request marked as fulfilled"
+                    undoMessage="Request reopened"
+                    canUndo
+                  />
+                )
+              ) : (
                 <RequestModalActionButtons
                   request={request}
                   onApprove={handleApprove}
@@ -215,6 +231,7 @@ export const RequestDetail = () => {
                   onOpenChange={() => navigate('/donations')}
                 />
               )}
+
             </div>
           </div>
         )}
