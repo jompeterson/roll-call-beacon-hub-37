@@ -261,16 +261,6 @@ export const Events = () => {
           </Select>
         )}
 
-        <Select value={dateFilter} onValueChange={setDateFilter}>
-          <SelectTrigger className="w-[150px]">
-            <SelectValue placeholder="Date" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Events</SelectItem>
-            <SelectItem value="upcoming">Upcoming</SelectItem>
-            <SelectItem value="past">Past</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
 
       {/* Events Section */}
@@ -284,106 +274,29 @@ export const Events = () => {
             </Button>
           )}
         </div>
-        <div className="border rounded-lg flex-1 min-h-0">
-          <div className="h-full flex flex-col">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <SortableTableHead
-                    field="title"
-                    currentSort={eventSort}
-                    currentDirection={eventDirection}
-                    onSort={handleEventSort}
-                    className={isAuthenticated ? "w-1/3" : "w-1/2"}
-                  >
-                    Event Title
-                  </SortableTableHead>
-                  <SortableTableHead
-                    field="start_date"
-                    currentSort={eventSort}
-                    currentDirection={eventDirection}
-                    onSort={handleEventSort}
-                    className={isAuthenticated ? "w-1/4" : "w-1/4"}
-                  >
-                    Start Date
-                  </SortableTableHead>
-                  <SortableTableHead
-                    field="location"
-                    currentSort={eventSort}
-                    currentDirection={eventDirection}
-                    onSort={handleEventSort}
-                    className={isAuthenticated ? "w-1/4" : "w-1/4"}
-                  >
-                    Location
-                  </SortableTableHead>
-                  {isAuthenticated && (
-                    <SortableTableHead
-                      field="status"
-                      currentSort={eventSort}
-                      currentDirection={eventDirection}
-                      onSort={handleEventSort}
-                      className="w-1/6"
-                    >
-                      Status
-                    </SortableTableHead>
-                  )}
-                </TableRow>
-              </TableHeader>
-            </Table>
-            <ScrollArea className="flex-1">
-              <Table>
-                <TableBody>
-                  {sortedEvents.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={isAuthenticated ? 4 : 3} className="text-center py-8 text-muted-foreground">
-                        No events found
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    sortedEvents.map((event) => {
-                      const isPast = new Date(event.start_date) < new Date();
-                      return (
-                      <TableRow 
-                        key={event.id} 
-                        className={`cursor-pointer hover:bg-muted/50 ${isPast ? "opacity-60" : ""}`}
-                        onClick={() => handleEventRowClick(event)}
-                      >
-                        <TableCell className={`font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-0 ${isAuthenticated ? "w-1/3" : "w-1/2"}`}>
-                          <div className="flex items-center gap-2">
-                            <span>{event.title}</span>
-                            {event.is_private && (
-                              <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-800 border border-amber-300 px-1.5 py-0.5 rounded">
-                                <Lock className="h-3 w-3" /> Private
-                              </span>
-                            )}
-                            {isPast && <span className="text-xs bg-muted text-muted-foreground px-1.5 py-0.5 rounded">Past</span>}
-                            <RSVPCount eventId={event.id} isApproved={event.is_approved} />
-                          </div>
-                        </TableCell>
-                        <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
-                          {formatDate(event.start_date)}
-                        </TableCell>
-                        <TableCell className="w-1/4 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
-                          {event.location || "TBD"}
-                        </TableCell>
-                        {isAuthenticated && (
-                          <TableCell className="w-1/6">
-                            <div className="flex items-center gap-2 whitespace-nowrap">
-                              <StatusIcon status={getEventStatus(event)} />
-                              <span>{getEventStatus(event)}</span>
-                            </div>
-                          </TableCell>
-                        )}
-                      </TableRow>
-                      );
-                    })
-                  )}
-                </TableBody>
-              </Table>
-            </ScrollArea>
-          </div>
-        </div>
+
+        <Tabs defaultValue="upcoming" className="w-full flex-1 flex flex-col min-h-0">
+          <TabsList className="w-auto self-start">
+            <TabsTrigger value="upcoming" className="gap-2">
+              <CalendarClock className="h-4 w-4" />
+              Upcoming ({upcomingEvents.length})
+            </TabsTrigger>
+            <TabsTrigger value="past" className="gap-2">
+              <Archive className="h-4 w-4" />
+              Past ({pastEvents.length})
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="upcoming" className="mt-0 flex-1 data-[state=active]:flex flex-col min-h-0">
+            {renderEventTable(upcomingEvents)}
+          </TabsContent>
+
+          <TabsContent value="past" className="mt-0 flex-1 data-[state=active]:flex flex-col min-h-0">
+            {renderEventTable(pastEvents)}
+          </TabsContent>
+        </Tabs>
       </div>
+
 
       {/* Modals */}
       <EventModal
