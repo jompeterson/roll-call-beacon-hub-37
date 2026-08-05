@@ -1,47 +1,32 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Mail, Phone, FileText, Search, Briefcase, BookOpen, Award } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Search, Briefcase } from "lucide-react";
+import {
+  StudentTalentCard,
+  StudentRow,
+  getProfile,
+  getCourses,
+  getCerts,
+} from "@/components/talent/StudentTalentCard";
 
-interface StudentRow {
+interface B2SClassRow {
   id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
-  profile_image_url: string | null;
-  organization_id: string | null;
-  organizations: { name: string } | null;
-  student_profiles: {
-    bio: string | null;
-    skills: string[] | null;
-    resume_url: string | null;
-    resume_filename: string | null;
-  } | null;
-  student_courses: { course_name: string; completed_on: string | null }[] | null;
-  student_certifications: { name: string; issuer: string | null }[] | null;
+  name: string;
+  year: number;
+  session: string;
+  sort_order: number;
 }
-
-type StudentProfileData = StudentRow["student_profiles"];
-
-const getProfile = (s: StudentRow): NonNullable<StudentProfileData> | null =>
-  (Array.isArray(s.student_profiles)
-    ? s.student_profiles[0]
-    : s.student_profiles) || null;
-
-const getCourses = (s: StudentRow) => s.student_courses || [];
-
-const getCerts = (s: StudentRow) => s.student_certifications || [];
 
 export const DiscoverTalent = () => {
   const { isAuthenticated, userRole, isInitialized } = useAuth();
   const [students, setStudents] = useState<StudentRow[]>([]);
+  const [classes, setClasses] = useState<B2SClassRow[]>([]);
+  const [memberships, setMemberships] = useState<
+    { class_id: string; student_user_id: string }[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
@@ -53,29 +38,41 @@ export const DiscoverTalent = () => {
       setLoading(false);
       return;
     }
-    const fetchStudents = async () => {
+    const fetchData = async () => {
       setLoading(true);
-      const { data, error } = await supabase
-        .from("user_profiles")
-        .select(`
-          id, first_name, last_name, email, phone, profile_image_url, organization_id,
-          organizations:organization_id ( name ),
-          user_roles!inner ( name ),
-          student_profiles ( bio, skills, resume_url, resume_filename ),
-          student_courses ( course_name, completed_on ),
-          student_certifications ( name, issuer )
-        `)
-        .eq("user_roles.name", "student")
-        .eq("is_approved", true);
+      const [studentsRes, classesRes, membershipsRes] = await Promise.all([
+        supabase
+          .from("user_profiles")
+          .select(`
+            id, first_name, last_name, email, phone, profile_image_url, organization_id,
+            organizations:organization_id ( name ),
+            user_roles!inner ( name ),
+            student_profiles ( bio, skills, resume_url, resume_filename ),
+            student_courses ( course_name, completed_on ),
+            student_certifications ( name, issuer )
+          `)
+          .eq("user_roles.name", "student")
+          .eq("is_approved", true),
+        supabase
+          .from("b2s_classes")
+          .select("id, name, year, session, sort_order")
+          .order("sort_order", { ascending: true }),
+        supabase.from("b2s_class_students").select("class_id, student_user_id"),
+      ]);
 
-      if (error) {
-        console.error("Error fetching students:", error);
-      } else {
-        setStudents((data as any) || []);
-      }
+      if (studentsRes.error) console.error("Error fetching students:", studentsRes.error);
+      else setStudents((studentsRes.data as any) || []);
+
+      if (classesRes.error) console.error("Error fetching classes:", classesRes.error);
+      else setClasses((classesRes.data as any) || []);
+
+      if (membershipsRes.error)
+        console.error("Error fetching class rosters:", membershipsRes.error);
+      else setMemberships((membershipsRes.data as any) || []);
+
       setLoading(false);
     };
-    fetchStudents();
+    fetchData();
   }, [allowed]);
 
   if (!isInitialized) {
@@ -115,6 +112,41 @@ export const DiscoverTalent = () => {
     return haystack.includes(q);
   });
 
+  const studentById = new Map(filtered.map((s) => [s.id, s]));
+  const assignedIds = new Set<string>();
+
+  const groups: { key: string; title: string; subtitle?: string; students: StudentRow[] }[] =
+    [];
+
+  classes.forEach((c) => {
+    const members = memberships
+      .filter((m) => m.class_id === c.id)
+      .map((m) => studentById.get(m.student_user_id))
+      .filter((s): s is StudentRow => Boolean(s));
+    members.forEach((s) => assignedIds.add(s.id));
+    if (members.length > 0) {
+      groups.push({
+        key: c.id,
+        title: c.name,
+        subtitle: `${c.year} · ${c.session}`,
+        students: members.sort((a, b) =>
+          `${a.first_name} ${a.last_name}`.localeCompare(`${b.first_name} ${b.last_name}`)
+        ),
+      });
+    }
+  });
+
+  const unassigned = filtered.filter((s) => !assignedIds.has(s.id));
+  if (unassigned.length > 0) {
+    groups.push({
+      key: "unassigned",
+      title: "Other Talent",
+      students: unassigned.sort((a, b) =>
+        `${a.first_name} ${a.last_name}`.localeCompare(`${b.first_name} ${b.last_name}`)
+      ),
+    });
+  }
+
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       <div>
@@ -146,118 +178,22 @@ export const DiscoverTalent = () => {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {filtered.map((s) => {
-            const fullName = `${s.first_name} ${s.last_name}`;
-            const initials = `${s.first_name?.[0] || ""}${s.last_name?.[0] || ""}`;
-            const sp = getProfile(s);
-            return (
-              <Card key={s.id} className="hover:shadow-md transition-shadow">
-                <CardHeader className="flex flex-row items-start gap-4 space-y-0">
-                  <Avatar className="h-16 w-16">
-                    <AvatarImage src={s.profile_image_url || undefined} className="object-cover" />
-                    <AvatarFallback>{initials.toUpperCase()}</AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1">
-                    <Link
-                      to={`/discover-talent/${s.id}`}
-                      className="text-lg font-semibold hover:underline"
-                    >
-                      {fullName}
-                    </Link>
-                    {s.organizations?.name && (
-                      <p className="text-sm text-muted-foreground">
-                        {s.organizations.name}
-                      </p>
-                    )}
-                    <div className="flex flex-wrap gap-3 mt-2 text-xs text-muted-foreground">
-                      {s.email && (
-                        <a
-                          href={`mailto:${s.email}`}
-                          className="flex items-center gap-1 hover:text-foreground"
-                        >
-                          <Mail className="h-3 w-3" />
-                          {s.email}
-                        </a>
-                      )}
-                      {s.phone && (
-                        <a
-                          href={`tel:${s.phone}`}
-                          className="flex items-center gap-1 hover:text-foreground"
-                        >
-                          <Phone className="h-3 w-3" />
-                          {s.phone}
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {sp?.bio && (
-                    <p className="text-sm text-foreground line-clamp-3">{sp.bio}</p>
-                  )}
-                  {sp?.skills && sp.skills.length > 0 && (
-                    <div className="flex flex-wrap gap-1">
-                      {sp.skills.slice(0, 8).map((skill) => (
-                        <Badge key={skill} variant="secondary">
-                          {skill}
-                        </Badge>
-                      ))}
-                      {sp.skills.length > 8 && (
-                        <Badge variant="outline">+{sp.skills.length - 8}</Badge>
-                      )}
-                    </div>
-                  )}
-                  {getCourses(s).length > 0 && (
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground flex items-center gap-1 mb-1">
-                        <BookOpen className="h-3 w-3" /> Building to Scale Courses
-                      </p>
-                      <ul className="list-disc pl-5 space-y-0.5">
-                        {getCourses(s).map((c, i) => (
-                          <li key={`${c.course_name}-${i}`} className="text-sm text-foreground">
-                            {c.course_name}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  {getCerts(s).length > 0 && (
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground flex items-center gap-1 mb-1">
-                        <Award className="h-3 w-3" /> Certifications
-                      </p>
-                      <ul className="list-disc pl-5 space-y-0.5">
-                        {getCerts(s).map((c, i) => (
-                          <li key={`${c.name}-${i}`} className="text-sm text-foreground">
-                            {c.name}
-                            {c.issuer && (
-                              <span className="text-muted-foreground"> — {c.issuer}</span>
-                            )}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  <div className="flex gap-2 pt-1">
-                    {sp?.resume_url && (
-                      <a href={sp.resume_url} target="_blank" rel="noopener noreferrer">
-                        <Button variant="outline" size="sm">
-                          <FileText className="h-3 w-3 mr-1" />
-                          {sp.resume_filename ? "View Resume" : "Resume"}
-                        </Button>
-                      </a>
-                    )}
-                    <Link to={`/discover-talent/${s.id}`}>
-                      <Button variant="default" size="sm">
-                        View Profile
-                      </Button>
-                    </Link>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+        <div className="space-y-8">
+          {groups.map((g) => (
+            <section key={g.key} className="space-y-3">
+              <div className="border-b pb-2">
+                <h2 className="text-xl font-semibold">{g.title}</h2>
+                {g.subtitle && (
+                  <p className="text-sm text-muted-foreground">{g.subtitle}</p>
+                )}
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {g.students.map((s) => (
+                  <StudentTalentCard key={s.id} student={s} />
+                ))}
+              </div>
+            </section>
+          ))}
         </div>
       )}
     </div>
