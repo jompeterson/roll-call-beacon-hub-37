@@ -205,7 +205,21 @@ export const RequestDetail = () => {
                   </Button>
                 )}
               </div>
-              {!request.is_completed && (
+              {request.is_completed ? (
+                isAdministrator && (
+                  <MarkFulfilledButton
+                    table="requests"
+                    column="is_completed"
+                    recordId={request.id}
+                    isFulfilled={true}
+                    markLabel="Mark Fulfilled"
+                    undoLabel="Reopen Request"
+                    successMessage="Request marked as fulfilled"
+                    undoMessage="Request reopened"
+                    canUndo
+                  />
+                )
+              ) : (
                 <RequestModalActionButtons
                   request={request}
                   onApprove={handleApprove}
@@ -215,6 +229,7 @@ export const RequestDetail = () => {
                   onOpenChange={() => navigate('/donations')}
                 />
               )}
+
             </div>
           </div>
         )}
