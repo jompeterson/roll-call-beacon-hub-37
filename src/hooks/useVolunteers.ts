@@ -20,6 +20,8 @@ export interface Volunteer {
   updated_at: string;
   images?: string[];
   organization_name?: string | null;
+  helping_organization_id?: string | null;
+  helping_organization_name?: string | null;
   interested_organizations?: string[];
   is_ended?: boolean;
   ended_at?: string | null;
@@ -86,6 +88,21 @@ export const useVolunteers = () => {
         });
       }
 
+      // Names for selected helping organizations
+      const helpingOrgIds = [
+        ...new Set(rows.map((v) => v.helping_organization_id).filter(Boolean) as string[]),
+      ];
+      let helpingOrgNames: Record<string, string> = {};
+      if (helpingOrgIds.length > 0) {
+        const { data: orgs } = await supabase
+          .from("organizations")
+          .select("id, name")
+          .in("id", helpingOrgIds);
+        (orgs || []).forEach((o: any) => {
+          helpingOrgNames[o.id] = o.name;
+        });
+      }
+
       return rows.map((v) => {
         const posterOrg = orgByUser[v.creator_user_id] ?? null;
         const interested = [
@@ -98,6 +115,9 @@ export const useVolunteers = () => {
         return {
           ...v,
           organization_name: posterOrg,
+          helping_organization_name: v.helping_organization_id
+            ? helpingOrgNames[v.helping_organization_id] ?? null
+            : null,
           interested_organizations: interested,
         };
       }) as Volunteer[];
