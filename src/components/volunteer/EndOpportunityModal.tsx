@@ -198,6 +198,24 @@ export const EndOpportunityModal = ({
           </p>
         </div>
 
+        <div className="space-y-2">
+          <Label htmlFor="discounted-services">Discounted professional services ($)</Label>
+          <Input
+            id="discounted-services"
+            type="number"
+            min="0"
+            step="0.01"
+            inputMode="decimal"
+            placeholder="e.g. 1500"
+            value={discountedServices}
+            onChange={(e) => setDiscountedServices(e.target.value)}
+            disabled={submitting}
+          />
+          <p className="text-sm text-muted-foreground">
+            Optional. Total dollar value of professional services provided at a discount.
+          </p>
+        </div>
+
 
 
         <div className="space-y-3">
