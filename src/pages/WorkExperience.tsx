@@ -77,11 +77,13 @@ export const WorkExperience = () => {
   const [resumeFilename, setResumeFilename] = useState<string | null>(null);
   const [work, setWork] = useState<WorkRow[]>([]);
   const [education, setEducation] = useState<EduRow[]>([]);
+  const [courses, setCourses] = useState<CourseRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [deletedWork, setDeletedWork] = useState<string[]>([]);
   const [deletedEdu, setDeletedEdu] = useState<string[]>([]);
+  const [deletedCourses, setDeletedCourses] = useState<string[]>([]);
 
   useEffect(() => {
     if (!isAuthenticated || !user || !isStudent) {
