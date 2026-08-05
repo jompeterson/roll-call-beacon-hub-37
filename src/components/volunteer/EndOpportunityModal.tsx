@@ -27,6 +27,7 @@ export const EndOpportunityModal = ({
   const { toast } = useToast();
   const [items, setItems] = useState<string[]>([""]);
   const [totalHours, setTotalHours] = useState("");
+  const [discountedServices, setDiscountedServices] = useState("");
   const [photos, setPhotos] = useState<File[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
