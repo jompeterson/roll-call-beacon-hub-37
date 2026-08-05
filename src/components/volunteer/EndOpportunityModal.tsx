@@ -97,12 +97,22 @@ export const EndOpportunityModal = ({
       return;
     }
 
+    const hours = Number(totalHours);
+    if (!totalHours.trim() || !Number.isFinite(hours) || hours < 0) {
+      toast({
+        title: "Total hours required",
+        description: "Enter the total number of hours volunteered.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setSubmitting(true);
     try {
       const completionImages = await uploadPhotos();
       const sessionToken = localStorage.getItem("session_token");
       const { data, error } = await supabase.functions.invoke("end-volunteer-opportunity", {
-        body: { sessionToken, volunteerId, accomplishments, completionImages },
+        body: { sessionToken, volunteerId, accomplishments, completionImages, totalHours: hours },
       });
 
       if (error) throw error;
@@ -114,8 +124,10 @@ export const EndOpportunityModal = ({
       });
       onOpenChange(false);
       setItems([""]);
+      setTotalHours("");
       setPhotos([]);
       onEnded?.();
+
     } catch (err: any) {
       console.error("Failed to end opportunity:", err);
       toast({
