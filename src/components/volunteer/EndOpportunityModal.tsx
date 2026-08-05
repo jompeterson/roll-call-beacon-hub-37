@@ -108,12 +108,30 @@ export const EndOpportunityModal = ({
       return;
     }
 
+    const servicesRaw = discountedServices.trim();
+    const servicesValue = servicesRaw ? Number(servicesRaw) : null;
+    if (servicesValue !== null && (!Number.isFinite(servicesValue) || servicesValue < 0)) {
+      toast({
+        title: "Invalid amount",
+        description: "Enter a valid dollar value for discounted professional services.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setSubmitting(true);
     try {
       const completionImages = await uploadPhotos();
       const sessionToken = localStorage.getItem("session_token");
       const { data, error } = await supabase.functions.invoke("end-volunteer-opportunity", {
-        body: { sessionToken, volunteerId, accomplishments, completionImages, totalHours: hours },
+        body: {
+          sessionToken,
+          volunteerId,
+          accomplishments,
+          completionImages,
+          totalHours: hours,
+          discountedServicesValue: servicesValue,
+        },
       });
 
       if (error) throw error;
@@ -126,6 +144,7 @@ export const EndOpportunityModal = ({
       onOpenChange(false);
       setItems([""]);
       setTotalHours("");
+      setDiscountedServices("");
       setPhotos([]);
       onEnded?.();
 
