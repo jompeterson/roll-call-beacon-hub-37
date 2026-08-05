@@ -49,6 +49,8 @@ import {
   Loader2,
   Pencil,
   Search,
+  ArrowUp,
+  ArrowDown,
 } from "lucide-react";
 
 interface B2SClass {
@@ -57,6 +59,7 @@ interface B2SClass {
   year: number;
   session: string;
   description: string | null;
+  sort_order: number;
 }
 
 interface StudentOption {
@@ -103,8 +106,7 @@ export const B2SManage = () => {
       supabase
         .from("b2s_classes")
         .select("*")
-        .order("year", { ascending: false })
-        .order("session", { ascending: true }),
+        .order("sort_order", { ascending: true }),
       supabase
         .from("user_profiles")
         .select("id, first_name, last_name, email, profile_image_url, user_roles!inner(name)")
@@ -194,13 +196,23 @@ export const B2SManage = () => {
       session: session.trim(),
       description: description.trim() || null,
     };
-    const { error } = editing
-      ? await supabase.from("b2s_classes").update(payload).eq("id", editing.id)
-      : await supabase.from("b2s_classes").insert({ ...payload, created_by: user?.id || null });
-    setSaving(false);
-    if (error) {
-      toast({ title: "Save failed", description: error.message, variant: "destructive" });
-      return;
+    if (!editing) {
+      const maxOrder = classes.reduce((max, c) => Math.max(max, c.sort_order ?? 0), 0);
+      const { error } = await supabase
+        .from("b2s_classes")
+        .insert({ ...payload, created_by: user?.id || null, sort_order: maxOrder + 1 });
+      setSaving(false);
+      if (error) {
+        toast({ title: "Save failed", description: error.message, variant: "destructive" });
+        return;
+      }
+    } else {
+      const { error } = await supabase.from("b2s_classes").update(payload).eq("id", editing.id);
+      setSaving(false);
+      if (error) {
+        toast({ title: "Save failed", description: error.message, variant: "destructive" });
+        return;
+      }
     }
     toast({ title: editing ? "Class updated" : "Class created" });
     setFormOpen(false);
@@ -239,6 +251,34 @@ export const B2SManage = () => {
       return;
     }
     setEnrollments((prev) => prev.filter((e) => e.id !== enrollmentId));
+  };
+
+  const moveClass = async (index: number, direction: -1 | 1) => {
+    const swapIndex = index + direction;
+    if (swapIndex < 0 || swapIndex >= visibleClasses.length) return;
+    const a = visibleClasses[index];
+    const b = visibleClasses[swapIndex];
+    // Swap sort_order values between the two classes
+    const updates = [
+      { id: a.id, sort_order: b.sort_order },
+      { id: b.id, sort_order: a.sort_order },
+    ];
+    // Optimistic UI update
+    setClasses((prev) =>
+      prev.map((c) => {
+        if (c.id === a.id) return { ...c, sort_order: b.sort_order };
+        if (c.id === b.id) return { ...c, sort_order: a.sort_order };
+        return c;
+      })
+    );
+    const results = await Promise.all(
+      updates.map((u) => supabase.from("b2s_classes").update({ sort_order: u.sort_order }).eq("id", u.id))
+    );
+    const err = results.find((r) => r.error);
+    if (err?.error) {
+      toast({ title: "Reorder failed", description: err.error.message, variant: "destructive" });
+      loadAll();
+    }
   };
 
   if (!isInitialized) return <div className="text-muted-foreground">Loading...</div>;
@@ -308,7 +348,7 @@ export const B2SManage = () => {
         </Card>
       ) : (
         <div className="space-y-4">
-          {visibleClasses.map((c) => {
+          {visibleClasses.map((c, index) => {
             const roster = rosterFor(c.id);
             return (
               <Card key={c.id}>
@@ -324,6 +364,28 @@ export const B2SManage = () => {
                     </CardDescription>
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
+                    <div className="flex flex-col">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                        disabled={index === 0}
+                        onClick={() => moveClass(index, -1)}
+                        title="Move up"
+                      >
+                        <ArrowUp className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                        disabled={index === visibleClasses.length - 1}
+                        onClick={() => moveClass(index, 1)}
+                        title="Move down"
+                      >
+                        <ArrowDown className="h-4 w-4" />
+                      </Button>
+                    </div>
                     <Button
                       variant="outline"
                       size="sm"

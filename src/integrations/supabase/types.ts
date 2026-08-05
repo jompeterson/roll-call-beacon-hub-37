@@ -85,6 +85,7 @@ export type Database = {
           id: string
           name: string
           session: string
+          sort_order: number
           updated_at: string
           year: number
         }
@@ -95,6 +96,7 @@ export type Database = {
           id?: string
           name: string
           session: string
+          sort_order?: number
           updated_at?: string
           year: number
         }
@@ -105,6 +107,7 @@ export type Database = {
           id?: string
           name?: string
           session?: string
+          sort_order?: number
           updated_at?: string
           year?: number
         }
