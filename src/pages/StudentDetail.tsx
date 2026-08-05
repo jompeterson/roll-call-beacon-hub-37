@@ -29,7 +29,7 @@ export const StudentDetail = () => {
     }
     const fetchAll = async () => {
       setLoading(true);
-      const [{ data: u }, { data: p }, { data: w }, { data: e }] = await Promise.all([
+      const [{ data: u }, { data: p }, { data: w }, { data: e }, { data: c }] = await Promise.all([
         supabase
           .from("user_profiles")
           .select("id, first_name, last_name, email, phone, profile_image_url, organizations:organization_id(name)")
@@ -48,11 +48,17 @@ export const StudentDetail = () => {
           .eq("user_id", studentId)
           .order("currently_studying", { ascending: false })
           .order("start_date", { ascending: false }),
+        supabase
+          .from("student_courses")
+          .select("*")
+          .eq("user_id", studentId)
+          .order("completed_on", { ascending: false }),
       ]);
       setStudent(u);
       setProfile(p);
       setWork(w || []);
       setEducation(e || []);
+      setCourses(c || []);
       setLoading(false);
     };
     fetchAll();
