@@ -1100,6 +1100,7 @@ export type Database = {
           created_at: string
           creator_user_id: string
           description: string | null
+          discounted_services_value: number | null
           end_date: string | null
           ended_at: string | null
           id: string
@@ -1122,6 +1123,7 @@ export type Database = {
           created_at?: string
           creator_user_id: string
           description?: string | null
+          discounted_services_value?: number | null
           end_date?: string | null
           ended_at?: string | null
           id?: string
@@ -1144,6 +1146,7 @@ export type Database = {
           created_at?: string
           creator_user_id?: string
           description?: string | null
+          discounted_services_value?: number | null
           end_date?: string | null
           ended_at?: string | null
           id?: string
