@@ -300,6 +300,14 @@ export const EventDetail = () => {
           onEventUpdated={refetchChangeRequest}
         />
       )}
+      <EndEventModal
+        open={endOpen}
+        onOpenChange={setEndOpen}
+        eventId={event.id}
+        eventTitle={event.title}
+        onEnded={() => queryClient.invalidateQueries({ queryKey: ["events"] })}
+      />
+
     </div>
   );
 };
