@@ -105,7 +105,7 @@ export const DiscoverTalent = () => {
           Discover Talent
         </h1>
         <p className="text-muted-foreground mt-1">
-          Browse student profiles, skills, and resumes.
+          Find talented professionals trained by the industry, through the Home Building Foundation.
         </p>
       </div>
 
