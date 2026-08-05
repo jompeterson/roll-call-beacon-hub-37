@@ -201,6 +201,20 @@ export const DiscoverTalent = () => {
                       )}
                     </div>
                   )}
+                  {getCourses(s).length > 0 && (
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground flex items-center gap-1 mb-1">
+                        <BookOpen className="h-3 w-3" /> Building to Scale Courses
+                      </p>
+                      <ul className="list-disc pl-5 space-y-0.5">
+                        {getCourses(s).map((c, i) => (
+                          <li key={`${c.course_name}-${i}`} className="text-sm text-foreground">
+                            {c.course_name}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                   <div className="flex gap-2 pt-1">
                     {sp?.resume_url && (
                       <a href={sp.resume_url} target="_blank" rel="noopener noreferrer">
