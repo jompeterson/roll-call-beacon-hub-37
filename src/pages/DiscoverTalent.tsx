@@ -101,6 +101,7 @@ export const DiscoverTalent = () => {
       s.organizations?.name,
       getProfile(s)?.bio,
       ...(getProfile(s)?.skills || []),
+      ...getCourses(s).map((c) => c.course_name),
     ]
       .filter(Boolean)
       .join(" ")
