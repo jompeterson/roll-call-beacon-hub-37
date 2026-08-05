@@ -58,7 +58,8 @@ export const DiscoverTalent = () => {
           id, first_name, last_name, email, phone, profile_image_url, organization_id,
           organizations:organization_id ( name ),
           user_roles!inner ( name ),
-          student_profiles ( bio, skills, resume_url, resume_filename )
+          student_profiles ( bio, skills, resume_url, resume_filename ),
+          student_courses ( course_name, completed_on )
         `)
         .eq("user_roles.name", "student")
         .eq("is_approved", true);
