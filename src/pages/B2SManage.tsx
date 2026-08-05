@@ -49,6 +49,8 @@ import {
   Loader2,
   Pencil,
   Search,
+  ArrowUp,
+  ArrowDown,
 } from "lucide-react";
 
 interface B2SClass {
