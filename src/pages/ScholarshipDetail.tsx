@@ -15,6 +15,8 @@ import { ShareButton } from "@/components/ShareButton";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { ChangeRequestBanner } from "@/components/shared/ChangeRequestBanner";
+import { canViewPost } from "@/lib/postVisibility";
+import { Lock } from "lucide-react";
 
 export const ScholarshipDetail = () => {
   const { scholarshipId } = useParams();
@@ -37,6 +39,7 @@ export const ScholarshipDetail = () => {
 
   const scholarship = scholarships.find(s => s.id === scholarshipId);
   const isOwner = user?.id === scholarship?.creator_user_id;
+  const canView = scholarship ? canViewPost(scholarship, user?.id, isAdministrator) : true;
 
   if (isLoading) {
     return (
@@ -63,7 +66,7 @@ export const ScholarshipDetail = () => {
     );
   }
 
-  if (!scholarship) {
+  if (!scholarship || !canView) {
     return (
       <div className="space-y-6">
         <Breadcrumb>
@@ -154,7 +157,15 @@ export const ScholarshipDetail = () => {
         <div className="p-6 border-b">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-2xl font-semibold">{scholarship.title}</h1>
+              <div className="flex items-center gap-2">
+                <h1 className="text-2xl font-semibold">{scholarship.title}</h1>
+                {scholarship.is_private && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 text-amber-800 border border-amber-300 px-2 py-0.5 text-xs font-medium">
+                    <Lock className="h-3 w-3" />
+                    Private
+                  </span>
+                )}
+              </div>
               <p className="text-sm text-muted-foreground mt-1">Scholarships</p>
             </div>
             <ShareButton />
