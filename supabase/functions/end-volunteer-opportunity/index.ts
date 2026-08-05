@@ -167,10 +167,21 @@ Deno.serve(async (req) => {
           )
           .join("")}</div>`
       : "";
-    const hoursHtml = totalHours !== null
-      ? `<p style="font-size: 15px; line-height: 1.6; color: #333; margin: 0 0 20px;"><strong>Total hours volunteered:</strong> ${totalHours.toLocaleString("en-US")}</p>`
-      : "";
-    const hoursText = totalHours !== null ? `\n\nTotal hours volunteered: ${totalHours}` : "";
+    const servicesFormatted = discountedServicesValue !== null
+      ? discountedServicesValue.toLocaleString("en-US", { style: "currency", currency: "USD" })
+      : null;
+    const hoursHtml = `${
+      totalHours !== null
+        ? `<p style="font-size: 15px; line-height: 1.6; color: #333; margin: 0 0 8px;"><strong>Total hours volunteered:</strong> ${totalHours.toLocaleString("en-US")}</p>`
+        : ""
+    }${
+      servicesFormatted
+        ? `<p style="font-size: 15px; line-height: 1.6; color: #333; margin: 0 0 20px;"><strong>Discounted professional services:</strong> ${servicesFormatted}</p>`
+        : ""
+    }`;
+    const hoursText = `${totalHours !== null ? `\n\nTotal hours volunteered: ${totalHours}` : ""}${
+      servicesFormatted ? `\nDiscounted professional services: ${servicesFormatted}` : ""
+    }`;
     const subject = `Thank you for volunteering: ${volunteer.title}`;
 
     const emails = [...recipients.entries()].map(([email, firstName]) => {
