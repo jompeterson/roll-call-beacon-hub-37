@@ -10,6 +10,8 @@ import { ImageUpload } from "@/components/shared/ImageUpload";
 import { SubmitForReviewDialog } from "@/components/shared/SubmitForReviewDialog";
 import { X } from "lucide-react";
 import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useOrganizationOptions } from "@/hooks/useOrganizationOptions";
 import type { Volunteer } from "@/hooks/useVolunteers";
 
 interface VolunteerEditModalProps {
@@ -38,9 +40,11 @@ export const VolunteerEditModal = ({
     end_date: volunteer.end_date ? new Date(volunteer.end_date).toISOString().slice(0, 16) : "",
     location: volunteer.location || "",
     volunteer_link: volunteer.volunteer_link || "",
-    max_participants: volunteer.max_participants?.toString() || ""
+    max_participants: volunteer.max_participants?.toString() || "",
+    helping_organization_id: volunteer.helping_organization_id || ""
   });
   const [isPrivate, setIsPrivate] = useState(!!volunteer.is_private);
+  const { organizations } = useOrganizationOptions();
 
   const { toast } = useToast();
 
@@ -89,6 +93,7 @@ export const VolunteerEditModal = ({
         location: formData.location || null,
         volunteer_link: formData.volunteer_link || null,
         max_participants: formData.max_participants ? parseInt(formData.max_participants) : null,
+        helping_organization_id: formData.helping_organization_id || null,
         images: imageUrls,
         is_private: isPrivate,
         updated_at: new Date().toISOString()
@@ -204,6 +209,25 @@ export const VolunteerEditModal = ({
                 onChange={(e) => handleInputChange("max_participants", e.target.value)}
                 placeholder="No limit"
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="helping_organization_id">Organization Helping</Label>
+              <Select
+                value={formData.helping_organization_id}
+                onValueChange={(value) => handleInputChange("helping_organization_id", value)}
+              >
+                <SelectTrigger id="helping_organization_id">
+                  <SelectValue placeholder="Select an organization (optional)" />
+                </SelectTrigger>
+                <SelectContent>
+                  {organizations.map((org) => (
+                    <SelectItem key={org.id} value={org.id}>
+                      {org.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 

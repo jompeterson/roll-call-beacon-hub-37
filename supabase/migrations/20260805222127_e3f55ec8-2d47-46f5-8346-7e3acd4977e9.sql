@@ -1,0 +1,1 @@
+ALTER TABLE public.volunteers ADD COLUMN IF NOT EXISTS helping_organization_id uuid REFERENCES public.organizations(id) ON DELETE SET NULL;
