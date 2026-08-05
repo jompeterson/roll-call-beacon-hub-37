@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScholarshipFormData, AmountType } from "./ScholarshipFormData";
 import { ImageUpload } from "@/components/shared/ImageUpload";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 
 interface ScholarshipFormFieldsProps {
   formData: ScholarshipFormData;
@@ -112,12 +113,11 @@ export const ScholarshipFormFields = ({ formData, images, onInputChange, onImage
 
       <div className="space-y-2">
         <Label htmlFor="description">Description</Label>
-        <Textarea
+        <RichTextEditor
           id="description"
           value={formData.description}
-          onChange={(e) => onInputChange("description", e.target.value)}
+          onChange={(html) => onInputChange("description", html)}
           placeholder="Describe the scholarship program..."
-          rows={3}
         />
       </div>
 

@@ -13,6 +13,7 @@ import { SubmitForReviewDialog } from "@/components/shared/SubmitForReviewDialog
 import type { Request } from "@/hooks/useRequests";
 import { DimensionsInput } from "@/components/shared/DimensionsInput";
 import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 
 interface RequestEditModalProps {
   open: boolean;
@@ -297,12 +298,11 @@ export const RequestEditModal = ({
             <p className="text-sm text-muted-foreground">
               Please provide as much detail about your request as possible.
             </p>
-            <Textarea
+            <RichTextEditor
               id="description"
               value={formData.description}
-              onChange={(e) => handleInputChange("description", e.target.value)}
+              onChange={(html) => handleInputChange("description", html)}
               placeholder="Describe your donation needs..."
-              rows={4}
             />
           </div>
 

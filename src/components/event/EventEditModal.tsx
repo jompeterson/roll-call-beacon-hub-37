@@ -13,6 +13,7 @@ import { EVENT_TYPES } from "@/lib/eventTypes";
 import { X } from "lucide-react";
 import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
 import type { Event } from "@/hooks/useEvents";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 
 interface EventEditModalProps {
   open: boolean;
@@ -229,12 +230,11 @@ export const EventEditModal = ({
 
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
-            <Textarea
+            <RichTextEditor
               id="description"
               value={formData.description}
-              onChange={(e) => handleInputChange("description", e.target.value)}
+              onChange={(html) => handleInputChange("description", html)}
               placeholder="Describe the event..."
-              rows={4}
             />
           </div>
 
