@@ -6,7 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ChevronUp, ChevronDown, Clock, CheckCircle, XCircle, Archive, Users } from "lucide-react";
+import { ChevronUp, ChevronDown, Clock, CheckCircle, XCircle, Archive, Users, CalendarClock, History as HistoryIcon } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import { VolunteerModal } from "@/components/VolunteerModal";
 import { VolunteerCreateModal } from "@/components/VolunteerCreateModal";
 import { GuestVolunteerSignupModal } from "@/components/GuestVolunteerSignupModal";
