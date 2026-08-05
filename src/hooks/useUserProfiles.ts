@@ -15,6 +15,9 @@ interface UserProfile {
   role_id: string;
   is_approved: boolean;
   approval_decision_made: boolean;
+  waiver_agreed?: boolean | null;
+  waiver_agreed_at?: string | null;
+  waiver_signature_name?: string | null;
   user_roles: {
     id: string;
     name: string;
