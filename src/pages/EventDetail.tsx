@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEvents } from "@/hooks/useEvents";
 import { useAuth } from "@/hooks/useAuth";
 import { useEventRSVPs } from "@/hooks/useEventRSVPs";
 import { useChangeRequest } from "@/hooks/useChangeRequest";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { ChevronRight, Edit, Lock } from "lucide-react";
+import { ChevronRight, Edit, Lock, Flag } from "lucide-react";
+import { EndEventModal } from "@/components/event/EndEventModal";
 import { EventModalHeader } from "@/components/event/EventModalHeader";
 import { EventModalInformation } from "@/components/event/EventModalInformation";
 import { EventModalRSVPStatus } from "@/components/event/EventModalRSVPStatus";
@@ -33,6 +35,8 @@ export const EventDetail = () => {
   } = useEvents();
   const { rsvpCount, hasRsvp, submitting, createRSVP, deleteRSVP } = useEventRSVPs(eventId || "");
   const [editOpen, setEditOpen] = useState(false);
+  const [endOpen, setEndOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   const event = events.find(e => e.id === eventId);
   const { changeRequest, refetch: refetchChangeRequest } = useChangeRequest("event", eventId || "");
@@ -118,6 +122,11 @@ export const EventDetail = () => {
   const showComments = event.is_approved;
   const canDelete = user && (isAdministrator || (user.id === event.creator_user_id && !event.is_approved));
   const canEdit = user && ((user.id === event.creator_user_id && !event.is_approved) || isAdministrator);
+  const hasPassed = new Date(event.end_date || event.start_date) < new Date();
+  const canEndEvent = !!user && isAdministrator && event.is_approved && hasPassed && !event.is_ended;
+  const hasRecap =
+    !!event.is_ended &&
+    (!!event.accomplishments || event.funds_raised != null || (event.completion_images?.length ?? 0) > 0);
 
   const handleDelete = () => {
     deleteEvent(event.id);
@@ -190,6 +199,42 @@ export const EventDetail = () => {
             isAuthenticated={isAuthenticated}
           />
 
+          {hasRecap && (
+            <div className="rounded-md border bg-muted/40 p-4">
+              <h3 className="font-semibold mb-2">Accomplishments</h3>
+              {event.funds_raised != null && (
+                <p className="mb-3 text-sm">
+                  <span className="font-medium">Money raised:</span>{" "}
+                  {Number(event.funds_raised).toLocaleString("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                  })}
+                </p>
+              )}
+              {event.accomplishments && (
+                <ul className="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
+                  {event.accomplishments.split("\n").filter(Boolean).map((item, i) => (
+                    <li key={i}>{item}</li>
+                  ))}
+                </ul>
+              )}
+              {(event.completion_images?.length ?? 0) > 0 && (
+                <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                  {event.completion_images!.map((url, i) => (
+                    <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="block">
+                      <img
+                        src={url}
+                        alt={`Photo ${i + 1} from ${event.title}`}
+                        loading="lazy"
+                        className="aspect-square w-full rounded-md border object-cover"
+                      />
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Comments Section */}
           {showComments && (
             <CommentsSection
@@ -216,6 +261,17 @@ export const EventDetail = () => {
                   <Edit className="w-4 h-4 mr-2" />
                   Edit
                 </Button>
+              )}
+              {canEndEvent && (
+                <Button variant="outline" onClick={() => setEndOpen(true)}>
+                  <Flag className="w-4 h-4 mr-2" />
+                  End Event
+                </Button>
+              )}
+              {event.is_ended && (
+                <Badge variant="outline" className="self-center bg-gray-100 text-gray-800 border-gray-300">
+                  Ended
+                </Badge>
               )}
             </div>
             <div>
@@ -244,6 +300,14 @@ export const EventDetail = () => {
           onEventUpdated={refetchChangeRequest}
         />
       )}
+      <EndEventModal
+        open={endOpen}
+        onOpenChange={setEndOpen}
+        eventId={event.id}
+        eventTitle={event.title}
+        onEnded={() => queryClient.invalidateQueries({ queryKey: ["events"] })}
+      />
+
     </div>
   );
 };
