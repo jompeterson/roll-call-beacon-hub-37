@@ -177,14 +177,9 @@ export const EventModal = ({
           <EventModalActionButtons
             event={event}
             isAdministrator={isAdministrator}
-            isAuthenticated={isAuthenticated}
-            hasRsvp={hasRsvp}
-            rsvpCount={rsvpCount}
-            submitting={submitting}
             onApprove={onApprove}
             onReject={onReject}
             onRequestChanges={onRequestChanges}
-            onRSVPAction={handleRSVPAction}
             onEdit={() => setIsEditModalOpen(true)}
             onDelete={onDelete ? (id) => { onDelete(id); onOpenChange(false); } : undefined}
           />
