@@ -264,21 +264,6 @@ export const DonationDetail = () => {
                 )}
               </div>
               <div className="flex items-center gap-2 flex-wrap justify-end">
-                {donation.is_approved && (isOwner || isAdministrator) && (
-                  <MarkFulfilledButton
-                    table="donations"
-                    column="is_taken"
-                    recordId={donation.id}
-                    isFulfilled={(donation as any).is_taken ?? false}
-                    markLabel="Mark as Taken"
-                    undoLabel="Mark as Available"
-                    successMessage="Donation marked as taken"
-                    undoMessage="Donation marked as available"
-                    canUndo={isAdministrator}
-                    selectRecipient
-
-                  />
-                )}
                 <DonationModalActionButtons
                   donationId={donation.id}
                   creatorUserId={donation.creator_user_id}
