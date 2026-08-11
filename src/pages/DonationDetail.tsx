@@ -149,7 +149,7 @@ export const DonationDetail = () => {
       <div className="bg-card rounded-lg border">
         {/* Header */}
         <div className="p-6 border-b">
-          <div className="flex justify-between items-start">
+          <div className="flex justify-between items-start gap-4">
             <div>
               <div className="flex items-center gap-3 flex-wrap">
                 <h1 className="text-3xl font-bold">{donation.title}</h1>
@@ -166,7 +166,27 @@ export const DonationDetail = () => {
               </div>
               <p className="text-sm text-muted-foreground mt-1">Give an In-Kind Donation</p>
             </div>
-            <ShareButton />
+            <div className="flex items-center gap-2 flex-wrap justify-end">
+              {donation.is_approved && (isOwner || isAdministrator) && (
+                <MarkFulfilledButton
+                  table="donations"
+                  column="is_taken"
+                  recordId={donation.id}
+                  isFulfilled={(donation as any).is_taken ?? false}
+                  markLabel="Mark as Taken"
+                  undoLabel="Mark as Available"
+                  successMessage="Donation marked as taken"
+                  undoMessage="Donation marked as available"
+                  canUndo={isAdministrator}
+                  selectRecipient
+                  size="sm"
+                />
+              )}
+              {donation.is_approved && (
+                <AskForDonationButton donationId={donation.id} size="sm" />
+              )}
+              <ShareButton />
+            </div>
           </div>
         </div>
 
