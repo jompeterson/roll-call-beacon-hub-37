@@ -167,7 +167,31 @@ export const EventDetail = () => {
               </div>
               <p className="text-sm text-muted-foreground mt-1">Events</p>
             </div>
-            <ShareButton />
+            <div className="flex items-center gap-2">
+              {event.is_approved && isAuthenticated && (
+                <Button
+                  onClick={handleRSVPAction}
+                  disabled={submitting}
+                  variant={hasRsvp ? "outline" : "default"}
+                  size="sm"
+                >
+                  {submitting ? (
+                    "Processing..."
+                  ) : hasRsvp ? (
+                    <>
+                      <UserCheck className="h-4 w-4 mr-2" />
+                      Remove Interest
+                    </>
+                  ) : (
+                    <>
+                      <UserCheck className="h-4 w-4 mr-2" />
+                      Show Interest
+                    </>
+                  )}
+                </Button>
+              )}
+              <ShareButton />
+            </div>
           </div>
         </div>
 
