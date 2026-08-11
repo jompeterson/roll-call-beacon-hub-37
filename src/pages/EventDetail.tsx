@@ -7,7 +7,7 @@ import { useEventRSVPs } from "@/hooks/useEventRSVPs";
 import { useChangeRequest } from "@/hooks/useChangeRequest";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { ChevronRight, Edit, Lock, Flag } from "lucide-react";
+import { ChevronRight, Edit, Lock, Flag, UserCheck } from "lucide-react";
 import { EndEventModal } from "@/components/event/EndEventModal";
 import { EventModalHeader } from "@/components/event/EventModalHeader";
 import { EventModalInformation } from "@/components/event/EventModalInformation";
@@ -167,7 +167,31 @@ export const EventDetail = () => {
               </div>
               <p className="text-sm text-muted-foreground mt-1">Events</p>
             </div>
-            <ShareButton />
+            <div className="flex items-center gap-2">
+              {event.is_approved && isAuthenticated && (
+                <Button
+                  onClick={handleRSVPAction}
+                  disabled={submitting}
+                  variant={hasRsvp ? "outline" : "default"}
+                  size="sm"
+                >
+                  {submitting ? (
+                    "Processing..."
+                  ) : hasRsvp ? (
+                    <>
+                      <UserCheck className="h-4 w-4 mr-2" />
+                      Remove Interest
+                    </>
+                  ) : (
+                    <>
+                      <UserCheck className="h-4 w-4 mr-2" />
+                      Show Interest
+                    </>
+                  )}
+                </Button>
+              )}
+              <ShareButton />
+            </div>
           </div>
         </div>
 
@@ -278,13 +302,8 @@ export const EventDetail = () => {
               <EventModalActionButtons
                 event={event}
                 isAdministrator={isAdministrator}
-                isAuthenticated={isAuthenticated}
-                hasRsvp={hasRsvp}
-                rsvpCount={rsvpCount}
-                submitting={submitting}
                 onApprove={handleApprove}
                 onReject={handleReject}
-                onRSVPAction={handleRSVPAction}
                 onChangeRequestSubmitted={refetchChangeRequest}
               />
             </div>

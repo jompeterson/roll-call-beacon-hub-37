@@ -1,4 +1,4 @@
-
+import type { ReactNode } from "react";
 import { DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Calendar, Lock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -7,9 +7,10 @@ import { ShareButton } from "../ShareButton";
 interface EventModalHeaderProps {
   title: string;
   isPrivate?: boolean | null;
+  actions?: ReactNode;
 }
 
-export const EventModalHeader = ({ title, isPrivate }: EventModalHeaderProps) => {
+export const EventModalHeader = ({ title, isPrivate, actions }: EventModalHeaderProps) => {
   return (
     <div className="flex-shrink-0 p-6 border-b">
       <DialogHeader>
@@ -28,7 +29,10 @@ export const EventModalHeader = ({ title, isPrivate }: EventModalHeaderProps) =>
               Event details and management
             </DialogDescription>
           </div>
-          <ShareButton />
+          <div className="flex items-center gap-2">
+            {actions}
+            <ShareButton />
+          </div>
         </div>
       </DialogHeader>
     </div>

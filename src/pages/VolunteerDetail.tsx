@@ -8,7 +8,7 @@ import { useChangeRequest } from "@/hooks/useChangeRequest";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { ChevronRight, Calendar, MapPin, Users, CheckCircle, XCircle, Edit, Flag, Lock } from "lucide-react";
+import { ChevronRight, Calendar, MapPin, Users, CheckCircle, XCircle, Edit, Flag, Lock, UserCheck } from "lucide-react";
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ShareButton } from "@/components/ShareButton";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
@@ -166,7 +166,31 @@ export const VolunteerDetail = () => {
               <h1 className="text-2xl font-semibold">{volunteer.title}</h1>
               <p className="text-sm text-muted-foreground mt-1">Volunteer Opportunities</p>
             </div>
-            <ShareButton />
+            <div className="flex items-center gap-2">
+              {volunteer.is_approved && !isVolunteerFull && isAuthenticated && (
+                <Button
+                  onClick={handleSignupAction}
+                  disabled={submitting}
+                  variant={hasSignedUp ? "outline" : "default"}
+                  size="sm"
+                >
+                  {submitting ? (
+                    "Processing..."
+                  ) : hasSignedUp ? (
+                    <>
+                      <UserCheck className="h-4 w-4 mr-2" />
+                      Remove Interest
+                    </>
+                  ) : (
+                    <>
+                      <UserCheck className="h-4 w-4 mr-2" />
+                      Show Interest
+                    </>
+                  )}
+                </Button>
+              )}
+              <ShareButton />
+            </div>
           </div>
         </div>
 
@@ -397,22 +421,6 @@ export const VolunteerDetail = () => {
                     Reject
                   </Button>
                 </>
-              )}
-
-              {volunteer.is_approved && !isVolunteerFull && isAuthenticated && (
-                <Button
-                  onClick={handleSignupAction}
-                  disabled={submitting}
-                  variant={hasSignedUp ? "outline" : "default"}
-                >
-                  {submitting ? (
-                    "Processing..."
-                  ) : hasSignedUp ? (
-                    "Remove Interest"
-                  ) : (
-                    "Show Interest"
-                  )}
-                </Button>
               )}
             </div>
           </div>
