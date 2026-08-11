@@ -62,7 +62,9 @@ export const MarkFulfilledButton = ({
   undoMessage,
   canUndo = false,
   selectRecipient = false,
+  size = "default",
 }: MarkFulfilledButtonProps) => {
+
   const [saving, setSaving] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
