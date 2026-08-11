@@ -411,8 +411,8 @@ export const UserModal = ({
                 variant="outline"
                 size="sm"
                 className="gap-2"
-                onClick={() =>
-                  downloadWaiverPdf({
+                onClick={async () =>
+                  await downloadWaiverPdf({
                     fullName: `${user.first_name} ${user.last_name}`.trim(),
                     signatureName: user.waiver_signature_name,
                     signedAt: user.waiver_agreed_at,

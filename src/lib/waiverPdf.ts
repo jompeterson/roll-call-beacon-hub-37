@@ -8,7 +8,34 @@ interface WaiverPdfOptions {
   signedAt?: string | null;
 }
 
-export const downloadWaiverPdf = ({ fullName, signatureName, signedAt }: WaiverPdfOptions) => {
+const LOGO_URL = "/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png";
+
+const loadImageAsBase64 = (url: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        reject(new Error("Could not get canvas context"));
+        return;
+      }
+      ctx.drawImage(img, 0, 0);
+      resolve(canvas.toDataURL("image/png"));
+    };
+    img.onerror = () => reject(new Error(`Failed to load image: ${url}`));
+    img.src = url;
+  });
+};
+
+export const downloadWaiverPdf = async ({
+  fullName,
+  signatureName,
+  signedAt,
+}: WaiverPdfOptions) => {
   const doc = new jsPDF({ unit: "pt", format: "letter" });
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
@@ -16,11 +43,23 @@ export const downloadWaiverPdf = ({ fullName, signatureName, signedAt }: WaiverP
   const maxWidth = pageWidth - margin * 2;
   let y = margin;
 
+  try {
+    const logoDataUrl = await loadImageAsBase64(LOGO_URL);
+    const logoWidth = 140;
+    const logoHeight = 40;
+    doc.addImage(logoDataUrl, "PNG", margin, y, logoWidth, logoHeight);
+    y += logoHeight + 16;
+  } catch {
+    // Fallback to text if logo fails to load
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.text("HBF Roll Call", margin, y);
+    y += 24;
+  }
+
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(16);
-  doc.text("HBF Roll Call", margin, y);
-  y += 24;
   doc.setFontSize(13);
+  doc.setTextColor(0);
   doc.text(WAIVER_TITLE, margin, y, { maxWidth });
   y += 28;
 
@@ -57,6 +96,7 @@ export const downloadWaiverPdf = ({ fullName, signatureName, signedAt }: WaiverP
   let sy = signatureTop + 24;
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
+  doc.setTextColor(0);
   doc.text("Signature", margin, sy);
   sy += 22;
 
