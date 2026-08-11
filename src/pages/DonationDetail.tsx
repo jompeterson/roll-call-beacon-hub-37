@@ -13,12 +13,15 @@ import { DonationModalActionButtons } from "@/components/donations/DonationModal
 import { DonationEditModal } from "@/components/donations/DonationEditModal";
 import { DonationRequestersSection } from "@/components/donations/DonationRequestersSection";
 import { CommentsSection } from "@/components/comments/CommentsSection";
+import { ShareButton } from "@/components/ShareButton";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { ChangeRequestBanner } from "@/components/shared/ChangeRequestBanner";
 import { Badge } from "@/components/ui/badge";
 import { Lock } from "lucide-react";
 import { canViewPost } from "@/lib/postVisibility";
 import { MarkFulfilledButton } from "@/components/shared/MarkFulfilledButton";
+import { AskForDonationButton } from "@/components/donations/AskForDonationButton";
+
 import { AskForDonationButton } from "@/components/donations/AskForDonationButton";
 
 
