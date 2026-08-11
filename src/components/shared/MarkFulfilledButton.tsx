@@ -168,7 +168,7 @@ export const MarkFulfilledButton = ({
   if (isFulfilled) {
     if (!canUndo) return null;
     return (
-      <Button variant="outline" onClick={() => update(false)} disabled={saving}>
+      <Button variant="outline" onClick={() => update(false)} disabled={saving} size={size}>
         <RotateCcw className="w-4 h-4 mr-2" />
         {undoLabel}
       </Button>
