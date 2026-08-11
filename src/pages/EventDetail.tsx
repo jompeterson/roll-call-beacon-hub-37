@@ -302,13 +302,8 @@ export const EventDetail = () => {
               <EventModalActionButtons
                 event={event}
                 isAdministrator={isAdministrator}
-                isAuthenticated={isAuthenticated}
-                hasRsvp={hasRsvp}
-                rsvpCount={rsvpCount}
-                submitting={submitting}
                 onApprove={handleApprove}
                 onReject={handleReject}
-                onRSVPAction={handleRSVPAction}
                 onChangeRequestSubmitted={refetchChangeRequest}
               />
             </div>
