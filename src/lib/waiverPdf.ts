@@ -27,24 +27,58 @@ const fetchLogoUrl = async (): Promise<string> => {
   }
 };
 
-const loadImageAsBase64 = (url: string): Promise<string> => {
-  return new Promise((resolve, reject) => {
+interface LoadedLogo {
+  dataUrl: string;
+  width: number;
+  height: number;
+}
+
+// Loads the image, flattens transparency onto white and returns a JPEG data URL
+// (jsPDF renders alpha PNGs inconsistently, which can result in a blank logo).
+const loadLogo = async (url: string): Promise<LoadedLogo> => {
+  let src = url;
+  try {
+    const res = await fetch(url, { mode: "cors" });
+    if (res.ok) {
+      const blob = await res.blob();
+      src = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = () => reject(new Error("Could not read logo blob"));
+        reader.readAsDataURL(blob);
+      });
+    }
+  } catch {
+    // fall back to loading the URL directly
+  }
+
+  return new Promise<LoadedLogo>((resolve, reject) => {
     const img = new Image();
-    img.crossOrigin = "anonymous";
+    if (!src.startsWith("data:")) img.crossOrigin = "anonymous";
     img.onload = () => {
       const canvas = document.createElement("canvas");
-      canvas.width = img.naturalWidth;
-      canvas.height = img.naturalHeight;
+      canvas.width = img.naturalWidth || 600;
+      canvas.height = img.naturalHeight || 200;
       const ctx = canvas.getContext("2d");
       if (!ctx) {
         reject(new Error("Could not get canvas context"));
         return;
       }
-      ctx.drawImage(img, 0, 0);
-      resolve(canvas.toDataURL("image/png"));
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      try {
+        resolve({
+          dataUrl: canvas.toDataURL("image/jpeg", 0.92),
+          width: canvas.width,
+          height: canvas.height,
+        });
+      } catch (e) {
+        reject(e as Error);
+      }
     };
     img.onerror = () => reject(new Error(`Failed to load image: ${url}`));
-    img.src = url;
+    img.src = src;
   });
 };
 
@@ -63,12 +97,16 @@ export const downloadWaiverPdf = async ({
   const logoUrl = await fetchLogoUrl();
 
   try {
-    const logoDataUrl = await loadImageAsBase64(logoUrl);
-    const logoWidth = 140;
-    const logoHeight = 40;
-    doc.addImage(logoDataUrl, "PNG", margin, y, logoWidth, logoHeight);
+    const logo = await loadLogo(logoUrl);
+    const logoWidth = 180;
+    const logoHeight = Math.max(
+      18,
+      Math.min(70, (logo.height / logo.width) * logoWidth)
+    );
+    doc.addImage(logo.dataUrl, "JPEG", margin, y, logoWidth, logoHeight);
     y += logoHeight + 16;
-  } catch {
+  } catch (error) {
+    console.error("Waiver PDF logo failed to load:", error);
     // Fallback to text if logo fails to load
     doc.setFont("helvetica", "bold");
     doc.setFontSize(16);
@@ -76,6 +114,7 @@ export const downloadWaiverPdf = async ({
     doc.text("HBF Roll Call", margin, y);
     y += 24;
   }
+
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(13);
