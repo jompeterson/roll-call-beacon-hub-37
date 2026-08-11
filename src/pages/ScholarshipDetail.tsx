@@ -168,7 +168,15 @@ export const ScholarshipDetail = () => {
               </div>
               <p className="text-sm text-muted-foreground mt-1">Scholarships</p>
             </div>
-            <ShareButton />
+            <div className="flex items-center gap-2">
+              {showApplyButton && (
+                <ScholarshipApplyButton
+                  scholarshipLink={scholarship.scholarship_link}
+                  onApply={handleApplyToScholarship}
+                />
+              )}
+              <ShareButton />
+            </div>
           </div>
         </div>
 
@@ -200,7 +208,7 @@ export const ScholarshipDetail = () => {
         </div>
 
         {/* Footer with Action Buttons */}
-        {(showApplyButton || showActionButtons || canDelete) && (
+        {(showActionButtons || canDelete || canEdit) && (
           <div className="border-t p-6 space-y-2">
             <div className="flex justify-between items-center">
               <div className="flex gap-2">
@@ -217,14 +225,6 @@ export const ScholarshipDetail = () => {
                     <Edit className="w-4 h-4 mr-2" />
                     Edit
                   </Button>
-                )}
-              </div>
-              <div className="flex gap-2">
-                {showApplyButton && (
-                  <ScholarshipApplyButton
-                    scholarshipLink={scholarship.scholarship_link}
-                    onApply={handleApplyToScholarship}
-                  />
                 )}
               </div>
             </div>
