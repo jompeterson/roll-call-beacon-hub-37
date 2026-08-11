@@ -47,7 +47,9 @@ interface MarkFulfilledButtonProps {
   canUndo?: boolean;
   /** When true, ask which platform user received the donation */
   selectRecipient?: boolean;
+  size?: "default" | "sm" | "lg" | "icon";
 }
+
 
 export const MarkFulfilledButton = ({
   table,
@@ -60,7 +62,9 @@ export const MarkFulfilledButton = ({
   undoMessage,
   canUndo = false,
   selectRecipient = false,
+  size = "default",
 }: MarkFulfilledButtonProps) => {
+
   const [saving, setSaving] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -164,7 +168,7 @@ export const MarkFulfilledButton = ({
   if (isFulfilled) {
     if (!canUndo) return null;
     return (
-      <Button variant="outline" onClick={() => update(false)} disabled={saving}>
+      <Button variant="outline" onClick={() => update(false)} disabled={saving} size={size}>
         <RotateCcw className="w-4 h-4 mr-2" />
         {undoLabel}
       </Button>
@@ -176,6 +180,7 @@ export const MarkFulfilledButton = ({
       <Button
         onClick={() => update(true)}
         disabled={saving}
+        size={size}
         style={{ backgroundColor: "#3d7471" }}
         className="text-white hover:opacity-90"
       >
@@ -190,6 +195,7 @@ export const MarkFulfilledButton = ({
       <Button
         onClick={() => setDialogOpen(true)}
         disabled={saving}
+        size={size}
         style={{ backgroundColor: "#3d7471" }}
         className="text-white hover:opacity-90"
       >
