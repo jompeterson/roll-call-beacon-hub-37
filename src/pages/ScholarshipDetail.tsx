@@ -168,7 +168,15 @@ export const ScholarshipDetail = () => {
               </div>
               <p className="text-sm text-muted-foreground mt-1">Scholarships</p>
             </div>
-            <ShareButton />
+            <div className="flex items-center gap-2">
+              {showApplyButton && (
+                <ScholarshipApplyButton
+                  scholarshipLink={scholarship.scholarship_link}
+                  onApply={handleApplyToScholarship}
+                />
+              )}
+              <ShareButton />
+            </div>
           </div>
         </div>
 
