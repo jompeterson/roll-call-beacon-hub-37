@@ -47,7 +47,9 @@ interface MarkFulfilledButtonProps {
   canUndo?: boolean;
   /** When true, ask which platform user received the donation */
   selectRecipient?: boolean;
+  size?: "default" | "sm" | "lg" | "icon";
 }
+
 
 export const MarkFulfilledButton = ({
   table,
