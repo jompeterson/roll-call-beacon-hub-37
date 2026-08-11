@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useEventRSVPs } from "@/hooks/useEventRSVPs";
 import { CommentsSection } from "@/components/comments/CommentsSection";
@@ -12,6 +13,7 @@ import { EventModalRSVPStatus } from "@/components/event/EventModalRSVPStatus";
 import { EventModalActionButtons } from "@/components/event/EventModalActionButtons";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
 import { EventEditModal } from "@/components/event/EventEditModal";
+import { UserCheck } from "lucide-react";
 
 interface Event {
   id: string;
