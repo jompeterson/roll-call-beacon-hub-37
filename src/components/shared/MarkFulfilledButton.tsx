@@ -180,6 +180,7 @@ export const MarkFulfilledButton = ({
       <Button
         onClick={() => update(true)}
         disabled={saving}
+        size={size}
         style={{ backgroundColor: "#3d7471" }}
         className="text-white hover:opacity-90"
       >
