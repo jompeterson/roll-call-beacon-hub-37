@@ -97,11 +97,48 @@ export const EventModal = ({
   // Use smaller height when comments aren't shown
   const modalHeight = showComments ? "h-[80vh]" : "h-[60vh]";
 
+  const isEventFull = event.max_participants && rsvpCount >= event.max_participants;
+  const canRSVP = event.is_approved && (!isEventFull || hasRsvp);
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={`max-w-4xl ${modalHeight} flex flex-col p-0`}>
         {/* Fixed Header */}
-        <EventModalHeader title={event.title} isPrivate={event.is_private} />
+        <EventModalHeader
+          title={event.title}
+          isPrivate={event.is_private}
+          actions={
+            canRSVP ? (
+              <Button
+                onClick={handleRSVPAction}
+                disabled={submitting}
+                variant={isAuthenticated && hasRsvp ? "destructive" : "outline"}
+                size="sm"
+              >
+                {submitting ? (
+                  "Processing..."
+                ) : isAuthenticated ? (
+                  hasRsvp ? (
+                    <>
+                      <UserCheck className="h-4 w-4 mr-2" />
+                      Remove Interest
+                    </>
+                  ) : (
+                    <>
+                      <UserCheck className="h-4 w-4 mr-2" />
+                      Show Interest
+                    </>
+                  )
+                ) : (
+                  <>
+                    <UserCheck className="h-4 w-4 mr-2" />
+                    Show Interest
+                  </>
+                )}
+              </Button>
+            ) : undefined
+          }
+        />
 
         {/* Scrollable Content */}
         <ScrollArea className="flex-1 px-6">
