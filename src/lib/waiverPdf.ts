@@ -1,6 +1,7 @@
 import jsPDF from "jspdf";
 import { WAIVER_PARAGRAPHS, WAIVER_TITLE } from "@/components/waiver/WaiverText";
 import { formatDate } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
 
 interface WaiverPdfOptions {
   fullName?: string | null;
@@ -8,7 +9,23 @@ interface WaiverPdfOptions {
   signedAt?: string | null;
 }
 
-const LOGO_URL = "/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png";
+const DEFAULT_LOGO_URL = "/lovable-uploads/8849daf6-28a0-4f3f-b445-3be062dba04a.png";
+
+const fetchLogoUrl = async (): Promise<string> => {
+  try {
+    const { data, error } = await supabase
+      .from('app_settings' as any)
+      .select('value')
+      .eq('key', 'logo_url')
+      .single();
+
+    if (error) throw error;
+    return (data as any)?.value || DEFAULT_LOGO_URL;
+  } catch (error) {
+    console.error('Error fetching logo URL for waiver PDF:', error);
+    return DEFAULT_LOGO_URL;
+  }
+};
 
 const loadImageAsBase64 = (url: string): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -43,8 +60,10 @@ export const downloadWaiverPdf = async ({
   const maxWidth = pageWidth - margin * 2;
   let y = margin;
 
+  const logoUrl = await fetchLogoUrl();
+
   try {
-    const logoDataUrl = await loadImageAsBase64(LOGO_URL);
+    const logoDataUrl = await loadImageAsBase64(logoUrl);
     const logoWidth = 140;
     const logoHeight = 40;
     doc.addImage(logoDataUrl, "PNG", margin, y, logoWidth, logoHeight);
@@ -53,6 +72,7 @@ export const downloadWaiverPdf = async ({
     // Fallback to text if logo fails to load
     doc.setFont("helvetica", "bold");
     doc.setFontSize(16);
+    doc.setTextColor(0);
     doc.text("HBF Roll Call", margin, y);
     y += 24;
   }
