@@ -422,22 +422,6 @@ export const VolunteerDetail = () => {
                   </Button>
                 </>
               )}
-
-              {volunteer.is_approved && !isVolunteerFull && isAuthenticated && (
-                <Button
-                  onClick={handleSignupAction}
-                  disabled={submitting}
-                  variant={hasSignedUp ? "outline" : "default"}
-                >
-                  {submitting ? (
-                    "Processing..."
-                  ) : hasSignedUp ? (
-                    "Remove Interest"
-                  ) : (
-                    "Show Interest"
-                  )}
-                </Button>
-              )}
             </div>
           </div>
         </div>
