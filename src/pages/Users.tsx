@@ -311,12 +311,18 @@ export const Users = () => {
           />
         </div>
         {isAdministrator && (
-          <BulkWaiverDownloadButton
-            users={sortedUsers as any}
-            fileName="all-waivers"
-            label="Download All Waivers"
-            size="default"
-          />
+          <>
+            <Button onClick={() => setStudentModalOpen(true)}>
+              <UserPlus className="h-4 w-4 mr-2" />
+              Add B2S Graduate
+            </Button>
+            <BulkWaiverDownloadButton
+              users={sortedUsers as any}
+              fileName="all-waivers"
+              label="Download All Waivers"
+              size="default"
+            />
+          </>
         )}
       </div>
 
