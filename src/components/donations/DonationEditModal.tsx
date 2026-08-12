@@ -55,6 +55,7 @@ export const DonationEditModal = ({
     contact_phone: donation.contact_phone || "",
     donation_link: donation.donation_link || "",
     can_deliver: donation.can_deliver || false,
+    must_take_all: donation.must_take_all || false,
     delivery_miles: donation.delivery_miles?.toString() || "",
     service_type: (donation as any).service_type || "",
     hours_available: (donation as any).hours_available?.toString() || "",
@@ -146,6 +147,7 @@ export const DonationEditModal = ({
         contact_phone: formData.contact_phone || null,
         donation_link: formData.donation_link || null,
         can_deliver: formData.can_deliver,
+        must_take_all: formData.must_take_all,
         delivery_miles: formData.delivery_miles ? parseFloat(formData.delivery_miles) : null,
         images: imageUrls,
         updated_at: new Date().toISOString(),
@@ -257,6 +259,17 @@ export const DonationEditModal = ({
               </Label>
             </div>
             
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="must_take_all"
+                checked={formData.must_take_all}
+                onCheckedChange={(checked) => handleInputChange("must_take_all", checked)}
+              />
+              <Label htmlFor="must_take_all" className="cursor-pointer">
+                Must Take All
+              </Label>
+            </div>
+
             {formData.can_deliver && (
               <div className="space-y-2 pl-6">
                 <Label htmlFor="delivery_miles">Delivery Miles</Label>

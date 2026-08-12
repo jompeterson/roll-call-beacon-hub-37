@@ -211,6 +211,12 @@ export const DonationModalInformation = ({
               </div>
             </FieldWrapper>
           )}
+          {isDonationView && donation.must_take_all && (
+            <div>
+              <label className="font-medium text-sm text-muted-foreground">Must Take All</label>
+              <p className="text-base mt-1">Recipient must take the entire donation</p>
+            </div>
+          )}
           {isDonationView && donation.can_deliver && (
             <div>
               <label className="font-medium text-sm text-muted-foreground">Can Deliver</label>

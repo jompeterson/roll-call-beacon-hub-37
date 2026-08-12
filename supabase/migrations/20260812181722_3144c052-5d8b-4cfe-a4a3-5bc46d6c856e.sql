@@ -1,0 +1,1 @@
+ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS must_take_all boolean NOT NULL DEFAULT false;

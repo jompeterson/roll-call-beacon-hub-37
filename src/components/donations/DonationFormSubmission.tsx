@@ -19,6 +19,7 @@ interface DonationFormData {
   material_type: string;
   images: File[];
   can_deliver: boolean;
+  must_take_all: boolean;
   delivery_miles: string;
   service_type: string;
   hours_available: string;
@@ -117,6 +118,7 @@ export const useDonationFormSubmission = () => {
         donation_type: formData.donation_type || null,
         images: imageUrls,
         can_deliver: formData.can_deliver,
+        must_take_all: formData.must_take_all,
         delivery_miles: formData.delivery_miles ? parseFloat(formData.delivery_miles) : null,
         location: formData.location || null,
         is_private: formData.is_private

@@ -252,6 +252,7 @@ export type Database = {
           location: string | null
           material_type: string | null
           mileage: number | null
+          must_take_all: boolean
           organization_id: string | null
           organization_name: string | null
           quantity: number | null
@@ -289,6 +290,7 @@ export type Database = {
           location?: string | null
           material_type?: string | null
           mileage?: number | null
+          must_take_all?: boolean
           organization_id?: string | null
           organization_name?: string | null
           quantity?: number | null
@@ -326,6 +328,7 @@ export type Database = {
           location?: string | null
           material_type?: string | null
           mileage?: number | null
+          must_take_all?: boolean
           organization_id?: string | null
           organization_name?: string | null
           quantity?: number | null
