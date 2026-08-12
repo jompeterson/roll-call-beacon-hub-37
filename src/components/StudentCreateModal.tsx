@@ -134,6 +134,7 @@ export const StudentCreateModal = ({
     setSkills([]);
     setSkillInput("");
     setClassId("");
+    setRoleId("");
     setWork([]);
     setEducation([]);
     setCourses([]);
