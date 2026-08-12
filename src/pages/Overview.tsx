@@ -1,6 +1,7 @@
 
 import { MetricCard } from "@/components/MetricCard";
 import { PendingOrganizationsWidget } from "@/components/PendingOrganizationsWidget";
+import { PendingUsersWidget } from "@/components/PendingUsersWidget";
 import { PendingScholarshipsWidget } from "@/components/PendingScholarshipsWidget";
 import { PendingDonationsRequestsWidget } from "@/components/PendingDonationsRequestsWidget";
 import { PendingEventsWidget } from "@/components/PendingEventsWidget";
@@ -141,6 +142,7 @@ export const Overview = () => {
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold">Pending Approvals</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <PendingUsersWidget />
             <PendingOrganizationsWidget />
             <PendingScholarshipsWidget />
             <PendingDonationsRequestsWidget />
