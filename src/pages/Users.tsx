@@ -60,6 +60,7 @@ export const Users = () => {
   // Modal states
   const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
   const [userModalOpen, setUserModalOpen] = useState(false);
+  const [studentModalOpen, setStudentModalOpen] = useState(false);
 
   const handleUserSort = (field: SortField) => {
     if (userSort === field) {
