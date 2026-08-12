@@ -88,7 +88,7 @@ export const useUserProfilesRealtime = () => {
 
     // Set up real-time subscription for user profiles
     const channel = supabase
-      .channel('user-profiles-changes')
+      .channel(`user-profiles-changes-${Math.random().toString(36).slice(2)}`)
       .on(
         'postgres_changes',
         {
