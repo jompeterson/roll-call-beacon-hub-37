@@ -673,6 +673,10 @@ export const StudentCreateModal = ({
               </div>
             ))}
           </div>
+          </>
+          )}
+
+
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>
