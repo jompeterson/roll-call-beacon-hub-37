@@ -231,6 +231,10 @@ export const Organizations = () => {
                       Status
                     </OrganizationSortableTableHead>
                   )}
+                  {isAdministrator && (
+                    <TableHead className="w-[180px]">Waivers</TableHead>
+                  )}
+
                 </TableRow>
               </TableHeader>
             </Table>
