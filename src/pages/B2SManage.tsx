@@ -189,6 +189,8 @@ export const B2SManage = () => {
     }
     setSaving(true);
     const payload = {
+      // `name` is required by the database; derive it from session + year
+      name: `${session.trim()} ${yearNum}`,
       year: yearNum,
       session: session.trim(),
       description: description.trim() || null,
@@ -458,13 +460,6 @@ export const B2SManage = () => {
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
-            <div>
-              <Label>Class Name *</Label>
-              <Input
-                value={name}
-                onChange={(e) => setName(e.target.value.slice(0, 150))}
-              />
-            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <Label>Year *</Label>
