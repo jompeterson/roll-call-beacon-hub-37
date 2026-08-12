@@ -189,6 +189,8 @@ export const B2SManage = () => {
     }
     setSaving(true);
     const payload = {
+      // `name` is required by the database; derive it from session + year
+      name: `${session.trim()} ${yearNum}`,
       year: yearNum,
       session: session.trim(),
       description: description.trim() || null,
