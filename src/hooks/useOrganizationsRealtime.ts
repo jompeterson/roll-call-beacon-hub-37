@@ -176,7 +176,7 @@ export const useOrganizationsRealtime = () => {
 
     // Set up real-time subscription for organizations
     const channel = supabase
-      .channel('organizations-changes')
+      .channel(`organizations-changes-${crypto.randomUUID()}`)
       .on(
         'postgres_changes',
         {

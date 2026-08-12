@@ -50,7 +50,7 @@ export const LoginForm = () => {
     fetchLogo();
 
     const channel = supabase
-      .channel('app_settings_changes')
+      .channel(`app-settings-changes-${crypto.randomUUID()}`)
       .on(
         'postgres_changes',
         {
