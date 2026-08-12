@@ -259,6 +259,17 @@ export const DonationEditModal = ({
               </Label>
             </div>
             
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="must_take_all"
+                checked={formData.must_take_all}
+                onCheckedChange={(checked) => handleInputChange("must_take_all", checked)}
+              />
+              <Label htmlFor="must_take_all" className="cursor-pointer">
+                Must Take All
+              </Label>
+            </div>
+
             {formData.can_deliver && (
               <div className="space-y-2 pl-6">
                 <Label htmlFor="delivery_miles">Delivery Miles</Label>
