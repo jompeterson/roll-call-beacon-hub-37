@@ -353,6 +353,12 @@ export const Users = () => {
         isDeleting={isDeleting}
         isUpdatingRole={isUpdatingRole}
       />
+
+      <StudentCreateModal
+        open={studentModalOpen}
+        onOpenChange={setStudentModalOpen}
+        onUserCreated={refetch}
+      />
     </div>
   );
 };
