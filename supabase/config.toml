@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.proxy-image]
 verify_jwt = false
+
+[functions.create-student-user]
+verify_jwt = false

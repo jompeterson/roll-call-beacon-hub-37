@@ -10,6 +10,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { BulkWaiverDownloadButton } from "@/components/waiver/BulkWaiverDownloadButton";
+import { Button } from "@/components/ui/button";
+import { UserPlus } from "lucide-react";
+import { StudentCreateModal } from "@/components/StudentCreateModal";
 
 type SortDirection = "asc" | "desc" | null;
 type SortField = "firstName" | "lastName" | "organization" | "email" | "dateJoined" | "status" | null;
@@ -57,6 +60,7 @@ export const Users = () => {
   // Modal states
   const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
   const [userModalOpen, setUserModalOpen] = useState(false);
+  const [studentModalOpen, setStudentModalOpen] = useState(false);
 
   const handleUserSort = (field: SortField) => {
     if (userSort === field) {
@@ -311,12 +315,18 @@ export const Users = () => {
           />
         </div>
         {isAdministrator && (
-          <BulkWaiverDownloadButton
-            users={sortedUsers as any}
-            fileName="all-waivers"
-            label="Download All Waivers"
-            size="default"
-          />
+          <>
+            <Button onClick={() => setStudentModalOpen(true)}>
+              <UserPlus className="h-4 w-4 mr-2" />
+              Add B2S Graduate
+            </Button>
+            <BulkWaiverDownloadButton
+              users={sortedUsers as any}
+              fileName="all-waivers"
+              label="Download All Waivers"
+              size="default"
+            />
+          </>
         )}
       </div>
 
@@ -342,6 +352,12 @@ export const Users = () => {
         isAdministrator={isAdministrator}
         isDeleting={isDeleting}
         isUpdatingRole={isUpdatingRole}
+      />
+
+      <StudentCreateModal
+        open={studentModalOpen}
+        onOpenChange={setStudentModalOpen}
+        onUserCreated={refetch}
       />
     </div>
   );
