@@ -100,4 +100,10 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Hide browser-native password reveal toggle so it doesn't duplicate our custom eye button */
+  input::-ms-reveal,
+  input::-ms-clear {
+    display: none;
+  }
 }
