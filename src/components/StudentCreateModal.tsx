@@ -252,20 +252,37 @@ export const StudentCreateModal = ({
               />
             </div>
             <div className="space-y-2">
-              <Label>B2S Class (Optional)</Label>
-              <Select value={classId} onValueChange={setClassId}>
+              <Label>Role *</Label>
+              <Select value={roleId} onValueChange={setRoleId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a class" />
+                  <SelectValue placeholder={rolesLoading ? "Loading roles..." : "Select a role"} />
                 </SelectTrigger>
                 <SelectContent>
-                  {classes.map((c) => (
-                    <SelectItem key={c.id} value={c.id}>
-                      {c.session} {c.year}
+                  {userRoles.map((r) => (
+                    <SelectItem key={r.id} value={r.id}>
+                      {r.display_name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
+            {isStudent && (
+              <div className="space-y-2">
+                <Label>B2S Class (Optional)</Label>
+                <Select value={classId} onValueChange={setClassId}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a class" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {classes.map((c) => (
+                      <SelectItem key={c.id} value={c.id}>
+                        {c.session} {c.year}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
 
           {isStudent && (
