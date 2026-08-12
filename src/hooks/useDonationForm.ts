@@ -24,6 +24,7 @@ interface DonationFormData {
   material_type: string;
   images: File[];
   can_deliver: boolean;
+  must_take_all: boolean;
   delivery_miles: string;
   service_type: string;
   hours_available: string;
@@ -56,6 +57,7 @@ export const useDonationForm = (open: boolean) => {
     material_type: "",
     images: [],
     can_deliver: false,
+    must_take_all: false,
     delivery_miles: "",
     service_type: "",
     hours_available: "",
