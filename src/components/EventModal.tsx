@@ -14,6 +14,7 @@ import { EventModalActionButtons } from "@/components/event/EventModalActionButt
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
 import { EventEditModal } from "@/components/event/EventEditModal";
 import { UserCheck } from "lucide-react";
+import { CompletionRecap } from "@/components/shared/CompletionRecap";
 
 interface Event {
   id: string;
@@ -32,6 +33,11 @@ interface Event {
   created_at: string;
   updated_at: string;
   images?: string[];
+  is_ended?: boolean | null;
+  ended_at?: string | null;
+  accomplishments?: string | null;
+  completion_images?: string[] | null;
+  funds_raised?: number | null;
 }
 
 interface EventModalProps {

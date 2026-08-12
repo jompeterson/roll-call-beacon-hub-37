@@ -16,6 +16,7 @@ import { RequestChangesModal } from "@/components/shared/RequestChangesModal";
 import { PrivateApprovalToggle } from "@/components/shared/PrivateApprovalToggle";
 import { supabase } from "@/integrations/supabase/client";
 import { RichText } from "@/components/ui/rich-text";
+import { CompletionRecap } from "@/components/shared/CompletionRecap";
 
 interface Volunteer {
   id: string;
@@ -33,6 +34,12 @@ interface Volunteer {
   created_at: string;
   updated_at: string;
   images?: string[];
+  is_ended?: boolean | null;
+  ended_at?: string | null;
+  accomplishments?: string | null;
+  completion_images?: string[] | null;
+  total_hours?: number | null;
+  discounted_services_value?: number | null;
 }
 
 interface VolunteerModalProps {
@@ -208,6 +215,24 @@ export const VolunteerModal = ({
                 </div>
               </div>
             )}
+
+            <CompletionRecap
+              title={volunteer.title}
+              isEnded={volunteer.is_ended}
+              accomplishments={volunteer.accomplishments}
+              images={volunteer.completion_images}
+              stats={[
+                ...(volunteer.total_hours != null
+                  ? [{ label: "Total hours volunteered", value: Number(volunteer.total_hours).toLocaleString() }]
+                  : []),
+                ...(volunteer.discounted_services_value != null
+                  ? [{
+                      label: "Discounted professional services",
+                      value: Number(volunteer.discounted_services_value).toLocaleString("en-US", { style: "currency", currency: "USD" }),
+                    }]
+                  : []),
+              ]}
+            />
 
             {/* Comments Section - Only show for approved volunteers */}
             {showComments && (
