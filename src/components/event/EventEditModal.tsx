@@ -158,7 +158,7 @@ export const EventEditModal = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="start_date">Start Date & Time *</Label>
+              <Label htmlFor="start_date">Date & Time *</Label>
               <Input
                 id="start_date"
                 type="datetime-local"

@@ -218,7 +218,7 @@ export const Events = () => {
                 onSort={handleEventSort}
                 className="w-1/4"
               >
-                Start Date
+                Date
               </SortableTableHead>
               <SortableTableHead
                 field="location"

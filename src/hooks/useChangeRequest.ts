@@ -27,7 +27,7 @@ const FIELD_LABEL_TO_KEY: Record<string, string> = {
   "Eligibility Criteria": "eligibility_criteria",
   "Application Deadline": "application_deadline",
   "Scholarship Link": "scholarship_link",
-  "Start Date": "start_date",
+  "Date": "start_date",
   "End Date": "end_date",
   "Max Participants": "max_participants",
   "Event Link": "event_link",

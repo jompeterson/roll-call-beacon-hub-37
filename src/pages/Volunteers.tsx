@@ -233,7 +233,7 @@ export const Volunteers = () => {
                   onSort={handleVolunteerSort}
                   className="w-1/5"
                 >
-                  Start Date
+                  Date
                 </SortableTableHead>
                 {isAuthenticated && (
                   <SortableTableHead
