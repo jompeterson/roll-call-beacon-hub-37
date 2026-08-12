@@ -387,6 +387,21 @@ export const OrganizationModal = ({
               </div>
             )}
           </div>
+
+          <Separator />
+
+          {/* Waivers - Only show for administrators */}
+          {isAdministrator && (
+            <div className="space-y-4">
+              <h3 className="font-semibold text-lg">Waivers</h3>
+              <BulkWaiverDownloadButton
+                organizationId={organization.id}
+                fileName={`${organization.name}-waivers`}
+                label="Download Organization Waivers"
+                size="default"
+              />
+            </div>
+          )}
         </div>
 
         {showApprovalButtons && (
