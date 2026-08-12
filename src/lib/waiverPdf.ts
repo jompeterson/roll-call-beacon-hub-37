@@ -37,6 +37,7 @@ interface LoadedLogo {
 // (jsPDF renders alpha PNGs inconsistently, which can result in a blank logo).
 const loadLogo = async (url: string): Promise<LoadedLogo> => {
   let src = url;
+  let loaded = false;
   try {
     const res = await fetch(url, { mode: "cors" });
     if (res.ok) {
@@ -47,10 +48,24 @@ const loadLogo = async (url: string): Promise<LoadedLogo> => {
         reader.onerror = () => reject(new Error("Could not read logo blob"));
         reader.readAsDataURL(blob);
       });
+      loaded = true;
     }
   } catch {
-    // fall back to loading the URL directly
+    // CORS-blocked; fall through to the edge-function proxy below
   }
+
+  if (!loaded) {
+    try {
+      const { data, error } = await supabase.functions.invoke("proxy-image", {
+        body: { url },
+      });
+      if (error) throw error;
+      if ((data as any)?.dataUrl) src = (data as any).dataUrl;
+    } catch {
+      // fall back to loading the URL directly
+    }
+  }
+
 
   return new Promise<LoadedLogo>((resolve, reject) => {
     const img = new Image();
