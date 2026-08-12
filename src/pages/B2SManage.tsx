@@ -465,7 +465,6 @@ export const B2SManage = () => {
               <Label>Class Name *</Label>
               <Input
                 value={name}
-                placeholder="e.g. Building to Scale Cohort A"
                 onChange={(e) => setName(e.target.value.slice(0, 150))}
               />
             </div>
