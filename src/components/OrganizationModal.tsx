@@ -13,6 +13,7 @@ import { useUserProfiles } from "@/hooks/useUserProfiles";
 import { useAuth } from "@/hooks/useAuth";
 import { OrganizationImageUpload } from "@/components/organizations/OrganizationImageUpload";
 import { organizationTypes, OrganizationType } from "@/components/organizations/types";
+import { BulkWaiverDownloadButton } from "@/components/waiver/BulkWaiverDownloadButton";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
