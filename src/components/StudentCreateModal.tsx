@@ -268,6 +268,8 @@ export const StudentCreateModal = ({
             </div>
           </div>
 
+          {isStudent && (
+          <>
           {/* Bio & skills */}
           <div className="space-y-4">
             <h3 className="text-sm font-semibold">Profile</h3>
