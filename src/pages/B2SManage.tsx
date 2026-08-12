@@ -60,6 +60,7 @@ interface B2SClass {
   session: string;
   description: string | null;
   sort_order: number;
+  created_by?: string | null;
 }
 
 interface StudentOption {
@@ -90,7 +91,6 @@ export const B2SManage = () => {
 
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<B2SClass | null>(null);
-  const [name, setName] = useState("");
   const [year, setYear] = useState(String(currentYear));
   const [session, setSession] = useState("");
   const [description, setDescription] = useState("");
@@ -159,7 +159,6 @@ export const B2SManage = () => {
 
   const openCreate = () => {
     setEditing(null);
-    setName("");
     setYear(String(currentYear));
     setSession("");
     setDescription("");
@@ -168,7 +167,6 @@ export const B2SManage = () => {
 
   const openEdit = (c: B2SClass) => {
     setEditing(c);
-    setName(c.name);
     setYear(String(c.year));
     setSession(c.session);
     setDescription(c.description || "");
@@ -176,10 +174,10 @@ export const B2SManage = () => {
   };
 
   const saveClass = async () => {
-    if (!name.trim() || !session.trim() || !year.trim()) {
+    if (!session.trim() || !year.trim()) {
       toast({
         title: "Missing information",
-        description: "Class name, year, and session are required.",
+        description: "Year and session are required.",
         variant: "destructive",
       });
       return;
@@ -191,7 +189,6 @@ export const B2SManage = () => {
     }
     setSaving(true);
     const payload = {
-      name: name.trim(),
       year: yearNum,
       session: session.trim(),
       description: description.trim() || null,
