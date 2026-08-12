@@ -10,6 +10,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { BulkWaiverDownloadButton } from "@/components/waiver/BulkWaiverDownloadButton";
+import { Button } from "@/components/ui/button";
+import { UserPlus } from "lucide-react";
+import { StudentCreateModal } from "@/components/StudentCreateModal";
 
 type SortDirection = "asc" | "desc" | null;
 type SortField = "firstName" | "lastName" | "organization" | "email" | "dateJoined" | "status" | null;
