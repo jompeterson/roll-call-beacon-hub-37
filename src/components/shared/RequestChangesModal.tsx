@@ -60,7 +60,7 @@ const FIELDS_BY_TYPE: Record<ContentType, FieldOption[]> = {
   event: [
     { key: "title", label: "Title" },
     { key: "description", label: "Description" },
-    { key: "start_date", label: "Start Date" },
+    { key: "start_date", label: "Date" },
     { key: "end_date", label: "End Date" },
     { key: "location", label: "Location" },
     { key: "max_participants", label: "Max Participants" },
@@ -70,7 +70,7 @@ const FIELDS_BY_TYPE: Record<ContentType, FieldOption[]> = {
   volunteer: [
     { key: "title", label: "Title" },
     { key: "description", label: "Description" },
-    { key: "start_date", label: "Start Date" },
+    { key: "start_date", label: "Date" },
     { key: "end_date", label: "End Date" },
     { key: "location", label: "Location" },
     { key: "max_participants", label: "Max Participants" },

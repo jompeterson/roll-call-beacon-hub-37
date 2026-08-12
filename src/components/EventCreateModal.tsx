@@ -243,7 +243,7 @@ export const EventCreateModal = ({
                 <FormItem>
                   <FormLabel className="flex items-center gap-2">
                     <Calendar className="h-4 w-4" />
-                    Start Date & Time *
+                    Date & Time *
                   </FormLabel>
                   <FormControl>
                     <Input
