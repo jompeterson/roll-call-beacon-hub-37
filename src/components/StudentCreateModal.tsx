@@ -24,6 +24,7 @@ import { Loader2, Plus, Trash2, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { OrganizationSelector } from "@/components/profile/OrganizationSelector";
+import { useUserRoles } from "@/hooks/useUserRoles";
 
 interface StudentCreateModalProps {
   open: boolean;
