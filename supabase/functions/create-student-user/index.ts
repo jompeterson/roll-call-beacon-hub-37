@@ -165,7 +165,7 @@ Deno.serve(async (req) => {
         currently_working: !!w.currently_working,
         description: nullable(w.description),
       }));
-    if (workRows.length) {
+    if (isStudentRole && workRows.length) {
       const { error } = await supabase.from("student_work_experience").insert(workRows);
       if (error) console.error("work insert failed", error);
     }
@@ -184,7 +184,7 @@ Deno.serve(async (req) => {
         currently_studying: !!e.currently_studying,
         description: nullable(e.description),
       }));
-    if (eduRows.length) {
+    if (isStudentRole && eduRows.length) {
       const { error } = await supabase.from("student_education").insert(eduRows);
       if (error) console.error("education insert failed", error);
     }
@@ -198,7 +198,7 @@ Deno.serve(async (req) => {
         course_name: str(c.course_name),
         completed_on: nullable(c.completed_on),
       }));
-    if (courseRows.length) {
+    if (isStudentRole && courseRows.length) {
       const { error } = await supabase.from("student_courses").insert(courseRows);
       if (error) console.error("courses insert failed", error);
     }
@@ -214,14 +214,14 @@ Deno.serve(async (req) => {
         issued_on: nullable(c.issued_on),
         expires_on: nullable(c.expires_on),
       }));
-    if (certRows.length) {
+    if (isStudentRole && certRows.length) {
       const { error } = await supabase.from("student_certifications").insert(certRows);
       if (error) console.error("certifications insert failed", error);
     }
 
     // Optional B2S class assignment
     const classId = nullable(body.classId);
-    if (classId) {
+    if (isStudentRole && classId) {
       const { error } = await supabase
         .from("b2s_class_students")
         .insert({ class_id: classId, student_user_id: userId });
