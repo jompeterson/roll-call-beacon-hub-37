@@ -93,7 +93,7 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
 
     // Listen for settings changes
     const settingsSubscription = supabase
-      .channel('app_settings_changes')
+      .channel(`app-settings-changes-${crypto.randomUUID()}`)
       .on('postgres_changes', 
         { 
           event: '*', 
@@ -110,7 +110,7 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
       .subscribe();
 
     return () => {
-      settingsSubscription.unsubscribe();
+      supabase.removeChannel(settingsSubscription);
     };
   }, []);
 

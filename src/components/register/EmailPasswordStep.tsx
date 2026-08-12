@@ -47,7 +47,7 @@ export const EmailPasswordStep = ({ data, onNext, onBack, onUpdate }: EmailPassw
     fetchLogo();
 
     const channel = supabase
-      .channel('app_settings_changes')
+      .channel(`app-settings-changes-${crypto.randomUUID()}`)
       .on(
         'postgres_changes',
         {
