@@ -270,15 +270,6 @@ export const Organizations = () => {
                           </div>
                         </TableCell>
                       )}
-                      {isAdministrator && (
-                        <TableCell className="w-[180px]">
-                          <BulkWaiverDownloadButton
-                            organizationId={org.id}
-                            fileName={`${org.name}-waivers`}
-                            label="Waivers"
-                          />
-                        </TableCell>
-                      )}
                     </TableRow>
                   ))}
                 </TableBody>
