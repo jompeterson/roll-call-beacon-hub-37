@@ -333,7 +333,7 @@ export const B2SManage = () => {
             </Select>
           )}
           <Button onClick={openCreate}>
-            <Plus className="h-4 w-4 mr-1" /> New Class
+            <Plus className="h-4 w-4 mr-1" /> New Session
           </Button>
         </div>
       </div>
