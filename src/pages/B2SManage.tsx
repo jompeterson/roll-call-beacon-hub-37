@@ -173,10 +173,10 @@ export const B2SManage = () => {
   };
 
   const saveClass = async () => {
-    if (!name.trim() || !session.trim() || !year.trim()) {
+    if (!session.trim() || !year.trim()) {
       toast({
         title: "Missing information",
-        description: "Class name, year, and session are required.",
+        description: "Year and session are required.",
         variant: "destructive",
       });
       return;
@@ -188,7 +188,6 @@ export const B2SManage = () => {
     }
     setSaving(true);
     const payload = {
-      name: name.trim(),
       year: yearNum,
       session: session.trim(),
       description: description.trim() || null,
