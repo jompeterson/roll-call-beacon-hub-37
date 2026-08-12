@@ -101,6 +101,9 @@ export const StudentCreateModal = ({
   const [skills, setSkills] = useState<string[]>([]);
   const [skillInput, setSkillInput] = useState("");
   const [classId, setClassId] = useState("");
+  const { userRoles, loading: rolesLoading } = useUserRoles();
+  const [roleId, setRoleId] = useState("");
+  const isStudent = userRoles.find((r) => r.id === roleId)?.name === "student";
   const [classes, setClasses] = useState<
     { id: string; name: string; year: number; session: string }[]
   >([]);
