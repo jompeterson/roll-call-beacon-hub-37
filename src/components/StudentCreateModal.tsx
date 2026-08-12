@@ -24,6 +24,7 @@ import { Loader2, Plus, Trash2, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { OrganizationSelector } from "@/components/profile/OrganizationSelector";
+import { useUserRoles } from "@/hooks/useUserRoles";
 
 interface StudentCreateModalProps {
   open: boolean;
@@ -101,6 +102,9 @@ export const StudentCreateModal = ({
   const [skills, setSkills] = useState<string[]>([]);
   const [skillInput, setSkillInput] = useState("");
   const [classId, setClassId] = useState("");
+  const { userRoles, loading: rolesLoading } = useUserRoles();
+  const [roleId, setRoleId] = useState("");
+  const isStudent = userRoles.find((r) => r.id === roleId)?.name === "student";
   const [classes, setClasses] = useState<
     { id: string; name: string; year: number; session: string }[]
   >([]);
@@ -130,6 +134,7 @@ export const StudentCreateModal = ({
     setSkills([]);
     setSkillInput("");
     setClassId("");
+    setRoleId("");
     setWork([]);
     setEducation([]);
     setCourses([]);
@@ -144,10 +149,10 @@ export const StudentCreateModal = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!firstName || !lastName || !email || !phone || !address) {
+    if (!firstName || !lastName || !email || !phone || !address || !roleId) {
       toast({
         title: "Missing information",
-        description: "First name, last name, email, phone, and address are required.",
+        description: "First name, last name, email, phone, address, and role are required.",
         variant: "destructive",
       });
       return;
@@ -164,14 +169,15 @@ export const StudentCreateModal = ({
           email,
           phone,
           address,
+          roleId,
           organizationId: organizationId || null,
-          bio,
-          skills,
-          classId: classId || null,
-          workExperience: work,
-          education,
-          courses,
-          certifications,
+          bio: isStudent ? bio : "",
+          skills: isStudent ? skills : [],
+          classId: isStudent ? classId || null : null,
+          workExperience: isStudent ? work : [],
+          education: isStudent ? education : [],
+          courses: isStudent ? courses : [],
+          certifications: isStudent ? certifications : [],
           appUrl: window.location.origin,
         },
       });
@@ -179,7 +185,7 @@ export const StudentCreateModal = ({
       const errMessage = (error as any)?.message || (data as any)?.error;
       if (errMessage) {
         toast({
-          title: "Could not create graduate",
+          title: "Could not create user",
           description: String(errMessage),
           variant: "destructive",
         });
@@ -187,7 +193,7 @@ export const StudentCreateModal = ({
       }
 
       toast({
-        title: "B2S Graduate created",
+        title: "User created",
         description: (data as any)?.emailSent
           ? `An account setup email was sent to ${email}.`
           : `Account created, but the setup email could not be sent to ${email}.`,
@@ -196,10 +202,10 @@ export const StudentCreateModal = ({
       onUserCreated();
       onOpenChange(false);
     } catch (err) {
-      console.error("Create student error:", err);
+      console.error("Create user error:", err);
       toast({
         title: "Error",
-        description: "Failed to create the graduate account.",
+        description: "Failed to create the user account.",
         variant: "destructive",
       });
     } finally {
@@ -211,9 +217,9 @@ export const StudentCreateModal = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[720px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Add B2S Graduate</DialogTitle>
+          <DialogTitle>Add User</DialogTitle>
           <DialogDescription>
-            Create a graduate profile. They'll receive an email with a link to set their
+            Create a user account. They'll receive an email with a link to set their
             password and sign in.
           </DialogDescription>
         </DialogHeader>
@@ -252,22 +258,41 @@ export const StudentCreateModal = ({
               />
             </div>
             <div className="space-y-2">
-              <Label>B2S Class (Optional)</Label>
-              <Select value={classId} onValueChange={setClassId}>
+              <Label>Role *</Label>
+              <Select value={roleId} onValueChange={setRoleId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a class" />
+                  <SelectValue placeholder={rolesLoading ? "Loading roles..." : "Select a role"} />
                 </SelectTrigger>
                 <SelectContent>
-                  {classes.map((c) => (
-                    <SelectItem key={c.id} value={c.id}>
-                      {c.session} {c.year}
+                  {userRoles.map((r) => (
+                    <SelectItem key={r.id} value={r.id}>
+                      {r.display_name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
+            {isStudent && (
+              <div className="space-y-2">
+                <Label>B2S Class (Optional)</Label>
+                <Select value={classId} onValueChange={setClassId}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a class" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {classes.map((c) => (
+                      <SelectItem key={c.id} value={c.id}>
+                        {c.session} {c.year}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
 
+          {isStudent && (
+          <>
           {/* Bio & skills */}
           <div className="space-y-4">
             <h3 className="text-sm font-semibold">Profile</h3>
@@ -673,6 +698,10 @@ export const StudentCreateModal = ({
               </div>
             ))}
           </div>
+          </>
+          )}
+
+
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>

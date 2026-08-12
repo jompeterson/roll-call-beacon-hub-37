@@ -78,13 +78,14 @@ Deno.serve(async (req) => {
       .maybeSingle();
     if (existing) return json({ error: "A user with that email already exists" }, 409);
 
-    // Resolve student role
-    const { data: role, error: roleErr } = await supabase
-      .from("user_roles")
-      .select("id")
-      .eq("name", "student")
-      .maybeSingle();
-    if (roleErr || !role) return json({ error: "B2S Graduate role not found" }, 500);
+    // Resolve role: explicit roleId from the admin, otherwise default to B2S Graduate
+    const requestedRoleId = nullable(body.roleId);
+    const roleQuery = supabase.from("user_roles").select("id, name");
+    const { data: role, error: roleErr } = requestedRoleId
+      ? await roleQuery.eq("id", requestedRoleId).maybeSingle()
+      : await roleQuery.eq("name", "student").maybeSingle();
+    if (roleErr || !role) return json({ error: "Selected role not found" }, 500);
+    const isStudentRole = role.name === "student";
 
     // Placeholder password — the user sets their own via the emailed link
     const { data: salt } = await supabase.rpc("generate_salt");
@@ -135,18 +136,20 @@ Deno.serve(async (req) => {
       return json({ error: "Failed to create user profile" }, 500);
     }
 
-    // Student profile (bio / skills / resume)
+    // Student profile (bio / skills / resume) — graduates only
     const skills = Array.isArray(body.skills)
       ? body.skills.map((s: unknown) => str(s)).filter(Boolean)
       : [];
-    const { error: spErr } = await supabase.from("student_profiles").insert({
-      user_id: userId,
-      bio: nullable(body.bio),
-      skills,
-      resume_url: nullable(body.resumeUrl),
-      resume_filename: nullable(body.resumeFilename),
-    });
-    if (spErr) console.error("student_profiles insert failed", spErr);
+    if (isStudentRole) {
+      const { error: spErr } = await supabase.from("student_profiles").insert({
+        user_id: userId,
+        bio: nullable(body.bio),
+        skills,
+        resume_url: nullable(body.resumeUrl),
+        resume_filename: nullable(body.resumeFilename),
+      });
+      if (spErr) console.error("student_profiles insert failed", spErr);
+    }
 
     // Work experience
     const work = Array.isArray(body.workExperience) ? body.workExperience : [];
@@ -162,7 +165,7 @@ Deno.serve(async (req) => {
         currently_working: !!w.currently_working,
         description: nullable(w.description),
       }));
-    if (workRows.length) {
+    if (isStudentRole && workRows.length) {
       const { error } = await supabase.from("student_work_experience").insert(workRows);
       if (error) console.error("work insert failed", error);
     }
@@ -181,7 +184,7 @@ Deno.serve(async (req) => {
         currently_studying: !!e.currently_studying,
         description: nullable(e.description),
       }));
-    if (eduRows.length) {
+    if (isStudentRole && eduRows.length) {
       const { error } = await supabase.from("student_education").insert(eduRows);
       if (error) console.error("education insert failed", error);
     }
@@ -195,7 +198,7 @@ Deno.serve(async (req) => {
         course_name: str(c.course_name),
         completed_on: nullable(c.completed_on),
       }));
-    if (courseRows.length) {
+    if (isStudentRole && courseRows.length) {
       const { error } = await supabase.from("student_courses").insert(courseRows);
       if (error) console.error("courses insert failed", error);
     }
@@ -211,14 +214,14 @@ Deno.serve(async (req) => {
         issued_on: nullable(c.issued_on),
         expires_on: nullable(c.expires_on),
       }));
-    if (certRows.length) {
+    if (isStudentRole && certRows.length) {
       const { error } = await supabase.from("student_certifications").insert(certRows);
       if (error) console.error("certifications insert failed", error);
     }
 
     // Optional B2S class assignment
     const classId = nullable(body.classId);
-    if (classId) {
+    if (isStudentRole && classId) {
       const { error } = await supabase
         .from("b2s_class_students")
         .insert({ class_id: classId, student_user_id: userId });

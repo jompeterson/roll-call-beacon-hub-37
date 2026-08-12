@@ -318,7 +318,7 @@ export const Users = () => {
           <>
             <Button onClick={() => setStudentModalOpen(true)}>
               <UserPlus className="h-4 w-4 mr-2" />
-              Add B2S Graduate
+              Add User
             </Button>
             <BulkWaiverDownloadButton
               users={sortedUsers as any}
