@@ -9,6 +9,7 @@ import { useUserFiltering } from "@/hooks/useUserFiltering";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { BulkWaiverDownloadButton } from "@/components/waiver/BulkWaiverDownloadButton";
 
 type SortDirection = "asc" | "desc" | null;
 type SortField = "firstName" | "lastName" | "organization" | "email" | "dateJoined" | "status" | null;
