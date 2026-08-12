@@ -139,6 +139,7 @@ export const useDonationForm = (open: boolean) => {
       material_type: "",
       images: [],
       can_deliver: false,
+      must_take_all: false,
       delivery_miles: "",
       service_type: "",
       hours_available: "",
