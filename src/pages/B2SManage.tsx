@@ -60,6 +60,7 @@ interface B2SClass {
   session: string;
   description: string | null;
   sort_order: number;
+  created_by?: string | null;
 }
 
 interface StudentOption {
