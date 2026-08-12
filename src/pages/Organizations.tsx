@@ -8,7 +8,6 @@ import { OrganizationModal } from "@/components/OrganizationModal";
 import { OrganizationSortableTableHead } from "@/components/organizations/OrganizationSortableTableHead";
 import { OrganizationStatusIcon } from "@/components/organizations/OrganizationStatusIcon";
 import { useOrganizationsRealtime } from "@/hooks/useOrganizationsRealtime";
-import { BulkWaiverDownloadButton } from "@/components/waiver/BulkWaiverDownloadButton";
 import { useAuth } from "@/hooks/useAuth";
 
 type SortDirection = "asc" | "desc" | null;
@@ -232,9 +231,6 @@ export const Organizations = () => {
                       Status
                     </OrganizationSortableTableHead>
                   )}
-                  {isAdministrator && (
-                    <TableHead className="w-[180px]" />
-                  )}
 
                 </TableRow>
               </TableHeader>
@@ -271,15 +267,6 @@ export const Organizations = () => {
                               {getStatusText(org.is_approved, org.approval_decision_made)}
                             </Badge>
                           </div>
-                        </TableCell>
-                      )}
-                      {isAdministrator && (
-                        <TableCell className="w-[180px]">
-                          <BulkWaiverDownloadButton
-                            organizationId={org.id}
-                            fileName={`${org.name}-waivers`}
-                            label="Waivers"
-                          />
                         </TableCell>
                       )}
                     </TableRow>
