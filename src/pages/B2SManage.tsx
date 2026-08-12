@@ -158,7 +158,6 @@ export const B2SManage = () => {
 
   const openCreate = () => {
     setEditing(null);
-    setName("");
     setYear(String(currentYear));
     setSession("");
     setDescription("");
@@ -167,7 +166,6 @@ export const B2SManage = () => {
 
   const openEdit = (c: B2SClass) => {
     setEditing(c);
-    setName(c.name);
     setYear(String(c.year));
     setSession(c.session);
     setDescription(c.description || "");
