@@ -136,18 +136,20 @@ Deno.serve(async (req) => {
       return json({ error: "Failed to create user profile" }, 500);
     }
 
-    // Student profile (bio / skills / resume)
+    // Student profile (bio / skills / resume) — graduates only
     const skills = Array.isArray(body.skills)
       ? body.skills.map((s: unknown) => str(s)).filter(Boolean)
       : [];
-    const { error: spErr } = await supabase.from("student_profiles").insert({
-      user_id: userId,
-      bio: nullable(body.bio),
-      skills,
-      resume_url: nullable(body.resumeUrl),
-      resume_filename: nullable(body.resumeFilename),
-    });
-    if (spErr) console.error("student_profiles insert failed", spErr);
+    if (isStudentRole) {
+      const { error: spErr } = await supabase.from("student_profiles").insert({
+        user_id: userId,
+        bio: nullable(body.bio),
+        skills,
+        resume_url: nullable(body.resumeUrl),
+        resume_filename: nullable(body.resumeFilename),
+      });
+      if (spErr) console.error("student_profiles insert failed", spErr);
+    }
 
     // Work experience
     const work = Array.isArray(body.workExperience) ? body.workExperience : [];
