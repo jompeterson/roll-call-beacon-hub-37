@@ -78,13 +78,14 @@ Deno.serve(async (req) => {
       .maybeSingle();
     if (existing) return json({ error: "A user with that email already exists" }, 409);
 
-    // Resolve student role
-    const { data: role, error: roleErr } = await supabase
-      .from("user_roles")
-      .select("id")
-      .eq("name", "student")
-      .maybeSingle();
-    if (roleErr || !role) return json({ error: "B2S Graduate role not found" }, 500);
+    // Resolve role: explicit roleId from the admin, otherwise default to B2S Graduate
+    const requestedRoleId = nullable(body.roleId);
+    const roleQuery = supabase.from("user_roles").select("id, name");
+    const { data: role, error: roleErr } = requestedRoleId
+      ? await roleQuery.eq("id", requestedRoleId).maybeSingle()
+      : await roleQuery.eq("name", "student").maybeSingle();
+    if (roleErr || !role) return json({ error: "Selected role not found" }, 500);
+    const isStudentRole = role.name === "student";
 
     // Placeholder password — the user sets their own via the emailed link
     const { data: salt } = await supabase.rpc("generate_salt");
