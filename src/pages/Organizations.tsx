@@ -1,13 +1,14 @@
 
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { OrganizationModal } from "@/components/OrganizationModal";
 import { OrganizationSortableTableHead } from "@/components/organizations/OrganizationSortableTableHead";
 import { OrganizationStatusIcon } from "@/components/organizations/OrganizationStatusIcon";
 import { useOrganizationsRealtime } from "@/hooks/useOrganizationsRealtime";
+import { BulkWaiverDownloadButton } from "@/components/waiver/BulkWaiverDownloadButton";
 import { useAuth } from "@/hooks/useAuth";
 
 type SortDirection = "asc" | "desc" | null;
@@ -231,6 +232,10 @@ export const Organizations = () => {
                       Status
                     </OrganizationSortableTableHead>
                   )}
+                  {isAdministrator && (
+                    <TableHead className="w-[180px]">Waivers</TableHead>
+                  )}
+
                 </TableRow>
               </TableHeader>
             </Table>
@@ -266,6 +271,15 @@ export const Organizations = () => {
                               {getStatusText(org.is_approved, org.approval_decision_made)}
                             </Badge>
                           </div>
+                        </TableCell>
+                      )}
+                      {isAdministrator && (
+                        <TableCell className="w-[180px]">
+                          <BulkWaiverDownloadButton
+                            organizationId={org.id}
+                            fileName={`${org.name}-waivers`}
+                            label="Waivers"
+                          />
                         </TableCell>
                       )}
                     </TableRow>

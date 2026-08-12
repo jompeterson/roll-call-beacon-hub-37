@@ -9,6 +9,7 @@ import { useUserFiltering } from "@/hooks/useUserFiltering";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { BulkWaiverDownloadButton } from "@/components/waiver/BulkWaiverDownloadButton";
 
 type SortDirection = "asc" | "desc" | null;
 type SortField = "firstName" | "lastName" | "organization" | "email" | "dateJoined" | "status" | null;
@@ -300,12 +301,25 @@ export const Users = () => {
         </p>
       </div>
 
-      <UserFilters
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        statusFilter={statusFilter}
-        onStatusFilterChange={setStatusFilter}
-      />
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+        <div className="flex-1">
+          <UserFilters
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            statusFilter={statusFilter}
+            onStatusFilterChange={setStatusFilter}
+          />
+        </div>
+        {isAdministrator && (
+          <BulkWaiverDownloadButton
+            users={sortedUsers as any}
+            fileName="all-waivers"
+            label="Download All Waivers"
+            size="default"
+          />
+        )}
+      </div>
+
 
       <div className="space-y-4 flex-1 flex flex-col min-h-0">
         <UserTable
