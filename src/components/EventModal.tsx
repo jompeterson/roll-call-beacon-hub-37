@@ -14,6 +14,7 @@ import { EventModalActionButtons } from "@/components/event/EventModalActionButt
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
 import { EventEditModal } from "@/components/event/EventEditModal";
 import { UserCheck } from "lucide-react";
+import { CompletionRecap } from "@/components/shared/CompletionRecap";
 
 interface Event {
   id: string;
@@ -32,6 +33,11 @@ interface Event {
   created_at: string;
   updated_at: string;
   images?: string[];
+  is_ended?: boolean | null;
+  ended_at?: string | null;
+  accomplishments?: string | null;
+  completion_images?: string[] | null;
+  funds_raised?: number | null;
 }
 
 interface EventModalProps {
@@ -160,6 +166,28 @@ export const EventModal = ({
               rsvpCount={rsvpCount}
               isAuthenticated={isAuthenticated}
             />
+
+            <CompletionRecap
+              title={event.title}
+              isEnded={event.is_ended}
+              accomplishments={event.accomplishments}
+              images={event.completion_images}
+              stats={
+                event.funds_raised != null
+                  ? [
+                      {
+                        label: "Money raised",
+                        value: Number(event.funds_raised).toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                        }),
+                      },
+                    ]
+                  : []
+              }
+            />
+
+
 
             {/* Comments Section - Only show for approved events */}
             {showComments && (
