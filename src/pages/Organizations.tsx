@@ -233,7 +233,7 @@ export const Organizations = () => {
                     </OrganizationSortableTableHead>
                   )}
                   {isAdministrator && (
-                    <TableHead className="w-[180px]">Waivers</TableHead>
+                    <TableHead className="w-[180px]" />
                   )}
 
                 </TableRow>
