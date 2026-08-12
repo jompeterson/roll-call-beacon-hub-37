@@ -161,6 +161,28 @@ export const EventModal = ({
               isAuthenticated={isAuthenticated}
             />
 
+            <CompletionRecap
+              title={event.title}
+              isEnded={event.is_ended}
+              accomplishments={event.accomplishments}
+              images={event.completion_images}
+              stats={
+                event.funds_raised != null
+                  ? [
+                      {
+                        label: "Money raised",
+                        value: Number(event.funds_raised).toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                        }),
+                      },
+                    ]
+                  : []
+              }
+            />
+
+
+
             {/* Comments Section - Only show for approved events */}
             {showComments && (
               <CommentsSection
