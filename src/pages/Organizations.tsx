@@ -8,7 +8,6 @@ import { OrganizationModal } from "@/components/OrganizationModal";
 import { OrganizationSortableTableHead } from "@/components/organizations/OrganizationSortableTableHead";
 import { OrganizationStatusIcon } from "@/components/organizations/OrganizationStatusIcon";
 import { useOrganizationsRealtime } from "@/hooks/useOrganizationsRealtime";
-import { BulkWaiverDownloadButton } from "@/components/waiver/BulkWaiverDownloadButton";
 import { useAuth } from "@/hooks/useAuth";
 
 type SortDirection = "asc" | "desc" | null;
