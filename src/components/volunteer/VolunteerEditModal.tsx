@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useOrganizationOptions } from "@/hooks/useOrganizationOptions";
 import type { Volunteer } from "@/hooks/useVolunteers";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
+import { LocationFields } from "@/components/shared/LocationFields";
 
 interface VolunteerEditModalProps {
   open: boolean;
@@ -179,15 +180,11 @@ export const VolunteerEditModal = ({
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
-              <Input
-                id="location"
-                value={formData.location}
-                onChange={(e) => handleInputChange("location", e.target.value)}
-                placeholder="Enter location"
-              />
-            </div>
+            <LocationFields
+              idPrefix="volunteer-edit-location"
+              value={formData.location}
+              onChange={(value) => handleInputChange("location", value)}
+            />
 
             <div className="space-y-2">
               <Label htmlFor="volunteer_link">Volunteer Link</Label>

@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { EVENT_TYPES } from "@/lib/eventTypes";
 import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
+import { LocationFields } from "@/components/shared/LocationFields";
 
 interface EventCreateModalProps {
   open: boolean;
@@ -286,10 +287,7 @@ export const EventCreateModal = ({
                     Location
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Enter event location"
-                      {...field}
-                    />
+                    <LocationFields idPrefix="event-create-location" value={field.value || ""} onChange={field.onChange} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

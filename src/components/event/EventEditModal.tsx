@@ -14,6 +14,7 @@ import { X } from "lucide-react";
 import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
 import type { Event } from "@/hooks/useEvents";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
+import { LocationFields } from "@/components/shared/LocationFields";
 
 interface EventEditModalProps {
   open: boolean;
@@ -178,15 +179,11 @@ export const EventEditModal = ({
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
-              <Input
-                id="location"
-                value={formData.location}
-                onChange={(e) => handleInputChange("location", e.target.value)}
-                placeholder="Enter event location"
-              />
-            </div>
+            <LocationFields
+              idPrefix="event-edit-location"
+              value={formData.location}
+              onChange={(value) => handleInputChange("location", value)}
+            />
 
             <div className="space-y-2">
               <Label htmlFor="event_link">Event Link</Label>

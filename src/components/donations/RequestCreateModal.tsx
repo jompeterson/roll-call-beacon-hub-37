@@ -13,6 +13,7 @@ import { useProfileData } from "@/hooks/useProfileData";
 import { DimensionsInput } from "@/components/shared/DimensionsInput";
 import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
+import { LocationFields } from "@/components/shared/LocationFields";
 
 interface RequestCreateModalProps {
   open: boolean;
@@ -274,16 +275,12 @@ export const RequestCreateModal = ({
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="location">Location *</Label>
-              <Input
-                id="location"
-                value={formData.location}
-                onChange={(e) => handleInputChange("location", e.target.value)}
-                placeholder="Address, City, State, ZIP"
-                required
-              />
-            </div>
+            <LocationFields
+              idPrefix="request-create-location"
+              value={formData.location}
+              onChange={(value) => handleInputChange("location", value)}
+              required
+            />
 
             <div className="space-y-2">
               <Label htmlFor="urgency_level">Urgency Level</Label>

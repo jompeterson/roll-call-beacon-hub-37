@@ -16,6 +16,7 @@ import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useOrganizationOptions } from "@/hooks/useOrganizationOptions";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
+import { LocationFields } from "@/components/shared/LocationFields";
 
 interface VolunteerCreateModalProps {
   open: boolean;
@@ -260,10 +261,7 @@ export const VolunteerCreateModal = ({
                     Location
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Enter location"
-                      {...field}
-                    />
+                    <LocationFields idPrefix="volunteer-create-location" value={field.value || ""} onChange={field.onChange} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

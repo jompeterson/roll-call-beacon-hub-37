@@ -13,6 +13,7 @@ import { DonationFormContactFields } from "./DonationFormContactFields";
 import { DonationImageUpload } from "./DonationImageUpload";
 import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
+import { LocationFields } from "@/components/shared/LocationFields";
 
 interface DonationCreateModalProps {
   open: boolean;
@@ -64,16 +65,12 @@ export const DonationCreateModal = ({
             onInputChange={handleInputChange}
           />
 
-          <div className="space-y-2">
-            <Label htmlFor="location">Location *</Label>
-            <Input
-              id="location"
-              value={formData.location}
-              onChange={(e) => handleInputChange("location", e.target.value)}
-              placeholder="Address, City, State, ZIP"
-              required
-            />
-          </div>
+          <LocationFields
+            idPrefix="donation-create-location"
+            value={formData.location}
+            onChange={(value) => handleInputChange("location", value)}
+            required
+          />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <DonationFormOrganizationField
