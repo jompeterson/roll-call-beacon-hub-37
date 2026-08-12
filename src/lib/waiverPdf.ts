@@ -97,22 +97,29 @@ const loadLogo = async (url: string): Promise<LoadedLogo> => {
   });
 };
 
-export const downloadWaiverPdf = async ({
-  fullName,
-  signatureName,
-  signedAt,
-}: WaiverPdfOptions) => {
-  const doc = new jsPDF({ unit: "pt", format: "letter" });
+const getLogo = async (): Promise<LoadedLogo | null> => {
+  try {
+    const logoUrl = await fetchLogoUrl();
+    return await loadLogo(logoUrl);
+  } catch (error) {
+    console.error("Waiver PDF logo failed to load:", error);
+    return null;
+  }
+};
+
+// Renders a single waiver onto the current page of the document.
+const renderWaiver = (
+  doc: jsPDF,
+  { fullName, signatureName, signedAt }: WaiverPdfOptions,
+  logo: LoadedLogo | null
+) => {
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
   const margin = 56;
   const maxWidth = pageWidth - margin * 2;
   let y = margin;
 
-  const logoUrl = await fetchLogoUrl();
-
-  try {
-    const logo = await loadLogo(logoUrl);
+  if (logo) {
     const logoWidth = 180;
     const logoHeight = Math.max(
       18,
@@ -120,16 +127,13 @@ export const downloadWaiverPdf = async ({
     );
     doc.addImage(logo.dataUrl, "JPEG", margin, y, logoWidth, logoHeight);
     y += logoHeight + 16;
-  } catch (error) {
-    console.error("Waiver PDF logo failed to load:", error);
-    // Fallback to text if logo fails to load
+  } else {
     doc.setFont("helvetica", "bold");
     doc.setFontSize(16);
     doc.setTextColor(0);
     doc.text("HBF Roll Call", margin, y);
     y += 24;
   }
-
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(13);
@@ -192,7 +196,36 @@ export const downloadWaiverPdf = async ({
     margin,
     sy
   );
+};
 
-  const safeName = (signatureName || fullName || "waiver").replace(/[^a-z0-9]+/gi, "-");
+export const downloadWaiverPdf = async (options: WaiverPdfOptions) => {
+  const doc = new jsPDF({ unit: "pt", format: "letter" });
+  const logo = await getLogo();
+  renderWaiver(doc, options, logo);
+
+  const safeName = (options.signatureName || options.fullName || "waiver").replace(
+    /[^a-z0-9]+/gi,
+    "-"
+  );
   doc.save(`waiver-${safeName.toLowerCase()}.pdf`);
+};
+
+// Combines many waivers into a single PDF (one waiver starts on its own page).
+export const downloadWaiversPdf = async (
+  waivers: WaiverPdfOptions[],
+  fileName = "waivers"
+) => {
+  if (!waivers.length) return 0;
+
+  const doc = new jsPDF({ unit: "pt", format: "letter" });
+  const logo = await getLogo();
+
+  waivers.forEach((waiver, index) => {
+    if (index > 0) doc.addPage();
+    renderWaiver(doc, waiver, logo);
+  });
+
+  const safeFile = fileName.replace(/[^a-z0-9]+/gi, "-").toLowerCase();
+  doc.save(`${safeFile}.pdf`);
+  return waivers.length;
 };
