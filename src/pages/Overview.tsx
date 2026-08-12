@@ -183,7 +183,7 @@ export const Overview = () => {
             navigateTo="/donations"
           />
           <MetricCard
-            title="Pending In-Kind Donations"
+            title="Available In-Kind Donations"
             value={yearlyLoading ? "..." : formatCurrency(yearlyMetrics?.pendingDonations || 0)}
             change={yearlyPendingDonationChange.change}
             changeType={yearlyPendingDonationChange.changeType}
@@ -277,7 +277,7 @@ export const Overview = () => {
             navigateTo="/donations"
           />
           <MetricCard
-            title="Pending In-Kind Donations"
+            title="Available In-Kind Donations"
             value={monthlyLoading ? "..." : formatCurrency(monthlyMetrics?.pendingDonations || 0)}
             change={monthlyPendingDonationChange.change}
             changeType={monthlyPendingDonationChange.changeType}
