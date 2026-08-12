@@ -1,6 +1,7 @@
 
 import { MetricCard } from "@/components/MetricCard";
 import { PendingOrganizationsWidget } from "@/components/PendingOrganizationsWidget";
+import { PendingUsersWidget } from "@/components/PendingUsersWidget";
 import { PendingScholarshipsWidget } from "@/components/PendingScholarshipsWidget";
 import { PendingDonationsRequestsWidget } from "@/components/PendingDonationsRequestsWidget";
 import { PendingEventsWidget } from "@/components/PendingEventsWidget";
