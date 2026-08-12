@@ -90,7 +90,6 @@ export const B2SManage = () => {
 
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<B2SClass | null>(null);
-  const [name, setName] = useState("");
   const [year, setYear] = useState(String(currentYear));
   const [session, setSession] = useState("");
   const [description, setDescription] = useState("");
