@@ -13,6 +13,7 @@ import { DonationFormContactFields } from "./DonationFormContactFields";
 import { DonationImageUpload } from "./DonationImageUpload";
 import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
+import { LocationFields } from "@/components/shared/LocationFields";
 
 interface DonationCreateModalProps {
   open: boolean;
