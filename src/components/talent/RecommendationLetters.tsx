@@ -109,8 +109,9 @@ export const RecommendationLetters = ({ studentId, canUpload = false, descriptio
           <FileText className="h-5 w-5" /> Letters of Recommendation
         </CardTitle>
         <CardDescription>
-          {description || "Private — visible only to administrators and this graduate."}
+          {description || "Visible to members with Discover Talent access and this graduate."}
         </CardDescription>
+
       </CardHeader>
       <CardContent className="space-y-3">
         {loading ? (
