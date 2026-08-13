@@ -206,7 +206,7 @@ export const Overview = () => {
             icon={Clock}
           />
           <MetricCard
-            title="Value of Hours Donated"
+            title="Estimated Value of Hours Donated"
             value={yearlyLoading ? "..." : formatCurrency(yearlyMetrics?.hoursDonatedValue || 0)}
             change={hoursValueChange.change}
             changeType={hoursValueChange.changeType}
@@ -316,7 +316,7 @@ export const Overview = () => {
             icon={Clock}
           />
           <MetricCard
-            title="Value of Hours Donated"
+            title="Estimated Value of Hours Donated"
             value={monthlyLoading ? "..." : formatCurrency(monthlyMetrics?.hoursDonatedValue || 0)}
             change={monthlyHoursValueChange.change}
             changeType={monthlyHoursValueChange.changeType}
