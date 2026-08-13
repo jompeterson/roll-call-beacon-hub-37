@@ -49,10 +49,12 @@ Deno.serve(async (req) => {
       return json({ error: "Invalid studentId" }, 400);
     }
 
-    // Authorization: admin, or the graduate the letter belongs to
+    // Authorization: admin, any non-student member (Discover Talent access), or the graduate themselves
     const { data: isAdmin } = await supabase.rpc("user_is_admin", { _user_id: sessionUser.id });
+    const { data: isNonStudent } = await supabase.rpc("is_non_student", { _user_id: sessionUser.id });
     const isOwner = sessionUser.id === studentId;
-    if (!isAdmin && !isOwner) return json({ error: "Forbidden" }, 403);
+    if (!isAdmin && !isOwner && !isNonStudent) return json({ error: "Forbidden" }, 403);
+
 
     if (action === "list") {
       const { data, error } = await supabase.storage.from(BUCKET).list(studentId, {
