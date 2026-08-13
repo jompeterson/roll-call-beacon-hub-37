@@ -160,9 +160,18 @@ export const StudentDetail = () => {
         </Card>
       )}
 
-      {userRole?.name === "administrator" && studentId && (
-        <RecommendationLetters studentId={studentId} canUpload />
+      {studentId && (
+        <RecommendationLetters
+          studentId={studentId}
+          canUpload={userRole?.name === "administrator"}
+          description={
+            userRole?.name === "administrator"
+              ? "Visible to members with Discover Talent access and this graduate."
+              : undefined
+          }
+        />
       )}
+
 
 
 
