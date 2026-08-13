@@ -6,7 +6,7 @@ export const HOURLY_RATE_USD = 30;
 /**
  * Totals for donated hours within a date range, based on ended volunteer opportunities:
  *  - hours: sum of `total_hours` (falls back to the opportunity's start/end duration)
- *  - value: sum of (hours × number of participants × HOURLY_RATE_USD)
+ *  - value: sum of (hours × participants × HOURLY_RATE_USD) + discounted services value
  */
 export const calculateDonatedHours = async (
   startISO: string,
@@ -14,7 +14,7 @@ export const calculateDonatedHours = async (
 ): Promise<{ hours: number; value: number }> => {
   const { data: volunteers } = await supabase
     .from("volunteers")
-    .select("id, total_hours, start_date, end_date")
+    .select("id, total_hours, start_date, end_date, discounted_services_value")
     .eq("is_approved", true)
     .eq("is_ended", true)
     .gte("created_at", startISO)
@@ -46,8 +46,10 @@ export const calculateDonatedHours = async (
   const totalHours = list.reduce((sum, v) => sum + hoursFor(v), 0);
   const totalValue = list.reduce((sum, v) => {
     const participants = participantCounts.get(v.id) || 0;
-    return sum + hoursFor(v) * participants * HOURLY_RATE_USD;
+    const services = Number(v.discounted_services_value) || 0;
+    return sum + hoursFor(v) * participants * HOURLY_RATE_USD + services;
   }, 0);
+
 
 
   return {
