@@ -81,7 +81,7 @@ export const Sidebar = ({ open, onOpenChange, collapsed, onCollapsedChange }: Si
   const isStudent = userRole?.name === "student";
   const topNavigationItems = [
     ...baseTopNavigationItems,
-    ...(isAuthenticated && !isStudent ? [{ name: "Discover Talent", href: "/discover-talent" }] : []),
+    ...(!isStudent ? [{ name: "Discover Talent", href: "/discover-talent" }] : []),
     ...(isAuthenticated && isStudent ? [{ name: "Work Experience", href: "/work-experience" }] : []),
   ];
   const [user, setUser] = useState(null);

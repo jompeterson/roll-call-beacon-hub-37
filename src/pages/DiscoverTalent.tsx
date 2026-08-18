@@ -31,7 +31,7 @@ export const DiscoverTalent = () => {
   const [search, setSearch] = useState("");
 
   const isStudent = userRole?.name === "student";
-  const allowed = isAuthenticated && !isStudent;
+  const allowed = !isStudent;
 
   useEffect(() => {
     if (!allowed) {
