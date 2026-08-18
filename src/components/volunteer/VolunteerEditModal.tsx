@@ -219,6 +219,7 @@ export const VolunteerEditModal = ({
                   <SelectValue placeholder="Select an organization (optional)" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="">None</SelectItem>
                   {organizations.map((org) => (
                     <SelectItem key={org.id} value={org.id}>
                       {org.name}
