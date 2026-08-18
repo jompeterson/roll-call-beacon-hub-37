@@ -224,7 +224,7 @@ export const Volunteers = () => {
                   onSort={handleVolunteerSort}
                   className={isAuthenticated ? "w-1/4" : "w-2/5"}
                 >
-                  Organization Helping
+                  Project
                 </SortableTableHead>
                 <SortableTableHead
                   field="start_date"
