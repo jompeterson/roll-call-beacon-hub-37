@@ -39,8 +39,8 @@ export const LocationFields = ({ value, onChange, required, idPrefix = "location
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-      <div className="space-y-2 md:col-span-2">
+    <div className="space-y-4">
+      <div className="space-y-2">
         <Label htmlFor={`${idPrefix}-address`}>Address {required && "*"}</Label>
         <Input
           id={`${idPrefix}-address`}
@@ -50,34 +50,36 @@ export const LocationFields = ({ value, onChange, required, idPrefix = "location
           required={required}
         />
       </div>
-      <div className="space-y-2">
-        <Label htmlFor={`${idPrefix}-city`}>City {required && "*"}</Label>
-        <Input
-          id={`${idPrefix}-city`}
-          value={parts.city}
-          onChange={(e) => update("city", e.target.value)}
-          placeholder="City"
-          required={required}
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor={`${idPrefix}-state`}>State {required && "*"}</Label>
-        <Input
-          id={`${idPrefix}-state`}
-          value={parts.state}
-          onChange={(e) => update("state", e.target.value)}
-          placeholder="State"
-          required={required}
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor={`${idPrefix}-postal`}>Postal Code</Label>
-        <Input
-          id={`${idPrefix}-postal`}
-          value={parts.postalCode}
-          onChange={(e) => update("postalCode", e.target.value)}
-          placeholder="ZIP"
-        />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor={`${idPrefix}-city`}>City {required && "*"}</Label>
+          <Input
+            id={`${idPrefix}-city`}
+            value={parts.city}
+            onChange={(e) => update("city", e.target.value)}
+            placeholder="City"
+            required={required}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor={`${idPrefix}-state`}>State {required && "*"}</Label>
+          <Input
+            id={`${idPrefix}-state`}
+            value={parts.state}
+            onChange={(e) => update("state", e.target.value)}
+            placeholder="State"
+            required={required}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor={`${idPrefix}-postal`}>Postal Code</Label>
+          <Input
+            id={`${idPrefix}-postal`}
+            value={parts.postalCode}
+            onChange={(e) => update("postalCode", e.target.value)}
+            placeholder="ZIP"
+          />
+        </div>
       </div>
     </div>
   );
