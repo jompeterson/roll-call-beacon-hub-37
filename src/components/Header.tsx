@@ -29,7 +29,7 @@ export const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
   const isMobile = useIsMobile();
   const { userRole, isAuthenticated } = useAuth();
   const isStudent = userRole?.name === "student";
-  const showDiscoverTalent = isAuthenticated && !isStudent;
+  const showDiscoverTalent = !isStudent;
   const showWorkExperience = isAuthenticated && isStudent;
   const [user, setUser] = useState<CustomUser | null>(null);
   const [logoUrl, setLogoUrl] = useState<string | null>(null);

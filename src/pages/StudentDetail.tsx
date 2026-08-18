@@ -23,7 +23,7 @@ export const StudentDetail = () => {
   const [loading, setLoading] = useState(true);
 
   const isStudent = userRole?.name === "student";
-  const allowed = isAuthenticated && !isStudent;
+  const allowed = !isStudent;
 
   useEffect(() => {
     if (!allowed || !studentId) {
