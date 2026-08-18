@@ -1,0 +1,1 @@
+UPDATE public.scholarships SET application_deadline = date_trunc('day', application_deadline) + interval '12 hours' WHERE application_deadline IS NOT NULL AND application_deadline = date_trunc('day', application_deadline);
