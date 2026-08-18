@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { ScholarshipFormData } from "@/components/scholarship/ScholarshipFormData";
+import { dateInputToISO } from "@/lib/utils";
 
 interface UseScholarshipSubmissionProps {
   onScholarshipCreated: () => void;
@@ -60,9 +61,7 @@ export const useScholarshipSubmission = ({
         description: formData.description || null,
         amount: formData.amount_type !== "none" ? (parseFloat(formData.amount) || 0) : 0,
         amount_max: formData.amount_type === "range" ? (parseFloat(formData.amount_max) || null) : null,
-        application_deadline: formData.application_deadline 
-          ? new Date(formData.application_deadline).toISOString() 
-          : null,
+        application_deadline: dateInputToISO(formData.application_deadline),
         eligibility_criteria: formData.eligibility_criteria || null,
         contact_email: formData.contact_email || null,
         contact_phone: formData.contact_phone || null,

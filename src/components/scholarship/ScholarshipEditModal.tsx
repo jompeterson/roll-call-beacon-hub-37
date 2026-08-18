@@ -8,6 +8,7 @@ import { type AmountType } from "./ScholarshipFormData";
 import { ImageUpload } from "@/components/shared/ImageUpload";
 import { SubmitForReviewDialog } from "@/components/shared/SubmitForReviewDialog";
 import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
+import { dateInputToISO, isoToDateInput } from "@/lib/utils";
 
 interface ScholarshipEditModalProps {
   open: boolean;
@@ -42,7 +43,7 @@ export const ScholarshipEditModal = ({
     amount_type: getInitialAmountType(),
     amount: scholarship.amount?.toString() || "",
     amount_max: scholarship.amount_max?.toString() || "",
-    application_deadline: scholarship.application_deadline ? new Date(scholarship.application_deadline).toISOString().split('T')[0] : "",
+    application_deadline: isoToDateInput(scholarship.application_deadline),
     eligibility_criteria: scholarship.eligibility_criteria || "",
     organization_name: scholarship.organization_name || "",
     contact_email: scholarship.contact_email || "",
@@ -94,7 +95,7 @@ export const ScholarshipEditModal = ({
         description: formData.description || null,
         amount: formData.amount_type !== "none" ? (parseFloat(formData.amount) || 0) : 0,
         amount_max: formData.amount_type === "range" ? (parseFloat(formData.amount_max) || null) : null,
-        application_deadline: formData.application_deadline ? new Date(formData.application_deadline).toISOString() : null,
+        application_deadline: dateInputToISO(formData.application_deadline),
         eligibility_criteria: formData.eligibility_criteria || null,
         organization_name: formData.organization_name || null,
         contact_email: formData.contact_email || null,
