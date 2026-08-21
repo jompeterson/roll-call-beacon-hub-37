@@ -304,6 +304,12 @@ export const Volunteers = () => {
                     <TableCell className="w-1/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
                       {formatDate(volunteer.start_date)}
                     </TableCell>
+                    <TableCell className="w-1/6 whitespace-nowrap">
+                      {volunteer.start_date
+                        ? new Date(volunteer.start_date).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })
+                        : "—"}
+                    </TableCell>
+
                     {isAuthenticated && (
                       <TableCell className="w-1/6">
                         <div className="flex items-center gap-2 whitespace-nowrap">
