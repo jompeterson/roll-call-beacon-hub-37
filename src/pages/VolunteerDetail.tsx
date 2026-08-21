@@ -10,7 +10,7 @@ import { useChangeRequest } from "@/hooks/useChangeRequest";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { ChevronRight, Calendar, MapPin, Users, CheckCircle, XCircle, Edit, Flag, Lock, UserCheck } from "lucide-react";
+import { ChevronRight, Calendar, MapPin, Users, Heart, CheckCircle, XCircle, Edit, Flag, Lock, UserCheck } from "lucide-react";
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ShareButton } from "@/components/ShareButton";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
@@ -304,6 +304,16 @@ export const VolunteerDetail = () => {
                   <div>
                     <p className="font-medium">Organization Helping</p>
                     <p className="text-muted-foreground">{volunteer.helping_organization_name}</p>
+                  </div>
+                </div>
+              )}
+
+              {volunteer.non_profit && (
+                <div className="flex items-start gap-2">
+                  <Heart className="h-5 w-5 mt-0.5 text-muted-foreground" />
+                  <div>
+                    <p className="font-medium">Non-Profit</p>
+                    <p className="text-muted-foreground">{volunteer.non_profit}</p>
                   </div>
                 </div>
               )}

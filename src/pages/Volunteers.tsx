@@ -20,7 +20,7 @@ import { filterVisiblePosts } from "@/lib/postVisibility";
 import { Lock } from "lucide-react";
 
 type SortDirection = "asc" | "desc" | null;
-type SortField = "helping_organization_name" | "title" | "start_date" | "location" | "status" | null;
+type SortField = "helping_organization_name" | "non_profit" | "title" | "start_date" | "location" | "status" | null;
 
 
 const StatusIcon = ({ status }: { status: string }) => {
@@ -209,6 +209,15 @@ export const Volunteers = () => {
                   Volunteer Group
                 </SortableTableHead>
                 <SortableTableHead
+                  field="non_profit"
+                  currentSort={volunteerSort}
+                  currentDirection={volunteerDirection}
+                  onSort={handleVolunteerSort}
+                  className="w-1/5"
+                >
+                  Non-Profit
+                </SortableTableHead>
+                <SortableTableHead
                   field="location"
                   currentSort={volunteerSort}
                   currentDirection={volunteerDirection}
@@ -252,55 +261,58 @@ export const Volunteers = () => {
           <ScrollArea className="flex-1">
             <Table>
               <TableBody>
-                {items.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={isAuthenticated ? 5 : 4} className="text-center py-8 text-muted-foreground">
-                      No volunteer opportunities found
+              {items.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={isAuthenticated ? 6 : 5} className="text-center py-8 text-muted-foreground">
+                    No volunteer opportunities found
+                  </TableCell>
+                </TableRow>
+              ) : (
+                items.map((volunteer) => (
+                  <TableRow
+                    key={volunteer.id}
+                    className="cursor-pointer hover:bg-muted/50"
+                    onClick={() => handleVolunteerRowClick(volunteer)}
+                  >
+                    <TableCell className="w-1/5 max-w-0">
+                      <div className="truncate">{volunteer.helping_organization_name || "—"}</div>
+                      {volunteer.interested_organizations && volunteer.interested_organizations.length > 0 && (
+                        <div className="truncate text-xs text-muted-foreground">
+                          Interested: {volunteer.interested_organizations.join(", ")}
+                        </div>
+                      )}
                     </TableCell>
-                  </TableRow>
-                ) : (
-                  items.map((volunteer) => (
-                    <TableRow
-                      key={volunteer.id}
-                      className="cursor-pointer hover:bg-muted/50"
-                      onClick={() => handleVolunteerRowClick(volunteer)}
-                    >
-                      <TableCell className="w-1/5 max-w-0">
-                        <div className="truncate">{volunteer.helping_organization_name || "—"}</div>
-                        {volunteer.interested_organizations && volunteer.interested_organizations.length > 0 && (
-                          <div className="truncate text-xs text-muted-foreground">
-                            Interested: {volunteer.interested_organizations.join(", ")}
-                          </div>
+                    <TableCell className="w-1/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                      {volunteer.non_profit || "—"}
+                    </TableCell>
+                    <TableCell className="w-1/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                      {volunteer.location || "TBD"}
+                    </TableCell>
+                    <TableCell className={`font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-0 ${isAuthenticated ? "w-1/4" : "w-2/5"}`}>
+                      <div className="flex items-center gap-2">
+                        <span>{volunteer.title}</span>
+                        {volunteer.is_private && (
+                          <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-800 border border-amber-300 px-1.5 py-0.5 rounded">
+                            <Lock className="h-3 w-3" /> Private
+                          </span>
                         )}
-                      </TableCell>
-                      <TableCell className="w-1/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
-                        {volunteer.location || "TBD"}
-                      </TableCell>
-                      <TableCell className={`font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-0 ${isAuthenticated ? "w-1/4" : "w-2/5"}`}>
-                        <div className="flex items-center gap-2">
-                          <span>{volunteer.title}</span>
-                          {volunteer.is_private && (
-                            <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-800 border border-amber-300 px-1.5 py-0.5 rounded">
-                              <Lock className="h-3 w-3" /> Private
-                            </span>
-                          )}
-                          <SignupCount volunteerId={volunteer.id} isApproved={volunteer.is_approved} />
+                        <SignupCount volunteerId={volunteer.id} isApproved={volunteer.is_approved} />
+                      </div>
+                    </TableCell>
+                    <TableCell className="w-1/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
+                      {formatDate(volunteer.start_date)}
+                    </TableCell>
+                    {isAuthenticated && (
+                      <TableCell className="w-1/6">
+                        <div className="flex items-center gap-2 whitespace-nowrap">
+                          <StatusIcon status={getVolunteerStatus(volunteer)} />
+                          <span>{getVolunteerStatus(volunteer)}</span>
                         </div>
                       </TableCell>
-                      <TableCell className="w-1/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-0">
-                        {formatDate(volunteer.start_date)}
-                      </TableCell>
-                      {isAuthenticated && (
-                        <TableCell className="w-1/6">
-                          <div className="flex items-center gap-2 whitespace-nowrap">
-                            <StatusIcon status={getVolunteerStatus(volunteer)} />
-                            <span>{getVolunteerStatus(volunteer)}</span>
-                          </div>
-                        </TableCell>
-                      )}
-                    </TableRow>
-                  ))
-                )}
+                    )}
+                  </TableRow>
+                ))
+              )}
               </TableBody>
             </Table>
           </ScrollArea>

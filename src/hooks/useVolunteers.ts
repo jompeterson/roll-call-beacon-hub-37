@@ -29,6 +29,7 @@ export interface Volunteer {
   completion_images?: string[];
   total_hours?: number | null;
   discounted_services_value?: number | null;
+  non_profit?: string | null;
 }
 
 export const useVolunteers = () => {

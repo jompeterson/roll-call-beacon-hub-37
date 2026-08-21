@@ -1277,6 +1277,7 @@ export type Database = {
           is_private: boolean
           location: string | null
           max_participants: number | null
+          non_profit: string | null
           start_date: string
           title: string
           total_hours: number | null
@@ -1301,6 +1302,7 @@ export type Database = {
           is_private?: boolean
           location?: string | null
           max_participants?: number | null
+          non_profit?: string | null
           start_date: string
           title: string
           total_hours?: number | null
@@ -1325,6 +1327,7 @@ export type Database = {
           is_private?: boolean
           location?: string | null
           max_participants?: number | null
+          non_profit?: string | null
           start_date?: string
           title?: string
           total_hours?: number | null

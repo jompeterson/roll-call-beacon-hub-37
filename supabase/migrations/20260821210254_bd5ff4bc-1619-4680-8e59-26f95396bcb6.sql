@@ -1,0 +1,1 @@
+ALTER TABLE public.volunteers ADD COLUMN non_profit text;

@@ -5,7 +5,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, MapPin, Users, CheckCircle, XCircle, Edit } from "lucide-react";
+import { Calendar, MapPin, Users, Heart, CheckCircle, XCircle, Edit } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { WaiverSignDialog } from "@/components/waiver/WaiverSignDialog";
@@ -42,6 +42,8 @@ interface Volunteer {
   completion_images?: string[] | null;
   total_hours?: number | null;
   discounted_services_value?: number | null;
+  helping_organization_name?: string | null;
+  non_profit?: string | null;
 }
 
 interface VolunteerModalProps {
@@ -184,6 +186,13 @@ export const VolunteerModal = ({
                       Volunteer Link
                     </a>
                   </span>
+                </div>
+              )}
+
+              {volunteer.non_profit && (
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Heart className="h-4 w-4" />
+                  <span>Non-Profit: {volunteer.non_profit}</span>
                 </div>
               )}
 
