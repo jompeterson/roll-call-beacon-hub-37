@@ -244,7 +244,15 @@ export const Volunteers = () => {
                 >
                   Date
                 </SortableTableHead>
-                <TableHead className="w-1/6">Time</TableHead>
+                <SortableTableHead
+                  field="time"
+                  currentSort={volunteerSort}
+                  currentDirection={volunteerDirection}
+                  onSort={handleVolunteerSort}
+                  className="w-1/6"
+                >
+                  Time
+                </SortableTableHead>
 
                 {isAuthenticated && (
                   <SortableTableHead
