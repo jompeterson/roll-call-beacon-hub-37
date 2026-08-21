@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Search, Briefcase } from "lucide-react";
 import {
   StudentTalentCard,
@@ -86,8 +88,13 @@ export const DiscoverTalent = () => {
         <p className="text-muted-foreground">
           {isStudent
             ? "This page is available to non-student members only."
-            : "Please sign in to browse student talent."}
+            : "Sign in to browse student talent and view graduate profiles."}
         </p>
+        {!isAuthenticated && !isStudent && (
+          <Link to="/login">
+            <Button className="mt-4">Sign In</Button>
+          </Link>
+        )}
       </div>
     );
   }
