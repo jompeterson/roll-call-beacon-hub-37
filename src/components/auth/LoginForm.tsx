@@ -167,7 +167,7 @@ export const LoginForm = () => {
           )}
           <Link to="/">
             <img
-              src="/__l5e/assets-v1/11f3a429-f384-4b35-b670-89606864d0fa/3bf5b36b-46ad-420d-8eb5-7435b9aaad17.png"
+              src="https://rollcall.buildhopepdx.org/lovable-uploads/3bf5b36b-46ad-420d-8eb5-7435b9aaad17.png"
               alt="Roll Call Logo"
               className="h-12 object-contain mt-4"
             />
