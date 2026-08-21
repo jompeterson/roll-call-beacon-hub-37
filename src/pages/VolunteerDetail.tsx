@@ -3,6 +3,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useVolunteers } from "@/hooks/useVolunteers";
 import { useAuth } from "@/hooks/useAuth";
+import { WaiverSignDialog } from "@/components/waiver/WaiverSignDialog";
+import { useWaiverRequirement } from "@/hooks/useWaiverRequirement";
 import { useVolunteerSignups } from "@/hooks/useVolunteerSignups";
 import { useChangeRequest } from "@/hooks/useChangeRequest";
 import { Button } from "@/components/ui/button";
@@ -32,6 +34,7 @@ export const VolunteerDetail = () => {
     deleteVolunteer
   } = useVolunteers();
   const { signupCount, hasSignedUp, submitting, signUp, cancelSignup, userSignup } = useVolunteerSignups(volunteerId || "");
+  const { waiverOpen, setWaiverOpen, requireWaiver, onWaiverSigned } = useWaiverRequirement();
   const [editOpen, setEditOpen] = useState(false);
   const [endOpen, setEndOpen] = useState(false);
   const queryClient = useQueryClient();
@@ -103,7 +106,7 @@ export const VolunteerDetail = () => {
     if (hasSignedUp && userSignup) {
       cancelSignup(userSignup.id);
     } else {
-      signUp();
+      requireWaiver(() => signUp());
     }
   };
 
@@ -444,6 +447,7 @@ export const VolunteerDetail = () => {
           onVolunteerUpdated={refetchChangeRequest}
         />
       )}
+      <WaiverSignDialog open={waiverOpen} onOpenChange={setWaiverOpen} onSigned={onWaiverSigned} />
     </div>
   );
 };

@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, MapPin, Users, CheckCircle, XCircle, Edit } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
+import { WaiverSignDialog } from "@/components/waiver/WaiverSignDialog";
+import { useWaiverRequirement } from "@/hooks/useWaiverRequirement";
 import { useVolunteerSignups } from "@/hooks/useVolunteerSignups";
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";
@@ -69,6 +71,7 @@ export const VolunteerModal = ({
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [showRequestChangesModal, setShowRequestChangesModal] = useState(false);
   const [approveAsPrivate, setApproveAsPrivate] = useState(false);
+  const { waiverOpen, setWaiverOpen, requireWaiver, onWaiverSigned } = useWaiverRequirement();
   
   const isOwner = user?.id === volunteer?.creator_user_id;
   const canEdit = isOwner || isAdministrator;
@@ -99,7 +102,7 @@ export const VolunteerModal = ({
       if (hasSignedUp && userSignup) {
         cancelSignup(userSignup.id);
       } else {
-        signUp();
+        requireWaiver(() => signUp());
       }
     } else {
       // For guests, open the guest signup modal
@@ -332,6 +335,7 @@ export const VolunteerModal = ({
           onSubmit={() => onRequestChanges(volunteer.id)}
         />
       )}
+      <WaiverSignDialog open={waiverOpen} onOpenChange={setWaiverOpen} onSigned={onWaiverSigned} />
     </Dialog>
   );
 };
