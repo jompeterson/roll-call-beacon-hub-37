@@ -34,6 +34,7 @@ export const VolunteerDetail = () => {
     deleteVolunteer
   } = useVolunteers();
   const { signupCount, hasSignedUp, submitting, signUp, cancelSignup, userSignup } = useVolunteerSignups(volunteerId || "");
+  const { waiverOpen, setWaiverOpen, requireWaiver, onWaiverSigned } = useWaiverRequirement();
   const [editOpen, setEditOpen] = useState(false);
   const [endOpen, setEndOpen] = useState(false);
   const queryClient = useQueryClient();
@@ -105,7 +106,7 @@ export const VolunteerDetail = () => {
     if (hasSignedUp && userSignup) {
       cancelSignup(userSignup.id);
     } else {
-      signUp();
+      requireWaiver(() => signUp());
     }
   };
 
@@ -446,6 +447,7 @@ export const VolunteerDetail = () => {
           onVolunteerUpdated={refetchChangeRequest}
         />
       )}
+      <WaiverSignDialog open={waiverOpen} onOpenChange={setWaiverOpen} onSigned={onWaiverSigned} />
     </div>
   );
 };

@@ -71,6 +71,7 @@ export const VolunteerModal = ({
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [showRequestChangesModal, setShowRequestChangesModal] = useState(false);
   const [approveAsPrivate, setApproveAsPrivate] = useState(false);
+  const { waiverOpen, setWaiverOpen, requireWaiver, onWaiverSigned } = useWaiverRequirement();
   
   const isOwner = user?.id === volunteer?.creator_user_id;
   const canEdit = isOwner || isAdministrator;
@@ -101,7 +102,7 @@ export const VolunteerModal = ({
       if (hasSignedUp && userSignup) {
         cancelSignup(userSignup.id);
       } else {
-        signUp();
+        requireWaiver(() => signUp());
       }
     } else {
       // For guests, open the guest signup modal
@@ -334,6 +335,7 @@ export const VolunteerModal = ({
           onSubmit={() => onRequestChanges(volunteer.id)}
         />
       )}
+      <WaiverSignDialog open={waiverOpen} onOpenChange={setWaiverOpen} onSigned={onWaiverSigned} />
     </Dialog>
   );
 };
