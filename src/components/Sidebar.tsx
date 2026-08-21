@@ -315,7 +315,7 @@ export const Sidebar = ({ open, onOpenChange, collapsed, onCollapsedChange }: Si
           <img
             src="https://rollcall.buildhopepdx.org/lovable-uploads/PCCC-RC-PlatformPoweredByPCCCLogo-Small-260812.svg"
             alt="Platform powered by Pacific Crest Custom Cabinetry"
-            className="w-28 h-auto mx-auto object-contain dark:invert"
+            className="w-36 h-auto mx-auto object-contain dark:invert"
           />
         )}
       </div>
