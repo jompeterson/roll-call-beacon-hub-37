@@ -20,7 +20,7 @@ import { filterVisiblePosts } from "@/lib/postVisibility";
 import { Lock } from "lucide-react";
 
 type SortDirection = "asc" | "desc" | null;
-type SortField = "helping_organization_name" | "non_profit" | "title" | "start_date" | "location" | "status" | null;
+type SortField = "helping_organization_name" | "non_profit" | "title" | "start_date" | "time" | "location" | "status" | null;
 
 
 const StatusIcon = ({ status }: { status: string }) => {
@@ -148,6 +148,9 @@ export const Volunteers = () => {
       } else if (sortField === "start_date") {
         aValue = a.start_date;
         bValue = b.start_date;
+      } else if (sortField === "time") {
+        aValue = a.start_date ? new Date(a.start_date).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false }) : "";
+        bValue = b.start_date ? new Date(b.start_date).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false }) : "";
       } else {
         aValue = a[sortField as keyof typeof a] || "";
         bValue = b[sortField as keyof typeof b] || "";
@@ -244,7 +247,15 @@ export const Volunteers = () => {
                 >
                   Date
                 </SortableTableHead>
-                <TableHead className="w-1/6">Time</TableHead>
+                <SortableTableHead
+                  field="time"
+                  currentSort={volunteerSort}
+                  currentDirection={volunteerDirection}
+                  onSort={handleVolunteerSort}
+                  className="w-1/6"
+                >
+                  Time
+                </SortableTableHead>
 
                 {isAuthenticated && (
                   <SortableTableHead
