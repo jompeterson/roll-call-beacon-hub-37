@@ -43,7 +43,8 @@ export const VolunteerEditModal = ({
     location: volunteer.location || "",
     volunteer_link: volunteer.volunteer_link || "",
     max_participants: volunteer.max_participants?.toString() || "",
-    helping_organization_id: volunteer.helping_organization_id || ""
+    helping_organization_id: volunteer.helping_organization_id || "",
+    non_profit: volunteer.non_profit || ""
   });
   const [isPrivate, setIsPrivate] = useState(!!volunteer.is_private);
   const { organizations } = useOrganizationOptions();
@@ -96,6 +97,7 @@ export const VolunteerEditModal = ({
         volunteer_link: formData.volunteer_link || null,
         max_participants: formData.max_participants ? parseInt(formData.max_participants) : null,
         helping_organization_id: formData.helping_organization_id || null,
+        non_profit: formData.non_profit || null,
         images: imageUrls,
         is_private: isPrivate,
         updated_at: new Date().toISOString()
