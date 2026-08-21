@@ -313,7 +313,7 @@ export const Sidebar = ({ open, onOpenChange, collapsed, onCollapsedChange }: Si
       <div className="mt-auto px-3 py-4 border-t border-border">
         {collapsed && !isMobile ? null : (
           <img
-            src="https://rollcall.buildhopepdx.org/lovable-uploads/powered-by-pacific-crest-5XmbzMge.png"
+            src="https://rollcall.buildhopepdx.org/lovable-uploads/PCCC-RC-PlatformPoweredByPCCCLogo-Small-260812.svg"
             alt="Platform powered by Pacific Crest Custom Cabinetry"
             className="w-28 h-auto mx-auto object-contain dark:invert"
           />
