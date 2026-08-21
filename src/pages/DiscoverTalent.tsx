@@ -86,8 +86,13 @@ export const DiscoverTalent = () => {
         <p className="text-muted-foreground">
           {isStudent
             ? "This page is available to non-student members only."
-            : "Please sign in to browse student talent."}
+            : "Sign in to browse student talent and view graduate profiles."}
         </p>
+        {!isAuthenticated && !isStudent && (
+          <Link to="/login">
+            <Button className="mt-4">Sign In</Button>
+          </Link>
+        )}
       </div>
     );
   }
