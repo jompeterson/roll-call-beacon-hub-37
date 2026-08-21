@@ -206,7 +206,7 @@ export const Volunteers = () => {
                   onSort={handleVolunteerSort}
                   className="w-1/5"
                 >
-                  Organization
+                  Volunteer Group
                 </SortableTableHead>
                 <SortableTableHead
                   field="location"
