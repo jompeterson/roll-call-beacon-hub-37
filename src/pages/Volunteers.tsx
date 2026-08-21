@@ -209,6 +209,15 @@ export const Volunteers = () => {
                   Volunteer Group
                 </SortableTableHead>
                 <SortableTableHead
+                  field="non_profit"
+                  currentSort={volunteerSort}
+                  currentDirection={volunteerDirection}
+                  onSort={handleVolunteerSort}
+                  className="w-1/5"
+                >
+                  Non-Profit
+                </SortableTableHead>
+                <SortableTableHead
                   field="location"
                   currentSort={volunteerSort}
                   currentDirection={volunteerDirection}
