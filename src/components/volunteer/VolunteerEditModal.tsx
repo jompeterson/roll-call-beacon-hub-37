@@ -230,6 +230,16 @@ export const VolunteerEditModal = ({
                 </SelectContent>
               </Select>
             </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="non_profit">Non-Profit</Label>
+              <Input
+                id="non_profit"
+                value={formData.non_profit}
+                onChange={(e) => handleInputChange("non_profit", e.target.value)}
+                placeholder="Enter the non-profit benefiting from this opportunity"
+              />
+            </div>
           </div>
 
           <PrivatePostToggle isPrivate={isPrivate} onChange={setIsPrivate} />
