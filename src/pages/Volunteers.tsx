@@ -148,6 +148,9 @@ export const Volunteers = () => {
       } else if (sortField === "start_date") {
         aValue = a.start_date;
         bValue = b.start_date;
+      } else if (sortField === "time") {
+        aValue = a.start_date ? new Date(a.start_date).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false }) : "";
+        bValue = b.start_date ? new Date(b.start_date).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false }) : "";
       } else {
         aValue = a[sortField as keyof typeof a] || "";
         bValue = b[sortField as keyof typeof b] || "";
