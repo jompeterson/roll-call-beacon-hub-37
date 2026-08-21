@@ -189,6 +189,13 @@ export const VolunteerModal = ({
                 </div>
               )}
 
+              {volunteer.non_profit && (
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Heart className="h-4 w-4" />
+                  <span>Non-Profit: {volunteer.non_profit}</span>
+                </div>
+              )}
+
               {volunteer.max_participants && (
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Users className="h-4 w-4" />
