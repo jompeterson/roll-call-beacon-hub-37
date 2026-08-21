@@ -321,14 +321,14 @@ export const VolunteerCreateModal = ({
                     <Building2 className="h-4 w-4" />
                     Organization Helping
                   </FormLabel>
-                  <Select value={field.value} onValueChange={field.onChange}>
+                  <Select value={field.value || "__none__"} onValueChange={(v) => field.onChange(v === "__none__" ? "" : v)}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select an organization (optional)" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="">None</SelectItem>
+                      <SelectItem value="__none__">None</SelectItem>
                       {organizations.map((org) => (
                         <SelectItem key={org.id} value={org.id}>
                           {org.name}
