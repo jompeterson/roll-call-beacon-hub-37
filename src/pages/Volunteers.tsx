@@ -20,7 +20,7 @@ import { filterVisiblePosts } from "@/lib/postVisibility";
 import { Lock } from "lucide-react";
 
 type SortDirection = "asc" | "desc" | null;
-type SortField = "helping_organization_name" | "non_profit" | "title" | "start_date" | "location" | "status" | null;
+type SortField = "helping_organization_name" | "non_profit" | "title" | "start_date" | "time" | "location" | "status" | null;
 
 
 const StatusIcon = ({ status }: { status: string }) => {
