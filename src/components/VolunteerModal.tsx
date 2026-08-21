@@ -42,6 +42,8 @@ interface Volunteer {
   completion_images?: string[] | null;
   total_hours?: number | null;
   discounted_services_value?: number | null;
+  helping_organization_name?: string | null;
+  non_profit?: string | null;
 }
 
 interface VolunteerModalProps {
