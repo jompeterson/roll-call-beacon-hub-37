@@ -344,6 +344,23 @@ export const VolunteerCreateModal = ({
               )}
             />
 
+            <FormField
+              control={form.control}
+              name="non_profit"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Non-Profit</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter the non-profit benefiting from this opportunity"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <ImageUpload 
               images={images}
               onImagesChange={setImages}
