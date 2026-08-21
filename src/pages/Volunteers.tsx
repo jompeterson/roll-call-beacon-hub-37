@@ -244,6 +244,8 @@ export const Volunteers = () => {
                 >
                   Date
                 </SortableTableHead>
+                <TableHead className="w-1/6">Time</TableHead>
+
                 {isAuthenticated && (
                   <SortableTableHead
                     field="status"
