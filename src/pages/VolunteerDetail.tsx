@@ -3,6 +3,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useVolunteers } from "@/hooks/useVolunteers";
 import { useAuth } from "@/hooks/useAuth";
+import { WaiverSignDialog } from "@/components/waiver/WaiverSignDialog";
+import { useWaiverRequirement } from "@/hooks/useWaiverRequirement";
 import { useVolunteerSignups } from "@/hooks/useVolunteerSignups";
 import { useChangeRequest } from "@/hooks/useChangeRequest";
 import { Button } from "@/components/ui/button";

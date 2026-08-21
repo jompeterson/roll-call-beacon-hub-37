@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, MapPin, Users, CheckCircle, XCircle, Edit } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
+import { WaiverSignDialog } from "@/components/waiver/WaiverSignDialog";
+import { useWaiverRequirement } from "@/hooks/useWaiverRequirement";
 import { useVolunteerSignups } from "@/hooks/useVolunteerSignups";
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { ImageCarousel } from "@/components/shared/ImageCarousel";

@@ -5,7 +5,6 @@ import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
 import { FloatingActionButton } from "./FloatingActionButton";
 import { AuthProtection } from "./AuthProtection";
-import { WaiverGate } from "./waiver/WaiverGate";
 
 const useIsTablet = () => {
   const [isTablet, setIsTablet] = useState(
@@ -30,7 +29,7 @@ export const Layout = () => {
   }, [isTablet]);
 
   return (
-    <WaiverGate>
+    <>
       <div className="h-screen bg-background flex flex-col overflow-hidden">
         <AuthProtection />
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
@@ -42,6 +41,6 @@ export const Layout = () => {
         </div>
         <FloatingActionButton />
       </div>
-    </WaiverGate>
+    </>
   );
 };
