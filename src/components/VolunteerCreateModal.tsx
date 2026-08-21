@@ -33,6 +33,7 @@ interface VolunteerFormData {
   volunteer_link: string;
   max_participants: number | null;
   helping_organization_id: string;
+  non_profit: string;
 }
 
 export const VolunteerCreateModal = ({
@@ -58,6 +59,7 @@ export const VolunteerCreateModal = ({
       volunteer_link: "",
       max_participants: null,
       helping_organization_id: "",
+      non_profit: "",
     },
   });
 
@@ -110,6 +112,7 @@ export const VolunteerCreateModal = ({
           volunteer_link: data.volunteer_link || null,
           max_participants: data.max_participants,
           helping_organization_id: data.helping_organization_id || null,
+          non_profit: data.non_profit || null,
           creator_user_id: user.id,
           images: imageUrls,
           is_private: isPrivate,
