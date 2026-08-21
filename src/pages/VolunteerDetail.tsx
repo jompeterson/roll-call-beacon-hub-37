@@ -308,6 +308,16 @@ export const VolunteerDetail = () => {
                 </div>
               )}
 
+              {volunteer.non_profit && (
+                <div className="flex items-start gap-2">
+                  <Heart className="h-5 w-5 mt-0.5 text-muted-foreground" />
+                  <div>
+                    <p className="font-medium">Non-Profit</p>
+                    <p className="text-muted-foreground">{volunteer.non_profit}</p>
+                  </div>
+                </div>
+              )}
+
               {(volunteer.interested_organizations?.length ?? 0) > 0 && (
                 <div className="flex items-start gap-2">
                   <Users className="h-5 w-5 mt-0.5 text-muted-foreground" />
