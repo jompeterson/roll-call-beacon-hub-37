@@ -96,6 +96,14 @@ export const CustomWidget = ({ title, description, metrics, displayConfig, secti
   };
 
   const changeData = getChangeData();
+  const numericValue = displayConfig?.equation && displayConfig.equation.length > 0 && widgetData
+    ? calculateEquationValue(displayConfig.equation, widgetData)
+    : (metrics.length > 0 ? Number(metrics[0].value || 0) : 0);
+
+  // Hide widget if it calculates to zero (but keep it visible while loading)
+  if (!isLoading && !previousMonthLoading && !previousYearLoading && numericValue === 0) {
+    return null;
+  }
 
   return (
     <Card>
