@@ -169,6 +169,8 @@ export const Overview = () => {
           <MetricCard
             title="Organizations"
             value={yearlyLoading ? "..." : formatNumber(yearlyMetrics?.organizations || 0)}
+            rawValue={yearlyMetrics?.organizations || 0}
+            isLoading={yearlyLoading}
             change={yearlyOrgChange.change}
             changeType={yearlyOrgChange.changeType}
             icon={Building2}
@@ -177,6 +179,8 @@ export const Overview = () => {
           <MetricCard
             title="In-Kind Donations"
             value={yearlyLoading ? "..." : formatCurrency(yearlyMetrics?.totalDonations || 0)}
+            rawValue={yearlyMetrics?.totalDonations || 0}
+            isLoading={yearlyLoading}
             change={yearlyDonationChange.change}
             changeType={yearlyDonationChange.changeType}
             icon={Hammer}
@@ -185,6 +189,8 @@ export const Overview = () => {
           <MetricCard
             title="Available In-Kind Donations"
             value={yearlyLoading ? "..." : formatCurrency(yearlyMetrics?.pendingDonations || 0)}
+            rawValue={yearlyMetrics?.pendingDonations || 0}
+            isLoading={yearlyLoading}
             change={yearlyPendingDonationChange.change}
             changeType={yearlyPendingDonationChange.changeType}
             icon={Hammer}
@@ -193,6 +199,8 @@ export const Overview = () => {
           <MetricCard
             title="Events"
             value={yearlyLoading ? "..." : formatNumber(yearlyMetrics?.events || 0)}
+            rawValue={yearlyMetrics?.events || 0}
+            isLoading={yearlyLoading}
             change={yearlyEventChange.change}
             changeType={yearlyEventChange.changeType}
             icon={Calendar}
@@ -201,6 +209,8 @@ export const Overview = () => {
           <MetricCard
             title="Hours Donated"
             value={yearlyLoading ? "..." : formatNumber(yearlyMetrics?.hoursDonated || 0)}
+            rawValue={yearlyMetrics?.hoursDonated || 0}
+            isLoading={yearlyLoading}
             change={hoursChange.change}
             changeType={hoursChange.changeType}
             icon={Clock}
@@ -208,6 +218,8 @@ export const Overview = () => {
           <MetricCard
             title="Estimated Value of Hours Donated"
             value={yearlyLoading ? "..." : formatCurrency(yearlyMetrics?.hoursDonatedValue || 0)}
+            rawValue={yearlyMetrics?.hoursDonatedValue || 0}
+            isLoading={yearlyLoading}
             change={hoursValueChange.change}
             changeType={hoursValueChange.changeType}
             icon={DollarSign}
@@ -215,6 +227,8 @@ export const Overview = () => {
           <MetricCard
             title="Posts"
             value={yearlyLoading ? "..." : formatNumber(yearlyMetrics?.posts || 0)}
+            rawValue={yearlyMetrics?.posts || 0}
+            isLoading={yearlyLoading}
             change={postsChange.change}
             changeType={postsChange.changeType}
             icon={MessageSquare}
@@ -222,6 +236,8 @@ export const Overview = () => {
           <MetricCard
             title="Financial Totals"
             value={yearlyLoading ? "..." : formatCurrency(yearlyMetrics?.financialTotals || 0)}
+            rawValue={yearlyMetrics?.financialTotals || 0}
+            isLoading={yearlyLoading}
             change={financialChange.change}
             changeType={financialChange.changeType}
             icon={Calculator}
@@ -229,6 +245,8 @@ export const Overview = () => {
           <MetricCard
             title="Volunteer Opportunities"
             value={yearlyLoading ? "..." : formatNumber(yearlyMetrics?.volunteers || 0)}
+            rawValue={yearlyMetrics?.volunteers || 0}
+            isLoading={yearlyLoading}
             change={yearlyVolunteerChange.change}
             changeType={yearlyVolunteerChange.changeType}
             icon={HandHeart}
@@ -255,6 +273,8 @@ export const Overview = () => {
           <MetricCard
             title="New Organizations"
             value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newOrganizations || 0)}
+            rawValue={monthlyMetrics?.newOrganizations || 0}
+            isLoading={monthlyLoading}
             change={orgChange.change}
             changeType={orgChange.changeType}
             icon={Building2}
@@ -263,6 +283,8 @@ export const Overview = () => {
           <MetricCard
             title="Scholarships"
             value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newScholarships || 0)}
+            rawValue={monthlyMetrics?.newScholarships || 0}
+            isLoading={monthlyLoading}
             change={scholarshipChange.change}
             changeType={scholarshipChange.changeType}
             icon={GraduationCap}
@@ -271,6 +293,8 @@ export const Overview = () => {
           <MetricCard
             title="In-Kind Donations"
             value={monthlyLoading ? "..." : formatCurrency(monthlyMetrics?.totalDonations || 0)}
+            rawValue={monthlyMetrics?.totalDonations || 0}
+            isLoading={monthlyLoading}
             change={monthlyDonationChange.change}
             changeType={monthlyDonationChange.changeType}
             icon={Hammer}
@@ -279,6 +303,8 @@ export const Overview = () => {
           <MetricCard
             title="Available In-Kind Donations"
             value={monthlyLoading ? "..." : formatCurrency(monthlyMetrics?.pendingDonations || 0)}
+            rawValue={monthlyMetrics?.pendingDonations || 0}
+            isLoading={monthlyLoading}
             change={monthlyPendingDonationChange.change}
             changeType={monthlyPendingDonationChange.changeType}
             icon={Hammer}
@@ -287,6 +313,8 @@ export const Overview = () => {
           <MetricCard
             title="Events"
             value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newEvents || 0)}
+            rawValue={monthlyMetrics?.newEvents || 0}
+            isLoading={monthlyLoading}
             change={eventChange.change}
             changeType={eventChange.changeType}
             icon={Calendar}
@@ -295,6 +323,8 @@ export const Overview = () => {
           <MetricCard
             title="New Users"
             value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newUsers || 0)}
+            rawValue={monthlyMetrics?.newUsers || 0}
+            isLoading={monthlyLoading}
             change={userChange.change}
             changeType={userChange.changeType}
             icon={Users}
@@ -303,6 +333,8 @@ export const Overview = () => {
           <MetricCard
             title="Volunteer Opportunities"
             value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newVolunteers || 0)}
+            rawValue={monthlyMetrics?.newVolunteers || 0}
+            isLoading={monthlyLoading}
             change={volunteerChange.change}
             changeType={volunteerChange.changeType}
             icon={HandHeart}
@@ -311,6 +343,8 @@ export const Overview = () => {
           <MetricCard
             title="Hours Donated"
             value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.hoursDonated || 0)}
+            rawValue={monthlyMetrics?.hoursDonated || 0}
+            isLoading={monthlyLoading}
             change={monthlyHoursChange.change}
             changeType={monthlyHoursChange.changeType}
             icon={Clock}
@@ -318,6 +352,8 @@ export const Overview = () => {
           <MetricCard
             title="Estimated Value of Hours Donated"
             value={monthlyLoading ? "..." : formatCurrency(monthlyMetrics?.hoursDonatedValue || 0)}
+            rawValue={monthlyMetrics?.hoursDonatedValue || 0}
+            isLoading={monthlyLoading}
             change={monthlyHoursValueChange.change}
             changeType={monthlyHoursValueChange.changeType}
             icon={DollarSign}
