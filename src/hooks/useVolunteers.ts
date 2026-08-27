@@ -21,6 +21,7 @@ export interface Volunteer {
   images?: string[];
   organization_name?: string | null;
   helping_organization_id?: string | null;
+  helping_organization_text?: string | null;
   helping_organization_name?: string | null;
   interested_organizations?: string[];
   is_ended?: boolean;
