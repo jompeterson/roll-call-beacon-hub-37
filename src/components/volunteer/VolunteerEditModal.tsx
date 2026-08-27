@@ -45,7 +45,6 @@ export const VolunteerEditModal = ({
     non_profit: volunteer.non_profit || ""
   });
   const [isPrivate, setIsPrivate] = useState(!!volunteer.is_private);
-  const { organizations } = useOrganizationOptions();
 
   const { toast } = useToast();
 
