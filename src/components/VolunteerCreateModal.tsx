@@ -111,7 +111,7 @@ export const VolunteerCreateModal = ({
           location: data.location || null,
           volunteer_link: data.volunteer_link || null,
           max_participants: data.max_participants,
-          helping_organization_text: data.helping_organization_id || null,
+          helping_organization_text: data.helping_organization_text || null,
           non_profit: data.non_profit || null,
           creator_user_id: user.id,
           images: imageUrls,
