@@ -212,24 +212,15 @@ export const VolunteerEditModal = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="helping_organization_id">Organization Helping</Label>
-              <Select
-                value={formData.helping_organization_id || "__none__"}
-                onValueChange={(value) => handleInputChange("helping_organization_id", value === "__none__" ? "" : value)}
-              >
-                <SelectTrigger id="helping_organization_id">
-                  <SelectValue placeholder="Select an organization (optional)" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="__none__">None</SelectItem>
-                  {organizations.map((org) => (
-                    <SelectItem key={org.id} value={org.id}>
-                      {org.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Label htmlFor="helping_organization_text">Organization Helping</Label>
+              <Input
+                id="helping_organization_text"
+                value={formData.helping_organization_text}
+                onChange={(e) => handleInputChange("helping_organization_text", e.target.value)}
+                placeholder="Enter the organization helping"
+              />
             </div>
+
 
             <div className="space-y-2">
               <Label htmlFor="non_profit">Non-Profit</Label>
