@@ -79,7 +79,10 @@ export const Donations = () => {
   const filteredDonationPosts = filterDonations(visibilityFilteredDonations, searchTerm, statusFilter);
   const sortedDonationPosts = sortDonations(filteredDonationPosts, donationSort, donationDirection);
   
-  const visibilityFilteredRequests = filterVisiblePosts(requests, user?.id, isAdministrator);
+  const approvalVisibleRequests = isAdministrator
+    ? requests
+    : requests.filter(r => (r.approval_decision_made && r.is_approved) || r.creator_user_id === user?.id);
+  const visibilityFilteredRequests = filterVisiblePosts(approvalVisibleRequests, user?.id, isAdministrator);
   const filteredRequestPosts = filterRequests(visibilityFilteredRequests, searchTerm, statusFilter);
   const sortedRequestPosts = sortRequests(filteredRequestPosts, requestSort, requestDirection);
 
