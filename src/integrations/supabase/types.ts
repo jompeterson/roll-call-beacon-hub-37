@@ -1270,6 +1270,7 @@ export type Database = {
           end_date: string | null
           ended_at: string | null
           helping_organization_id: string | null
+          helping_organization_text: string | null
           id: string
           images: string[] | null
           is_approved: boolean
@@ -1295,6 +1296,7 @@ export type Database = {
           end_date?: string | null
           ended_at?: string | null
           helping_organization_id?: string | null
+          helping_organization_text?: string | null
           id?: string
           images?: string[] | null
           is_approved?: boolean
@@ -1320,6 +1322,7 @@ export type Database = {
           end_date?: string | null
           ended_at?: string | null
           helping_organization_id?: string | null
+          helping_organization_text?: string | null
           id?: string
           images?: string[] | null
           is_approved?: boolean
