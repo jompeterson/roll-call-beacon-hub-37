@@ -43,7 +43,7 @@ export const VolunteerEditModal = ({
     location: volunteer.location || "",
     volunteer_link: volunteer.volunteer_link || "",
     max_participants: volunteer.max_participants?.toString() || "",
-    helping_organization_id: volunteer.helping_organization_id || "",
+    helping_organization_text: volunteer.helping_organization_text || "",
     non_profit: volunteer.non_profit || ""
   });
   const [isPrivate, setIsPrivate] = useState(!!volunteer.is_private);
@@ -96,7 +96,7 @@ export const VolunteerEditModal = ({
         location: formData.location || null,
         volunteer_link: formData.volunteer_link || null,
         max_participants: formData.max_participants ? parseInt(formData.max_participants) : null,
-        helping_organization_id: formData.helping_organization_id || null,
+        helping_organization_text: formData.helping_organization_text || null,
         non_profit: formData.non_profit || null,
         images: imageUrls,
         is_private: isPrivate,
@@ -212,24 +212,15 @@ export const VolunteerEditModal = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="helping_organization_id">Organization Helping</Label>
-              <Select
-                value={formData.helping_organization_id || "__none__"}
-                onValueChange={(value) => handleInputChange("helping_organization_id", value === "__none__" ? "" : value)}
-              >
-                <SelectTrigger id="helping_organization_id">
-                  <SelectValue placeholder="Select an organization (optional)" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="__none__">None</SelectItem>
-                  {organizations.map((org) => (
-                    <SelectItem key={org.id} value={org.id}>
-                      {org.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Label htmlFor="helping_organization_text">Organization Helping</Label>
+              <Input
+                id="helping_organization_text"
+                value={formData.helping_organization_text}
+                onChange={(e) => handleInputChange("helping_organization_text", e.target.value)}
+                placeholder="Enter the organization helping"
+              />
             </div>
+
 
             <div className="space-y-2">
               <Label htmlFor="non_profit">Non-Profit</Label>

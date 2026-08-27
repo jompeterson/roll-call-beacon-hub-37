@@ -32,7 +32,7 @@ interface VolunteerFormData {
   location: string;
   volunteer_link: string;
   max_participants: number | null;
-  helping_organization_id: string;
+  helping_organization_text: string;
   non_profit: string;
 }
 
@@ -58,7 +58,7 @@ export const VolunteerCreateModal = ({
       location: "",
       volunteer_link: "",
       max_participants: null,
-      helping_organization_id: "",
+      helping_organization_text: "",
       non_profit: "",
     },
   });
@@ -111,7 +111,7 @@ export const VolunteerCreateModal = ({
           location: data.location || null,
           volunteer_link: data.volunteer_link || null,
           max_participants: data.max_participants,
-          helping_organization_id: data.helping_organization_id || null,
+          helping_organization_text: data.helping_organization_text || null,
           non_profit: data.non_profit || null,
           creator_user_id: user.id,
           images: imageUrls,
@@ -317,32 +317,21 @@ export const VolunteerCreateModal = ({
 
             <FormField
               control={form.control}
-              name="helping_organization_id"
+              name="helping_organization_text"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="flex items-center gap-2">
                     <Building2 className="h-4 w-4" />
                     Organization Helping
                   </FormLabel>
-                  <Select value={field.value || "__none__"} onValueChange={(v) => field.onChange(v === "__none__" ? "" : v)}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select an organization (optional)" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="__none__">None</SelectItem>
-                      {organizations.map((org) => (
-                        <SelectItem key={org.id} value={org.id}>
-                          {org.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <Input placeholder="Enter the organization helping (optional)" {...field} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
 
             <FormField
               control={form.control}
