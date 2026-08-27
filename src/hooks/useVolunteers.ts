@@ -117,9 +117,11 @@ export const useVolunteers = () => {
         return {
           ...v,
           organization_name: posterOrg,
-          helping_organization_name: v.helping_organization_id
-            ? helpingOrgNames[v.helping_organization_id] ?? posterOrg
-            : posterOrg,
+          helping_organization_name:
+            v.helping_organization_text ||
+            (v.helping_organization_id
+              ? helpingOrgNames[v.helping_organization_id] ?? posterOrg
+              : posterOrg),
           interested_organizations: interested,
         };
       }) as Volunteer[];
