@@ -67,6 +67,10 @@ export const PendingDonationsRequestsWidget = () => {
     );
   }
 
+  if (allPendingItems.length === 0) {
+    return null;
+  }
+
   return (
     <>
       <Card className="h-64">

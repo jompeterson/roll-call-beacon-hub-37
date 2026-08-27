@@ -6,14 +6,21 @@ import { useNavigate } from "react-router-dom";
 interface MetricCardProps {
   title: string;
   value: string;
+  rawValue?: number;
+  isLoading?: boolean;
   change: string;
   changeType: "positive" | "negative" | "neutral";
   icon: LucideIcon;
   navigateTo?: string;
 }
 
-export const MetricCard = ({ title, value, change, changeType, icon: Icon, navigateTo }: MetricCardProps) => {
+export const MetricCard = ({ title, value, rawValue, isLoading, change, changeType, icon: Icon, navigateTo }: MetricCardProps) => {
   const navigate = useNavigate();
+  
+  // Hide the card when it represents a zero value (but keep it visible while loading)
+  if (rawValue !== undefined && !isLoading && rawValue === 0) {
+    return null;
+  }
   
   const changeColor = {
     positive: "text-green-600",

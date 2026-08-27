@@ -103,6 +103,10 @@ export const PendingUsersWidget = () => {
     );
   }
 
+  if (pendingUsers.length === 0) {
+    return null;
+  }
+
   return (
     <>
       <Card className="h-64">
