@@ -317,32 +317,21 @@ export const VolunteerCreateModal = ({
 
             <FormField
               control={form.control}
-              name="helping_organization_id"
+              name="helping_organization_text"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="flex items-center gap-2">
                     <Building2 className="h-4 w-4" />
                     Organization Helping
                   </FormLabel>
-                  <Select value={field.value || "__none__"} onValueChange={(v) => field.onChange(v === "__none__" ? "" : v)}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select an organization (optional)" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="__none__">None</SelectItem>
-                      {organizations.map((org) => (
-                        <SelectItem key={org.id} value={org.id}>
-                          {org.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <Input placeholder="Enter the organization helping (optional)" {...field} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
 
             <FormField
               control={form.control}
