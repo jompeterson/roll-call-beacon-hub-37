@@ -32,7 +32,7 @@ interface VolunteerFormData {
   location: string;
   volunteer_link: string;
   max_participants: number | null;
-  helping_organization_id: string;
+  helping_organization_text: string;
   non_profit: string;
 }
 
