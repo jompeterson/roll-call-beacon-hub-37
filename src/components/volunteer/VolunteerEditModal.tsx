@@ -10,8 +10,6 @@ import { ImageUpload } from "@/components/shared/ImageUpload";
 import { SubmitForReviewDialog } from "@/components/shared/SubmitForReviewDialog";
 import { X } from "lucide-react";
 import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useOrganizationOptions } from "@/hooks/useOrganizationOptions";
 import type { Volunteer } from "@/hooks/useVolunteers";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import { LocationFields } from "@/components/shared/LocationFields";
