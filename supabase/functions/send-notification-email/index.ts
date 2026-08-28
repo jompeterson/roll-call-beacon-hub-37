@@ -238,6 +238,8 @@ function buildPostUrl(baseUrl: string, contentType: string | null, contentId: st
       return `${base}/events/${contentId}`;
     case "volunteer":
       return `${base}/volunteers/${contentId}`;
+    case "organization":
+      return `${base}/organizations`;
     default:
       return null;
   }
