@@ -16,4 +16,5 @@ export const NOTIFICATION_TYPES: NotificationTypeDef[] = [
   { key: "donation_acceptance", label: "Donation Acceptances", description: "When someone wants your donation", category: "Activity on My Posts" },
   { key: "request_fulfillment", label: "Request Fulfillments", description: "When someone wants to fulfill your request", category: "Activity on My Posts" },
   { key: "user_registration", label: "New User Registrations", description: "When a new user registers (admins only)", category: "Admin" },
+  { key: "organization_registration", label: "New Organizations Pending Approval", description: "When a new organization is submitted for approval (admins only)", category: "Admin" },
 ];
