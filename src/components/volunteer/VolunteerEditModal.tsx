@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -47,6 +48,7 @@ export const VolunteerEditModal = ({
   const [isPrivate, setIsPrivate] = useState(!!volunteer.is_private);
 
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
@@ -106,6 +108,10 @@ export const VolunteerEditModal = ({
         .eq("id", volunteer.id);
 
       if (error) throw error;
+
+      setExistingImages(imageUrls);
+      setImages([]);
+      await queryClient.invalidateQueries({ queryKey: ["volunteers"] });
 
       toast({
         title: "Success",
