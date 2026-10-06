@@ -186,24 +186,52 @@ export const Donations = () => {
         </TabsContent>
 
         <TabsContent value="requests" className="mt-0 flex-1 data-[state=active]:flex flex-col min-h-0">
-          <div className="space-y-4 flex flex-col flex-1 min-h-0">
-            <div className="flex items-center justify-end">
-              {isAuthenticated && canRequestDonation && (
-                <Button onClick={() => setRequestModalOpen(true)} size="sm" style={{ backgroundColor: "#3d7471" }} className="text-white hover:opacity-90">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Request
-                </Button>
-              )}
-            </div>
-            <RequestTable
-              requests={sortedRequestPosts}
-              sortField={requestSort}
-              sortDirection={requestDirection}
-              onSort={handleRequestSort}
-              onRowClick={handleRequestRowClick}
-              showStatus={isAuthenticated}
-            />
-          </div>
+          <Tabs defaultValue="requests" className="w-full flex-1 flex flex-col min-h-0">
+            <TabsList className="w-auto self-start">
+              <TabsTrigger value="requests" className="gap-2">
+                <FileText className="h-4 w-4" />
+                Requests ({currentRequestPosts.length})
+              </TabsTrigger>
+              <TabsTrigger value="past-requests" className="gap-2">
+                <FileText className="h-4 w-4" />
+                Past Requests ({pastRequestPosts.length})
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="requests" className="mt-0 flex-1 data-[state=active]:flex flex-col min-h-0">
+              <div className="space-y-4 flex flex-col flex-1 min-h-0">
+                <div className="flex items-center justify-end">
+                  {isAuthenticated && canRequestDonation && (
+                    <Button onClick={() => setRequestModalOpen(true)} size="sm" style={{ backgroundColor: "#3d7471" }} className="text-white hover:opacity-90">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Request
+                    </Button>
+                  )}
+                </div>
+                <RequestTable
+                  requests={currentRequestPosts}
+                  sortField={requestSort}
+                  sortDirection={requestDirection}
+                  onSort={handleRequestSort}
+                  onRowClick={handleRequestRowClick}
+                  showStatus={isAuthenticated}
+                />
+              </div>
+            </TabsContent>
+
+            <TabsContent value="past-requests" className="mt-0 flex-1 data-[state=active]:flex flex-col min-h-0">
+              <div className="space-y-4 flex flex-col flex-1 min-h-0">
+                <RequestTable
+                  requests={pastRequestPosts}
+                  sortField={requestSort}
+                  sortDirection={requestDirection}
+                  onSort={handleRequestSort}
+                  onRowClick={handleRequestRowClick}
+                  showStatus={isAuthenticated}
+                />
+              </div>
+            </TabsContent>
+          </Tabs>
         </TabsContent>
       </Tabs>
 
