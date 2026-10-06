@@ -6,6 +6,7 @@ import { PendingScholarshipsWidget } from "@/components/PendingScholarshipsWidge
 import { PendingDonationsRequestsWidget } from "@/components/PendingDonationsRequestsWidget";
 import { PendingEventsWidget } from "@/components/PendingEventsWidget";
 import { CustomWidget } from "@/components/CustomWidget";
+import { EventRevenueWidget, ProgramsSupportedWidget } from "@/components/EventRevenueProgramsWidgets";
 import { useAuth } from "@/hooks/useAuth";
 import { useYearlyMetrics } from "@/hooks/useYearlyMetrics";
 import { usePreviousYearMetrics } from "@/hooks/usePreviousYearMetrics";
@@ -208,6 +209,9 @@ export const Overview = () => {
             icon={HandHeart}
             navigateTo="/volunteers"
           />
+          <EventRevenueWidget />
+          <ProgramsSupportedWidget />
+
           {/* Add custom widgets for yearly metrics */}
           {yearlyMetricsWidgets?.map((widget) => (
             <CustomWidget
