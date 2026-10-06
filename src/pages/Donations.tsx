@@ -86,6 +86,14 @@ export const Donations = () => {
   const filteredRequestPosts = filterRequests(visibilityFilteredRequests, searchTerm, statusFilter);
   const sortedRequestPosts = sortRequests(filteredRequestPosts, requestSort, requestDirection);
 
+  const isPastRequest = (request: Request) => {
+    if (request.is_completed) return true;
+    const deadline = request.deadline ? new Date(request.deadline) : null;
+    return deadline ? deadline.getTime() < Date.now() : false;
+  };
+  const currentRequestPosts = sortedRequestPosts.filter((r) => !isPastRequest(r));
+  const pastRequestPosts = sortedRequestPosts.filter(isPastRequest);
+
   const handleDonationRowClick = (donation: Donation) => {
     navigate(`/donations/${donation.id}`);
   };
