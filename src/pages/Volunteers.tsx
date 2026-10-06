@@ -20,7 +20,7 @@ import { filterVisiblePosts } from "@/lib/postVisibility";
 import { Lock } from "lucide-react";
 
 type SortDirection = "asc" | "desc" | null;
-type SortField = "helping_organization_name" | "non_profit" | "title" | "start_date" | "time" | "location" | "status" | null;
+type SortField = "helping_organization_name" | "non_profit" | "title" | "start_date" | "time" | "location" | "status" | "is_ended" | null;
 
 
 const StatusIcon = ({ status }: { status: string }) => {
@@ -148,6 +148,9 @@ export const Volunteers = () => {
       } else if (sortField === "start_date") {
         aValue = a.start_date;
         bValue = b.start_date;
+      } else if (sortField === "is_ended") {
+        aValue = a.is_ended ? "Ended" : "Active";
+        bValue = b.is_ended ? "Ended" : "Active";
       } else if (sortField === "time") {
         aValue = a.start_date ? new Date(a.start_date).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false }) : "";
         bValue = b.start_date ? new Date(b.start_date).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false }) : "";
@@ -268,6 +271,15 @@ export const Volunteers = () => {
                     Status
                   </SortableTableHead>
                 )}
+                <SortableTableHead
+                  field="is_ended"
+                  currentSort={volunteerSort}
+                  currentDirection={volunteerDirection}
+                  onSort={handleVolunteerSort}
+                  className="w-1/6"
+                >
+                  Ended
+                </SortableTableHead>
               </TableRow>
             </TableHeader>
           </Table>
@@ -276,7 +288,7 @@ export const Volunteers = () => {
               <TableBody>
               {items.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={isAuthenticated ? 7 : 6} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={isAuthenticated ? 8 : 7} className="text-center py-8 text-muted-foreground">
                     No volunteer opportunities found
                   </TableCell>
                 </TableRow>
@@ -329,6 +341,13 @@ export const Volunteers = () => {
                         </div>
                       </TableCell>
                     )}
+                    <TableCell className="w-1/6 whitespace-nowrap">
+                      {volunteer.is_ended ? (
+                        <span className="text-xs bg-muted text-muted-foreground px-1.5 py-0.5 rounded">Ended</span>
+                      ) : (
+                        "—"
+                      )}
+                    </TableCell>
                   </TableRow>
                 ))
               )}
