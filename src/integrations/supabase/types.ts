@@ -717,6 +717,7 @@ export type Database = {
           dimensions: number | null
           handoff_date: string | null
           id: string
+          images: string[]
           is_approved: boolean
           is_completed: boolean
           is_private: boolean
@@ -744,6 +745,7 @@ export type Database = {
           dimensions?: number | null
           handoff_date?: string | null
           id?: string
+          images?: string[]
           is_approved?: boolean
           is_completed?: boolean
           is_private?: boolean
@@ -771,6 +773,7 @@ export type Database = {
           dimensions?: number | null
           handoff_date?: string | null
           id?: string
+          images?: string[]
           is_approved?: boolean
           is_completed?: boolean
           is_private?: boolean
