@@ -705,6 +705,8 @@ export type Database = {
       requests: {
         Row: {
           approval_decision_made: boolean
+          completed_value: number | null
+          completion_images: string[]
           contact_email: string | null
           contact_phone: string | null
           created_at: string
@@ -713,6 +715,7 @@ export type Database = {
           description: string | null
           dimension_unit: string | null
           dimensions: number | null
+          handoff_date: string | null
           id: string
           is_approved: boolean
           is_completed: boolean
@@ -729,6 +732,8 @@ export type Database = {
         }
         Insert: {
           approval_decision_made?: boolean
+          completed_value?: number | null
+          completion_images?: string[]
           contact_email?: string | null
           contact_phone?: string | null
           created_at?: string
@@ -737,6 +742,7 @@ export type Database = {
           description?: string | null
           dimension_unit?: string | null
           dimensions?: number | null
+          handoff_date?: string | null
           id?: string
           is_approved?: boolean
           is_completed?: boolean
@@ -753,6 +759,8 @@ export type Database = {
         }
         Update: {
           approval_decision_made?: boolean
+          completed_value?: number | null
+          completion_images?: string[]
           contact_email?: string | null
           contact_phone?: string | null
           created_at?: string
@@ -761,6 +769,7 @@ export type Database = {
           description?: string | null
           dimension_unit?: string | null
           dimensions?: number | null
+          handoff_date?: string | null
           id?: string
           is_approved?: boolean
           is_completed?: boolean
