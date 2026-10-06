@@ -15,9 +15,9 @@ interface Widget {
   id: string;
   title: string;
   description?: string;
-  section: 'pending_approvals' | 'monthly_metrics' | 'yearly_metrics';
   metrics: any[];
   display_config: any;
+  section: string;
   position: number;
   is_active: boolean;
 }
@@ -184,7 +184,6 @@ export const WidgetEditModal = ({ widget, open, onOpenChange, onSuccess }: Widge
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="pending_approvals">Pending Approvals</SelectItem>
-                  <SelectItem value="monthly_metrics">Monthly Metrics</SelectItem>
                   <SelectItem value="yearly_metrics">Yearly Metrics</SelectItem>
                 </SelectContent>
               </Select>

@@ -7,16 +7,12 @@ import { PendingDonationsRequestsWidget } from "@/components/PendingDonationsReq
 import { PendingEventsWidget } from "@/components/PendingEventsWidget";
 import { CustomWidget } from "@/components/CustomWidget";
 import { useAuth } from "@/hooks/useAuth";
-import { useMonthlyMetrics } from "@/hooks/useMonthlyMetrics";
 import { useYearlyMetrics } from "@/hooks/useYearlyMetrics";
-import { usePreviousMonthMetrics } from "@/hooks/usePreviousMonthMetrics";
 import { usePreviousYearMetrics } from "@/hooks/usePreviousYearMetrics";
 import { useMetricChanges } from "@/hooks/useMetricChanges";
 import { useCustomWidgets } from "@/hooks/useCustomWidgets";
 import {
-  Users,
   Hammer,
-  GraduationCap,
   Calendar,
   Building2,
   Clock,
@@ -28,15 +24,12 @@ import {
 
 export const Overview = () => {
   const { isAdministrator } = useAuth();
-  const { data: monthlyMetrics, isLoading: monthlyLoading } = useMonthlyMetrics();
   const { data: yearlyMetrics, isLoading: yearlyLoading } = useYearlyMetrics();
-  const { data: previousMonthMetrics, isLoading: previousMonthLoading } = usePreviousMonthMetrics();
   const { data: previousYearMetrics, isLoading: previousYearLoading } = usePreviousYearMetrics();
-  const { calculateChange, calculateAbsoluteChange } = useMetricChanges();
+  const { calculateChange } = useMetricChanges();
   
   // Fetch custom widgets for each section
   const { data: pendingApprovalsWidgets } = useCustomWidgets('pending_approvals');
-  const { data: monthlyMetricsWidgets } = useCustomWidgets('monthly_metrics');
   const { data: yearlyMetricsWidgets } = useCustomWidgets('yearly_metrics');
 
   // Format currency values
@@ -53,43 +46,6 @@ export const Overview = () => {
   const formatNumber = (num: number) => {
     return new Intl.NumberFormat('en-US').format(num);
   };
-
-  // Calculate monthly changes
-  const orgChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
-    ? calculateAbsoluteChange(monthlyMetrics.newOrganizations, previousMonthMetrics.newOrganizations)
-    : { change: "...", changeType: "neutral" as const };
-
-  const scholarshipChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
-    ? calculateAbsoluteChange(monthlyMetrics.newScholarships, previousMonthMetrics.newScholarships)
-    : { change: "...", changeType: "neutral" as const };
-
-  const monthlyDonationChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
-    ? calculateChange(monthlyMetrics.totalDonations, previousMonthMetrics.totalDonations)
-    : { change: "...", changeType: "neutral" as const };
-
-  const monthlyPendingDonationChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
-    ? calculateChange(monthlyMetrics.pendingDonations, previousMonthMetrics.pendingDonations)
-    : { change: "...", changeType: "neutral" as const };
-
-  const eventChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
-    ? calculateAbsoluteChange(monthlyMetrics.newEvents, previousMonthMetrics.newEvents)
-    : { change: "...", changeType: "neutral" as const };
-
-  const userChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
-    ? calculateChange(monthlyMetrics.newUsers, previousMonthMetrics.newUsers)
-    : { change: "...", changeType: "neutral" as const };
-
-  const volunteerChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
-    ? calculateAbsoluteChange(monthlyMetrics.newVolunteers, previousMonthMetrics.newVolunteers)
-    : { change: "...", changeType: "neutral" as const };
-
-  const monthlyHoursChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
-    ? calculateChange(monthlyMetrics.hoursDonated, previousMonthMetrics.hoursDonated)
-    : { change: "...", changeType: "neutral" as const };
-
-  const monthlyHoursValueChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
-    ? calculateChange(monthlyMetrics.hoursDonatedValue, previousMonthMetrics.hoursDonatedValue)
-    : { change: "...", changeType: "neutral" as const };
 
   // Calculate yearly changes
   const yearlyOrgChange = !yearlyLoading && !previousYearLoading && yearlyMetrics && previousYearMetrics 
@@ -266,111 +222,6 @@ export const Overview = () => {
         </div>
       </div>
 
-      {/* This Month's Metrics Section */}
-      <div className="space-y-4">
-        <h2 className="text-2xl font-semibold">This Month's Metrics</h2>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-6">
-          <MetricCard
-            title="New Organizations"
-            value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newOrganizations || 0)}
-            rawValue={monthlyMetrics?.newOrganizations || 0}
-            isLoading={monthlyLoading}
-            change={orgChange.change}
-            changeType={orgChange.changeType}
-            icon={Building2}
-            navigateTo="/organizations"
-          />
-          <MetricCard
-            title="Scholarships"
-            value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newScholarships || 0)}
-            rawValue={monthlyMetrics?.newScholarships || 0}
-            isLoading={monthlyLoading}
-            change={scholarshipChange.change}
-            changeType={scholarshipChange.changeType}
-            icon={GraduationCap}
-            navigateTo="/scholarships"
-          />
-          <MetricCard
-            title="In-Kind Donations"
-            value={monthlyLoading ? "..." : formatCurrency(monthlyMetrics?.totalDonations || 0)}
-            rawValue={monthlyMetrics?.totalDonations || 0}
-            isLoading={monthlyLoading}
-            change={monthlyDonationChange.change}
-            changeType={monthlyDonationChange.changeType}
-            icon={Hammer}
-            navigateTo="/donations"
-          />
-          <MetricCard
-            title="Available In-Kind Donations"
-            value={monthlyLoading ? "..." : formatCurrency(monthlyMetrics?.pendingDonations || 0)}
-            rawValue={monthlyMetrics?.pendingDonations || 0}
-            isLoading={monthlyLoading}
-            change={monthlyPendingDonationChange.change}
-            changeType={monthlyPendingDonationChange.changeType}
-            icon={Hammer}
-            navigateTo="/donations"
-          />
-          <MetricCard
-            title="Events"
-            value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newEvents || 0)}
-            rawValue={monthlyMetrics?.newEvents || 0}
-            isLoading={monthlyLoading}
-            change={eventChange.change}
-            changeType={eventChange.changeType}
-            icon={Calendar}
-            navigateTo="/events"
-          />
-          <MetricCard
-            title="New Users"
-            value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newUsers || 0)}
-            rawValue={monthlyMetrics?.newUsers || 0}
-            isLoading={monthlyLoading}
-            change={userChange.change}
-            changeType={userChange.changeType}
-            icon={Users}
-            navigateTo="/users"
-          />
-          <MetricCard
-            title="Volunteer Opportunities"
-            value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.newVolunteers || 0)}
-            rawValue={monthlyMetrics?.newVolunteers || 0}
-            isLoading={monthlyLoading}
-            change={volunteerChange.change}
-            changeType={volunteerChange.changeType}
-            icon={HandHeart}
-            navigateTo="/volunteers"
-          />
-          <MetricCard
-            title="Hours Donated"
-            value={monthlyLoading ? "..." : formatNumber(monthlyMetrics?.hoursDonated || 0)}
-            rawValue={monthlyMetrics?.hoursDonated || 0}
-            isLoading={monthlyLoading}
-            change={monthlyHoursChange.change}
-            changeType={monthlyHoursChange.changeType}
-            icon={Clock}
-          />
-          <MetricCard
-            title="Estimated Value of Hours Donated"
-            value={monthlyLoading ? "..." : formatCurrency(monthlyMetrics?.hoursDonatedValue || 0)}
-            rawValue={monthlyMetrics?.hoursDonatedValue || 0}
-            isLoading={monthlyLoading}
-            change={monthlyHoursValueChange.change}
-            changeType={monthlyHoursValueChange.changeType}
-            icon={DollarSign}
-          />
-          {/* Add custom widgets for monthly metrics */}
-          {monthlyMetricsWidgets?.map((widget) => (
-            <CustomWidget
-              key={widget.id}
-              title={widget.title}
-              description={widget.description}
-              metrics={widget.metrics}
-              displayConfig={widget.display_config}
-              section="monthly_metrics"
-            />
-          ))}
-        </div>
-      </div>
     </div>
   );
 };

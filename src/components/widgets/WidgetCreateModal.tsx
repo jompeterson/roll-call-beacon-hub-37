@@ -177,7 +177,6 @@ export const WidgetCreateModal = ({ open, onOpenChange, onSuccess }: WidgetCreat
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="pending_approvals">Pending Approvals</SelectItem>
-                  <SelectItem value="monthly_metrics">Monthly Metrics</SelectItem>
                   <SelectItem value="yearly_metrics">Yearly Metrics</SelectItem>
                 </SelectContent>
               </Select>

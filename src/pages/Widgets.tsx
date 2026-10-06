@@ -22,9 +22,9 @@ interface Widget {
   id: string;
   title: string;
   description?: string;
-  section: 'pending_approvals' | 'monthly_metrics' | 'yearly_metrics';
   metrics: any[];
   display_config: any;
+  section: string;
   position: number;
   is_active: boolean;
   created_at: string;
@@ -145,8 +145,6 @@ export const Widgets = () => {
     switch (section) {
       case 'pending_approvals':
         return 'Pending Approvals';
-      case 'monthly_metrics':
-        return 'Monthly Metrics';
       case 'yearly_metrics':
         return 'Yearly Metrics';
       default:
