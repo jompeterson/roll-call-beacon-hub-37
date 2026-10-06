@@ -10,6 +10,7 @@ import { useRequestFulfillments } from "@/hooks/useRequestFulfillments";
 import type { Request } from "@/hooks/useRequests";
 import { RequestChangesModal } from "@/components/shared/RequestChangesModal";
 import { PrivateApprovalToggle } from "@/components/shared/PrivateApprovalToggle";
+import { RequestCloseOutModal } from "./RequestCloseOutModal";
 
 interface RequestModalActionButtonsProps {
   request: Request;
@@ -40,6 +41,7 @@ export const RequestModalActionButtons = ({
   const canEdit = isOwner || isAdministrator;
   const [showRequestChangesModal, setShowRequestChangesModal] = useState(false);
   const [approveAsPrivate, setApproveAsPrivate] = useState(false);
+  const [showCloseOut, setShowCloseOut] = useState(false);
   const handleApprove = async (id: string) => {
     try {
       const { error } = await supabase
@@ -135,7 +137,7 @@ export const RequestModalActionButtons = ({
             )}
             {shouldShowMarkCompleted && (isOwner || isAdministrator) && (
               <Button 
-                onClick={() => handleMarkCompleted(request.id)}
+                onClick={() => setShowCloseOut(true)}
                 style={{ backgroundColor: "#3d7471" }}
                 className="text-white hover:opacity-90"
               >
@@ -193,6 +195,12 @@ export const RequestModalActionButtons = ({
           {renderActionButtons()}
         </div>
       </div>
+      <RequestCloseOutModal
+        open={showCloseOut}
+        onOpenChange={setShowCloseOut}
+        requestId={request.id}
+        onCompleted={() => { onMarkCompleted && onMarkCompleted(request.id); onOpenChange(false); }}
+      />
       <RequestChangesModal
         open={showRequestChangesModal}
         onOpenChange={setShowRequestChangesModal}
