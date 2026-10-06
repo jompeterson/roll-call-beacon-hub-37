@@ -1,3 +1,4 @@
+import { formatDate } from "@/lib/utils";
 import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useRequests, type Request } from "@/hooks/useRequests";
@@ -148,6 +149,19 @@ export const RequestDetail = () => {
                 )}
               </div>
               <p className="text-sm text-muted-foreground mt-1">Request a Donation</p>
+              {request.is_completed && ((request as any).completed_value != null || (request as any).handoff_date || (request as any).completion_images?.length > 0) && (
+                <div className="mt-3 space-y-2 text-sm">
+                  {(request as any).completed_value != null && <p><span className="font-medium">Value:</span> ${Number((request as any).completed_value).toLocaleString()}</p>}
+                  {(request as any).handoff_date && <p><span className="font-medium">Handoff Date:</span> {formatDate((request as any).handoff_date)}</p>}
+                  {(request as any).completion_images?.length > 0 && (
+                    <div className="flex gap-2">
+                      {(request as any).completion_images.map((u: string) => (
+                        <a key={u} href={u} target="_blank" rel="noreferrer"><img src={u} alt="Handoff" className="w-24 h-24 rounded object-cover border" /></a>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
             <ShareButton />
           </div>
