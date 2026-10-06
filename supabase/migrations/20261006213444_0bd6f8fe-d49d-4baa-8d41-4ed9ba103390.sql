@@ -1,0 +1,2 @@
+ALTER TABLE public.notifications DROP CONSTRAINT notifications_related_content_type_check;
+ALTER TABLE public.notifications ADD CONSTRAINT notifications_related_content_type_check CHECK (related_content_type = ANY (ARRAY['donation','request','scholarship','event','comment','user','organization','volunteer']));
