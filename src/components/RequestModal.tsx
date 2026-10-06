@@ -131,9 +131,9 @@ export const RequestModal = ({
               createdAt={request.created_at}
             />
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+            <div className={request.images?.length ? "grid grid-cols-1 lg:grid-cols-2 gap-3" : "space-y-3"}>
               <RequestModalInformation request={request} />
-              <RequestModalImageSection title={request.title} />
+              <RequestModalImageSection title={request.title} images={request.images || []} />
             </div>
 
             {/* Comments Section - Only show for approved requests */}

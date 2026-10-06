@@ -14,6 +14,9 @@ import { DimensionsInput } from "@/components/shared/DimensionsInput";
 import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import { LocationFields } from "@/components/shared/LocationFields";
+import { RequestPhotoUpload } from "@/components/request/RequestPhotoUpload";
+import { uploadRequestPhotos } from "@/lib/requestPhotos";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface RequestCreateModalProps {
   open: boolean;
@@ -32,6 +35,8 @@ export const RequestCreateModal = ({
   onRequestCreated 
 }: RequestCreateModalProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [images, setImages] = useState<File[]>([]);
+  const queryClient = useQueryClient();
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [formData, setFormData] = useState({
     title: "",
@@ -134,7 +139,9 @@ export const RequestCreateModal = ({
     setIsSubmitting(true);
 
     try {
+      const uploadedImages = await uploadRequestPhotos(images);
       const requestData = {
+        images: uploadedImages,
         title: formData.title,
         description: formData.description || null,
         request_type: formData.request_type,
@@ -171,6 +178,7 @@ export const RequestCreateModal = ({
       });
 
       // Reset form
+      setImages([]);
       setFormData({
         title: "",
         description: "",
@@ -190,6 +198,7 @@ export const RequestCreateModal = ({
       });
 
       onOpenChange(false);
+      queryClient.invalidateQueries({ queryKey: ["requests"] });
       onRequestCreated?.();
 
     } catch (error) {
@@ -353,6 +362,8 @@ export const RequestCreateModal = ({
               placeholder="Describe your donation needs..."
             />
           </div>
+
+          <RequestPhotoUpload images={images} onImagesChange={setImages} disabled={isSubmitting} />
 
           <div className="flex items-center space-x-2">
             <Switch
