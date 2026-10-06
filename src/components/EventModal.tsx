@@ -104,7 +104,8 @@ export const EventModal = ({
   const modalHeight = showComments ? "h-[80vh]" : "h-[60vh]";
 
   const isEventFull = event.max_participants && rsvpCount >= event.max_participants;
-  const canRSVP = event.is_approved && (!isEventFull || hasRsvp);
+  const hasPassed = new Date(event.end_date || event.start_date) < new Date();
+  const canRSVP = event.is_approved && !hasPassed && (!isEventFull || hasRsvp);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

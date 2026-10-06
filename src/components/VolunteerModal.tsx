@@ -306,8 +306,8 @@ export const VolunteerModal = ({
                   </>
                 )}
 
-                {volunteer.is_approved && (
-                  <Button
+                {volunteer.is_approved && new Date(volunteer.end_date || volunteer.start_date) >= new Date() && (
+                   <Button
                     onClick={handleSignupAction}
                     disabled={submitting}
                     className="flex-1"

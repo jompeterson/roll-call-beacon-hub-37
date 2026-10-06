@@ -168,7 +168,7 @@ export const EventDetail = () => {
               <p className="text-sm text-muted-foreground mt-1">Events</p>
             </div>
             <div className="flex items-center gap-2">
-              {event.is_approved && isAuthenticated && (
+              {event.is_approved && isAuthenticated && !hasPassed && (
                 <Button
                   onClick={handleRSVPAction}
                   disabled={submitting}

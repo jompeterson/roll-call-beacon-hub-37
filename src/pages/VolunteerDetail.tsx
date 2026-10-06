@@ -170,7 +170,7 @@ export const VolunteerDetail = () => {
               <p className="text-sm text-muted-foreground mt-1">Volunteer Opportunities</p>
             </div>
             <div className="flex items-center gap-2">
-              {volunteer.is_approved && !isVolunteerFull && isAuthenticated && (
+              {volunteer.is_approved && !isVolunteerFull && isAuthenticated && !hasPassed && (
                 <Button
                   onClick={handleSignupAction}
                   disabled={submitting}

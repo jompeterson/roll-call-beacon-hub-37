@@ -271,15 +271,17 @@ export const Volunteers = () => {
                     Status
                   </SortableTableHead>
                 )}
-                <SortableTableHead
-                  field="is_ended"
-                  currentSort={volunteerSort}
-                  currentDirection={volunteerDirection}
-                  onSort={handleVolunteerSort}
-                  className="w-1/6"
-                >
-                  Ended
-                </SortableTableHead>
+                {isAdministrator && (
+                  <SortableTableHead
+                    field="is_ended"
+                    currentSort={volunteerSort}
+                    currentDirection={volunteerDirection}
+                    onSort={handleVolunteerSort}
+                    className="w-1/6"
+                  >
+                    Ended
+                  </SortableTableHead>
+                )}
               </TableRow>
             </TableHeader>
           </Table>
@@ -288,7 +290,7 @@ export const Volunteers = () => {
               <TableBody>
               {items.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={isAuthenticated ? 8 : 7} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={isAuthenticated ? (isAdministrator ? 8 : 7) : 6} className="text-center py-8 text-muted-foreground">
                     No volunteer opportunities found
                   </TableCell>
                 </TableRow>
@@ -341,13 +343,15 @@ export const Volunteers = () => {
                         </div>
                       </TableCell>
                     )}
-                    <TableCell className="w-1/6 whitespace-nowrap">
-                      {volunteer.is_ended ? (
-                        <span className="text-xs bg-muted text-muted-foreground px-1.5 py-0.5 rounded">Ended</span>
-                      ) : (
-                        "—"
-                      )}
-                    </TableCell>
+                    {isAdministrator && (
+                      <TableCell className="w-1/6 whitespace-nowrap">
+                        {volunteer.is_ended ? (
+                          <span className="text-xs bg-muted text-muted-foreground px-1.5 py-0.5 rounded">Ended</span>
+                        ) : (
+                          "—"
+                        )}
+                      </TableCell>
+                    )}
                   </TableRow>
                 ))
               )}
