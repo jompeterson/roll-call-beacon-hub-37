@@ -1,0 +1,2 @@
+ALTER TABLE public.notifications DROP CONSTRAINT notifications_type_check;
+ALTER TABLE public.notifications ADD CONSTRAINT notifications_type_check CHECK (type = ANY (ARRAY['comment_reply','new_post','post_comment','user_registration','organization_registration','donation_acceptance','request_fulfillment']));
