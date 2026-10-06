@@ -47,43 +47,6 @@ export const Overview = () => {
     return new Intl.NumberFormat('en-US').format(num);
   };
 
-  // Calculate monthly changes
-  const orgChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
-    ? calculateAbsoluteChange(monthlyMetrics.newOrganizations, previousMonthMetrics.newOrganizations)
-    : { change: "...", changeType: "neutral" as const };
-
-  const scholarshipChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
-    ? calculateAbsoluteChange(monthlyMetrics.newScholarships, previousMonthMetrics.newScholarships)
-    : { change: "...", changeType: "neutral" as const };
-
-  const monthlyDonationChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
-    ? calculateChange(monthlyMetrics.totalDonations, previousMonthMetrics.totalDonations)
-    : { change: "...", changeType: "neutral" as const };
-
-  const monthlyPendingDonationChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
-    ? calculateChange(monthlyMetrics.pendingDonations, previousMonthMetrics.pendingDonations)
-    : { change: "...", changeType: "neutral" as const };
-
-  const eventChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
-    ? calculateAbsoluteChange(monthlyMetrics.newEvents, previousMonthMetrics.newEvents)
-    : { change: "...", changeType: "neutral" as const };
-
-  const userChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
-    ? calculateChange(monthlyMetrics.newUsers, previousMonthMetrics.newUsers)
-    : { change: "...", changeType: "neutral" as const };
-
-  const volunteerChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
-    ? calculateAbsoluteChange(monthlyMetrics.newVolunteers, previousMonthMetrics.newVolunteers)
-    : { change: "...", changeType: "neutral" as const };
-
-  const monthlyHoursChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
-    ? calculateChange(monthlyMetrics.hoursDonated, previousMonthMetrics.hoursDonated)
-    : { change: "...", changeType: "neutral" as const };
-
-  const monthlyHoursValueChange = !monthlyLoading && !previousMonthLoading && monthlyMetrics && previousMonthMetrics 
-    ? calculateChange(monthlyMetrics.hoursDonatedValue, previousMonthMetrics.hoursDonatedValue)
-    : { change: "...", changeType: "neutral" as const };
-
   // Calculate yearly changes
   const yearlyOrgChange = !yearlyLoading && !previousYearLoading && yearlyMetrics && previousYearMetrics 
     ? calculateChange(yearlyMetrics.organizations, previousYearMetrics.organizations)
