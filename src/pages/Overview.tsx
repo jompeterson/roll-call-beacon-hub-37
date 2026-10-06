@@ -7,16 +7,12 @@ import { PendingDonationsRequestsWidget } from "@/components/PendingDonationsReq
 import { PendingEventsWidget } from "@/components/PendingEventsWidget";
 import { CustomWidget } from "@/components/CustomWidget";
 import { useAuth } from "@/hooks/useAuth";
-import { useMonthlyMetrics } from "@/hooks/useMonthlyMetrics";
 import { useYearlyMetrics } from "@/hooks/useYearlyMetrics";
-import { usePreviousMonthMetrics } from "@/hooks/usePreviousMonthMetrics";
 import { usePreviousYearMetrics } from "@/hooks/usePreviousYearMetrics";
 import { useMetricChanges } from "@/hooks/useMetricChanges";
 import { useCustomWidgets } from "@/hooks/useCustomWidgets";
 import {
-  Users,
   Hammer,
-  GraduationCap,
   Calendar,
   Building2,
   Clock,
@@ -28,15 +24,12 @@ import {
 
 export const Overview = () => {
   const { isAdministrator } = useAuth();
-  const { data: monthlyMetrics, isLoading: monthlyLoading } = useMonthlyMetrics();
   const { data: yearlyMetrics, isLoading: yearlyLoading } = useYearlyMetrics();
-  const { data: previousMonthMetrics, isLoading: previousMonthLoading } = usePreviousMonthMetrics();
   const { data: previousYearMetrics, isLoading: previousYearLoading } = usePreviousYearMetrics();
-  const { calculateChange, calculateAbsoluteChange } = useMetricChanges();
+  const { calculateChange } = useMetricChanges();
   
   // Fetch custom widgets for each section
   const { data: pendingApprovalsWidgets } = useCustomWidgets('pending_approvals');
-  const { data: monthlyMetricsWidgets } = useCustomWidgets('monthly_metrics');
   const { data: yearlyMetricsWidgets } = useCustomWidgets('yearly_metrics');
 
   // Format currency values
