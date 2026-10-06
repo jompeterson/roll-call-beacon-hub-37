@@ -260,7 +260,7 @@ export const Events = () => {
             <TableBody>
               {items.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={isAuthenticated ? 4 : 3} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={isAuthenticated ? 5 : 4} className="text-center py-8 text-muted-foreground">
                     No events found
                   </TableCell>
                 </TableRow>

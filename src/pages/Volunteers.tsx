@@ -288,7 +288,7 @@ export const Volunteers = () => {
               <TableBody>
               {items.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={isAuthenticated ? 7 : 6} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={isAuthenticated ? 8 : 7} className="text-center py-8 text-muted-foreground">
                     No volunteer opportunities found
                   </TableCell>
                 </TableRow>
