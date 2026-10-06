@@ -82,11 +82,16 @@ export const ProgramsSupportedWidget = () => {
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold">{isLoading ? "..." : data!.length}</div>
-        <ul className="mt-2 max-h-32 overflow-y-auto space-y-1 text-xs">
+        <ul className="mt-2 max-h-32 overflow-y-auto flex flex-wrap gap-1.5">
           {data?.map(([name, n]) => (
-            <li key={name} className="flex justify-between gap-2">
+            <li
+              key={name}
+              className="inline-flex items-center gap-1.5 rounded-full bg-accent text-accent-foreground px-2.5 py-1 text-xs font-medium max-w-full"
+            >
               <span className="truncate">{name}</span>
-              <span className="text-muted-foreground shrink-0">{n} donation{n === 1 ? "" : "s"}</span>
+              <span className="rounded-full bg-primary text-primary-foreground px-1.5 py-px text-[10px] font-semibold shrink-0">
+                {n}
+              </span>
             </li>
           ))}
         </ul>
