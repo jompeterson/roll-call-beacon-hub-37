@@ -121,7 +121,7 @@ export const EventDetail = () => {
 
   const showComments = event.is_approved;
   const canDelete = user && (isAdministrator || (user.id === event.creator_user_id && !event.is_approved));
-  const canEdit = user && ((user.id === event.creator_user_id && !event.is_approved) || isAdministrator);
+  const canEdit = user && (user.id === event.creator_user_id || isAdministrator);
   const hasPassed = new Date(event.end_date || event.start_date) < new Date();
   const canEndEvent = !!user && isAdministrator && event.is_approved && hasPassed && !event.is_ended;
   const hasRecap =

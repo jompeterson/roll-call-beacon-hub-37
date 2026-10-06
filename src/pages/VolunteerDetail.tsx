@@ -133,7 +133,7 @@ export const VolunteerDetail = () => {
   const showComments = volunteer.is_approved;
   const isVolunteerFull = volunteer.max_participants && signupCount >= volunteer.max_participants;
   const canDelete = user && (isAdministrator || (user.id === volunteer.creator_user_id && !volunteer.is_approved));
-  const canEdit = user && ((user.id === volunteer.creator_user_id && !volunteer.is_approved) || isAdministrator);
+  const canEdit = user && (user.id === volunteer.creator_user_id || isAdministrator);
   const hasPassed = new Date(volunteer.end_date || volunteer.start_date) < new Date();
   const canEndOpportunity = !!user && volunteer.is_approved && hasPassed && !volunteer.is_ended && (isOwner || isAdministrator);
 
