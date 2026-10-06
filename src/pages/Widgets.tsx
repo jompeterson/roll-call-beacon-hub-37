@@ -24,6 +24,7 @@ interface Widget {
   description?: string;
   metrics: any[];
   display_config: any;
+  section: string;
   position: number;
   is_active: boolean;
   created_at: string;
