@@ -243,15 +243,17 @@ export const Events = () => {
                   Status
                 </SortableTableHead>
               )}
-              <SortableTableHead
-                field="is_ended"
-                currentSort={eventSort}
-                currentDirection={eventDirection}
-                onSort={handleEventSort}
-                className="w-1/6"
-              >
-                Ended
-              </SortableTableHead>
+              {isAdministrator && (
+                <SortableTableHead
+                  field="is_ended"
+                  currentSort={eventSort}
+                  currentDirection={eventDirection}
+                  onSort={handleEventSort}
+                  className="w-1/6"
+                >
+                  Ended
+                </SortableTableHead>
+              )}
             </TableRow>
           </TableHeader>
         </Table>
@@ -260,7 +262,7 @@ export const Events = () => {
             <TableBody>
               {items.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={isAuthenticated ? 5 : 4} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={isAuthenticated ? (isAdministrator ? 5 : 4) : 3} className="text-center py-8 text-muted-foreground">
                     No events found
                   </TableCell>
                 </TableRow>
@@ -299,13 +301,15 @@ export const Events = () => {
                           </div>
                         </TableCell>
                       )}
-                      <TableCell className="w-1/6 whitespace-nowrap">
-                        {event.is_ended ? (
-                          <span className="text-xs bg-muted text-muted-foreground px-1.5 py-0.5 rounded">Ended</span>
-                        ) : (
-                          "—"
-                        )}
-                      </TableCell>
+                      {isAdministrator && (
+                        <TableCell className="w-1/6 whitespace-nowrap">
+                          {event.is_ended ? (
+                            <span className="text-xs bg-muted text-muted-foreground px-1.5 py-0.5 rounded">Ended</span>
+                          ) : (
+                            "—"
+                          )}
+                        </TableCell>
+                      )}
                     </TableRow>
                   );
                 })
