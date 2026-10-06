@@ -145,6 +145,9 @@ export const Events = () => {
       if (sortField === "status") {
         aValue = getEventStatus(a);
         bValue = getEventStatus(b);
+      } else if (sortField === "is_ended") {
+        aValue = a.is_ended ? "Ended" : "Active";
+        bValue = b.is_ended ? "Ended" : "Active";
       } else if (sortField === "start_date") {
         aValue = a.start_date;
         bValue = b.start_date;
@@ -240,6 +243,15 @@ export const Events = () => {
                   Status
                 </SortableTableHead>
               )}
+              <SortableTableHead
+                field="is_ended"
+                currentSort={eventSort}
+                currentDirection={eventDirection}
+                onSort={handleEventSort}
+                className="w-1/6"
+              >
+                Ended
+              </SortableTableHead>
             </TableRow>
           </TableHeader>
         </Table>
@@ -287,6 +299,13 @@ export const Events = () => {
                           </div>
                         </TableCell>
                       )}
+                      <TableCell className="w-1/6 whitespace-nowrap">
+                        {event.is_ended ? (
+                          <span className="text-xs bg-muted text-muted-foreground px-1.5 py-0.5 rounded">Ended</span>
+                        ) : (
+                          "—"
+                        )}
+                      </TableCell>
                     </TableRow>
                   );
                 })
