@@ -10,6 +10,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbP
 import { ChevronRight, Edit } from "lucide-react";
 import { RequestModalCreatorInfo } from "@/components/request/RequestModalCreatorInfo";
 import { RequestModalInformation } from "@/components/request/RequestModalInformation";
+import { RequestModalImageSection } from "@/components/request/RequestModalImageSection";
 import { RequestModalActionButtons } from "@/components/request/RequestModalActionButtons";
 import { RequestEditModal } from "@/components/donations/RequestEditModal";
 import { CommentsSection } from "@/components/comments/CommentsSection";
@@ -190,6 +191,8 @@ export const RequestDetail = () => {
             request={request}
             highlightedFields={isOwner && changeRequest ? changeRequest.fieldKeys : undefined}
           />
+
+          <RequestModalImageSection title={request.title} images={request.images || []} />
 
           {/* Comments Section */}
           {showComments && (

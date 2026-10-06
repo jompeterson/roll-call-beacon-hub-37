@@ -15,6 +15,9 @@ import { DimensionsInput } from "@/components/shared/DimensionsInput";
 import { PrivatePostToggle } from "@/components/shared/PrivatePostToggle";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import { LocationFields } from "@/components/shared/LocationFields";
+import { RequestPhotoUpload } from "@/components/request/RequestPhotoUpload";
+import { uploadRequestPhotos } from "@/lib/requestPhotos";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface RequestEditModalProps {
   open: boolean;
@@ -37,6 +40,9 @@ export const RequestEditModal = ({
   hasChangeRequest = false,
 }: RequestEditModalProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [images, setImages] = useState<File[]>([]);
+  const [existingImages, setExistingImages] = useState<string[]>(request.images || []);
+  const queryClient = useQueryClient();
   const [showReviewDialog, setShowReviewDialog] = useState(false);
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [formData, setFormData] = useState({
@@ -62,6 +68,13 @@ export const RequestEditModal = ({
 
   const requestTypes = ["Assorted Goods", "Tools", "Materials", "Appliance"];
   const urgencyLevels = ["low", "medium", "high", "urgent"];
+
+  useEffect(() => {
+    if (open) {
+      setImages([]);
+      setExistingImages(request.images || []);
+    }
+  }, [open, request.id, request.images]);
 
   useEffect(() => {
     if (isAdministrator && open) {
@@ -102,7 +115,9 @@ export const RequestEditModal = ({
     setIsSubmitting(true);
 
     try {
+      const uploadedImages = await uploadRequestPhotos(images, existingImages);
       const updateData = {
+        images: uploadedImages,
         title: formData.title,
         description: formData.description || null,
         request_type: formData.request_type,
@@ -127,6 +142,9 @@ export const RequestEditModal = ({
         .eq("id", request.id);
 
       if (error) throw error;
+
+      queryClient.invalidateQueries({ queryKey: ["requests"] });
+      queryClient.invalidateQueries({ queryKey: ["request", request.id] });
 
       toast({
         title: "Success",
@@ -302,6 +320,8 @@ export const RequestEditModal = ({
               placeholder="Describe your donation needs..."
             />
           </div>
+
+          <RequestPhotoUpload images={images} onImagesChange={setImages} existingImages={existingImages} onExistingImagesChange={setExistingImages} disabled={isSubmitting} />
 
           <div className="flex items-center space-x-2">
             <Switch
