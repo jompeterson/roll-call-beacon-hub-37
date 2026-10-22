@@ -23,10 +23,10 @@ const useIsTablet = () => {
 
 export const Layout = () => {
   const [signedIn, setSignedIn] = useState(() => !!customAuth.getUser());
-  const [authReady, setAuthReady] = useState(() => sessionStorage.getItem(SPLASH_ENTRY_KEY) === "true");
+  const [authReady, setAuthReady] = useState(false);
   const [hasEntered, setHasEntered] = useState(() => sessionStorage.getItem(SPLASH_ENTRY_KEY) === "true");
   const isTablet = useIsTablet();
-  const [sidebarOpen, setSidebarOpen] = useState(() => sessionStorage.getItem(SPLASH_ENTRY_KEY) === "true");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(isTablet);
 
   useEffect(() => customAuth.onAuthStateChange(user => {
