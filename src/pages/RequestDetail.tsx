@@ -162,7 +162,22 @@ export const RequestDetail = () => {
                 </div>
               )}
             </div>
-            <ShareButton />
+            <div className="flex flex-wrap items-center gap-2">
+              {request.is_completed && isAdministrator && (
+                <MarkFulfilledButton
+                  table="requests"
+                  column="is_completed"
+                  recordId={request.id}
+                  isFulfilled={true}
+                  markLabel="Mark Fulfilled"
+                  undoLabel="Reopen Request"
+                  successMessage="Request marked as fulfilled"
+                  undoMessage="Request reopened"
+                  canUndo
+                />
+              )}
+              <ShareButton />
+            </div>
           </div>
         </div>
 
@@ -219,21 +234,7 @@ export const RequestDetail = () => {
                   </Button>
                 )}
               </div>
-              {request.is_completed ? (
-                isAdministrator && (
-                  <MarkFulfilledButton
-                    table="requests"
-                    column="is_completed"
-                    recordId={request.id}
-                    isFulfilled={true}
-                    markLabel="Mark Fulfilled"
-                    undoLabel="Reopen Request"
-                    successMessage="Request marked as fulfilled"
-                    undoMessage="Request reopened"
-                    canUndo
-                  />
-                )
-              ) : (
+              {request.is_completed ? null : (
                 <RequestModalActionButtons
                   request={request}
                   onApprove={handleApprove}
