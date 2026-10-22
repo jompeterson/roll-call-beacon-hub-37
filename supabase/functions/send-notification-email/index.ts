@@ -251,12 +251,15 @@ function buildPostUrl(baseUrl: string, contentType: string | null, contentId: st
     case "donation":
       return `${base}/donations/${contentId}`;
     case "request":
+    case "donation_request":
       return `${base}/donations/requests/${contentId}`;
     case "scholarship":
       return `${base}/scholarships/${contentId}`;
     case "event":
+    case "networking_event":
       return `${base}/events/${contentId}`;
     case "volunteer":
+    case "volunteer_opportunity":
       return `${base}/volunteers/${contentId}`;
     case "organization":
       return `${base}/organizations`;
