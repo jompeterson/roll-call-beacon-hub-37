@@ -24,7 +24,7 @@ const useIsTablet = () => {
 export const Layout = () => {
   const [signedIn, setSignedIn] = useState(() => !!customAuth.getUser());
   const [authReady, setAuthReady] = useState(false);
-  const [hasEntered, setHasEntered] = useState(() => sessionStorage.getItem(SPLASH_ENTRY_KEY) === "true");
+  const [hasEntered, setHasEntered] = useState(false);
   const isTablet = useIsTablet();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(isTablet);
@@ -45,7 +45,7 @@ export const Layout = () => {
 
   if (shouldShowSplash(signedIn, hasEntered)) {
     return <SplashScreen onEnter={() => {
-      sessionStorage.setItem(SPLASH_ENTRY_KEY, "true");
+      sessionStorage.removeItem(SPLASH_ENTRY_KEY);
       setHasEntered(true);
     }} />;
   }
