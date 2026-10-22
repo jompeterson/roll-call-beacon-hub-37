@@ -5,6 +5,9 @@ import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
 import { FloatingActionButton } from "./FloatingActionButton";
 import { AuthProtection } from "./AuthProtection";
+import { SplashScreen } from "./SplashScreen";
+import { customAuth } from "@/lib/customAuth";
+import { shouldShowSplash, SPLASH_ENTRY_KEY } from "@/lib/splashScreen";
 
 const useIsTablet = () => {
   const [isTablet, setIsTablet] = useState(
@@ -19,14 +22,33 @@ const useIsTablet = () => {
 };
 
 export const Layout = () => {
+  const [signedIn, setSignedIn] = useState(() => !!customAuth.getUser());
+  const [authReady, setAuthReady] = useState(false);
+  const [hasEntered, setHasEntered] = useState(() => sessionStorage.getItem(SPLASH_ENTRY_KEY) === "true");
   const isTablet = useIsTablet();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(isTablet);
+
+  useEffect(() => customAuth.onAuthStateChange(user => {
+    setSignedIn(!!user);
+    setAuthReady(true);
+  }), []);
 
   // Auto-collapse on tablet, expand on desktop
   useEffect(() => {
     setSidebarCollapsed(isTablet);
   }, [isTablet]);
+
+  if (!authReady) {
+    return <div className="splash-screen" role="status" aria-label="Loading Roll Call" />;
+  }
+
+  if (shouldShowSplash(signedIn, hasEntered)) {
+    return <SplashScreen onEnter={() => {
+      sessionStorage.setItem(SPLASH_ENTRY_KEY, "true");
+      setHasEntered(true);
+    }} />;
+  }
 
   return (
     <>

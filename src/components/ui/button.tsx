@@ -9,6 +9,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
+        splash: "bg-[hsl(var(--splash-button))] text-[hsl(var(--splash-button-foreground))] hover:bg-[hsl(var(--splash-button-hover))] focus-visible:ring-[hsl(var(--splash-button))]",
         default: "bg-primary text-primary-foreground hover:bg-primary/90",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",

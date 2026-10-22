@@ -35,6 +35,11 @@
     --ring: 174 77% 25%;
 
     --radius: 0.5rem;
+    --splash-background: 180 16% 90.2%;
+    --splash-button: 0 0% 0%;
+    --splash-button-foreground: 0 0% 100%;
+    --splash-button-hover: 0 0% 14%;
+    --splash-button-shadow: 0 0% 0% / 0.3;
 
     --sidebar-background: 0 0% 98%;
 
@@ -105,5 +110,44 @@
   input::-ms-reveal,
   input::-ms-clear {
     display: none;
+  }
+}
+
+.splash-screen {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: hsl(var(--splash-background));
+  padding: 24px;
+}
+
+.splash-artwork {
+  position: relative;
+  width: min(100%, 1200px);
+}
+
+.splash-enter {
+  position: absolute;
+  left: 50%;
+  top: 80%;
+  transform: translateX(-50%);
+  height: 64px;
+  padding: 0 28px;
+  border-radius: 4px;
+  font-size: 28px;
+  font-weight: 700;
+  box-shadow: 3px 3px 2px hsl(var(--splash-button-shadow));
+}
+
+@media (max-width: 640px) {
+  .splash-screen { padding: 12px; }
+  .splash-enter {
+    position: relative;
+    top: auto;
+    margin-top: 12px;
+    height: 48px;
+    padding: 0 24px;
+    font-size: 20px;
   }
 }
