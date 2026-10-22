@@ -87,6 +87,19 @@ Deno.serve(async (req) => {
     const includedIds: string[] = [];
     const skippedIds: string[] = [];
 
+    // Comment notifications point at the comment; resolve them to the parent post
+    const commentIds = notifications
+      .filter((n) => n.related_content_type === "comment" && n.related_content_id)
+      .map((n) => n.related_content_id as string);
+    const commentMap = new Map<string, { content_type: string; content_id: string }>();
+    if (commentIds.length > 0) {
+      const { data: comments } = await supabase
+        .from("comments")
+        .select("id, content_type, content_id")
+        .in("id", commentIds);
+      comments?.forEach((c) => commentMap.set(c.id, { content_type: c.content_type, content_id: c.content_id }));
+    }
+
     for (const n of notifications) {
       const profile = profileMap.get(n.user_id);
       if (!profile?.email) {
@@ -94,7 +107,14 @@ Deno.serve(async (req) => {
         continue;
       }
       const greeting = profile.first_name ? `Hi ${profile.first_name},` : "Hello,";
-      const postUrl = buildPostUrl(APP_BASE_URL, n.related_content_type, n.related_content_id);
+      let ctype = n.related_content_type;
+      let cid = n.related_content_id;
+      if (ctype === "comment" && cid) {
+        const c = commentMap.get(cid);
+        ctype = c?.content_type ?? null;
+        cid = c?.content_id ?? null;
+      }
+      const postUrl = buildPostUrl(APP_BASE_URL, ctype, cid);
       const buttonHtml = postUrl
         ? `<p style="margin: 0 0 24px;"><a href="${postUrl}" style="display: inline-block; background-color: #111; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-size: 15px; font-weight: 500;">View Post</a></p>`
         : "";
@@ -231,12 +251,15 @@ function buildPostUrl(baseUrl: string, contentType: string | null, contentId: st
     case "donation":
       return `${base}/donations/${contentId}`;
     case "request":
+    case "donation_request":
       return `${base}/donations/requests/${contentId}`;
     case "scholarship":
       return `${base}/scholarships/${contentId}`;
     case "event":
+    case "networking_event":
       return `${base}/events/${contentId}`;
     case "volunteer":
+    case "volunteer_opportunity":
       return `${base}/volunteers/${contentId}`;
     case "organization":
       return `${base}/organizations`;
