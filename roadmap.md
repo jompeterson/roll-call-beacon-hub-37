@@ -6,4 +6,4 @@
 # Signed-out welcome screen
 - [x] Add supplied artwork, matching background, and black entry button.
 - [x] Bypass the welcome screen for signed-in users and allow visitors to enter for their browsing session.
-- [ ] Verify entry behavior and artwork display.
+- [x] Verify entry behavior and artwork display.
