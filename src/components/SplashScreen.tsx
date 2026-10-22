@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import splashArtwork from "@/assets/splash.svg.asset.json";
+import splashSvg from "@/assets/splash-artwork.svg?raw";
 
 // Pieces of the artwork, each wrapped in its own animated group
 const PARTS: Record<string, string> = {
@@ -38,32 +38,15 @@ function prepareSvg(text: string): string {
 }
 
 export const SplashScreen = ({ onEnter }: { onEnter: () => void }) => {
-  const [markup, setMarkup] = useState<string | null>(null);
-
-  useEffect(() => {
-    let active = true;
-    fetch(splashArtwork.url)
-      .then(r => r.text())
-      .then(t => active && setMarkup(prepareSvg(t)))
-      .catch(() => active && setMarkup(""));
-    return () => { active = false; };
-  }, []);
+  const markup = useMemo(() => prepareSvg(splashSvg), []);
 
   return (
     <main className="splash-screen" aria-label="Welcome to Roll Call">
       <div className="splash-artwork">
-        {markup ? (
-          <div className="splash-svg" dangerouslySetInnerHTML={{ __html: markup }} />
-        ) : markup === "" ? (
-          <img src={splashArtwork.url} alt="Welcome to Roll Call. We are live! Let’s start building…" className="block h-auto w-full" />
-        ) : (
-          <div className="aspect-video w-full" />
-        )}
-        {markup !== null && (
-          <Button variant="splash" className="splash-enter" onClick={onEnter}>
+        <div className="splash-svg" dangerouslySetInnerHTML={{ __html: markup }} />
+        <Button variant="splash" className="splash-enter" onClick={onEnter}>
             Click to Enter
           </Button>
-        )}
       </div>
     </main>
   );
