@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { CommentsSection } from "@/components/comments/CommentsSection";
 import { RequestModalHeader } from "./request/RequestModalHeader";
@@ -25,12 +24,6 @@ interface RequestModalProps {
   disableNavigation?: boolean;
 }
 
-interface CreatorInfo {
-  name: string;
-  email: string;
-  organization: string;
-}
-
 export const RequestModal = ({ 
   request, 
   open, 
@@ -44,11 +37,6 @@ export const RequestModal = ({
   const { user, isAdministrator } = useAuth();
   const navigate = useNavigate();
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [creatorInfo, setCreatorInfo] = useState<CreatorInfo>({
-    name: "Loading...",
-    email: "Loading...",
-    organization: "Loading..."
-  });
   
   const isOwner = user?.id === request?.creator_user_id;
   const canEdit = isOwner || isAdministrator;
@@ -61,56 +49,6 @@ export const RequestModal = ({
       navigate('/donations', { replace: true });
     }
   }, [open, request, navigate, disableNavigation]);
-
-  useEffect(() => {
-    const fetchCreatorInfo = async () => {
-      if (!request?.creator_user_id) return;
-
-      try {
-        const { data: profile, error } = await supabase
-          .from("user_profiles")
-          .select(`
-            first_name,
-            last_name,
-            email,
-            organizations:organization_id (
-              name
-            )
-          `)
-          .eq("id", request.creator_user_id)
-          .single();
-
-        if (error) {
-          console.error("Error fetching creator info:", error);
-          setCreatorInfo({
-            name: "Unknown User",
-            email: "unknown@example.com",
-            organization: request.organization_name || "Unknown Organization"
-          });
-          return;
-        }
-
-        if (profile) {
-          setCreatorInfo({
-            name: `${profile.first_name} ${profile.last_name}`,
-            email: profile.email,
-            organization: (profile.organizations as any)?.name || request.organization_name || "Unknown Organization"
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching creator info:", error);
-        setCreatorInfo({
-          name: "Unknown User",
-          email: "unknown@example.com",
-          organization: request.organization_name || "Unknown Organization"
-        });
-      }
-    };
-
-    if (open && request) {
-      fetchCreatorInfo();
-    }
-  }, [request, open]);
 
   if (!request) return null;
 
@@ -127,7 +65,9 @@ export const RequestModal = ({
         <ScrollArea className="flex-1 px-6">
           <div className="space-y-4 py-4">
             <RequestModalCreatorInfo
-              creatorInfo={creatorInfo}
+              creatorUserId={request.creator_user_id}
+              organizationName={request.organization_name}
+              open={open}
               createdAt={request.created_at}
             />
             

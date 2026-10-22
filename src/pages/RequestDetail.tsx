@@ -88,8 +88,6 @@ export const RequestDetail = () => {
     );
   }
 
-  const orgName = request.organization_name || "Unknown Organization";
-
   const handleApprove = (id: string) => {
     console.log("Approved request:", id);
   };
@@ -179,11 +177,8 @@ export const RequestDetail = () => {
           )}
 
           <RequestModalCreatorInfo
-            creatorInfo={{
-              name: "User Name",
-              email: "user@example.com",
-              organization: orgName
-            }}
+            creatorUserId={request.creator_user_id}
+            organizationName={request.organization_name}
             createdAt={request.created_at}
           />
 
