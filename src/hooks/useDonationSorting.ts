@@ -17,8 +17,19 @@ export const sortDonations = (
   sortField: DonationSortField, 
   direction: SortDirection
 ): Donation[] => {
+  // Archived (taken) donations always sit below active ones, keeping each group's order
+  const active = data.filter(d => !d.is_taken);
+  const archived = data.filter(d => d.is_taken);
+  return [...sortWithin(active, sortField, direction), ...sortWithin(archived, sortField, direction)];
+};
+
+const sortWithin = (
+  data: Donation[],
+  sortField: DonationSortField,
+  direction: SortDirection
+): Donation[] => {
   if (!sortField || !direction) return data;
-  
+
   return [...data].sort((a, b) => {
     let aValue: string;
     let bValue: string;
