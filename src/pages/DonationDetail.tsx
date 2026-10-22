@@ -182,7 +182,7 @@ export const DonationDetail = () => {
                   size="sm"
                 />
               )}
-              {donation.is_approved && (
+              {donation.is_approved && !donation.is_taken && (
                 <AskForDonationButton donationId={donation.id} size="sm" />
               )}
               <ShareButton />
