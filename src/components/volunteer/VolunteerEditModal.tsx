@@ -45,6 +45,8 @@ export const VolunteerEditModal = ({
     helping_organization_text: volunteer.helping_organization_text || "",
     non_profit: volunteer.non_profit || ""
   });
+  const [accomplishments, setAccomplishments] = useState<string>((((volunteer as any).accomplishments as string | null) || ""));
+  const isEnded = !!(volunteer as any).is_ended;
   const [isPrivate, setIsPrivate] = useState(!!volunteer.is_private);
 
   const { toast } = useToast();
@@ -99,6 +101,7 @@ export const VolunteerEditModal = ({
         non_profit: formData.non_profit || null,
         images: imageUrls,
         is_private: isPrivate,
+        ...(isEnded ? { accomplishments: accomplishments.split("\n").map((l) => l.trim()).filter(Boolean).join("\n") || null } : {}),
         updated_at: new Date().toISOString()
       };
 
@@ -237,6 +240,21 @@ export const VolunteerEditModal = ({
           </div>
 
           <PrivatePostToggle isPrivate={isPrivate} onChange={setIsPrivate} />
+
+          {isEnded && (
+            <div className="space-y-2">
+              <Label htmlFor="accomplishments">Accomplishments</Label>
+              <Textarea
+                id="accomplishments"
+                rows={6}
+                value={accomplishments}
+                onChange={(e) => setAccomplishments(e.target.value)}
+                placeholder="One accomplishment per line"
+              />
+              <p className="text-sm text-muted-foreground">Put each accomplishment on its own line.</p>
+            </div>
+          )}
+
 
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
