@@ -46,6 +46,8 @@ export const EventEditModal = ({
     event_type: event.event_type || "",
     max_participants: event.max_participants?.toString() || ""
   });
+  const [accomplishments, setAccomplishments] = useState<string>((((event as any).accomplishments as string | null) || ""));
+  const isEnded = !!(event as any).is_ended;
   const [isPrivate, setIsPrivate] = useState(!!event.is_private);
 
   const { toast } = useToast();
@@ -99,6 +101,7 @@ export const EventEditModal = ({
         max_participants: formData.max_participants ? parseInt(formData.max_participants) : null,
         images: imageUrls,
         is_private: isPrivate,
+        ...(isEnded ? { accomplishments: accomplishments.split("\n").map((l) => l.trim()).filter(Boolean).join("\n") || null } : {}),
         updated_at: new Date().toISOString()
       };
 
@@ -230,6 +233,21 @@ export const EventEditModal = ({
           </div>
 
           <PrivatePostToggle isPrivate={isPrivate} onChange={setIsPrivate} />
+
+          {isEnded && (
+            <div className="space-y-2">
+              <Label htmlFor="accomplishments">Accomplishments</Label>
+              <Textarea
+                id="accomplishments"
+                rows={6}
+                value={accomplishments}
+                onChange={(e) => setAccomplishments(e.target.value)}
+                placeholder="One accomplishment per line"
+              />
+              <p className="text-sm text-muted-foreground">Put each accomplishment on its own line.</p>
+            </div>
+          )}
+
 
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
