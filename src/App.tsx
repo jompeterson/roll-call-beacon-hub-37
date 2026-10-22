@@ -52,6 +52,7 @@ const AppContent = () => {
           <Route path="donations" element={<Donations />} />
           <Route path="donations/:donationId" element={<DonationDetail />} />
           <Route path="requests/:requestId" element={<RequestDetail />} />
+          <Route path="donations/requests/:requestId" element={<RequestDetail />} />
           <Route path="scholarships" element={<Scholarships />} />
           <Route path="scholarships/:scholarshipId" element={<ScholarshipDetail />} />
           <Route path="events" element={<Events />} />
